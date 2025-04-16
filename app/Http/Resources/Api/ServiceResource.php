@@ -18,7 +18,9 @@ class ServiceResource extends JsonResource
             "id"=> $this->id,
             'image' => $this->full_image_path,
             'icon' => $this->full_icon_path,
-
+            'price' => $this->price,
+            'visiting_price' => $this->visiting_price,
+            'have_price_after_visiting' => $this->have_price_after_visiting,
             'name' => $this->name,
             'description' => $this->description
 

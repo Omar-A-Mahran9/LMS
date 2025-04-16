@@ -15,23 +15,23 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id');
-            $table->unsignedBigInteger('addon_service_id') ;
-            // Foreign key constraint.
+            $table->unsignedBigInteger('addon_service_id');
             $table->date('date');
+            $table->string('time'); // if you need to store time separately
+            $table->unsignedBigInteger('city_id');
             $table->string('address');
-            $table->integer('count')->nullable();
-
-
+            $table->integer('count');
+            $table->string('payment_type')->nullable();
             $table->integer('status')->comment('App\Enums\OrderStatus')->default(OrderStatus::pending->value);
-            $table->foreign('city_id')->references('id')->on('cities');
-            $table->foreign('customer_id')->references('id')->on('customers');
-
-            $table->foreign('addon_service_id')
-            ->references('id')
-            ->on('addon_services')
-            ->onDelete('cascade');
+            $table->string('otp')->nullable();
+            $table->timestamp('validated_at')->nullable(); // <-- added this line
             $table->timestamps();
+
+            $table->foreign('customer_id')->references('id')->on('customers');
+            $table->foreign('addon_service_id')->references('id')->on('addon_services')->onDelete('cascade');
+            $table->foreign('city_id')->references('id')->on('cities');
         });
+
     }
 
     /**

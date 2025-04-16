@@ -28,38 +28,39 @@ class OrderRequest extends FormRequest
     {
         $currentStep = request()->route('step');
 
-        // Define validation rules for each step
         $stepsRules = [
-            0 => [
-                "addon_service_id" => ['required'],
-
+            1 => [
+                'addon_service_id' => ['required', 'exists:addon_services,id'],
             ],
-          
-
-            3 => [  // Step 3 (combine the fields from steps 1 and 2)
-                "email" => ['nullable', 'email'],
-                "name" => ['required', 'string', 'max:255', new NotNumbersOnly()],
-                "phone" => [
+            2 => [
+                'count' => ['required', 'integer', 'min:1'],
+            ],
+            3 => [
+                'date' => ['required', 'date'],
+                'time' => ['required', 'date_format:H:i'],
+                'city_id' => ['required', 'exists:cities,id'],
+                'address' => ['required', 'string'],
+            ],
+            4 => [
+                'name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
+                'phone' => [
                     'required',
                     'string',
                     'max:255',
                     new PhoneNumber(),
                     function ($attribute, $value, $fail) {
-                        $customer = Customer::where('email', request()->input('email'))->orWhere('phone', $value)->first();
-                        if ($customer && $customer->phone == $value && $customer->email != request()->input('email')) {
-                            $fail(__('There is an account with the same phone number'));
+                        $customer = Customer::where('phone', $value)->first();
+                        if ($customer) {
+                            $fail(__('Phone number already registered.'));
                         }
                     }
-                ],
-                'city_id'=>['required'],
-                "address" => ['required', 'string'],
-                'date' => ['required','date'],
-                'addon_service_id' => ['required', 'numeric'],
-                'description'=>['required'],
+                ]
+            ],
+            5 => [
+                'otp' => ['required', 'string', 'size:6'], // assuming OTP is 6 digits
             ]
         ];
 
-        // Return validation rules for the current step
         return $stepsRules[$currentStep] ?? [];
     }
 }

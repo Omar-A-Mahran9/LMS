@@ -23,6 +23,8 @@ return new class extends Migration
             $table->boolean('is_publish')->default(TRUE);
             $table->decimal('price')->nullable();
             $table->decimal('visiting_price')->nullable();
+            $table->boolean('have_price_after_visiting')->default(false);
+
 
             $table->softDeletes();
             $table->timestamps();

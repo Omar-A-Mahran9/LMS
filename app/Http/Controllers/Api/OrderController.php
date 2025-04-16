@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\OrderStatus;
 use App\Models\Order;
 
 use App\Models\Customer;
@@ -14,6 +15,7 @@ use App\Traits\WebNotificationsTrait;
 
 
 use App\Http\Requests\Api\OrderRequest;
+use App\Http\Requests\Api\OrderRequestt;
 use App\Mail\OrderConfirmationMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -29,70 +31,95 @@ class OrderController extends Controller
         $this->otoService        = $otoService;
     }
 
-
-    public function createOrder(OrderRequest $request)
+    public function preCreateOrder(OrderRequestt $request)
     {
-        dd('fff');
         $data = $request->validated();
-        // If no addon service ID, return an error response or success message
-        if ($request->addon_service_id == null) {
-            return response()->json( $data );
+
+        // Ensure 'name' and 'phone' exist
+        if (empty($data['name'])) {
+            return response()->json(['error' => 'Name is required'], 422);
         }
 
-        // Create customer
-        $customerData = [
-            'first_name' => strtok($data['name'], ' '),
-            'last_name' => trim(strtok(' ')),
-            'phone' => $data['phone'],
-            'email' => $data['email'],
+        if (empty($data['phone'])) {
+            return response()->json(['error' => 'Phone is required'], 422);
+        }
+
+        // Find existing customer by phone or email
+        $existingCustomer = Customer::where(function ($query) use ($data) {
+            $query->where('phone', $data['phone']);
+            if (!empty($data['email'])) {
+                $query->orWhere('email', $data['email']);
+            }
+        })->first();
+
+        // Create or reuse customer
+        $customer = $existingCustomer ?? Customer::create([
+            'full_name'  => $data['name'],
+            'phone'      => $data['phone'],
+            'email'      => $data['email'] ?? null,
             'block_flag' => 0,
-        ];
-        $existingCustomer = Customer::where('email', $data['email'])->orWhere('phone', $data['phone'])->first();
-        if ($existingCustomer) {
-
-
-        $customer = $existingCustomer;
-        } else {
-            // Proceed with creating a new customer
-            $customerData = [
-                'first_name' => strtok($data['name'], ' '),
-                'last_name' => trim(strtok(' ')),
-                'phone' => $data['phone'],
-                'email' => $data['email'],
-                'block_flag' => 0,
-            ];
-
-            $customer = Customer::create($customerData);
-        }
-        // Create order
-        $orderData = [
-            'customer_id' => $customer->id,
-            'city_id' => $data['city_id'],
-            'address' => $data['address'],
-            'date' => $data['date'] ?? "",
-            'addon_service_id' => $data['addon_service_id'],
-            'description' => $data['description'],
-        ];
-
-        $order = Order::create($orderData);
-
-        return $this->success(
-            $order,
-         );
-
-
-
-     }
-
-
-    public function checkPaymentTransaction(Request $request)
-    {
-        $request->validate([
-            'tap_id' => ['required'],
         ]);
 
-        return $this->tapPaymentService->retrieveCharge($request->tap_id);
+        // Generate OTP (4-digit)
+        $otp = rand(1000, 9999);
+
+        // Create the order
+        $order = Order::create([
+            'customer_id'      => $customer->id,
+            'city_id'          => $data['city_id'],
+            'address'          => $data['address'],
+            'date'             => $data['date'],
+            'time'             => $data['time'],
+            'count'            => $data['count'],
+            'payment_type'     => $data['payment_type'] ?? 'cash',
+            'addon_service_id' => $data['addon_service_id'],
+            'status'           => OrderStatus::pending->value,
+            'otp'              => $otp,
+            'validated_at'     => null,
+        ]);
+
+        // Optionally send OTP via SMS/email service here
+
+        return $this->success([
+            'order' => $order,
+            'otp'   => $otp, // remove or hide this in production
+        ]);
+    }
+    public function createOrder(OrderRequest $request)
+    {
+        $data = $request->validated();
+
+        // Step 5: Verify OTP against order ID
+        $order = Order::where('id', $request->order_id) // Verify using order_id
+                      ->where('otp', $request->otp) // OTP validation
+                      ->whereNull('validated_at') // Ensure it’s not already validated
+                      ->first();
+
+        if (!$order) {
+            return response()->json(['error' => 'Invalid or expired OTP'], 422);
+        }
+
+        // Mark the order as validated
+        $order->update([
+            'validated_at' => now(),
+            'status'       => OrderStatus::approved->value
+        ]);
+
+        return $this->success([
+            'message' => 'Order successfully confirmed',
+            'order'   => $order
+        ]);
     }
 
+
+    public function handleStep(OrderRequest $request, $step)
+    {
+        $validated = $request->validated();
+
+        // You can store the validated data in session, cache, or a temporary table as needed
+        session()->put("order_step_$step", $validated);
+
+        return $this->success(['step' => $step, 'data' => $validated]);
+    }
 
 }

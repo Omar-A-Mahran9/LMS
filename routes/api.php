@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,10 +33,18 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('how-make-order', 'HomeController@getMakeOrder');
     Route::get('cities', 'HomeController@getcities');
 
-    Route::post('order/{step}', 'OrderController@createOrder');
+    // Route::post('order/{step}', 'OrderController@createOrder');
+// Step 1 - 4: Progressive validation (you may store values in session/temp)
+Route::post('/step/{step}', [OrderController::class, 'handleStep']);
+
+// Step 4: Create Order with OTP after validating customer info
+Route::post('/create', [OrderController::class, 'preCreateOrder']);
+
+// Step 5: Confirm Order with OTP
+Route::post('/confirm', [OrderController::class, 'createOrder']);
 
     Route::get('general', 'GeneralInvokableController');
     Route::post('contact_us', 'ContactUsController@store');
-    
+
 
 });

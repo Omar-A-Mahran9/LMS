@@ -166,6 +166,47 @@
                             </div>
                         </div>
 
+                        <div class="row mb-5 mt-5">
+
+
+                            <!-- Visiting Price -->
+                            <div class="col-md-6 fv-row">
+                                <label class="fs-5 fw-bold mb-2">{{ __('Visiting Price') }}</label>
+                                <div class="form-floating">
+                                    <input type="number" min="1" class="form-control" id="visiting_price_inp"
+                                        name="visiting_price" placeholder="example" />
+                                    <label for="visiting_price_inp">{{ __('Enter the visiting price') }}</label>
+                                </div>
+                                <p class="invalid-feedback" id="visiting_price"></p>
+                            </div>
+                            <!-- Price -->
+                            <div class="col-md-6 fv-row">
+                                <div class="d-flex align-items-center mb-2">
+                                    <label class="fs-5 fw-bold me-3 mb-0">{{ __('Price') }}</label>
+
+                                    <div class="form-check form-switch form-check-custom form-check-solid">
+                                        <input class="form-check-input mx-2" style="height: 22px; width: 44px;"
+                                            type="checkbox" name="have_price_after_visiting"
+                                            id="have-price-after-visiting-switch" />
+                                        <label class="form-check-label fs-6 fw-semibold ms-2 mb-0"
+                                            for="have-price-after-visiting-switch">
+                                            {{ __('Has price after visiting?') }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-floating">
+                                    <input type="number" min="1" class="form-control" id="price_inp"
+                                        name="price" placeholder="example" />
+                                    <label for="price_inp">{{ __('Enter the price') }}</label>
+                                </div>
+                                <p class="invalid-feedback" id="price"></p>
+                            </div>
+
+
+                        </div>
+
+
                         <div class="row">
                             <div class="col-6 fv-row mb-0 fv-plugins-icon-container">
                                 <label for="description_ar_inp"
@@ -225,4 +266,26 @@
     <script src="{{ asset('assets/dashboard/js/datatables/addon.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
     <script src="{{ asset('assets/dashboard/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const switchInput = document.getElementById('have-price-after-visiting-switch');
+            const priceInput = document.getElementById('price_inp');
+
+            function togglePriceInput() {
+                if (switchInput.checked) {
+                    priceInput.disabled = true;
+                    priceInput.value = '';
+                } else {
+                    priceInput.disabled = false;
+                }
+            }
+
+            // Run on page load
+            togglePriceInput();
+
+            // Run on switch toggle
+            switchInput.addEventListener('change', togglePriceInput);
+        });
+    </script>
 @endpush

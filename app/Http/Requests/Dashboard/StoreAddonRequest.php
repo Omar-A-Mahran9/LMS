@@ -28,7 +28,9 @@ class StoreAddonRequest extends FormRequest
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
             'icon' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
             'is_publish' => ['nullable', 'boolean'],
-
+            "price" => ['nullable', 'numeric', 'min:0'],
+            "visiting_price" => ['nullable', 'numeric', 'min:0'],
+            "have_price_after_visiting" => ['nullable' ],
             "name_ar" => ["required", "max:255", new NotNumbersOnly(), "unique:addon_services,name_ar"],
             "name_en" => ["required", "max:255", new NotNumbersOnly(), "unique:addon_services,name_en"],
             "description_ar" => ["required", new NotNumbersOnly() ],

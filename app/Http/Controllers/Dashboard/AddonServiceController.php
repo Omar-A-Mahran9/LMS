@@ -28,20 +28,33 @@ class AddonServiceController extends Controller
     public function store(StoreAddonRequest $request)
     {
         $data = $request->validated();
-         if ($request->hasFile('image')) {
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
             $data['image'] = uploadImageToDirectory($request->file('image'), "Services");
         }
 
+        // Handle icon upload
         if ($request->hasFile('icon')) {
             $data['icon'] = uploadImageToDirectory($request->file('icon'), "Services");
         }
 
+        // is_publish toggle
         $data['is_publish'] = $request->has('is_publish') ? 1 : 0;
 
+        // have_price_after_visiting toggle
+        $data['have_price_after_visiting'] = $request->has('have_price_after_visiting') ? 1 : 0;
+
+        // If have_price_after_visiting is true, nullify price
+        if ($data['have_price_after_visiting']) {
+            $data['price'] = null;
+        }
+
+        // Create the AddonService
         $addon = AddonService::create($data);
 
-
     }
+
 
 
 
