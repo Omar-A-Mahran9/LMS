@@ -21,16 +21,7 @@ use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
-    use WebNotificationsTrait;
-    private $tapPaymentService;
-    private $otoService;
-
-    public function __construct(TapPaymentService $tapPaymentService, OTOService $otoService)
-    {
-        $this->tapPaymentService = $tapPaymentService;
-        $this->otoService        = $otoService;
-    }
-
+ 
     public function preCreateOrder(OrderRequestt $request)
     {
         $data = $request->validated();

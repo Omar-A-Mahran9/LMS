@@ -56,8 +56,9 @@ class OrderRequest extends FormRequest
                     }
                 ]
             ],
-            5 => [
-                'otp' => ['required', 'string', 'size:6'], // assuming OTP is 6 digits
+         
+            6 => [
+                'payment_type' => ['required', Rule::in(['cash', 'visa', 'wallet'])], // your valid payment types here
             ]
         ];
 

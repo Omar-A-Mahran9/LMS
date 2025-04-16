@@ -21,6 +21,8 @@ return new class extends Migration
             $table->unsignedBigInteger('city_id');
             $table->string('address');
             $table->integer('count');
+            $table->decimal('total_price')->nullable();
+
             $table->string('payment_type')->nullable();
             $table->integer('status')->comment('App\Enums\OrderStatus')->default(OrderStatus::pending->value);
             $table->string('otp')->nullable();
