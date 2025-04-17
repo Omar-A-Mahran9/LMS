@@ -122,21 +122,7 @@ License: For each use you must have a valid license purchased only from above li
                                         placeholder="{{ __('Email') }}" name="email" id="email_inp"
                                         autocomplete="off" />
 
-                                    <!-- Email Icon Inside Input -->
-                                    <span class="position-absolute top-50 start-0 translate-middle-y ms-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none">
-                                            <path
-                                                d="M17.9014 8.85156L13.4581 12.4646C12.6186 13.1306 11.4375 13.1306 10.598 12.4646L6.11719 8.85156"
-                                                stroke="#6E7079" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M16.9089 21C19.9502 21.0084 22 18.5095 22 15.4384V8.57001C22 5.49883 19.9502 3 16.9089 3H7.09114C4.04979 3 2 5.49883 2 8.57001V15.4384C2 18.5095 4.04979 21.0084 7.09114 21H16.9089Z"
-                                                stroke="#6E7079" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                        </svg>
-                                    </span>
-                                    <!--end::Icon-->
+
                                 </div>
                                 <!--end::Input wrapper-->
                                 <p class="invalid-feedback" id="email"></p>
@@ -155,23 +141,7 @@ License: For each use you must have a valid license purchased only from above li
                                         placeholder="{{ __('Password') }}" name="password" autocomplete="off"
                                         id="password_inp" />
 
-                                    <!-- Password Icon Inside Input -->
-                                    <span class="position-absolute top-50 start-0 translate-middle-y ms-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20"
-                                            viewBox="0 0 18 20" fill="none">
-                                            <path
-                                                d="M13.4218 7.44756V5.30056C13.4218 2.78756 11.3838 0.749556 8.87078 0.749556C6.35778 0.738556 4.31178 2.76656 4.30078 5.28056V5.30056V7.44756"
-                                                stroke="#5E6366" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M12.683 19.2495H5.042C2.948 19.2495 1.25 17.5525 1.25 15.4575V11.1685C1.25 9.07346 2.948 7.37646 5.042 7.37646H12.683C14.777 7.37646 16.475 9.07346 16.475 11.1685V15.4575C16.475 17.5525 14.777 19.2495 12.683 19.2495Z"
-                                                stroke="#5E6366" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path d="M8.86328 12.2026V14.4236" stroke="#130F26" stroke-width="1.5"
-                                                stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
-                                    </span>
-
+                               
                                     <!--begin::Visibility toggle-->
                                     <span
                                         class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
