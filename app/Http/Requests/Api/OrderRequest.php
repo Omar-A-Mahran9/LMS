@@ -52,7 +52,7 @@ class OrderRequest extends FormRequest
             ]
         ];
 
- 
+
         return $stepsRules[$currentStep] ?? [];
     }
 }

@@ -52,7 +52,7 @@ class OrderController extends Controller
             'address'      => $data['address'],
             'date'         => $data['date'],
             'time'         => $data['time'],
-            'payment_type' => $data['payment_type'] ?? 'cash',
+            'payment_type' => $data['payment_type'],
             'status'       => OrderStatus::pending->value,
             'otp'          => $otp,
             'validated_at' => null,
@@ -69,7 +69,6 @@ class OrderController extends Controller
              'order' =>[
                'order_id'=>$order->id,
                'phone'=>$order->customer->phone,
-
                'otp'   => $otp,             ],
 
         ]);
@@ -79,7 +78,9 @@ class OrderController extends Controller
     {
         $data = $request->validated();
 
-        // Step 5: Verify OTP against order ID
+
+
+        // Step 5: Verify OTP against order ID (existing logic for confirming the order)
         $order = Order::where('id', $request->order_id) // Verify using order_id
                       ->where('otp', $request->otp) // OTP validation
                       ->whereNull('validated_at') // Ensure it’s not already validated
@@ -93,7 +94,6 @@ class OrderController extends Controller
         $order->update([
             'validated_at' => now(),
             'otp' => null,
-
             'status'       => OrderStatus::approved->value
         ]);
 
@@ -104,14 +104,37 @@ class OrderController extends Controller
     }
 
 
+
     public function handleStep(OrderRequest $request, $step)
     {
         $validated = $request->validated();
 
-        // You can store the validated data in session, cache, or a temporary table as needed
+        // If it's step 4 — update payment type (otp must be null & validated_at is set)
+        if ($step == 4) {
+            $order = Order::where('id', $request->order_id)
+                          ->whereNull('otp')
+                          ->whereNotNull('validated_at')
+                          ->first();
+
+            if (!$order) {
+                return response()->json(['error' => 'Invalid or unauthorized order for payment update'], 422);
+            }
+
+            // Update the payment type
+            $order->update([
+                'payment_type' => $validated['payment_type'],
+            ]);
+
+            return $this->success([
+                'message' => 'Order payment type updated successfully.',
+            ]);
+        }
+
+        // Store validated data in session, cache, or a temporary table if needed
         session()->put("order_step_$step", $validated);
 
         return $this->success(['step' => $step, 'data' => $validated]);
     }
+
 
 }
