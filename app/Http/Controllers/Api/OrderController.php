@@ -21,21 +21,15 @@ use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
- 
+
     public function preCreateOrder(OrderRequestt $request)
     {
         $data = $request->validated();
 
-        // Ensure 'name' and 'phone' exist
-        if (empty($data['name'])) {
-            return response()->json(['error' => 'Name is required'], 422);
+        if (empty($data['name']) || empty($data['phone'])) {
+            return response()->json(['error' => 'Name and Phone are required'], 422);
         }
 
-        if (empty($data['phone'])) {
-            return response()->json(['error' => 'Phone is required'], 422);
-        }
-
-        // Find existing customer by phone or email
         $existingCustomer = Customer::where(function ($query) use ($data) {
             $query->where('phone', $data['phone']);
             if (!empty($data['email'])) {
@@ -43,7 +37,6 @@ class OrderController extends Controller
             }
         })->first();
 
-        // Create or reuse customer
         $customer = $existingCustomer ?? Customer::create([
             'full_name'  => $data['name'],
             'phone'      => $data['phone'],
@@ -51,31 +44,37 @@ class OrderController extends Controller
             'block_flag' => 0,
         ]);
 
-        // Generate OTP (4-digit)
         $otp = rand(1000, 9999);
 
-        // Create the order
         $order = Order::create([
-            'customer_id'      => $customer->id,
-            'city_id'          => $data['city_id'],
-            'address'          => $data['address'],
-            'date'             => $data['date'],
-            'time'             => $data['time'],
-            'count'            => $data['count'],
-            'payment_type'     => $data['payment_type'] ?? 'cash',
-            'addon_service_id' => $data['addon_service_id'],
-            'status'           => OrderStatus::pending->value,
-            'otp'              => $otp,
-            'validated_at'     => null,
+            'customer_id'  => $customer->id,
+            'city_id'      => $data['city_id'],
+            'address'      => $data['address'],
+            'date'         => $data['date'],
+            'time'         => $data['time'],
+            'payment_type' => $data['payment_type'] ?? 'cash',
+            'status'       => OrderStatus::pending->value,
+            'otp'          => $otp,
+            'validated_at' => null,
         ]);
 
-        // Optionally send OTP via SMS/email service here
+        // Attach multiple addon services with counts
+        foreach ($data['services'] as $service) {
+            $order->addonServices()->attach($service['id'], ['count' => $service['count']]);
+        }
+
+        // Optionally send OTP here
 
         return $this->success([
-            'order' => $order,
-            'otp'   => $otp, // remove or hide this in production
+             'order' =>[
+               'order_id'=>$order->id,
+               'phone'=>$order->customer->phone,
+
+               'otp'   => $otp,             ],
+
         ]);
     }
+
     public function createOrder(OrderRequest $request)
     {
         $data = $request->validated();
@@ -93,6 +92,8 @@ class OrderController extends Controller
         // Mark the order as validated
         $order->update([
             'validated_at' => now(),
+            'otp' => null,
+
             'status'       => OrderStatus::approved->value
         ]);
 

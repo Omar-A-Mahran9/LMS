@@ -45,9 +45,13 @@ class AddonService extends Model
         return asset(getImagePathFromDirectory($this->image, 'Services', "default.svg"));
     }
 
+
+
     public function orders()
     {
-        return $this->HasMany(Order::class);
+        return $this->belongsToMany(Order::class, 'order_addon_service')
+                    ->withPivot('count')
+                    ->withTimestamps();
     }
 
 

@@ -5,44 +5,35 @@ namespace App\Http\Requests\Api;
 use App\Models\Customer;
 use App\Rules\PhoneNumber;
 use App\Rules\NotNumbersOnly;
-use App\Enums\PayingOffStatus;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OrderRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         $currentStep = request()->route('step');
 
         $stepsRules = [
             1 => [
-                'addon_service_id' => ['required', 'exists:addon_services,id'],
+                'services'         => ['required', 'array', 'min:1'],
+                'services.*.id'    => ['required', 'exists:addon_services,id'],
+                'services.*.count' => ['required', 'integer', 'min:1'],
             ],
+
             2 => [
-                'count' => ['required', 'integer', 'min:1'],
-            ],
-            3 => [
-                'date' => ['required', 'date'],
-                'time' => ['required', 'date_format:H:i'],
+                'date'    => ['required', 'date'],
+                'time'    => ['required', 'date_format:H:i'],
                 'city_id' => ['required', 'exists:cities,id'],
                 'address' => ['required', 'string'],
             ],
-            4 => [
-                'name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
+            3 => [
+                'name'  => ['required', 'string', 'max:255', new NotNumbersOnly()],
                 'phone' => [
                     'required',
                     'string',
@@ -56,12 +47,12 @@ class OrderRequest extends FormRequest
                     }
                 ]
             ],
-         
-            6 => [
-                'payment_type' => ['required', Rule::in(['cash', 'visa', 'wallet'])], // your valid payment types here
+            4 => [
+                'payment_type' => ['required', Rule::in(['cash', 'visa', 'wallet'])],
             ]
         ];
 
+ 
         return $stepsRules[$currentStep] ?? [];
     }
 }

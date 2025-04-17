@@ -27,9 +27,11 @@ class Order extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function addon_service()
+    public function addonServices()
     {
-        return $this->belongsTo(AddonService::class);
+        return $this->belongsToMany(AddonService::class, 'order_addon_service')
+                    ->withPivot('count')
+                    ->withTimestamps();
     }
 
     public function city()
@@ -37,5 +39,8 @@ class Order extends Model
         return $this->belongsTo(City::class);
     }
 
-    
+
+
+
+
 }

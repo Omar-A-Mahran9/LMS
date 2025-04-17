@@ -27,23 +27,19 @@ class OrderRequestt extends FormRequest
     public function rules(): array
     {
         return [
-            'addon_service_id' => ['required', 'exists:addon_services,id'],
-            'count'            => ['required', 'integer', 'min:1'],
+            'services'         => ['required', 'array', 'min:1'],
+            'services.*.id'    => ['required', 'exists:addon_services,id'],
+            'services.*.count' => ['required', 'integer', 'min:1'],
+
             'date'             => ['required', 'date'],
             'time'             => ['required', 'date_format:H:i'],
             'city_id'          => ['required', 'exists:cities,id'],
             'address'          => ['required', 'string'],
             'name'             => ['required', 'string', 'max:255', new NotNumbersOnly()],
-            'phone'            => [
-                'required',
-                'string',
-                'max:255',
-                new PhoneNumber(),
-               
-            ],
+            'phone'            => ['required', 'string', 'max:255', new PhoneNumber()],
             'email'            => ['nullable', 'email', 'max:255'],
-            'payment_type'     => ['nullable', 'in:cash,card'], // or whatever types you have
+            'payment_type'     => ['nullable', 'in:cash,card'],
             'description'      => ['nullable', 'string']
-         ];
+        ];
     }
 }
