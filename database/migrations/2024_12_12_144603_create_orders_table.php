@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('time');
             $table->unsignedBigInteger('city_id');
             $table->string('address');
+            $table->decimal('lat', 10, 7)->nullable();
+            $table->decimal('lng', 10, 7)->nullable();
             $table->decimal('total_price')->nullable();
             $table->string('payment_type')->nullable();
             $table->integer('status')->comment('App\Enums\OrderStatus')->default(OrderStatus::pending->value);

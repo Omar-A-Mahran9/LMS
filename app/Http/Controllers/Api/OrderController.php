@@ -52,7 +52,7 @@ class OrderController extends Controller
             'address'      => $data['address'],
             'date'         => $data['date'],
             'time'         => $data['time'],
-            'payment_type' => $data['payment_type'],
+            // 'payment_type' => $data['payment_type'],
             'status'       => OrderStatus::pending->value,
             'otp'          => $otp,
             'validated_at' => null,
@@ -85,9 +85,8 @@ class OrderController extends Controller
                       ->where('otp', $request->otp) // OTP validation
                       ->whereNull('validated_at') // Ensure it’s not already validated
                       ->first();
-
-        if (!$order) {
-            return response()->json(['error' => 'Invalid or expired OTP'], 422);
+         if (!$order) {
+            return $this->failure( __('Invalid or expired OTP'));
         }
 
         // Mark the order as validated
@@ -110,14 +109,15 @@ class OrderController extends Controller
         $validated = $request->validated();
 
         // If it's step 4 — update payment type (otp must be null & validated_at is set)
-        if ($step == 4) {
+        if ($step == 5) {
             $order = Order::where('id', $request->order_id)
                           ->whereNull('otp')
                           ->whereNotNull('validated_at')
                           ->first();
 
             if (!$order) {
-                return response()->json(['error' => 'Invalid or unauthorized order for payment update'], 422);
+                 return $this->failure( __('Invalid or unauthorized order for payment update'));
+
             }
 
             // Update the payment type

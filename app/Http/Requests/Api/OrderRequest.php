@@ -33,21 +33,21 @@ class OrderRequest extends FormRequest
                 'address' => ['required', 'string'],
             ],
             3 => [
+                'lat' => ['required', 'numeric', 'between:-90,90'],
+                'lng' => ['required', 'numeric', 'between:-180,180'],
+            ],
+
+            4 => [
                 'name'  => ['required', 'string', 'max:255', new NotNumbersOnly()],
                 'phone' => [
                     'required',
                     'string',
                     'max:255',
                     new PhoneNumber(),
-                    function ($attribute, $value, $fail) {
-                        $customer = Customer::where('phone', $value)->first();
-                        if ($customer) {
-                            $fail(__('Phone number already registered.'));
-                        }
-                    }
+ 
                 ]
             ],
-            4 => [
+            5 => [
                 'payment_type' => ['required', Rule::in(['cash', 'visa', 'wallet'])],
             ]
         ];

@@ -65,6 +65,7 @@
     "Enter the visiting price": "ادخل رسوم المعاينة",
     "Has price after visiting?": "السعر بعد المعاينة",
     "Enter the price": "ادخل السعر",
+    "Invalid or expired OTP": "الرمز خاطئ برجاء ارسال الرمز الصحيح والتأكد من صلاحيته",
 
     "orders": "الطلبات",
     "Search for vendors ( Name - Email )": "ابحث عن التجار ( الاسم - البريد الالكتروني )",
