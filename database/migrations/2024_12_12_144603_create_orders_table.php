@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('otp')->nullable();
             $table->timestamp('validated_at')->nullable();
             $table->timestamps();
-            $table->boolean('is_paid')->nullable();
+            $table->boolean('is_paid')->default(false);
 
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->foreign('city_id')->references('id')->on('cities');
