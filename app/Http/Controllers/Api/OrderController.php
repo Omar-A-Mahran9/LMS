@@ -27,7 +27,7 @@ class OrderController extends Controller
         $data = $request->validated();
 
         if (empty($data['name']) || empty($data['phone'])) {
-            return response()->json(['error' => 'Name and Phone are required'], 422);
+             return $this->failure( __('Name and Phone are required'));
         }
 
         $existingCustomer = Customer::where(function ($query) use ($data) {
@@ -52,6 +52,9 @@ class OrderController extends Controller
             'address'      => $data['address'],
             'date'         => $data['date'],
             'time'         => $data['time'],
+            'lat'         => $data['lat'],
+            'lng'         => $data['lng'],
+            'total_price'         => $data['total_price'],
             // 'payment_type' => $data['payment_type'],
             'status'       => OrderStatus::pending->value,
             'otp'          => $otp,
@@ -74,34 +77,35 @@ class OrderController extends Controller
         ]);
     }
 
-    public function createOrder(OrderRequest $request)
+
+    public function confirmOrderOtp(OrderRequest $request)
     {
         $data = $request->validated();
 
-
-
-        // Step 5: Verify OTP against order ID (existing logic for confirming the order)
-        $order = Order::where('id', $request->order_id) // Verify using order_id
-                      ->where('otp', $request->otp) // OTP validation
-                      ->whereNull('validated_at') // Ensure it’s not already validated
+        $order = Order::where('id', $request->order_id)
+                      ->where('otp', $request->otp)
+                      ->whereNull('validated_at')
                       ->first();
-         if (!$order) {
-            return $this->failure( __('Invalid or expired OTP'));
+
+        if (!$order) {
+            return $this->failure(__('Invalid or expired OTP'));
         }
 
         // Mark the order as validated
         $order->update([
             'validated_at' => now(),
             'otp' => null,
-            'status'       => OrderStatus::approved->value
+            'status' => OrderStatus::approved->value
         ]);
 
-        return $this->success([
-            'message' => 'Order successfully confirmed',
-            'order'   => $order
-        ]);
+        return $this->success(
+             'otp validate successfully',
+              [
+                'order_id' => $order->id,
+                'phone'    => $order->customer->phone,
+            ],
+        );
     }
-
 
 
     public function handleStep(OrderRequest $request, $step)
@@ -123,10 +127,12 @@ class OrderController extends Controller
             // Update the payment type
             $order->update([
                 'payment_type' => $validated['payment_type'],
+                'is_paid' => true,
+
             ]);
 
             return $this->success([
-                'message' => 'Order payment type updated successfully.',
+                'message' => 'Order payment successfully.',
             ]);
         }
 

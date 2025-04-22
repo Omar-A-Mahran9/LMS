@@ -44,11 +44,12 @@ class OrderRequest extends FormRequest
                     'string',
                     'max:255',
                     new PhoneNumber(),
- 
+
                 ]
             ],
             5 => [
                 'payment_type' => ['required', Rule::in(['cash', 'visa', 'wallet'])],
+ 
             ]
         ];
 
