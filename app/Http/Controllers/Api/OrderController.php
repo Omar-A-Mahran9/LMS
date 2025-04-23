@@ -17,15 +17,15 @@ use App\Traits\WebNotificationsTrait;
 use App\Http\Requests\Api\OrderRequest;
 use App\Http\Requests\Api\OrderRequestt;
 use App\Mail\OrderConfirmationMail;
+use App\Services\TaqnyatSmsService;
 use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
 
-    public function preCreateOrder(OrderRequestt $request)
+    public function preCreateOrder(OrderRequestt $request, TaqnyatSmsService $taqnyat)
     {
         $data = $request->validated();
-
         if (empty($data['name']) || empty($data['phone'])) {
              return $this->failure( __('Name and Phone are required'));
         }
@@ -67,6 +67,13 @@ class OrderController extends Controller
         }
 
         // Optionally send OTP here
+        $message = "رمز التحقق الخاص بك هو: $otp";
+        try {
+            $message = "رمز التحقق الخاص بك هو: $otp";
+            $taqnyat->sendMessage($customer->phone, $message);
+        } catch (\Exception $e) {
+            \Log::error("Taqnyat SMS failed for phone {$customer->phone}: " . $e->getMessage());
+        }
 
         return $this->success([
              'order' =>[

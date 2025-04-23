@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9fea3eed62ed0d58180fa6e09ee2fac5",
+    "content-hash": "a11f3ab971d1ba75436c87d7a97c2342",
     "packages": [
         {
             "name": "anlutro/l4-settings",
@@ -5506,6 +5506,54 @@
             "time": "2025-01-17T11:26:11+00:00"
         },
         {
+            "name": "taqnyat/php",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/taqnyat/php.git",
+                "reference": "090348cbe732a025f2542d0f0d2e9810bab55804"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/taqnyat/php/zipball/090348cbe732a025f2542d0f0d2e9810bab55804",
+                "reference": "090348cbe732a025f2542d0f0d2e9810bab55804",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "TaqnyatSms.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taqnyat",
+                    "email": "dev@taqnyat.sa"
+                }
+            ],
+            "description": "A PHP wrapper for Taqnyat's API",
+            "homepage": "https://taqnyat.sa/",
+            "keywords": [
+                "api",
+                "php",
+                "sms",
+                "taqnyat",
+                "taqnyat.sa"
+            ],
+            "support": {
+                "issues": "https://github.com/taqnyat/php/issues",
+                "source": "https://github.com/taqnyat/php/tree/1.0.2"
+            },
+            "time": "2021-10-24T13:46:54+00:00"
+        },
+        {
             "name": "tijsverkoyen/css-to-inline-styles",
             "version": "v2.3.0",
             "source": {
@@ -8299,5 +8347,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
