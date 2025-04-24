@@ -40,7 +40,7 @@ class DashboardController extends Controller
             ->map(function ($item) {
                 $service = \App\Models\AddonService::find($item->addon_service_id);
                 return [
-                    'name_en' => $service?->name_en ?? 'N/A',
+                    'name' => $service?->name ?? 'N/A',
                     'total_usage' => $item->total_usage,
                 ];
             });

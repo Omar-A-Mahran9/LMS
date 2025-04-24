@@ -45,48 +45,67 @@
                             <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
                                 <i class="ki-outline ki-book fs-2hx text-gray-600 mb-2"></i>
                                 <span class="fs-2x fw-bold text-gray-800">{{ $count }}</span>
-                                <span class="text-muted text-uppercase">{{ ucfirst($status) }} Orders</span>
+                                <span class="text-muted text-uppercase">
+                                    <!-- Apply a different color based on the status -->
+                                    @if ($status == 'pending')
+                                        <span class="badge bg-warning">{{ __(ucfirst($status) . ' Orders') }}</span>
+                                    @elseif($status == 'completed')
+                                        <span class="badge bg-success">{{ __(ucfirst($status) . ' Orders') }}</span>
+                                    @elseif($status == 'canceled')
+                                        <span class="badge bg-danger">{{ __(ucfirst($status) . ' Orders') }}</span>
+                                    @else
+                                        <span class="badge bg-secondary">{{ __(ucfirst($status) . ' Orders') }}</span>
+                                    @endif
+                                </span>
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
-
-            <!-- Top Add-on Services -->
-            <div class="card mt-10">
-                <div class="card-header">
-                    <h3 class="card-title">{{ __('Top Add-on Services') }}</h3>
+            <!-- Top Add-on Services and Monthly Earnings in one row -->
+            <div class="row gy-5 g-xl-10 mt-5 ">
+                <!-- Top Add-on Services -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">{{ __('Top Add-on Services') }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                @forelse($topServices as $service)
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ $service['name'] }}
+                                        <span
+                                            class="badge bg-primary rounded-pill text-white">{{ $service['total_usage'] }}</span>
+                                    </li>
+                                @empty
+                                    <li class="list-group-item text-muted">{{ __('No data available') }}</li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <ul class="list-group">
-                        @forelse($topServices as $service)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ $service['name_en'] }}
-                                <span class="badge bg-primary rounded-pill">{{ $service['total_usage'] }}</span>
-                            </li>
-                        @empty
-                            <li class="list-group-item text-muted">{{ __('No data available') }}</li>
-                        @endforelse
-                    </ul>
+
+                <!-- Monthly Earnings -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">{{ __('Monthly Earnings (Last 6 Months)') }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                @foreach ($monthlyEarnings as $item)
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>{{ $item->month }}</span>
+                                        <strong>{{ number_format($item->total, 2) }} SAR</strong>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Monthly Earnings -->
-            <div class="card mt-10">
-                <div class="card-header">
-                    <h3 class="card-title">{{ __('Monthly Earnings (Last 6 Months)') }}</h3>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group">
-                        @foreach ($monthlyEarnings as $item)
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>{{ $item->month }}</span>
-                                <strong>{{ number_format($item->total, 2) }} SAR</strong>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
 
         </div>
     </div>
