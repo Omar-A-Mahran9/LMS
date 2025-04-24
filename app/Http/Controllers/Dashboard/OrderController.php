@@ -17,24 +17,52 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
-         $this->authorize('view_orders');
+        $this->authorize('view_orders');
 
         if ($request->ajax()) {
-             return response(getModelData(model: new Order(), relations: ['customer' => ['id', 'first_name','last_name','phone'],'addon_service' => ['id', 'name_ar','name_en','description_en','description_ar']]));
-         }
+            return response(getModelData(
+                model: new Order(),
+                relations: [
+                    'customer' => ['id', 'full_name', 'phone'],
+                 ]
+            ));
+        }
 
         return view("dashboard.orders.index");
     }
 
     public function show(Order $order)
     {
+        // Authorize the action
         $this->authorize('show_orders');
+
+        // Load the necessary relationships for the order
         $order->load([
-            'customer',
-            
+            'customer',            // Load customer data
+            'addonServices',       // Load related addon services (with count)
+            'city'                 // Load the city for the order
         ]);
-        return view("dashboard.orders.show", compact("order"));
+
+        // Calculate total price (assuming each addon service has a price attribute)
+        $totalPrice = $order->addonServices->sum(function ($addonService) {
+            return $addonService->price * $addonService->pivot->count;
+        });
+
+        // Organize data for the view
+        $addonServices = $order->addonServices->map(function ($addonService) {
+            return [
+                'service_name' => $addonService->name,
+                'count' => $addonService->pivot->count,
+                'price' => $addonService->price, // Assuming addon_service has a price field
+                'total' => $addonService->price * $addonService->pivot->count, // Calculate total for this service
+            ];
+        });
+
+        // Return the view with the order data and addon services
+        return view('dashboard.orders.show', compact('order', 'addonServices', 'totalPrice'));
     }
 
- 
+
+
+
 }

@@ -41,15 +41,23 @@ class SliderController extends Controller
     public function store(StoreSliderRequest $request)
     {
         $this->authorize('create_sliders');
-        $data           = $request->validated();
-        $data['status'] = $request->has('status') ? $request->status : 0;
 
-        $data['background'] = uploadImageToDirectory($request->file('background'), "Sliders");
+        $data = $request->validated();
+        $data['status'] = $request->has('status') ? $request->status : 0;
+        $data['is_video'] = $request->has('is_video') ? $request->boolean('is_video') : false;
+         // Handle background image only if it's not a video
+        if (!$data['is_video']) {
+            $data['background'] = uploadImageToDirectory($request->file('background'), "Sliders");
+            $data['video_url'] = null; // Clear any video URL if not a video
+        } else {
+            $data['background'] = ''; // Optional: or store a placeholder
+        }
 
         Slider::create($data);
 
         return response(["slider created successfully"]);
     }
+
 
     public function edit(Slider $slider)
     {
@@ -62,15 +70,30 @@ class SliderController extends Controller
     public function update(UpdateSliderRequest $request, Slider $slider)
     {
         $this->authorize('update_sliders');
-        $data           = $request->validated();
+
+        $data = $request->validated();
         $data['status'] = $request->has('status') ? $request->status : 0;
-        if ($request->hasFile('background'))
-        {
-            deleteImageFromDirectory($request->background, 'Sliders');
-            $data['background'] = uploadImageToDirectory($request->file('background'), "Sliders");
+        $data['is_video'] = $request->has('is_video') ? $request->boolean('is_video') : false;
+
+        if ($data['is_video']) {
+            // If it's a video, optionally remove the background image
+            $data['background'] = $slider->background; // Keep existing background or set to null
+            $data['video_url'] = $request->input('video_url'); // Already validated
+        } else {
+            // It's an image slider, handle background update if a new image was uploaded
+            if ($request->hasFile('background')) {
+                deleteImageFromDirectory($slider->background, 'Sliders');
+                $data['background'] = uploadImageToDirectory($request->file('background'), "Sliders");
+            } else {
+                $data['background'] = $slider->background; // Retain existing if no new image
+            }
+
+            $data['video_url'] = null; // Clear video URL
         }
+
         $slider->update($data);
-        return response(["Slider update successfully"]);
+
+        return response(["Slider updated successfully"]);
     }
 
     public function destroy(Slider $slider)

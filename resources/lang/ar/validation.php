@@ -265,6 +265,8 @@ return [
     'about_us_banner'           => 'صورة قسم نبذة عنا',
     'contact_banner'            => 'صورة قسم التواصل',
     'service_banner'            => 'صورة قسم الخدمات',
+    'video_url'           => 'رابط الفيديو',
+    'is_video'           => 'الفيديو',
 
     'description_contact_en'   => 'وصف قسم التواصل (بالإنجليزية)',
     'description_contact_ar'   => 'وصف قسم التواصل (بالعربية)',

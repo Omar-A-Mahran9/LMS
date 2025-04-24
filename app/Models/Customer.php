@@ -13,7 +13,7 @@ class Customer extends Authenticatable
 {
     use HasFactory, HasApiTokens, SMSTrait;
 
-    protected $appends = ['name', 'full_image_path'];
+    protected $appends = [ 'full_image_path'];
     protected $guarded = ["password_confirmation"];
     protected $casts   = ['created_at' => 'date:Y-m-d', 'updated_at' => 'date:Y-m-d', 'otp' => 'string'];
 
@@ -40,10 +40,7 @@ class Customer extends Authenticatable
         $this->attributes['password'] = Hash::make($value);
     }
 
-    public function addresses()
-    {
-        return $this->HasMany(Address::class);
-    }
+
 
     public function orders()
     {
@@ -54,12 +51,9 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(Rate::class);
     }
- 
 
-    public function getNameAttribute()
-    {
-        return $this->attributes['first_name'] . ' ' . $this->attributes['last_name'];
-    }
+
+
 
     public function sendOTP(){
         $this->otp = rand(111111, 999999);

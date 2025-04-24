@@ -33,6 +33,8 @@ class UpdateSliderRequest extends FormRequest
             'btn_title_ar' => ["required", "string:255", new NotNumbersOnly()],
             'btn_title_en' => ["required", "string:255", new NotNumbersOnly()],
             'btn_link' => ["required", "url", "string:255", new NotNumbersOnly()],
+            'is_video' => ['required', 'boolean'],
+            'video_url' => ['nullable', 'url'],
             'status' => ["nullable", "in:0,1"],
         ];
     }

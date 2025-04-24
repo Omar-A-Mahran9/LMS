@@ -19,8 +19,10 @@ return new class extends Migration {
             $table->string('btn_link');
             $table->longText('description_en');
             $table->longText('description_ar');
-            $table->string('background');
+            $table->string('background')->nullable();
             $table->boolean('status')->default(TRUE);
+            $table->boolean('is_video')->default(false); // New field
+            $table->string('video_url')->nullable();     // New field
             $table->timestamps();
         });
     }

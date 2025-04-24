@@ -27,9 +27,8 @@ var KTDatatablesServerSide = (function () {
             },
             columns: [
                 { data: "id" },
-                { data: "customer.name", name: "customer_id" },
+                { data: "customer.full_name", name: "customer_id" },
                 { data: "customer.phone", name: "customer_id" },
-                { data: "addon_service.name", name: "addon_service_id" },
                  { data: "created_at" },
                 { data: null },
             ],

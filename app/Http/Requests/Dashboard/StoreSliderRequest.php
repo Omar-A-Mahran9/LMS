@@ -25,14 +25,17 @@ class StoreSliderRequest extends FormRequest
     public function rules()
     {
         return [
-            'background' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
-            "title_ar" => ["required", "string:255", new NotNumbersOnly()],
+             "title_ar" => ["required", "string:255", new NotNumbersOnly()],
             "title_en" => ["required", "string:255", new NotNumbersOnly()],
             "description_ar" => ["required", "string:255", new NotNumbersOnly()],
             "description_en" => ["required", "string:255", new NotNumbersOnly()],
             'btn_title_ar' => ["required", "string:255", new NotNumbersOnly()],
             'btn_title_en' => ["required", "string:255", new NotNumbersOnly()],
             'btn_link' => ["required", "url", "string:255", new NotNumbersOnly()],
+            'is_video' => ['nullable', 'boolean'],
+            'video_url' => ['required_if:is_video,true' ],
+            'background' => ['nullable', 'required_unless:is_video,1', 'image', 'mimes:jpg,png,jpeg,gif,svg'],
+
             'status' => ["nullable", "in:0,1"],
         ];
     }
