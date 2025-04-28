@@ -31,7 +31,7 @@ var KTDatatablesServerSide = (function () {
                 { data: "customer.phone", name: "customer_id" },
                 { data: "status", name: "status" },
 
-                 { data: "created_at" },
+                { data: "created_at" },
                 { data: null },
             ],
             columnDefs: [
@@ -40,6 +40,24 @@ var KTDatatablesServerSide = (function () {
                     orderable: false,
                     render: function (data, type, row, meta) {
                         return meta.row + 1;
+                    },
+                },
+                {
+                    targets: 3, // status column
+                    render: function (data, type, row, meta) {
+                        let statusLabels = {
+                            1: { text: "Pending", color: "warning" },
+                            2: { text: "Approved", color: "success" },
+                            3: { text: "Rejected", color: "danger" },
+                        };
+
+                        let status = statusLabels[row.status];
+
+                        if (status) {
+                            return `<span class="badge bg-${status.color}">${status.text}</span>`;
+                        } else {
+                            return `<span class="badge bg-secondary">Unknown</span>`;
+                        }
                     },
                 },
                 {
