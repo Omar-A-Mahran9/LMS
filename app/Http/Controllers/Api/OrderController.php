@@ -75,26 +75,31 @@ class OrderController extends Controller
         foreach ($data['services'] as $service) {
             $order->addonServices()->attach($service['id'], ['count' => $service['count']]);
         }
+// Optionally send OTP here
+$message = "رمز التحقق الخاص بك هو: $otp";
+try {
+    $phone = ltrim($customer->phone, '0');
+    $phone = '966' . $phone;
 
-        // Optionally send OTP here
-        $message = "رمز التحقق الخاص بك هو: $otp";
-        try {
-            $phone = ltrim($customer->phone, '0');
-            $phone = '966' . $phone;
+    $taqnyat->sendMessage($phone, $message);
+} catch (\Exception $e) {
+    \Log::error("Taqnyat SMS failed for phone {$customer->phone}: " . $e->getMessage());
 
-            $taqnyat->sendMessage($phone, $message);
-        } catch (\Exception $e) {
-            \Log::error("Taqnyat SMS failed for phone {$customer->phone}: " . $e->getMessage());
-        }
+    // Return the error message as part of the response
+    return $this->failure([
+        'error' => 'SMS sending failed',
+        'message' => $e->getMessage(),
+    ]);
+}
 
+return $this->success([
+    'order' => [
+        'order_id' => $order->id,
+        'phone' => $order->customer->phone,
+        'otp' => $otp,
+    ],
+]);
 
-        return $this->success([
-             'order' =>[
-               'order_id'=>$order->id,
-               'phone'=>$order->customer->phone,
-               'otp'   => $otp,             ],
-
-        ]);
     }
 
 
