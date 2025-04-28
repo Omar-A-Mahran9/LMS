@@ -92,17 +92,19 @@
                                         <tr>
                                             <td class="text-muted">
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fa-regular fa-calendar fs-4 me-2"></i>{{ __('Visiting Date') }}
+                                                    <i
+                                                        class="fa-regular fa-calendar fs-4 me-2"></i>{{ __('Visiting Date') }}
                                                 </div>
                                             </td>
-                                            <td class="fw-bold text-end">{{ $order->date  }}</td>
+                                            <td class="fw-bold text-end">{{ $order->date }}</td>
                                         </tr>
 
 
                                         <tr>
                                             <td class="text-muted">
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fa-regular fa-calendar fs-4 me-2"></i>{{ __('Visiting Time') }}
+                                                    <i
+                                                        class="fa-regular fa-calendar fs-4 me-2"></i>{{ __('Visiting Time') }}
                                                 </div>
                                             </td>
                                             <td class="fw-bold text-end">{{ $order->time }}</td>
@@ -123,13 +125,23 @@
                     </div>
                     <div class="card-body pt-0">
                         <!-- Google Maps Embed -->
-                        <div class="ratio ratio-16x9">
+                        <div class="ratio ratio-16x9 mb-3">
                             <iframe
                                 src="https://www.google.com/maps?q={{ $order->lat }},{{ $order->lng }}&output=embed"
-                                width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                                width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy">
+                            </iframe>
+                        </div>
+
+                        <!-- Open in Google Maps link -->
+                        <div class="text-center">
+                            <a href="https://www.google.com/maps/search/?api=1&query={{ $order->lat }},{{ $order->lng }}"
+                                target="_blank" class="btn btn-primary">
+                                {{ __('Open in Google Maps') }}
+                            </a>
                         </div>
                     </div>
                 </div>
+
 
             </div>
         </div>
