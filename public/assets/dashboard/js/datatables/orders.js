@@ -54,7 +54,9 @@ var KTDatatablesServerSide = (function () {
                         let status = statusLabels[row.status];
 
                         if (status) {
-                            return `<span class="badge bg-${status.color}">${status.text}</span>`;
+                            return `<span class="badge bg-${status.color}">${__(
+                                status.text
+                            )}</span>`;
                         } else {
                             return `<span class="badge bg-secondary">Unknown</span>`;
                         }
