@@ -47,7 +47,7 @@ class OrderController extends Controller
         $totalPrice = 0;
         foreach ($data['services'] as $service) {
             $serviceModel = AddonService::findOrFail($service['id']); // Load service from DB
-            $totalPrice += $serviceModel->price * $service['count'];  // Multiply price * count
+            $totalPrice += $serviceModel->price ?? $serviceModel->visiting_price * $service['count'];  // Multiply price * count
         }
 
         $otp = rand(1000, 9999);
@@ -115,6 +115,7 @@ class OrderController extends Controller
              'otp validate successfully',
               [
                 'order_id' => $order->id,
+                'total_price' => $order->total_price,
                 'phone'    => $order->customer->phone,
             ],
         );
