@@ -47,8 +47,12 @@ class OrderController extends Controller
         $totalPrice = 0;
         foreach ($data['services'] as $service) {
             $serviceModel = AddonService::findOrFail($service['id']); // Load service from DB
-            $totalPrice += $serviceModel->price ?? $serviceModel->visiting_price * $service['count'];  // Multiply price * count
-        }
+            if (!is_null($serviceModel->price)) {
+                $totalPrice += $serviceModel->price * $service['count'];
+            } else {
+                $totalPrice += $serviceModel->visiting_price * $service['count'];
+            }
+                    }
 
         $otp = rand(1000, 9999);
 
@@ -75,11 +79,14 @@ class OrderController extends Controller
         // Optionally send OTP here
         $message = "رمز التحقق الخاص بك هو: $otp";
         try {
-            $message = "رمز التحقق الخاص بك هو: $otp";
-            $taqnyat->sendMessage($customer->phone, $message);
+            $phone = ltrim($customer->phone, '0');
+            $phone = '966' . $phone;
+
+            $taqnyat->sendMessage($phone, $message);
         } catch (\Exception $e) {
             \Log::error("Taqnyat SMS failed for phone {$customer->phone}: " . $e->getMessage());
         }
+
 
         return $this->success([
              'order' =>[

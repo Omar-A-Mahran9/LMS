@@ -17,7 +17,7 @@ class TaqnyatSmsService
 
     public function sendMessage($phone, $message)
     {
-        $response = Http::withToken($this->bearer)
+         $response = Http::withToken($this->bearer)
             ->post('https://api.taqnyat.sa/v1/messages', [
                 'recipients' => [$phone],
                 'body'       => $message,
@@ -31,3 +31,4 @@ class TaqnyatSmsService
         return $response->json();
     }
 }
+
