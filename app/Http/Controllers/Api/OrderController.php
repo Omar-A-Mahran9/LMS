@@ -75,7 +75,7 @@ class OrderController extends Controller
         foreach ($data['services'] as $service) {
             $order->addonServices()->attach($service['id'], ['count' => $service['count']]);
         }
-// Optionally send OTP here
+// إرسال OTP
 $message = "رمز التحقق الخاص بك هو: $otp";
 try {
     $phone = ltrim($customer->phone, '0');
@@ -85,9 +85,17 @@ try {
 } catch (\Exception $e) {
     \Log::error("Taqnyat SMS failed for phone {$customer->phone}: " . $e->getMessage());
 
-    // Return the error message as part of the response
+    // التحقق من أن الخطأ يتعلق بالـ IP غير المصرح له
+    if (strpos($e->getMessage(), 'Not authorized to using the API') !== false) {
+        return $this->failure([
+            'error' => 'فشل في إرسال الرسالة',
+            'message' => 'عنوان الـ IP الخاص بخادمك غير مسموح به من قبل Taqnyat. يرجى التواصل مع دعم Taqnyat لإضافة الـ IP إلى القائمة البيضاء.',
+        ]);
+    }
+
+    // في حال كان الخطأ غير ذلك
     return $this->failure([
-        'error' => 'SMS sending failed',
+        'error' => 'فشل في إرسال الرسالة',
         'message' => $e->getMessage(),
     ]);
 }
@@ -99,6 +107,7 @@ return $this->success([
         'otp' => $otp,
     ],
 ]);
+
 
     }
 
