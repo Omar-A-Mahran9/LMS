@@ -30,7 +30,7 @@ class OrderRequestt extends FormRequest
             'services'         => ['required', 'array', 'min:1'],
             'services.*.id'    => ['required', 'exists:addon_services,id'],
             'services.*.count' => ['required', 'integer', 'min:1'],
- 
+
             'date'             => ['required', 'date'],
             'time'             => ['required', 'date_format:H:i'],
             'city_id'          => ['required', 'exists:cities,id'],
@@ -40,7 +40,7 @@ class OrderRequestt extends FormRequest
             'email'            => ['nullable', 'email', 'max:255'],
             'payment_type'     => ['nullable', 'in:cash,card'],
             'description'      => ['nullable', 'string'],
-            'total_price' => ['required', 'numeric', 'decimal:2'],
+            'total_price' => ['nullable', 'numeric', 'decimal:2'],
             'lat' => ['required', 'numeric', 'between:-90,90'],
             'lng' => ['required', 'numeric', 'between:-180,180'],
 

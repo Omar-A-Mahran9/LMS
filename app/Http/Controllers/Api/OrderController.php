@@ -17,6 +17,7 @@ use App\Traits\WebNotificationsTrait;
 use App\Http\Requests\Api\OrderRequest;
 use App\Http\Requests\Api\OrderRequestt;
 use App\Mail\OrderConfirmationMail;
+use App\Models\AddonService;
 use App\Services\TaqnyatSmsService;
 use Illuminate\Support\Facades\Mail;
 
@@ -43,6 +44,11 @@ class OrderController extends Controller
             'email'      => $data['email'] ?? null,
             'block_flag' => 0,
         ]);
+        $totalPrice = 0;
+        foreach ($data['services'] as $service) {
+            $serviceModel = AddonService::findOrFail($service['id']); // Load service from DB
+            $totalPrice += $serviceModel->price * $service['count'];  // Multiply price * count
+        }
 
         $otp = rand(1000, 9999);
 
@@ -54,7 +60,7 @@ class OrderController extends Controller
             'time'         => $data['time'],
             'lat'         => $data['lat'],
             'lng'         => $data['lng'],
-            'total_price'         => $data['total_price'],
+            'total_price'  => $totalPrice,
             // 'payment_type' => $data['payment_type'],
             'status'       => OrderStatus::pending->value,
             'otp'          => $otp,
