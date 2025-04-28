@@ -8,7 +8,10 @@ let translations = {
     ar: {
         "Add new why us": "اضافة لماذا نحن",
         "Add": "إضافة",
-
+        "Choose the type": "اختر النوع",
+        "Approved": "مقبول",
+        "Rejected": "مرفوض",
+        "Pending": "قيد الانتظار",
         "Edit gallery": "تعديل الصورة",
         "Add new partner": "اضافة شريك جديد",
         "Add new blog": "أضف مدونة جديدة",
@@ -112,7 +115,7 @@ let translations = {
         " selected": "محددة",
         male: "ذكر",
         female: "انثى",
-      
+
         "Medical center": "المركز الطبي",
         Doctor: "الطبيب",
         Client: "العميل",
