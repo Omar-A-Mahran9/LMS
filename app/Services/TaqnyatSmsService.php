@@ -2,26 +2,32 @@
 
 namespace App\Services;
 
-use Taqnyat\TaqnyatSms;
-use TaqnyatSms as GlobalTaqnyatSms;
+use Illuminate\Support\Facades\Http;
 
 class TaqnyatSmsService
 {
-    protected $client;
+    protected $bearer;
+    protected $sender;
 
     public function __construct()
     {
-        $bearer = config('services.taqnyat.bearer');
-        $this->client = new GlobalTaqnyatSms($bearer);
+        $this->bearer = config('services.taqnyat.bearer');
+        $this->sender = config('services.taqnyat.sender');
     }
 
-    public function getStatus()
+    public function sendMessage($phone, $message)
     {
-        return $this->client->sendStatus();
-    }
+        $response = Http::withToken($this->bearer)
+            ->post('https://api.taqnyat.sa/v1/messages', [
+                'recipients' => [$phone],
+                'body'       => $message,
+                'sender'     => $this->sender,
+            ]);
 
-    public function sendMessage($to, $message, $sender = null)
-    {
-        return $this->client->sendMsg($to, $message, $sender ?? config('services.taqnyat.sender'));
+        if (!$response->successful()) {
+            throw new \Exception('Taqnyat SMS failed: ' . $response->body());
+        }
+
+        return $response->json();
     }
 }
