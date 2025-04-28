@@ -39,7 +39,7 @@
                     <!--end::Svg Icon-->
                     <input type="text" data-kt-docs-table-filter="search"
                         class="form-control form-control-solid w-250px ps-20" placeholder="{{ __('Search for orders') }}">
-                  
+
                 </div>
                 <!--end::Search-->
 
@@ -61,7 +61,10 @@
                     <tr class=" text-gray-400 fw-bold fs-7 text-uppercase gs-0">
                         <th style="text-align: center">{{ __('Order ID') }}</th>
                         <th style="text-align: center">{{ __('Customer') }}</th>
+
                         <th style="text-align: center">{{ __('Phone') }}</th>
+                        <th style="text-align: center">{{ __('Status') }}</th>
+
                         <th style="text-align: center">{{ __('Created at') }}</th>
                         <th style="text-align: center" class=" min-w-100px">{{ __('Actions') }}</th>
                     </tr>
