@@ -82,6 +82,7 @@ try {
     $phone = '966' . $phone;
 
     $taqnyat->sendMessage($phone, $message);
+
 } catch (\Exception $e) {
     \Log::error("Taqnyat SMS failed for phone {$customer->phone}: " . $e->getMessage());
 
@@ -92,7 +93,6 @@ try {
             'message' => 'عنوان الـ IP الخاص بخادمك غير مسموح به من قبل Taqnyat. يرجى التواصل مع دعم Taqnyat لإضافة الـ IP إلى القائمة البيضاء.',
         ]);
     }
-dd($e->getMessage());
     // في حال كان الخطأ غير ذلك
     return $this->failure([
         'error' => 'فشل في إرسال الرسالة',
@@ -104,7 +104,7 @@ return $this->success([
     'order' => [
         'order_id' => $order->id,
         'phone' => $order->customer->phone,
-        'otp' => $otp,
+        // 'otp' => $otp,
     ],
 ]);
 
