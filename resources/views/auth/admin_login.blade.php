@@ -188,7 +188,7 @@ License: For each use you must have a valid license purchased only from above li
                                         src="https://webstdy.com/CDN/cr_dark.png">
                                 </a>
                             </div> --}}
-                            <div class="text-dark order-2 order-md-1" dir="{{ $dir }}">
+                            <div class="text-dark order-2 order-md-1" dir="ar">
                                 <span class="text-muted fw-semibold me-1">2025&copy;</span>
                                 <a href="https://webstdy.com/{{ app()->getLocale() }}" target="_blank"
                                     class="text-muted text-hover-primary px-2" id="developed_by">
