@@ -141,7 +141,7 @@ License: For each use you must have a valid license purchased only from above li
                                         placeholder="{{ __('Password') }}" name="password" autocomplete="off"
                                         id="password_inp" />
 
-                               
+
                                     <!--begin::Visibility toggle-->
                                     <span
                                         class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
@@ -181,11 +181,18 @@ License: For each use you must have a valid license purchased only from above li
                         <!--begin::Footer-->
                         <div class="d-flex flex-center flex-column-auto">
                             <!--begin::Links-->
-                            <div class="d-flex align-items-center fw-bold fs-6">
+                            {{-- <div class="d-flex align-items-center fw-bold fs-6">
                                 <a href="https://webstdy.com/{{ app()->getLocale() }}" target="_blank"
                                     class="text-muted text-hover-primary px-2" id="developed_by">
                                     {{ __('Developed by') }} <img class="mx-4"
                                         src="https://webstdy.com/CDN/cr_dark.png">
+                                </a>
+                            </div> --}}
+                            <div class="text-dark order-2 order-md-1">
+                                <span class="text-muted fw-semibold me-1">2025&copy;</span>
+                                <a href="https://webstdy.com/{{ app()->getLocale() }}" target="_blank"
+                                    class="text-muted text-hover-primary px-2" id="developed_by">
+                                    {{ __('Developed by') }} <img class="mx-4" src="https://webstdy.com/CDN/cr_dark.png">
                                 </a>
                             </div>
                             <!--end::Links-->
