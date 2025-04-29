@@ -192,7 +192,7 @@ License: For each use you must have a valid license purchased only from above li
                                 <!--begin::Links-->
                                 <div class="d-flex align-items-center fw-bold fs-6">
                                     <a href="https://webstdy.com/{{ app()->getLocale() }}" target="_blank" class="text-muted text-hover-primary px-2">
-                                        {{ __('Developed by') }}  <img class="mx-4" src="https://webstdy.com/CDN/cr.png"  >
+                                         <img class="mx-4" src="https://webstdy.com/CDN/cr.png"  >{{ __('Developed by') }} 
                                     </a>
                                 </div>
                                 <!--end::Links-->
