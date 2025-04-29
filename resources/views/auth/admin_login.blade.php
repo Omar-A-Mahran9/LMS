@@ -193,9 +193,9 @@ License: For each use you must have a valid license purchased only from above li
                                 <div class="d-flex align-items-center fw-bold fs-6" dir={{ app()->getLocale() }}>
                                     <a href="https://webstdy.com/{{ app()->getLocale() }}" target="_blank"
                                         class="text-muted text-hover-primary px-2">
-                                        <span>{{ __('Developed by') }}</span>
-                                        <img class="mx-4" src="https://webstdy.com/CDN/cr_dark.png">
 
+                                        <img class="mx-4" src="https://webstdy.com/CDN/cr_dark.png">
+                                        <span>{{ __('Developed by') }}</span>
                                     </a>
                                 </div>
                                 <!--end::Links-->
