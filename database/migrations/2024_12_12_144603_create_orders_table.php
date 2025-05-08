@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('lat', 10, 7)->nullable();
             $table->decimal('lng', 10, 7)->nullable();
             $table->decimal('total_price')->nullable();
-            $table->string('payment_type')->nullable();
+            $table->string('payment_id')->nullable();
             $table->integer('status')->comment('App\Enums\OrderStatus')->default(OrderStatus::pending->value);
             $table->string('otp')->nullable();
             $table->timestamp('validated_at')->nullable();

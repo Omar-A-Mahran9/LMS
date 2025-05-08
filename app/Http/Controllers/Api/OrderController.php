@@ -65,7 +65,7 @@ class OrderController extends Controller
             'lat'         => $data['lat'],
             'lng'         => $data['lng'],
             'total_price'  => $totalPrice,
-            // 'payment_type' => $data['payment_type'],
+            // 'payment_id' => $data['payment_id'],
             'status'       => OrderStatus::pending->value,
             'otp'          => $otp,
             'validated_at' => null,
@@ -75,38 +75,38 @@ class OrderController extends Controller
         foreach ($data['services'] as $service) {
             $order->addonServices()->attach($service['id'], ['count' => $service['count']]);
         }
-// إرسال OTP
-$message = "رمز التحقق الخاص بك هو: $otp";
-try {
-    $phone = ltrim($customer->phone, '0');
-    $phone = '966' . $phone;
+        // إرسال OTP
+        $message = "رمز التحقق الخاص بك هو: $otp";
+        try {
+            $phone = ltrim($customer->phone, '0');
+            $phone = '966' . $phone;
 
-    $taqnyat->sendMessage($phone, $message);
+            $taqnyat->sendMessage($phone, $message);
 
-} catch (\Exception $e) {
-    \Log::error("Taqnyat SMS failed for phone {$customer->phone}: " . $e->getMessage());
+        } catch (\Exception $e) {
+            \Log::error("Taqnyat SMS failed for phone {$customer->phone}: " . $e->getMessage());
 
-    // التحقق من أن الخطأ يتعلق بالـ IP غير المصرح له
-    if (strpos($e->getMessage(), 'Not authorized to using the API') !== false) {
-        return $this->failure([
-            'error' => 'فشل في إرسال الرسالة',
-            'message' => 'عنوان الـ IP الخاص بخادمك غير مسموح به من قبل Taqnyat. يرجى التواصل مع دعم Taqnyat لإضافة الـ IP إلى القائمة البيضاء.',
-        ]);
-    }
-    // في حال كان الخطأ غير ذلك
-    return $this->failure([
-        'error' => 'فشل في إرسال الرسالة',
-        'message' => $e->getMessage(),
-    ]);
-}
+            // التحقق من أن الخطأ يتعلق بالـ IP غير المصرح له
+            if (strpos($e->getMessage(), 'Not authorized to using the API') !== false) {
+                return $this->failure([
+                    'error' => 'فشل في إرسال الرسالة',
+                    'message' => 'عنوان الـ IP الخاص بخادمك غير مسموح به من قبل Taqnyat. يرجى التواصل مع دعم Taqnyat لإضافة الـ IP إلى القائمة البيضاء.',
+                ]);
+            }
+            // في حال كان الخطأ غير ذلك
+            return $this->failure([
+                'error' => 'فشل في إرسال الرسالة',
+                'message' => $e->getMessage(),
+            ]);
+        }
 
-return $this->success([
-    'order' => [
-        'order_id' => $order->id,
-        'phone' => $order->customer->phone,
-        // 'otp' => $otp,
-    ],
-]);
+            return $this->success([
+                'order' => [
+                    'order_id' => $order->id,
+                    'phone' => $order->customer->phone,
+                    // 'otp' => $otp,
+                ],
+            ]);
 
 
     }
@@ -161,7 +161,7 @@ return $this->success([
 
             // Update the payment type
             $order->update([
-                'payment_type' => $validated['payment_type'],
+                'payment_id' => $validated['payment_id'],
                 'is_paid' => true,
 
             ]);
