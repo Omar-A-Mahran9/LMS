@@ -48,7 +48,7 @@ class OrderRequest extends FormRequest
                 ]
             ],
             5 => [
-                'payment_id' => ['required', Rule::in(['cash', 'visa', 'wallet'])],
+                'payment_id' => ['required'],
 
             ]
         ];

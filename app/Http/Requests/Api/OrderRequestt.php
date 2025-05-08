@@ -38,7 +38,7 @@ class OrderRequestt extends FormRequest
             'name'             => ['required', 'string', 'max:255', new NotNumbersOnly()],
             'phone'            => ['required', 'string', 'max:255', new PhoneNumber()],
             'email'            => ['nullable', 'email', 'max:255'],
-            'payment_id'     => ['nullable', 'in:cash,card'],
+            'payment_id'     => ['nullable'],
             'description'      => ['nullable', 'string'],
             'total_price' => ['nullable', 'numeric', 'decimal:2'],
             'lat' => ['required', 'numeric', 'between:-90,90'],
