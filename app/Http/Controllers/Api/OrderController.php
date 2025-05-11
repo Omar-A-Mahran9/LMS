@@ -15,7 +15,6 @@ use App\Http\Requests\Api\OrderRequest;
 use App\Http\Requests\Api\OrderRequestt;
  use App\Models\AddonService;
 use App\Services\TaqnyatSmsService;
-use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
@@ -157,19 +156,6 @@ class OrderController extends Controller
                  return $this->failure( __('Invalid or unauthorized order for payment update'));
 
             }
-            // $response = Http::withBasicAuth(env('MOYASAR_SECRET_KEY'), '')
-            // ->get("https://api.moyasar.com/v1/payments/{$paymentId}");
-
-            //     if (!$response->successful()) {
-            //         return $this->failure('فشل في الاتصال بـ Moyasar');
-            //     }
-
-            //     $paymentData = $response->json();
-
-            //     if (!isset($paymentData['status']) || $paymentData['status'] !== 'paid') {
-            //         return $this->failure('لم يتم تأكيد الدفع بعد من Moyasar.');
-            //     }
-
             // Update the payment type
             $order->update([
                 'payment_id' => $validated['payment_id'],
