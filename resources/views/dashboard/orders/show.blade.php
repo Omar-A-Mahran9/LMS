@@ -16,33 +16,46 @@
                 <div class="card card-flush py-4">
                     <div class="card-header">
                         <div class="card-title">
-                            <h2>{{ __('Payment Status') }}</h2>
+                            <h2>{{ __('Payment Statue') }}</h2>
                         </div>
                     </div>
                     <div class="card-body pt-0">
                         @if (isset($paymentDetails))
                             <table class="table table-bordered">
                                 <tbody>
-                                    @foreach ($paymentDetails as $key => $value)
-                                        @if (!is_array($value))
-                                            <tr>
-                                                <th>{{ ucfirst(str_replace('_', ' ', $key)) }}</th>
-                                                <td>{{ $value }}</td>
-                                            </tr>
-                                        @else
-                                            <tr>
-                                                <th colspan="2">{{ ucfirst(str_replace('_', ' ', $key)) }}</th>
-                                            </tr>
-                                            @foreach ($value as $subKey => $subValue)
-                                                <tr>
-                                                    <td style="padding-left: 30px">
-                                                        {{ ucfirst(str_replace('_', ' ', $subKey)) }}</td>
-                                                    <td>{{ $subValue }}</td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    @endforeach
+                                    <tr>
+                                        <th>{{ __('Payment ID') }}</th>
+                                        <td>{{ $paymentDetails['id'] ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Status') }}</th>
+                                        <td>
+                                            <span
+                                                class="badge {{ $paymentDetails['status'] === 'paid' ? 'bg-success' : 'bg-warning' }}">
+                                                {{ ucfirst($paymentDetails['status']) }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Amount') }}</th>
+                                        <td>{{ $paymentDetails['amount_format'] ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Fee') }}</th>
+                                        <td>{{ $paymentDetails['fee_format'] ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Created At') }}</th>
+                                        <td>{{ \Carbon\Carbon::parse($paymentDetails['created_at'])->format('Y-m-d H:i') }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Updated At') }}</th>
+                                        <td>{{ \Carbon\Carbon::parse($paymentDetails['updated_at'])->format('Y-m-d H:i') }}
+                                        </td>
+                                    </tr>
                                 </tbody>
+
                             </table>
                         @else
                             <div class="text-muted">{{ __('No payment information available.') }}</div>
