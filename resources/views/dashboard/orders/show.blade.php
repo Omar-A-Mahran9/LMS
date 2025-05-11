@@ -19,21 +19,37 @@
                             <h2>{{ __('Payment Status') }}</h2>
                         </div>
                     </div>
-                    @dd($paymentStatus);
                     <div class="card-body pt-0">
-                        @if ($order->payment_id)
-                            <span
-                                class="badge
-                                @if ($paymentStatus === 'paid') badge-success
-                                @elseif($paymentStatus === 'failed') badge-danger
-                                @else badge-warning @endif">
-                                {{ __($paymentStatus) }}
-                            </span>
+                        @if (isset($paymentDetails))
+                            <table class="table table-bordered">
+                                <tbody>
+                                    @foreach ($paymentDetails as $key => $value)
+                                        @if (!is_array($value))
+                                            <tr>
+                                                <th>{{ ucfirst(str_replace('_', ' ', $key)) }}</th>
+                                                <td>{{ $value }}</td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <th colspan="2">{{ ucfirst(str_replace('_', ' ', $key)) }}</th>
+                                            </tr>
+                                            @foreach ($value as $subKey => $subValue)
+                                                <tr>
+                                                    <td style="padding-left: 30px">
+                                                        {{ ucfirst(str_replace('_', ' ', $subKey)) }}</td>
+                                                    <td>{{ $subValue }}</td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
                         @else
-                            <span class="text-muted">{{ __('No payment found') }}</span>
+                            <div class="text-muted">{{ __('No payment information available.') }}</div>
                         @endif
                     </div>
                 </div>
+
 
                 <div class="d-flex flex-column flex-xl-row gap-7 gap-lg-2">
                     <!-- Order details -->

@@ -60,7 +60,7 @@ class OrderController extends Controller
         });
 
         // Return the view with the order data and addon services
-        $paymentStatus = null;
+        $paymentDetails = null;
 
         if ($order->payment_id) {
             try {
@@ -68,18 +68,17 @@ class OrderController extends Controller
                     ->get("https://api.moyasar.com/v1/payments/{$order->payment_id}");
 
                 if ($response->ok()) {
-                    $paymentStatus = $response->json() ; // e.g. "paid", "failed"
+                    $paymentDetails = $response->json(); // entire response
                 } else {
-                    \Log::warning("Failed to fetch Moyasar payment status for order {$order->id}: " . $response->body());
-                    $paymentStatus = 'خطأ في استعلام الدفع';
+                    \Log::warning("Failed to fetch Moyasar payment for order {$order->id}: " . $response->body());
                 }
             } catch (\Exception $e) {
                 \Log::error("Moyasar API error: " . $e->getMessage());
-                $paymentStatus = 'خطأ في الاتصال بمويَسر';
             }
         }
 
-        return view('dashboard.orders.show', compact('order', 'addonServices', 'totalPrice', 'paymentStatus'));    }
+
+        return view('dashboard.orders.show', compact('order', 'addonServices', 'totalPrice', 'paymentDetails'));
 
 
 
