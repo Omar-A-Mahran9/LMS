@@ -157,18 +157,18 @@ class OrderController extends Controller
                  return $this->failure( __('Invalid or unauthorized order for payment update'));
 
             }
-            $response = Http::withBasicAuth(env('MOYASAR_SECRET_KEY'), '')
-            ->get("https://api.moyasar.com/v1/payments/{$paymentId}");
+            // $response = Http::withBasicAuth(env('MOYASAR_SECRET_KEY'), '')
+            // ->get("https://api.moyasar.com/v1/payments/{$paymentId}");
 
-                if (!$response->successful()) {
-                    return $this->failure('فشل في الاتصال بـ Moyasar');
-                }
+            //     if (!$response->successful()) {
+            //         return $this->failure('فشل في الاتصال بـ Moyasar');
+            //     }
 
-                $paymentData = $response->json();
+            //     $paymentData = $response->json();
 
-                if (!isset($paymentData['status']) || $paymentData['status'] !== 'paid') {
-                    return $this->failure('لم يتم تأكيد الدفع بعد من Moyasar.');
-                }
+            //     if (!isset($paymentData['status']) || $paymentData['status'] !== 'paid') {
+            //         return $this->failure('لم يتم تأكيد الدفع بعد من Moyasar.');
+            //     }
 
             // Update the payment type
             $order->update([
