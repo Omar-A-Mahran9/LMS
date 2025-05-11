@@ -40,7 +40,7 @@
                                         <td>
                                             <span
                                                 class="badge {{ $paymentDetails['status'] === 'paid' ? 'bg-success' : 'bg-warning' }}">
-                                                {{ ucfirst($paymentDetails['status']) }}
+                                                {{ __(ucfirst($paymentDetails['status'])) }}
                                             </span>
                                         </td>
                                     </tr>
