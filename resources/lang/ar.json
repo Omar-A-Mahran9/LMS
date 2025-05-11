@@ -83,6 +83,9 @@
     "Enter the price": "ادخل السعر",
     "Invalid or expired OTP": "الرمز خاطئ برجاء ارسال الرمز الصحيح والتأكد من صلاحيته",
     "Payment Statue": "حالة الدفع",
+    "Payment ID": "كود الطلب",
+    "Amount": "المبلغ",
+    "Fee": "الضريبة",
 
     "orders": "الطلبات",
     "Search for vendors ( Name - Email )": "ابحث عن التجار ( الاسم - البريد الالكتروني )",
@@ -251,7 +254,12 @@
     "Choose the tags": "اختر الكلمة المفتاحية",
     "discount price": "سعر الخصم",
     "video link": "رابط الفيديو",
-
+    "Created At": "تاريخ الانشاء",
+    "Updated At": "تاريخ التعديل",
+    "No payment information available.": "لا يوجد معلومات عن الدفع",
+    "Paid": "مدفوع",
+    "Not Paid": "غير مدفوع",
+    "Payment Status": "حالة الدفع",
     "Allow only 5 photos": "يسمح لك برفع 5 صور",
     "Drop images here or click to download": "قم بإسقاط الصور هنا أو اضغط للتحميل",
     "Edit Product": "تعديل المنتج",

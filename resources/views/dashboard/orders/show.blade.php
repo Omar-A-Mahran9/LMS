@@ -12,6 +12,14 @@
                                 href="#kt_ecommerce_sales_order_summary">{{ __('Order Summary') }}</a>
                         </li>
                     </ul>
+                    <div class="mt-4">
+                        @if ($order->is_paid)
+                            <span class="badge bg-success">{{ __('Paid') }}</span>
+                        @else
+                            <span class="badge bg-danger">{{ __('Not Paid') }}</span>
+                        @endif
+                    </div>
+
                 </div>
                 <div class="card card-flush py-4">
                     <div class="card-header">
