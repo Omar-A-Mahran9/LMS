@@ -7,19 +7,15 @@ use App\Models\Order;
 
 use App\Models\Customer;
 
-use App\Services\OTOService;
-use Illuminate\Http\Request;
-use App\Services\TapPaymentService;
+
 use App\Http\Controllers\Controller;
-use App\Traits\WebNotificationsTrait;
 
 
 use App\Http\Requests\Api\OrderRequest;
 use App\Http\Requests\Api\OrderRequestt;
-use App\Mail\OrderConfirmationMail;
-use App\Models\AddonService;
+ use App\Models\AddonService;
 use App\Services\TaqnyatSmsService;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
@@ -75,7 +71,7 @@ class OrderController extends Controller
         foreach ($data['services'] as $service) {
             $order->addonServices()->attach($service['id'], ['count' => $service['count']]);
         }
-        // // إرسال OTP
+        // إرسال OTP
         // $message = "رمز التحقق الخاص بك هو: $otp";
         // try {
         //     $phone = ltrim($customer->phone, '0');
@@ -99,6 +95,9 @@ class OrderController extends Controller
         //         'message' => $e->getMessage(),
         //     ]);
         // }
+
+        $message = "رمز التحقق الخاص بك هو: $otp";
+        $smsResult = $this->sendSms($customer->phone, $message, $taqnyat);
 
             return $this->success([
                 'order' => [
@@ -143,7 +142,7 @@ class OrderController extends Controller
     }
 
 
-    public function handleStep(OrderRequest $request, $step)
+    public function handleStep(OrderRequest $request, $step, TaqnyatSmsService $taqnyat)
     {
         $validated = $request->validated();
 
@@ -158,6 +157,18 @@ class OrderController extends Controller
                  return $this->failure( __('Invalid or unauthorized order for payment update'));
 
             }
+            $response = Http::withBasicAuth(env('MOYASAR_SECRET_KEY'), '')
+            ->get("https://api.moyasar.com/v1/payments/{$paymentId}");
+
+                if (!$response->successful()) {
+                    return $this->failure('فشل في الاتصال بـ Moyasar');
+                }
+
+                $paymentData = $response->json();
+
+                if (!isset($paymentData['status']) || $paymentData['status'] !== 'paid') {
+                    return $this->failure('لم يتم تأكيد الدفع بعد من Moyasar.');
+                }
 
             // Update the payment type
             $order->update([
@@ -165,6 +176,13 @@ class OrderController extends Controller
                 'is_paid' => true,
 
             ]);
+                // Send booking confirmation message
+                $message = "شكرا لك … تم ارسال طلبك رقم {$order->id} بنجاح";
+                $smsResult = $this->sendSms($order->customer->phone, $message, $taqnyat);
+
+                if ($smsResult !== true) {
+                    return $this->failure($smsResult);
+                }
 
             return $this->success([
                 'message' => 'Order payment successfully.',
@@ -176,6 +194,35 @@ class OrderController extends Controller
 
         return $this->success(['step' => $step, 'data' => $validated]);
     }
+
+
+
+    private function sendSms(string $phone, string $message, TaqnyatSmsService $taqnyat)
+    {
+        try {
+            $phone = ltrim($phone, '0');
+            $phone = '966' . $phone;
+
+            $taqnyat->sendMessage($phone, $message);
+            return true;
+
+        } catch (\Exception $e) {
+            \Log::error("Taqnyat SMS failed for phone {$phone}: " . $e->getMessage());
+
+            if (strpos($e->getMessage(), 'Not authorized to using the API') !== false) {
+                return [
+                    'error' => 'فشل في إرسال الرسالة',
+                    'message' => 'عنوان الـ IP الخاص بخادمك غير مسموح به من قبل Taqnyat. يرجى التواصل مع دعم Taqnyat لإضافة الـ IP إلى القائمة البيضاء.',
+                ];
+            }
+
+            return [
+                'error' => 'فشل في إرسال الرسالة',
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
 
 
 }
