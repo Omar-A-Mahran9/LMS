@@ -10,6 +10,7 @@ use App\Services\OTOService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ProductSpecification;
+use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
@@ -59,8 +60,26 @@ class OrderController extends Controller
         });
 
         // Return the view with the order data and addon services
-        return view('dashboard.orders.show', compact('order', 'addonServices', 'totalPrice'));
-    }
+        $paymentStatus = null;
+
+        if ($order->payment_id) {
+            try {
+                $response = Http::withBasicAuth(env('MOYASAR_SECRET_KEY'), '')
+                    ->get("https://api.moyasar.com/v1/payments/{$order->payment_id}");
+
+                if ($response->ok()) {
+                    $paymentStatus = $response->json() ; // e.g. "paid", "failed"
+                } else {
+                    \Log::warning("Failed to fetch Moyasar payment status for order {$order->id}: " . $response->body());
+                    $paymentStatus = 'خطأ في استعلام الدفع';
+                }
+            } catch (\Exception $e) {
+                \Log::error("Moyasar API error: " . $e->getMessage());
+                $paymentStatus = 'خطأ في الاتصال بمويَسر';
+            }
+        }
+
+        return view('dashboard.orders.show', compact('order', 'addonServices', 'totalPrice', 'paymentStatus'));    }
 
 
 

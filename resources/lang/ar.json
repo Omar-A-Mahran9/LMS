@@ -68,8 +68,8 @@
     "Completed Orders": "الطلبات المكتملة",
     "Pending Orders": "الطلبات المعلقة",
     "Top Add-on Services": "الخدمات الأكثر استحداماً",
-"Monthly Earnings (Last 6 Months)": "الأرباح الشهرية (آخر 6 أشهر)",
-"Open in Google Maps": "فتح على جوجل ماب",
+    "Monthly Earnings (Last 6 Months)": "الأرباح الشهرية (آخر 6 أشهر)",
+    "Open in Google Maps": "فتح على جوجل ماب",
 
     "Top Addon Services": "أفضل الخدمات الإضافية",
     "no_data_available": "لا توجد بيانات متاحة",
@@ -82,6 +82,7 @@
     "Has price after visiting?": "السعر بعد المعاينة",
     "Enter the price": "ادخل السعر",
     "Invalid or expired OTP": "الرمز خاطئ برجاء ارسال الرمز الصحيح والتأكد من صلاحيته",
+    "Payment Statue": "حالة الدفع",
 
     "orders": "الطلبات",
     "Search for vendors ( Name - Email )": "ابحث عن التجار ( الاسم - البريد الالكتروني )",

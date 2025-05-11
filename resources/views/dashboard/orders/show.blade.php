@@ -13,6 +13,27 @@
                         </li>
                     </ul>
                 </div>
+                <div class="card card-flush py-4">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h2>{{ __('Payment Status') }}</h2>
+                        </div>
+                    </div>
+                    @dd($paymentStatus);
+                    <div class="card-body pt-0">
+                        @if ($order->payment_id)
+                            <span
+                                class="badge
+                                @if ($paymentStatus === 'paid') badge-success
+                                @elseif($paymentStatus === 'failed') badge-danger
+                                @else badge-warning @endif">
+                                {{ __($paymentStatus) }}
+                            </span>
+                        @else
+                            <span class="text-muted">{{ __('No payment found') }}</span>
+                        @endif
+                    </div>
+                </div>
 
                 <div class="d-flex flex-column flex-xl-row gap-7 gap-lg-2">
                     <!-- Order details -->
@@ -49,7 +70,8 @@
                                         <tr>
                                             <td class="text-muted">
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fa-solid fa-dollar-sign fs-4 me-2"></i>{{ __('Total Price') }}
+                                                    <i
+                                                        class="fa-solid fa-dollar-sign fs-4 me-2"></i>{{ __('Total Price') }}
                                                 </div>
                                             </td>
                                             <td class="fw-bold text-end">{{ $totalPrice }}</td>
