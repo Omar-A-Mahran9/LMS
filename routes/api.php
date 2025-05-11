@@ -35,6 +35,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
  // Step 1 - 4: Progressive validation (you may store values in session/temp)
 Route::post('/step/{step}', [OrderController::class, 'handleStep']);
+Route::post('/orders/{order}/resend-otp', [OrderController::class, 'resendOtp']);
 
 // Step 4: Create Order with OTP after validating customer info
 Route::post('/create', [OrderController::class, 'preCreateOrder']);
