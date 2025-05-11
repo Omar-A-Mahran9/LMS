@@ -79,7 +79,7 @@ class OrderController extends Controller
 
 
         return view('dashboard.orders.show', compact('order', 'addonServices', 'totalPrice', 'paymentDetails'));
-
+    }
 
 
 
