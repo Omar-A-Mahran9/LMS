@@ -188,14 +188,17 @@ class OrderController extends Controller
 
     public function resendOtp(Order $order, TaqnyatSmsService $taqnyat)
     {
-    dd($order);
     try {
-        $otp = $order->otp;
+      // Generate new OTP
+      $otp = rand(1000, 9999);
 
-        if (!$otp) {
-            return $this->failure(__('لا يوجد رمز تحقق لهذا الطلب.'));
-        }
+      // Update order with new OTP and reset validation time
+      $order->update([
+          'otp' => $otp,
+          'validated_at' => null,
+      ]);
 
+     
         $phone = $order->customer->phone;
         $message = "رمز التحقق الخاص بك هو: $otp";
 
