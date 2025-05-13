@@ -32,6 +32,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('questions', 'HomeController@getQuestions');
     Route::get('how-make-order', 'HomeController@getMakeOrder');
     Route::get('cities', 'HomeController@getcities');
+    Route::get('rates', 'HomeController@getrates');
 
  // Step 1 - 4: Progressive validation (you may store values in session/temp)
 Route::post('/step/{step}', [OrderController::class, 'handleStep']);

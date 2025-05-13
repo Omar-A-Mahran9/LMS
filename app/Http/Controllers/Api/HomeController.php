@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\CitiesResource;
 use App\Http\Resources\Api\CommonQuestionResource;
 use App\Http\Resources\Api\HowuseResource;
+use App\Http\Resources\Api\RateResource;
 use App\Http\Resources\Api\ServiceResource;
 use App\Http\Resources\Api\SliderResource;
 
@@ -14,6 +15,7 @@ use App\Http\Resources\Api\WhyusResource;
 use App\Models\AddonService;
 use App\Models\City;
 use App\Models\CommonQuestion;
+use App\Models\CustomerRate;
 use App\Models\Howuse;
 use App\Models\NewsLetter;
 
@@ -67,7 +69,16 @@ class HomeController extends Controller
 
         return $this->success('', CitiesResource::collection($cities));
     }
-    
+    public function getrates()
+        {
+            // Fetch all rates from the Rate model
+            $rates = CustomerRate::all(); // Or you can use a query like ->where('status', 'approved') to filter rates
+
+
+            return $this->success('', RateResource::collection($rates));
+
+        }
+
     public function getQuestions()
     {
         $CommonQuestion = CommonQuestion::get();
