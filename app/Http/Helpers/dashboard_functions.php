@@ -45,6 +45,20 @@ if (!function_exists('uploadImageToDirectory')) {
     }
 }
 
+if (!function_exists('uploadAudioToDirectory')) {
+
+    function uploadAudioToDirectory($audioFile, $model = '')
+    {
+        $model     = Str::plural($model);
+        $model     = Str::ucfirst($model);
+        $path      = "/Audio/$model"; // Folder structure: storage/app/public/Audio/Models
+        $audioName = str_replace(' ', '', 'jalid_' . time() . $audioFile->getClientOriginalName()); // Unique name
+        $audioFile->storeAs($path, $audioName, 'public');
+        return $audioName; // Just the filename
+    }
+}
+
+
 if (!function_exists('updateModelImage')) {
 
     function updateModelImage($model, $imageFile, $directory)
@@ -101,6 +115,29 @@ if (!function_exists('getImagePathFromDirectory')) {
             return asset("/placeholder_images/$defaultImage");
     }
 }
+
+
+if (!function_exists('getAudioPathFromDirectory')) {
+
+    function getAudioPathFromDirectory($audioName = null, $directory = null, $defaultAudio = 'default.mp3')
+    {
+        $directory = Str::plural($directory);
+        $directory = Str::ucfirst($directory);
+
+        $audioPath         = "/storage/Audio/$directory/$audioName";
+        $fallbackAudioPath = "placeholder_audio/$directory/$defaultAudio";
+
+        if ($audioName && $directory && file_exists(public_path($audioPath))) {
+            return asset($audioPath);
+        } elseif (file_exists(public_path($fallbackAudioPath))) {
+            return asset($fallbackAudioPath);
+        } else {
+            return asset("/placeholder_audio/$defaultAudio");
+        }
+    }
+
+}
+
 
 
 if (!function_exists('isTabActive')) {
@@ -269,143 +306,6 @@ if (!function_exists('getModelData')) {
     }
 }
 
-/**
- * push firebase notification .
- * Author : Khaled
- * created By Khaled @ 15-06-2021
- */
-if (!function_exists('storeAndPushNotification')) {
-    function storeAndPushNotification($title, $description, $icon, $color, $url)
-    {
-        /** add notification to first Admin **/
-        $date         = \Carbon\Carbon::now()->diffForHumans();
-        $notification = new NewNotification($title, $description, $date, $icon, $color, $url);
-        $admin        = Admin::first();
-        $admin->notify($notification);
-
-        /** push notifications to all admins **/
-        $firebaseToken  = Admin::whereNotNull('device_token')->pluck('device_token')->all();
-        $SERVER_API_KEY = "AAAAdaClkUc:APA91bFvu0zGXOeq2_lBLwoHBUGH37Bdk_zBjh8Dg__55nmsWRtwk_njpEzCLc29Ik5S2KHW34vxNiQb2RcihiEJXZVPh8A3FPawZPxVH_MDf06x06VzBPXEt7iKhTur4tbzzg_RD_8H";
-
-        $data = [
-            "registration_ids" => $firebaseToken,
-            "notification" => [
-                "alert_title" => $title,
-                "title" => $title,
-                "description" => $description,
-                "body" => $description,
-                "date" => $date,
-                "alert_icon" => $icon,
-                "icon" => asset(getImagePathFromDirectory(setting('fav_icon'), 'Settings')),
-                "icon_color" => $color,
-                "url" => $url,
-                "id" => $admin->notifications->last()->id,
-            ],
-            "webpush" => [
-                "fcm_options" => [
-                    "link" => $url
-                ]
-            ]
-        ];
-
-        $response = Http::withHeaders([
-            "Authorization" => "key=$SERVER_API_KEY",
-        ])->post('https://fcm.googleapis.com/fcm/send', $data);
-
-        return $response;
-    }
-}
-
-if (!function_exists('sendFirebaseNotification')) {
-    function sendFirebaseNotification($notificationBody, $type, $token = null, $tokens = [])
-    {
-        $SERVER_API_KEY = "AAAAdaClkUc:APA91bFvu0zGXOeq2_lBLwoHBUGH37Bdk_zBjh8Dg__55nmsWRtwk_njpEzCLc29Ik5S2KHW34vxNiQb2RcihiEJXZVPh8A3FPawZPxVH_MDf06x06VzBPXEt7iKhTur4tbzzg_RD_8H";
-
-        $data = [
-            "notification" => [
-                "title" => 'Twelve',
-                "body" => $notificationBody,
-                "sound" => "default"
-            ],
-            'data' => [
-                "action" => $type
-            ],
-        ];
-
-        if ($token == null)
-            $data['registration_ids'] = $tokens;
-        else
-            $data['to'] = $token;
-
-        Http::withHeaders([
-            'Authorization' => 'key=' . $SERVER_API_KEY,
-            'Content-Type' => 'application/json'
-        ])->post('https://fcm.googleapis.com/fcm/send', $data);
-    }
-}
-
-if (!function_exists('storeAndPushNotificationAdmin')) {
-
-    function storeAndPushNotificationAdmin($isAdmin, $titleAr, $titleEn, $descriptionAr, $descriptionEn, $icon, $color, $url, $vendors = null, $ability = null)
-    {
-        /** add notification to first Admin **/
-        $date         = \Carbon\Carbon::now()->diffForHumans();
-        $notification = new NewNotificationDashboard($titleAr, $titleEn, $descriptionAr, $descriptionEn, $date, $icon, $color, $url);
-        if ($isAdmin == 1) {
-            if ($ability) {
-                $admins       = Admin::whereHas('roles.abilities', function ($query) use ($ability) {
-                    $query->where('category', $ability);
-                })->get();
-            } else {
-                $admins       = Admin::whereHas('roles', function ($query) {
-                    $query->where('id', 1);
-                })->get();
-            }
-
-            foreach ($admins as $admin) {
-                $admin->notify($notification);
-            }
-        }
-        if ($isAdmin == 0) {
-            $vendors = Vendor::whereIn('id', $vendors)->get();
-            foreach ($vendors as $vendor) {
-                $vendor->notify($notification);
-            }
-        }
-
-        /** push notifications to all admins **/
-        $firebaseToken  = Admin::whereNotNull('device_token')->pluck('device_token')->all();
-        $SERVER_API_KEY = "AAAAbJigBxA:APA91bGEFXY9LQAOXAxOQGWaujUO_Wbm6zFf0794ROrbzf3ebjKr-l4uS6MnQIrRe4q4hTTJJx6DjR8kSkXTHHp86iXfiwI_FezdpznCLBlhJMUaMtCqE8rIC3nPv_UHarHqpVw7OpnQ";
-
-        $data = [
-            "registration_ids" => $firebaseToken,
-            "notification" => [
-                "alert_title" => app()->isLocale('ar') ? $titleAr : $titleEn,
-                "title_ar" => $titleAr,
-                "title_en" => $titleEn,
-                "description_ar" => $descriptionAr,
-                "description_en" => $descriptionEn,
-                "date" => $date,
-                "alert_icon" => $icon,
-                "icon" => asset(getImagePathFromDirectory(setting('fav_icon'), 'Settings')),
-                "icon_color" => $color,
-                "url" => $url,
-                // "id" => $admin->notifications->last()->id,
-            ],
-            "webpush" => [
-                "fcm_options" => [
-                    "link" => $url
-                ]
-            ]
-        ];
-
-        $response = Http::withHeaders([
-            "Authorization" => "key=$SERVER_API_KEY",
-        ])->post('https://fcm.googleapis.com/fcm/send', $data);
-
-        return $response;
-    }
-}
 if (!function_exists('generateRandomCode')) {
     function generateRandomCode($length)
     {
@@ -420,69 +320,4 @@ if (!function_exists('generateRandomCode')) {
     }
 }
 
-if (!function_exists('currentCurrency')) {
-    function currentCurrency()
-    {
-        return session('currency_code') ?? config('app.currency_code');
-    }
-}
 
-if (!function_exists('getCurrencyTransferAmount')) {
-    function getCurrencyTransferAmount()
-    {
-        $currency_name   = Cache::get('currency_name');
-        $currency_amount = Cache::get('currency_amount');
-
-        if ($currency_name != currentCurrency()) {
-            cache()->forget('currency_name');
-            cache()->forget('currency_amount');
-
-            // Fetching JSON
-            $req_url       = 'https://api.exchangerate-api.com/v4/latest/USD';
-            $response_json = file_get_contents($req_url);
-
-            if (false !== $response_json) {
-
-                // Try/catch for json_decode operation
-                try {
-
-                    // Decoding
-                    $response_object = json_decode($response_json);
-
-                    // YOUR APPLICATION CODE HERE, e.g.
-                    $currency               = currentCurrency();
-                    $currencyTransferAmount = round(($response_object->rates->$currency), 2);
-                    Cache::put('currency_name', $currency);
-                    Cache::put('currency_amount', $currencyTransferAmount);
-
-                    return $currencyTransferAmount;
-                } catch (Exception $e) {
-                    // Handle JSON parse error...
-                }
-            }
-        }
-
-        return $currency_amount;
-    }
-}
-
-if (!function_exists('priceAfterTransfer')) {
-    function priceAfterTransfer($price)
-    {
-        $base_price  = $price;
-        $final_price = round(($base_price * getCurrencyTransferAmount()), 2);
-
-        return $final_price;
-    }
-}
-
-if (!function_exists('checkIfProviderAllowQuantity')) {
-    function checkIfProviderAllowQuantity($provider, $type)
-    {
-        if ($provider == 'unipin' && $type == 'voucher') {
-            return true;
-        }
-
-        return false;
-    }
-}

@@ -23,7 +23,7 @@ class Role extends Model
     public static $modules = [
         'whyus',
         'howuse',
-
+        'customers_rate',
         'admins',
         'CommonQuestion',
         'home_content',

@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\City;
 use App\Models\Order;
-use App\Models\Vendor;
-use App\Models\HistoryOrder;
-use App\Services\OTOService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\ProductSpecification;
 use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller

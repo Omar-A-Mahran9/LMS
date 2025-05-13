@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers_rates', function (Blueprint $table) {
+        Schema::create('customer_rates', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('customer_id');
-            $table->foreign('customer_id')->references('id')->on('customers');
-            $table->integer('rate')->default(5); // Set default to 5
-            $table->longText('comment'); // Set default to 5
-            $table->enum('status', ['approve', 'reject','pending'])->default('pending'); // Define enum with a default value
-            $table->string('audio')->nullable(); // Add audio field to store audio file path
+            $table->string('full_name');
+            $table->string('image')->nullable();
+            $table->integer('rate')->default(5); // Default rating
+            $table->longText('comment'); // User comment
+            $table->enum('status', ['approve', 'reject', 'pending'])->default('pending'); // Review status
+            $table->string('audio')->nullable(); // Optional audio feedback
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers_rates');
+        Schema::dropIfExists('customer_rates');
     }
 };

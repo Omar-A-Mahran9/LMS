@@ -16,5 +16,5 @@ class Contact_us extends Model
     /**
      * The "booted" method of the model.
      */
- 
+
 }

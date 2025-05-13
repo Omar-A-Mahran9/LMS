@@ -13,11 +13,9 @@
                     class="h-50px d-none d-sm-inline app-sidebar-logo-default theme-light-show" />
             @endif
             @if (isArabic())
-                <img alt="Logo" src="{{ asset('placeholder_images/Logo.svg') }}"
-                    class="h-50px theme-dark-show" />
+                <img alt="Logo" src="{{ asset('placeholder_images/Logo.svg') }}" class="h-50px theme-dark-show" />
             @else
-                <img alt="Logo" src="{{ asset('placeholder_images/Logo.svg') }}"
-                    class="h-50px theme-dark-show" />
+                <img alt="Logo" src="{{ asset('placeholder_images/Logo.svg') }}" class="h-50px theme-dark-show" />
             @endif
         </a>
         <!--end::Logo-->
@@ -88,6 +86,15 @@
                     </x-dashboard.aside-item>
                 @endcan
                 <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                @can('view_customers_rate')
+                    <x-dashboard.aside-item :slug="'customers'" :route="route('dashboard.customers_rate.index')" :title="__('customers Rate')">
+                        <i class="ki-outline ki-people fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
+                <!--end:Menu item-->
+
                 <!--begin:Menu item-->
 
                 @can('view_cities')
@@ -117,7 +124,7 @@
                 @endcan
 
 
-                
+
 
                 @can('view_roles')
                     <x-dashboard.aside-item :slug="'settings'" :route="route('dashboard.settings.roles.index')" :title="__('Settings')">

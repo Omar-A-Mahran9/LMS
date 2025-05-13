@@ -267,6 +267,8 @@ return [
     'service_banner'            => 'صورة قسم الخدمات',
     'video_url'           => 'رابط الفيديو',
     'is_video'           => 'الفيديو',
+    'full_name'           => 'الاسم',
+    'audio'           => 'الصوت',
 
     'description_contact_en'   => 'وصف قسم التواصل (بالإنجليزية)',
     'description_contact_ar'   => 'وصف قسم التواصل (بالعربية)',
