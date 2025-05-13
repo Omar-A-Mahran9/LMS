@@ -16,8 +16,7 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('image')->nullable();
             $table->integer('rate')->default(5); // Default rating
-            $table->longText('comment'); // User comment
-            $table->enum('status', ['approve', 'reject', 'pending'])->default('pending'); // Review status
+             $table->enum('status', ['approve', 'reject', 'pending'])->default('pending'); // Review status
             $table->string('audio')->nullable(); // Optional audio feedback
             $table->timestamps();
         });
