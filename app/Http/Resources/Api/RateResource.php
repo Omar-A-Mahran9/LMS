@@ -12,7 +12,9 @@ class RateResource extends JsonResource
         return [
             'id' => $this->id,
             'rate' => $this->rate, // Assuming 'rate' is a field in the Rate model
-            'description' => $this->description, // Assuming 'description' is a field in the Rate model
+            'image' => $this->full_image_path,
+            'audio' => $this->full_audio_path,
+
             'created_at' => $this->created_at->toDateString(),
             'updated_at' => $this->updated_at->toDateString(),
         ];
