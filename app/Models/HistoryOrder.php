@@ -25,10 +25,6 @@ class HistoryOrder extends Model
     {
         return OrderStatus::tryFrom($this->attributes['status'])->name;
     }
-    public function vendor()
-    {
-        return $this->belongsTo(Vendor::class);
-    }
     public function admin()
     {
         return $this->belongsTo(Admin::class);
