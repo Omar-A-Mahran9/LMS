@@ -7,17 +7,17 @@ const __ = (word) => {
 let translations = {
     ar: {
         "Add new why us": "اضافة لماذا نحن",
-        "Add": "إضافة",
+        Add: "إضافة",
         "Choose the type": "اختر النوع",
-        "Approved": "مقبول",
-        "Rejected": "مرفوض",
-        "Pending": "قيد الانتظار",
+        Approved: "مقبول",
+        Rejected: "مرفوض",
+        Pending: "قيد الانتظار",
         "Edit gallery": "تعديل الصورة",
         "Add new partner": "اضافة شريك جديد",
         "Add new blog": "أضف مدونة جديدة",
         "Please wait...": "يرجى الانتظار...",
         "Are you sure from deleting this ": "هل انت متاكد من حذف  ",
-        "Edit blog": "تعديل المدونة",
+        "Edit rate": "تعديل المدونة",
         "Edit packageCategories": "تعديل فئة الباقة",
         "Add package category": "أضف فئة باقة جديدة",
         "Add package": "أضف باقة جديدة",
@@ -123,8 +123,6 @@ let translations = {
         "Create new car": "أضف سيارة جديد",
         Approved: "مقبول",
         Pending: "قيد الانتظار",
-
-
 
         Delivered: "تم التوصيل",
         Rejected: "تم الرفض",

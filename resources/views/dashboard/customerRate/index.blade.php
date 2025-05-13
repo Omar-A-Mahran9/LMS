@@ -240,9 +240,9 @@
                     </div>
 
                     <div class="modal-body">
-                        <div class="row">
+                        <div class="row justify-content-center align-items-center">
                             {{-- Image Upload --}}
-                            <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                            <div class="col-6 d-flex flex-column ">
                                 <label for="image_inp" class="form-label required text-center fs-6 fw-bold mb-3">
                                     {{ __('Image') }}
                                 </label>
@@ -289,14 +289,6 @@
                                 </label>
                             </div>
                             <div class="fv-plugins-message-container invalid-feedback" id="status"></div>
-                        </div>
-
-                        {{-- Comment --}}
-                        <div class="fv-row mb-5">
-                            <label class="required form-label">{{ __('Comment') }}</label>
-                            <textarea class="form-control form-control-solid" name="comment" id="comment_inp"
-                                placeholder="{{ __('Write a comment') }}" data-kt-autosize="true"></textarea>
-                            <div class="fv-plugins-message-container invalid-feedback" id="comment"></div>
                         </div>
 
 

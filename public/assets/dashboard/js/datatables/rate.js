@@ -162,7 +162,7 @@ var KTDatatablesServerSide = (function () {
                 let data = datatable.row(currentBtnIndex).data();
 
                 // Set modal title
-                $("#form_title").text(__("Edit blog"));
+                $("#form_title").text(__("Edit rate"));
 
                 // Set full name
                 $("#full_name").val(data.full_name);
