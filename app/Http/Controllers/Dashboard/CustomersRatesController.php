@@ -40,8 +40,7 @@ class CustomersRatesController extends Controller
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
             'rate'      => 'required|numeric|min:1|max:5',
             'status'    => 'required|in:pending,reject,approve',
-            'comment'   => 'required|string',
-            'audio'     => 'required|file|mimetypes:audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/ogg|max:5120',
+             'audio'     => 'required|file|mimetypes:audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/ogg|max:5120',
         ]);
         // Upload image
         if ($request->hasFile('image')) {
