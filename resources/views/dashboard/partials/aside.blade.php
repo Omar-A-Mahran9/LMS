@@ -89,7 +89,7 @@
 
                 <!--begin:Menu item-->
                 @can('view_customers_rate')
-                    <x-dashboard.aside-item :slug="'customers'" :route="route('dashboard.customers_rate.index')" :title="__('customers Rate')">
+                    <x-dashboard.aside-item :slug="'customers_rate'" :route="route('dashboard.customers_rate.index')" :title="__('customers Rate')">
                         <i class="ki-outline ki-star fs-2 text-muted"></i>
                     </x-dashboard.aside-item>
                 @endcan
