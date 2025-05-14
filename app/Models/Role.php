@@ -21,28 +21,30 @@ class Role extends Model
     ];
 
     public static $modules = [
-        'whyus',
-        'howuse',
-        'customers_rate',
         'admins',
-        'CommonQuestion',
-        'home_content',
-        'customers',
-        'customersRate',
-        'vendors',
 
-        'gallary',
-        'roles',
-        'addonService',
-        'tags',
-        'cities',
-        'offers',
-        'products',
-        'newsletter',
-        'contact_us',
-        'settings',
-        'orders',
         'sliders',
+
+        'addonService',
+
+        'customers_rate',
+
+        'CommonQuestion',
+
+        'customers',
+
+        'customersRate',
+
+         'roles',
+
+         'cities',
+
+        'contact_us',
+
+        'settings',
+
+        'orders',
+
     ];
 
     protected static function booted()

@@ -48,11 +48,11 @@
                     </x-dashboard.aside-item>
                 @endcan
 
-                @can('view_sliders')
+                {{-- @can('view_sliders')
                     <x-dashboard.aside-item :slug="'sliders'" :route="route('dashboard.sliders.index')" :title="__('Sliders')">
                         <i class="ki-outline ki-slider-horizontal-2 fs-2"></i>
                     </x-dashboard.aside-item>
-                @endcan
+                @endcan --}}
 
 
                 @can('view_addonService')
@@ -61,7 +61,7 @@
                     </x-dashboard.aside-item>
                 @endcan
 
-                @can('view_whyus')
+                {{-- @can('view_whyus')
                     <x-dashboard.aside-item :slug="'whyus'" :route="route('dashboard.whyus.index')" :title="__('Why us')">
                         <i class="ki-outline ki-abstract-29 fs-2"></i>
                     </x-dashboard.aside-item>
@@ -71,7 +71,7 @@
                     <x-dashboard.aside-item :slug="'howuse'" :route="route('dashboard.howuse.index')" :title="__('How make Order')">
                         <i class="ki-outline ki-discount fs-2"></i>
                     </x-dashboard.aside-item>
-                @endcan
+                @endcan --}}
 
                 @can('view_CommonQuestion')
                     <x-dashboard.aside-item :slug="'CommonQuestion'" :route="route('dashboard.CommonQuestion.index')" :title="__('Common Question')">
@@ -90,7 +90,8 @@
                 <!--begin:Menu item-->
                 @can('view_customers_rate')
                     <x-dashboard.aside-item :slug="'customers'" :route="route('dashboard.customers_rate.index')" :title="__('customers Rate')">
-                        <i class="ki-outline ki-audio fs-2 text-muted"></i> </x-dashboard.aside-item>
+                        <i class="ki-outline ki-star fs-2 text-muted"></i>
+                    </x-dashboard.aside-item>
                 @endcan
                 <!--end:Menu item-->
 
@@ -116,12 +117,12 @@
                 @endcan
 
 
-                @can('view_awards')
+                {{-- @can('view_awards')
                     <x-dashboard.aside-item :slug="'brands'" :route="route('dashboard.brands.index')" :title="__('awards')">
                         <i class="fas fa-certificate fs-2"></i>
                     </x-dashboard.aside-item>
                 @endcan
-
+ --}}
 
 
 
@@ -132,11 +133,11 @@
                 @endcan
                 <!--end:Menu item-->
                 <!--begin:Menu item-->
-                @can('view_recycle_bin')
+                {{-- @can('view_recycle_bin')
                     <x-dashboard.aside-item :slug="'trash'" :route="route('dashboard.trash')" :title="__('Recycle Bin')">
                         <i class="ki-outline ki-trash fs-2"></i>
                     </x-dashboard.aside-item>
-                @endcan
+                @endcan --}}
                 <!--end:Menu item-->
             </div>
             <!--end::Menu-->
