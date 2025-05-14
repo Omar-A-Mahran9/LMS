@@ -54,7 +54,11 @@
                     </x-dashboard.aside-item>
                 @endcan --}}
 
-
+                @can('view_orders')
+                    <x-dashboard.aside-item :slug="'orders'" :route="route('dashboard.orders.index')" :title="__('Orders')">
+                        <i class="ki-outline ki-parcel fs-1"></i>
+                    </x-dashboard.aside-item>
+                @endcan
                 @can('view_addonService')
                     <x-dashboard.aside-item :slug="'addonService'" :route="route('dashboard.addon.index')" :title="__('Services')">
                         <i class="ki-outline ki-plus fs-2"></i>
@@ -105,16 +109,12 @@
                 <!--end:Menu item-->
 
                 @can('view_contact_us')
-                    <x-dashboard.aside-item :slug="'contact_us'" :route="route('dashboard.contact-requests.index')" :title="__('Contact us')">
+                    <x-dashboard.aside-item :slug="'contact-requests'" :route="route('dashboard.contact-requests.index')" :title="__('Contact us')">
                         <i class="ki-outline ki-phone fs-1"></i>
                     </x-dashboard.aside-item>
                 @endcan
 
-                @can('view_orders')
-                    <x-dashboard.aside-item :slug="'orders'" :route="route('dashboard.orders.index')" :title="__('Orders')">
-                        <i class="ki-outline ki-parcel fs-1"></i>
-                    </x-dashboard.aside-item>
-                @endcan
+
 
 
                 {{-- @can('view_awards')
@@ -200,8 +200,7 @@
                         <!--end::Menu item-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-3 my-0">
-                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
-                                data-kt-value="dark">
+                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="dark">
                                 <span class="menu-icon" data-kt-element="icon">
                                     <i class="ki-outline ki-moon fs-2"></i>
                                 </span>
