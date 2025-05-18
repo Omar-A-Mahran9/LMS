@@ -14,6 +14,9 @@ class GeneralInvokableController extends Controller
      */
     public function __invoke(Request $request)
     {
+            $locale = app()->getLocale(); // 'ar' or 'en'
+
+    $address = $locale === 'ar' ? setting('address_ar') : setting('address_en');
 
             return $this->success('', [
 
@@ -26,8 +29,9 @@ class GeneralInvokableController extends Controller
             'whatsapp_number' => setting('whatsapp_number'),
             'sms_number' => setting('sms_number'),
             'email' => setting('email'),
-            'address_ar' => setting('address_ar'),
-            'address_en' => setting('address_en'),
+            'address' => $address,
+            'google_map_url' => setting('address_en'),
+
 
         ]);
     }
