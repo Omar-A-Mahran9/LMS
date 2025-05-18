@@ -65,7 +65,7 @@
                                         <div class="fv-plugins-message-container invalid-feedback" id="facebook_link"></div>
                                         <!--end::Description-->
                                     </div>
-                                    <div class="col-lg-4">
+                                    {{-- <div class="col-lg-4">
                                         <!--begin::Label-->
                                         <label class="form-label">{{ __('TikTok link') }}</label>
                                         <!--end::Label-->
@@ -80,12 +80,12 @@
                                         </div>
                                         <!--end::Input group-->
 
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <!--end::Input group-->
                                 <!--begin::Input group-->
                                 <div class="mb-10 row">
-                                    <div class="col-lg-4">
+                                    {{-- <div class="col-lg-4">
                                         <!--begin::Label-->
                                         <label class="form-label">{{ __('Snapchat link') }}</label>
                                         <!--end::Label-->
@@ -102,7 +102,7 @@
                                         <!--begin::Description-->
                                         <div class="fv-plugins-message-container invalid-feedback" id="linkedin_link"></div>
                                         <!--end::Description-->
-                                    </div>
+                                    </div> --}}
 
                                     <div class="col-lg-4">
                                         <!--begin::Label-->
@@ -122,7 +122,7 @@
                                         <div class="fv-plugins-message-container invalid-feedback" id="youtube_link"></div>
                                         <!--end::Description-->
                                     </div>
-                                    <div class="col-lg-4">
+                                    {{-- <div class="col-lg-4">
                                         <!--begin::Label-->
                                         <label class="form-label">{{ __('X link') }}</label>
                                         <!--end::Label-->
@@ -139,7 +139,7 @@
                                         <!--begin::Description-->
                                         <div class="fv-plugins-message-container invalid-feedback" id="twitter_link"></div>
                                         <!--end::Description-->
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <!--end::Input group-->
                             </div>

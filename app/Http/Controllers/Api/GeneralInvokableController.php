@@ -18,12 +18,11 @@ class GeneralInvokableController extends Controller
             return $this->success('', [
 
             'instagram_link' => setting('instagram_link'),
-            'privacy_policy' => setting('privacy_policy_' . request()->header('Content-language')),
-            'facebook_link' => setting('facebook_link'),
-            'snapchat' => setting('linkedin_link'),
+             'facebook_link' => setting('facebook_link'),
+            // 'snapchat' => setting('linkedin_link'),
             'youtube_link' => setting('youtube_link'),
-            'tiktok_link' =>  setting('tiktok_link'),
-            'twitter_link' => setting('twitter_link'),
+            // 'tiktok_link' =>  setting('tiktok_link'),
+            // 'twitter_link' => setting('twitter_link'),
             'whatsapp_number' => setting('whatsapp_number'),
             'sms_number' => setting('sms_number'),
             'email' => setting('email'),
