@@ -15,10 +15,10 @@
     </li>
     <!--end:::Tab item-->
     <!--begin:::Tab item-->
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a class="nav-link text-active-primary pb-4 {{ getClassIfUrlContains('active', 'terms') }}"
             href="{{ route('dashboard.settings.home.terms') }}">{{ __('Terms and conditions') }}</a>
-    </li>
+    </li> --}}
     <!--end:::Tab item-->
     <!--begin:::Tab item-->
     <li class="nav-item">
