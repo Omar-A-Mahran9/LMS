@@ -106,7 +106,7 @@ public function getAboutUs()
             'description'     => setting('description_about_us' . $suffix),
             'about_us_banner' => getImagePathFromDirectory(setting('about_us_banner'), 'Settings') ,
         ],
-        'about_us_image' => getImagePathFromDirectory(setting('about_us_image'), 'Images/Settings'),
+        'about_us_image' => getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
         'about_us'       => setting('about_us' . $suffix),
         'our_mission'    => setting('our_mission' . $suffix),
         'our_vision'     => setting('our_vission' . $suffix), // double-check spelling
