@@ -97,7 +97,7 @@ class HomeController extends Controller
 
       public function getAboutUs()
     {
-        $about_us = setting('about-us');
+        $about_us = setting('about_us');
 
         return $this->success('',$about_us);
     }
