@@ -163,11 +163,11 @@ var KTDatatablesServerSide = (function () {
                 let data = datatable.row(currentBtnIndex).data();
 
                 $("#form_title").text(__("Edit addon"));
-                $(".image-input-wrapper").css(
+                $(".image_inp").css(
                     "background-image",
                     `url('${data.full_image_path}')`
                 );
-                $(".icon-input-wrapper").css(
+                $(".icon_inp").css(
                     "background-image",
                     `url('${data.full_icon_path}')`
                 );

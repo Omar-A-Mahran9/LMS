@@ -57,6 +57,8 @@ class HomeController extends Controller
         return $this->success('', ServiceResource::collection($services));
     }
 
+    
+
     public function getwhyus()
     {
         $Whyus = Whyus::get();
