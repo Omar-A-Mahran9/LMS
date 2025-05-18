@@ -92,4 +92,13 @@ class HomeController extends Controller
 
         return $this->success('', HowuseResource::collection($makeOrder));
     }
+
+
+
+      public function getAboutUs()
+    {
+        $about_us = setting('about-us');
+
+        return $this->success('',$about_us);
+    }
 }
