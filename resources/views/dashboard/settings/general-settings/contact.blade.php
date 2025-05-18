@@ -132,9 +132,29 @@
                                     </div>
                                 </div>
                                 <!--end::Input group-->
+                                <!-- Google Map URL -->
+                                <div class="col-lg-12">
+                                    <!--begin::Label-->
+                                    <label class="form-label">{{ __('Google Map URL') }}</label>
+                                    <!--end::Label-->
+                                    <!--begin::Input group-->
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">
+                                            <i class="la la-map fs-2"></i>
+                                        </span>
+                                        <input type="url" class="form-control" name="google_map_url"
+                                            value="{{ setting('google_map_url') }}" id="google_map_url_inp"
+                                            placeholder="https://www.google.com/maps/..." aria-describedby="basic-addon3" />
+                                    </div>
+                                    <!--end::Input group-->
+                                    <!--begin::Description-->
+                                    <div class="fv-plugins-message-container invalid-feedback" id="google_map_url">
+                                    </div>
+                                    <!--end::Description-->
+                                </div>
 
 
-                            
+
                             </div>
                             <!--end::Card header-->
                         </div>
