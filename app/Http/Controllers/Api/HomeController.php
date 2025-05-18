@@ -104,7 +104,7 @@ public function getAboutUs()
         'about_us_banner_data' => [
             'label'           => setting('label_about_us' . $suffix),
             'description'     => setting('description_about_us' . $suffix),
-            'about_us_banner' => setting('about_us_banner'),
+            'about_us_banner' => getImagePathFromDirectory(setting('about_us_banner'), 'Images/Settings') ,
         ],
         'about_us_image' => setting('about_us_image'),
         'about_us'       => setting('about_us' . $suffix),
