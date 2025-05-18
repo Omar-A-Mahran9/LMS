@@ -30,7 +30,7 @@ class GeneralInvokableController extends Controller
             'sms_number' => setting('sms_number'),
             'email' => setting('email'),
             'address' => $address,
-            'google_map_url' => setting('address_en'),
+            'google_map_url' => setting('google_map_url'),
 
 
         ]);
