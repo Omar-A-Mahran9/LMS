@@ -97,19 +97,24 @@ class HomeController extends Controller
 
 public function getAboutUs()
 {
-    $locale = app()->getLocale(); // e.g., 'ar' or 'en'
-
+    $locale = app()->getLocale(); // 'ar' or 'en'
     $suffix = $locale === 'ar' ? '_ar' : '_en';
 
     $data = [
-        'about_us_image'     => setting('about_us_image'),
-        'about_us'     => setting('about_us' . $suffix),
-        'our_mission'  => setting('our_mission' . $suffix),
-        'our_vision'   => setting('our_vission' . $suffix), // Note spelling if intentional
+        'about_us_banner_data' => [
+            'label'           => setting('label_about_us' . $suffix),
+            'description'     => setting('description_about_us' . $suffix),
+            'about_us_banner' => setting('about_us_banner'),
+        ],
+        'about_us_image' => setting('about_us_image'),
+        'about_us'       => setting('about_us' . $suffix),
+        'our_mission'    => setting('our_mission' . $suffix),
+        'our_vision'     => setting('our_vission' . $suffix), // double-check spelling
     ];
 
     return $this->success('', $data);
 }
+
 
 
 public function getprivacypolicy()
