@@ -102,6 +102,7 @@ public function getAboutUs()
     $suffix = $locale === 'ar' ? '_ar' : '_en';
 
     $data = [
+        'about_us_image'     => setting('about_us_image'),
         'about_us'     => setting('about_us' . $suffix),
         'our_mission'  => setting('our_mission' . $suffix),
         'our_vision'   => setting('our_vission' . $suffix), // Note spelling if intentional
