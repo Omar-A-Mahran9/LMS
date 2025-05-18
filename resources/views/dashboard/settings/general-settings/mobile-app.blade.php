@@ -65,6 +65,24 @@
                                         <div class="fv-plugins-message-container invalid-feedback" id="facebook_link"></div>
                                         <!--end::Description-->
                                     </div>
+                                    <div class="col-lg-4">
+                                        <!--begin::Label-->
+                                        <label class="form-label">{{ __('Youtube link') }}</label>
+                                        <!--end::Label-->
+                                        <!--begin::Input group-->
+                                        <div class="input-group mb-5">
+                                            <span class="input-group-text">
+                                                <i class="lab la-youtube fs-1"></i>
+                                            </span>
+                                            <input type="text" class="form-control" name="youtube_link"
+                                                value="{{ setting('youtube_link') }}" id="youtube_link_inp"
+                                                placeholder="www.example.com" aria-describedby="basic-addon3" />
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Description-->
+                                        <div class="fv-plugins-message-container invalid-feedback" id="youtube_link"></div>
+                                        <!--end::Description-->
+                                    </div>
                                     {{-- <div class="col-lg-4">
                                         <!--begin::Label-->
                                         <label class="form-label">{{ __('TikTok link') }}</label>
@@ -104,24 +122,7 @@
                                         <!--end::Description-->
                                     </div> --}}
 
-                                    <div class="col-lg-4">
-                                        <!--begin::Label-->
-                                        <label class="form-label">{{ __('Youtube link') }}</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input group-->
-                                        <div class="input-group mb-5">
-                                            <span class="input-group-text">
-                                                <i class="lab la-youtube fs-1"></i>
-                                            </span>
-                                            <input type="text" class="form-control" name="youtube_link"
-                                                value="{{ setting('youtube_link') }}" id="youtube_link_inp"
-                                                placeholder="www.example.com" aria-describedby="basic-addon3" />
-                                        </div>
-                                        <!--end::Input group-->
-                                        <!--begin::Description-->
-                                        <div class="fv-plugins-message-container invalid-feedback" id="youtube_link"></div>
-                                        <!--end::Description-->
-                                    </div>
+
                                     {{-- <div class="col-lg-4">
                                         <!--begin::Label-->
                                         <label class="form-label">{{ __('X link') }}</label>
