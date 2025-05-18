@@ -111,4 +111,15 @@ public function getAboutUs()
 }
 
 
+public function getprivacypolicy()
+{
+    $locale = app()->getLocale(); // e.g., 'ar' or 'en'
+    $key = 'privacy_policy_' . $locale; // Will resolve to 'privacy_policy_ar' or 'privacy_policy_en'
+
+    $data = setting($key); // Fetch the appropriate setting
+
+    return $this->success('', $data);
+}
+
+
 }

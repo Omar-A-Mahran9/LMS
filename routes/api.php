@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['middleware' => ['cors', 'json.response']], function () {
 
     Route::get('about_us', 'HomeController@getAboutUs');
+    Route::get('privacy_policy', 'HomeController@getprivacypolicy');
 
     Route::post('news-letter', 'HomeController@newsLetter');
     Route::get('sliders', 'HomeController@getSliders');
