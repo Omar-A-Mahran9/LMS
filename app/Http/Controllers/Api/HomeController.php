@@ -97,12 +97,18 @@ class HomeController extends Controller
 
 public function getAboutUs()
 {
-    $locale = app()->getLocale(); // Get current app locale (e.g., 'ar' or 'en')
+    $locale = app()->getLocale(); // e.g., 'ar' or 'en'
 
-    $key = $locale === 'ar' ? 'about_us_ar' : 'about_us_en'; // Choose the right key
-    $about_us = setting($key);
+    $suffix = $locale === 'ar' ? '_ar' : '_en';
 
-    return $this->success('', $about_us);
+    $data = [
+        'about_us'     => setting('about_us' . $suffix),
+        'our_mission'  => setting('our_mission' . $suffix),
+        'our_vision'   => setting('our_vission' . $suffix), // Note spelling if intentional
+    ];
+
+    return $this->success('', $data);
 }
+
 
 }
