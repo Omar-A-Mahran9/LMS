@@ -140,7 +140,7 @@ class OrderController extends Controller
 
             ]);
                 // Send booking confirmation message
-                $message = "شكرا لك … تم ارسال طلبك رقم {$order->id} بنجاح";
+                $message = "عزيزي العميل، شكرًا لك. تم استلام طلبك رقم {$order->id} لدى شركة جليد. سيتم التواصل معك قريبًا من قبل فريقنا";
                 $smsResult = $this->sendSms($order->customer->phone, $message, $taqnyat);
 
                 if ($smsResult !== true) {
@@ -198,7 +198,7 @@ class OrderController extends Controller
           'validated_at' => null,
       ]);
 
-     
+
         $phone = $order->customer->phone;
         $message = "رمز التحقق الخاص بك هو: $otp";
 
