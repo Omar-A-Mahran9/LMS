@@ -50,14 +50,25 @@ class HomeController extends Controller
     }
 
 
-    public function getservices()
-    {
-        $services = AddonService::where('is_publish', '1')->get();
+public function getServices()
+{
+    $suffix = ''; // Define or calculate suffix if necessary
 
-        return $this->success('', ServiceResource::collection($services));
-    }
+    $services = AddonService::where('is_publish', '1')->get();
 
-    
+    $serviceBannerData = [
+        'label'           => setting('label_service' . $suffix),
+        'description'     => setting('description_service' . $suffix),
+        'service_banner'  => getImagePathFromDirectory(setting('about_us_banner'), 'Settings'),
+    ];
+
+    return $this->success('', [
+        'services' => ServiceResource::collection($services),
+        'service_banner_data' => $serviceBannerData,
+    ]);
+}
+
+
 
     public function getwhyus()
     {
