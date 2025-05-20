@@ -52,7 +52,8 @@ class HomeController extends Controller
 
 public function getServices()
 {
-    $suffix = ''; // Define or calculate suffix if necessary
+  $locale = app()->getLocale(); // 'ar' or 'en'
+    $suffix = $locale === 'ar' ? '_ar' : '_en';
 
     $services = AddonService::where('is_publish', '1')->get();
 
