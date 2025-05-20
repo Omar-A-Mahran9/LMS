@@ -57,14 +57,15 @@ public function getServices()
     $services = AddonService::where('is_publish', '1')->get();
 
     $serviceBannerData = [
-        'label'           => setting('label_service' . $suffix),
-        'description'     => setting('description_service' . $suffix),
-        'service_banner'  => getImagePathFromDirectory(setting('about_us_banner'), 'Settings'),
+        'label'           => setting('label_services' . $suffix),
+        'description'     => setting('description_services' . $suffix),
+        'service_banner'  => getImagePathFromDirectory(setting('services_banner'), 'Settings'),
     ];
 
     return $this->success('', [
-        'services' => ServiceResource::collection($services),
         'service_banner_data' => $serviceBannerData,
+
+        'services' => ServiceResource::collection($services),
     ]);
 }
 
