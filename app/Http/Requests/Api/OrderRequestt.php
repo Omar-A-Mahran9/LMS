@@ -33,7 +33,7 @@ class OrderRequestt extends FormRequest
 
             'date'             => ['required', 'date'],
             'time'             => ['required', 'date_format:H:i'],
-            'city_id'          => ['required', 'exists:cities,id'],
+            'city_id'          => ['required', 'exists:governments,id'],
             'address'          => ['required', 'string'],
             'name'             => ['required', 'string', 'max:255', new NotNumbersOnly()],
             'phone'            => ['required', 'string', 'max:255', new PhoneNumber()],

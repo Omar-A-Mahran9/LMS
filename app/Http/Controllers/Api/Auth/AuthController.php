@@ -29,7 +29,7 @@ class AuthController extends Controller
                 'email',
                 'exists:customers,email',
                 function ($attribute, $value, $fail) {
-                    $customer = Student::whereEmail($value)->first();
+                    $customer = Customer::whereEmail($value)->first();
 
                     if ($customer && $customer->block_flag === 1 )
                     {
@@ -40,7 +40,7 @@ class AuthController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        $customer = Student::whereEmail($request->email)->first();
+        $customer = Customer::whereEmail($request->email)->first();
 
         if (Hash::check($request->password, $customer->password))
         {
@@ -77,97 +77,62 @@ class AuthController extends Controller
         return $this->success("logged in successfully", ['token' => $token, "customer" => new CustomerResource($customer)]);
     }
 
-    public function register(Request $request)
-    {
-        $data                        = $request->validate([
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg',
-            'full_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
 
-            // 'first_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
-            // 'last_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
-            'phone' => ['required', 'string', 'regex:/^[0-9]+$/', 'max:20', 'unique:customers'],
-            'email' => 'required|string|email|unique:customers',
-            'password' => ['required', 'string', 'min:8', 'max:255', new PasswordNumberAndLetter()],
-            // 'password_confirmation' => 'required|same:password',
-            'privacy_flag' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    if ($value == 0 || $value == false || $value == "false")
-                    {
-                        $fail(__('Must be approved first'));
+public function register(Request $request)
+{
+    $data = $request->validate([
+        'first_name' => ['required', 'string', 'max:255'],
+        'middle_name' => ['nullable', 'string', 'max:255'],
+        'last_name' => ['required', 'string', 'max:255'],
 
-                    }
-                }
-            ],
-            // 'power_attorney_flag' => [
-            //     'required',
-            //     function ($attribute, $value, $fail) {
-            //         if ($value == 0 || $value == false || $value == "false")
-            //         {
-            //             $fail(__('Must be approved first'));
+        'phone' => ['required', 'string', 'regex:/^[0-9]+$/', 'max:20', 'unique:students'],
+        'parent_phone' => ['nullable', 'string', 'regex:/^[0-9]+$/', 'max:20'],
+        'parent_job' => 'nullable|string|max:255',
+        'gender' => 'required|in:male,female',
+        'government_id' => 'required|exists:governments,id',
+        'category_id' => 'required|exists:categories,id',
 
-            //         }
-            //     }
-            // ],
-        ]);
-         $data['password_confirmation'] = $data['password']; // Remaining words as last_name or empty string if not provided
+        'email' => 'required|string|email|unique:students',
 
-        $names = explode(' ', trim($data['full_name']), 2);
-        $data['first_name'] = $names[0]; // First word as first_name
-        $data['last_name'] = isset($names[1]) ? $names[1] : ''; // Remaining words as last_name or empty string if not provided
+        'password' => ['required', 'string', 'min:8', 'max:255'],
+        'confirm_password' => ['required', 'same:password'],
 
-        $data['privacy_flag']        = $data['privacy_flag'] ? 1 : 0;
-        $data['power_attorney_flag'] = 1;
-        if ($request->image)
-            $data['image'] = uploadImageToDirectory($request->file('image'), "Customers");
-        $data['block_flag']       = 0;
-        $customer                 = Student::create($data);
-        $customer->remember_token = Str::random(10);
-        $customer->save();
 
-        $customer->sendOTP();
-        /* Mail::send('emails.otp',['user' =>  $customer],function($message) use($customer){
-            $message->to($customer->email)->subject('Otp verification');
-        }); */
+    ]);
 
-        $token = $customer->createToken('Personal access token to apis')->plainTextToken;
-
-        return $this->success("registered in successfully", ['token' => $token, "customer" => new CustomerResource($customer)]);
+    // Handle image upload if provided
+    if ($request->hasFile('image')) {
+        $data['image'] = uploadImageToDirectory($request->file('image'), 'Students');
     }
 
-    /* function socialLogin(Request $request) {
-        $request->validate([
-            'social_id' => "required",
-        ]);
 
-        $user = User::where('social_id', $request->social_id)->first();
-        if($user)
-        {
-            $token = $user->createToken('Personal access token to apis')->accessToken;
 
-            return $this->success("logged in successfully", ['token' => $token, "user" => new UserResource($user)]);
-        }
+    // Default flags
+    $data['block_flag'] = false;
 
-        $request->validate([
-            'name' => "required|string:255",
-            'phone' => 'required|regex:/(^(05)([0-9]{8})$)/u|max:255',
-            'email' => "required|email:255",
-            'social_image_link' => "nullable",
-            'fcm_token' => "required",
-        ]);
+    // Create the student record
+    $student = Student::create($data);
 
-        $user = User::create([
-            'social_id' => $request->social_id,
-            'name' => $request->name,
-            'social_image_link' => $request->social_image_link,
-            'fcm_token' => $request->fcm_token,
-            'phone' => $request->phone,
-            'email' => $request->email
-        ]);
-        $token = $user->createToken('Personal access token to apis')->accessToken;
+    // Generate OTP and expiration (valid 15 minutes)
+    $student->otp = rand(111111, 999999);
+    $student->otp_expiration = now()->addMinutes(15);
+    $student->remember_token = Str::random(10);
+    $student->save();
 
-        return $this->success("logged in successfully", ['token' => $token, "user" => new UserResource($user)]);
-    } */
+    // Optionally send OTP here
+    // $student->sendOTP();
+
+    // Create a personal access token
+    $token = $student->createToken('Personal Access Token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Registration successful',
+        'token' => $token,
+        'student' => new StudentResource($student),,
+    ], 201);
+}
+
+
 
     public function logout(Request $request)
     {

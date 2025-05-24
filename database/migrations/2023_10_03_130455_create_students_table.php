@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('students', function (Blueprint $table) {
+       Schema::create('students', function (Blueprint $table) {
             $table->id();
 
             // Name fields
@@ -26,23 +26,26 @@ return new class extends Migration {
             // Additional info
             $table->string('parent_job')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
-            $table->unsignedBigInteger('governorate_id')->nullable(); // "المحافظة"
+            $table->unsignedBigInteger('government_id')->nullable(); // "المحافظة"
             $table->unsignedBigInteger('category_id')->nullable();
 
             // Auth fields
-             $table->string('password')->nullable();
+            $table->string('password')->nullable();
             $table->boolean('block_flag')->default(false);
             $table->rememberToken();
 
             // Image
             $table->string('image')->nullable();
 
+            // OTP fields
+            $table->string('otp')->nullable();
+            $table->timestamp('otp_expiration')->nullable();
+
             $table->timestamps();
 
-            // Foreign key
+            // Foreign key constraints
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
-            $table->foreign('governorate_id')->references('id')->on('governorates')->onDelete('set null');
-
+            $table->foreign('government_id')->references('id')->on('governments')->onDelete('set null');
         });
     }
 

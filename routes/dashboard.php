@@ -15,8 +15,8 @@ Route::delete("contact-requests/delete-selected", "ContactRequestController@dele
 Route::delete("customers/delete-selected", "CustomerController@deleteSelected");
 Route::delete("tags/delete-selected", "TagController@deleteSelected");
 Route::get("tags/restore-selected", "TagController@restoreSelected");
-Route::delete("cities/delete-selected", "CityController@deleteSelected");
-Route::get("cities/restore-selected", "CityController@restoreSelected");
+Route::delete("cities/delete-selected", "GovernmentsController@deleteSelected");
+Route::get("cities/restore-selected", "GovernmentsController@restoreSelected");
 Route::delete("skin-colors/delete-selected", "SkinColorController@deleteSelected");
 Route::get("skin-colors/restore-selected", "SkinColorController@restoreSelected");
 Route::delete("ads/delete-selected", "AdController@deleteSelected");
@@ -30,9 +30,9 @@ Route::delete("brands/delete-selected", "BrandController@deleteSelected");
 Route::get("brands/restore-selected", "BrandController@restoreSelected");
 Route::delete("vendors/delete-selected", "VendorController@deleteSelected");
 Route::get("vendors/restore-selected", "VendorController@restoreSelected");
-Route::delete("fast-shipping-city/delete-selected", "FastShippingCityController@deleteSelected");
-Route::get("fast-shipping-city/restore-selected", "FastShippingCityController@restoreSelected");
-Route::get("fast-shipping-city/restore/{fastCity}", "FastShippingCityController@restore");
+Route::delete("fast-shipping-city/delete-selected", "FastShippingGovernmentsController@deleteSelected");
+Route::get("fast-shipping-city/restore-selected", "FastShippingGovernmentsController@restoreSelected");
+Route::get("fast-shipping-city/restore/{fastCity}", "FastShippingGovernmentsController@restore");
 Route::delete("packageCategories/delete-selected", "PackageCategoryController@deleteSelected");
 Route::delete("packages/delete-selected", "PackagesController@deleteSelected");
 
@@ -74,7 +74,7 @@ Route::resource('packagesubCategories', 'PackagesubCategoryController')->except(
 Route::resource('packages', 'PackagesController')->except(['create', 'edit']);
 Route::resource('car_prices', 'CarPriceController')->except(['create', 'edit']);
 
-Route::resource('cities', 'CityController')->except(['create', 'edit']);
+Route::resource('governments', 'GovernmentsController')->except(['create', 'edit']);
 Route::resource('categories', 'CategoryController')->except(['create', 'edit']);
 Route::resource('maincategories', 'MainCategoryController')->except(['create', 'edit']);
 
@@ -93,7 +93,7 @@ Route::post('vendor/{vendor}/shipping-details', 'VendorController@storeShippingD
 Route::post('vendor/{vendor}/edit-shipping-details', 'VendorController@updateShippingDetails')->name('vendor.update.shipping-details');
 Route::post('change/vendor/{vendor}', 'VendorController@changeStatus')->name('vendor.change.status');
 Route::resource('vendors', 'VendorController');
-Route::resource('fast-shipping-city', 'FastShippingCityController');
+Route::resource('fast-shipping-city', 'FastShippingGovernmentsController');
 Route::resource('tags', 'TagController')->except(['create', 'edit']);
 Route::resource('skin-colors', 'SkinColorController')->except(['create', 'edit']);
 Route::resource('ads', 'AdController')->except(['create', 'edit']);
@@ -110,7 +110,7 @@ Route::put('update-profile-password', 'ProfileController@updateProfilePassword')
 /** ajax routes **/
 Route::post('dropzone/validate-image', 'DropzoneController@validateImage')->name('dropzone.validate-image');
 Route::post("select2-ajax/subcategories", "ProductController@getSubcategories")->name('select2-ajax.subcategories');
-Route::post("select2-ajax/vendor-cities", "ProductController@getCitiesBasedOnVendor")->name('select2-ajax.vendor-cities');
+Route::post("select2-ajax/vendor-cities", "ProductController@getgovernmentsBasedOnVendor")->name('select2-ajax.vendor-cities');
 
 /**  ====================SETTINGS======================  **/
 Route::prefix('settings')->name('settings.')->group(function () {

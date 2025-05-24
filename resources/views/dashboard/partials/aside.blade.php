@@ -61,13 +61,23 @@
                     </x-dashboard.aside-item>
                 @endcan
                 <!--end:Menu item-->
+
+
+                @can('view_governments')
+                    <x-dashboard.aside-item :slug="'governments'" :route="route('dashboard.governments.index')" :title="__('Governments')">
+                        <i class="ki-outline ki-map fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
+                <!--end:Menu item-->
+
+
                 @can('view_contact_us')
                     <x-dashboard.aside-item :slug="'contact-requests'" :route="route('dashboard.contact-requests.index')" :title="__('Contact us')">
                         <i class="ki-outline ki-phone fs-1"></i>
                     </x-dashboard.aside-item>
                 @endcan
 
-                
+
                 @can('view_orders')
                     <x-dashboard.aside-item :slug="'orders'" :route="route('dashboard.orders.index')" :title="__('Orders')">
                         <i class="ki-outline ki-parcel fs-1"></i>
@@ -115,12 +125,6 @@
 
                 <!--begin:Menu item-->
 
-                @can('view_cities')
-                    <x-dashboard.aside-item :slug="'cities'" :route="route('dashboard.cities.index')" :title="__('Cities')">
-                        <i class="ki-outline ki-map fs-2"></i>
-                    </x-dashboard.aside-item>
-                @endcan
-                <!--end:Menu item-->
 
 
 

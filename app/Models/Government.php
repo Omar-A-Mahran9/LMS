@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class City extends Model
+class Government extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -32,6 +32,6 @@ class City extends Model
 
     public function getFullImagePathAttribute()
     {
-        return asset(getImagePathFromDirectory($this->image, 'city', "default.svg"));
+        return asset(getImagePathFromDirectory($this->image, 'Government', "default.svg"));
     }
 }

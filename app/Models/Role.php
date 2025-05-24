@@ -30,7 +30,7 @@ class Role extends Model
         'addonService',
 
         'home_content',
-        
+
         'customers_rate',
 
         'CommonQuestion',
@@ -41,7 +41,7 @@ class Role extends Model
 
          'roles',
 
-         'cities',
+        'governments',
 
         'contact_us',
 

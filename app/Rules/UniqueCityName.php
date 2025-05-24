@@ -15,7 +15,7 @@ class UniqueCityName implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if(City::where('fast_shipping', request()->input('fast_shipping') ?? FALSE)->where(''.$attribute, $value)->exists())
+        if(Government::where('fast_shipping', request()->input('fast_shipping') ?? FALSE)->where(''.$attribute, $value)->exists())
         {
             $fail(__('' . $attribute) . __(' is already taken'));
         }

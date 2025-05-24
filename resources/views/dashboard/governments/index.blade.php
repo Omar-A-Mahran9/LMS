@@ -109,7 +109,7 @@
     <!--end::Basic info-->
 
     {{-- begin::Add Country Modal --}}
-    <form id="crud_form" class="ajax-form" action="{{ route('dashboard.cities.store') }}" method="post"
+    <form id="crud_form" class="ajax-form" action="{{ route('dashboard.governments.store') }}" method="post"
         data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
         <div class="modal fade" tabindex="-1" id="crud_modal">
@@ -164,7 +164,7 @@
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/cities.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/governments.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script>
@@ -175,7 +175,7 @@
                 $("#form_title").text(__('Add new city'));
                 $("[name='_method']").remove();
                 $("#crud_form").trigger('reset');
-                $("#crud_form").attr('action', `/dashboard/cities`);
+                $("#crud_form").attr('action', `/dashboard/governments`);
             });
 
 

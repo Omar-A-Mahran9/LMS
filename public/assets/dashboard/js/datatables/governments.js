@@ -3,7 +3,7 @@
 var datatable;
 // Class definition
 var KTDatatablesServerSide = (function () {
-    let dbTable = "cities";
+    let dbTable = "governments";
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
@@ -54,7 +54,7 @@ var KTDatatablesServerSide = (function () {
                 },
 
                 {
-                    targets: 3,
+                    targets: 2,
                     render: function (data, type, row) {
                         return `
                             <div>

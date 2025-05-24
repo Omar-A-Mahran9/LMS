@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\CategoryResource;
-use App\Http\Resources\Api\CitiesResource;
+use App\Http\Resources\Api\GovernmentsResource;
 use App\Http\Resources\Api\CommonQuestionResource;
 use App\Http\Resources\Api\HowuseResource;
 use App\Http\Resources\Api\RateResource;
@@ -17,6 +17,7 @@ use App\Models\AddonService;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\CommonQuestion;
+use App\Models\Government;
 use App\Models\Student_rate;
 use App\Models\Howuse;
 use App\Models\NewsLetter;
@@ -75,12 +76,13 @@ public function getCategories()
 
         return $this->success('', WhyusResource::collection($Whyus));
     }
-    public function getcities()
+    public function getgovernments()
     {
-        $cities = City::get();
+        $cities = Government::get();
 
-        return $this->success('', CitiesResource::collection($cities));
+        return $this->success('', GovernmentsResource::collection($cities));
     }
+
       public function getrates()
         {
             // Fetch all rates from the Rate model

@@ -29,7 +29,7 @@ class OrderRequest extends FormRequest
             2 => [
                 'date'    => ['required', 'date'],
                 'time'    => ['required', 'date_format:H:i'],
-                'city_id' => ['required', 'exists:cities,id'],
+                'city_id' => ['required', 'exists:governments,id'],
                 'address' => ['required', 'string'],
             ],
             3 => [

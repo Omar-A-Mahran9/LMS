@@ -6,7 +6,7 @@ use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateCityRequest extends FormRequest
+class UpdateGovernmentsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +15,7 @@ class UpdateCityRequest extends FormRequest
      */
     public function authorize()
     {
-        return abilities()->contains('update_cities');
+        return abilities()->contains('update_governments');
     }
 
     /**
@@ -25,11 +25,11 @@ class UpdateCityRequest extends FormRequest
      */
     public function rules()
     {
-        $city = request()->route('city');
+        $government = request()->route('government');
 
         return [
-            "name_ar" => ["required", "string:255", "regex:/^[ء-ي]+/", Rule::unique('cities')->ignore($city->id)],
-            "name_en" => ["required", "string:255", "regex:/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/", Rule::unique('cities')->ignore($city->id)],
+            "name_ar" => ["required", "string:255", "regex:/^[ء-ي]+/", Rule::unique('governments')->ignore($government->id)],
+            "name_en" => ["required", "string:255", "regex:/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/", Rule::unique('governments')->ignore($government->id)],
         ];
     }
 }

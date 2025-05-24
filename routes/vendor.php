@@ -9,18 +9,18 @@ use Illuminate\Support\Facades\Route;
 Route::get("/home", "DashboardController@index")->name('home');
 Route::post('/fetch-data', 'DashboardController@ordersTransaction')->name('fetch.data');
 
-Route::delete("branches/delete-selected", "CityController@deleteSelected");
-Route::get("branches/restore-selected", "CityController@restoreSelected");
-// Route::get("branches/restore", "CityController@restore");
+Route::delete("branches/delete-selected", "GovernmentsController@deleteSelected");
+Route::get("branches/restore-selected", "GovernmentsController@restoreSelected");
+// Route::get("branches/restore", "GovernmentsController@restore");
 
 Route::post("products/{step?}", "ProductController@store")->name('products.store');
 Route::put("products/{product}/{step?}", "ProductController@update")->name('products.update');
 Route::get("products/{product}/images", "ProductController@images");
 Route::resource('products', 'ProductController')->except(['store', 'update']);
 Route::resource('orders', 'OrderController')->except(['store', 'update']);
-// Route::resource('branches','CityController')->only(['index', 'store', 'update', 'destroy']);
-Route::resource('branches', 'CityController');
-Route::get("branches/restore", "CityController@restore");
+// Route::resource('branches','GovernmentsController')->only(['index', 'store', 'update', 'destroy']);
+Route::resource('branches', 'GovernmentsController');
+Route::get("branches/restore", "GovernmentsController@restore");
 
 Route::post('change-order-status/{id}', 'OrderController@changeOrderStatus')->name('change-order-status');
 Route::get('profile-info', 'VendorController@profileInfo')->name('profile-info');
