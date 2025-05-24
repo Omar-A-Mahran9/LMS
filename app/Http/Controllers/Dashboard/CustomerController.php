@@ -28,7 +28,7 @@ class CustomerController extends Controller
         $data          = $request->validated();
         $data['image'] = uploadImageToDirectory($request->file('image'), "Customers");
         $data['block_flag']= false;
-        Customer::create($data);
+        Student::create($data);
 
         return response(["Customer created successfully"]);
     }
@@ -57,7 +57,7 @@ class CustomerController extends Controller
     {
         $this->authorize('delete_customers');
 
-        // Customer::whereIn('id', $request->selected_items_ids)->delete();
+        // Student::whereIn('id', $request->selected_items_ids)->delete();
 
         return response(["selected customers deleted successfully"]);
     }

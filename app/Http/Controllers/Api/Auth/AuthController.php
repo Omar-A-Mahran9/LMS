@@ -28,8 +28,8 @@ class AuthController extends Controller
                 'email',
                 'exists:customers,email',
                 function ($attribute, $value, $fail) {
-                    $customer = Customer::whereEmail($value)->first();
-                     
+                    $customer = Student::whereEmail($value)->first();
+
                     if ($customer && $customer->block_flag === 1 )
                     {
                         $fail(__("Your account is blocked. Please contact support."));
@@ -39,7 +39,7 @@ class AuthController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        $customer = Customer::whereEmail($request->email)->first();
+        $customer = Student::whereEmail($request->email)->first();
 
         if (Hash::check($request->password, $customer->password))
         {
@@ -120,7 +120,7 @@ class AuthController extends Controller
         if ($request->image)
             $data['image'] = uploadImageToDirectory($request->file('image'), "Customers");
         $data['block_flag']       = 0;
-        $customer                 = Customer::create($data);
+        $customer                 = Student::create($data);
         $customer->remember_token = Str::random(10);
         $customer->save();
 

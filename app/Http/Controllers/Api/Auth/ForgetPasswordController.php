@@ -15,7 +15,7 @@ class ForgetPasswordController extends Controller
 
     public function sendOtp(Request $request, $phone)
     {
-        $customer = Customer::where('phone', $phone)->first();
+        $customer = Student::where('phone', $phone)->first();
         if (!$customer)
             return $this->failure(__("This user does not exist"));
 
@@ -29,13 +29,13 @@ class ForgetPasswordController extends Controller
             return $this->failure(__("Your account is blocked. Please contact support."));
         }
         $customer->sendOTP();
-        
+
         return $this->success("Send otp is successfully", ["customer" => new CustomerResource($customer)]);
     }
 
     public function reSendOtp(Request $request, $phone)
     {
-        $customer = Customer::where('phone', $phone)->first();
+        $customer = Student::where('phone', $phone)->first();
         if (!$customer)
             return $this->failure(__("This user does not exist"));
 
