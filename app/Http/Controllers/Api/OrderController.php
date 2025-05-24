@@ -26,14 +26,14 @@ class OrderController extends Controller
              return $this->failure( __('Name and Phone are required'));
         }
 
-        $existingCustomer = Customer::where(function ($query) use ($data) {
+        $existingCustomer = Studentwhere(function ($query) use ($data) {
             $query->where('phone', $data['phone']);
             if (!empty($data['email'])) {
                 $query->orWhere('email', $data['email']);
             }
         })->first();
 
-        $customer = $existingCustomer ?? Customer::create([
+        $customer = $existingCustomer ?? Studentcreate([
             'full_name'  => $data['name'],
             'phone'      => $data['phone'],
             'email'      => $data['email'] ?? null,

@@ -17,7 +17,7 @@ class StudentsRatesController extends Controller
     {
         $this->authorize('view_customersRate');
 
-        $customers = Customer::get(); // Get the count of blogs
+        $customers = Studentget(); // Get the count of blogs
         $categories = Category::all();
 
          $count_Student_rate = Student_rate::count(); // Get the count of blogs

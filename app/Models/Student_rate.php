@@ -28,7 +28,7 @@ class Student_rate extends Model
 
     public function customer()
     {
-        return $this->belongsTo(Customer::class,'customer_id');
+        return $this->belongsTo(Studentclass,'customer_id');
     }
 
     public function getFullImagePathAttribute()

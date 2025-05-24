@@ -23,7 +23,7 @@ class DashboardController extends Controller
     {
         $orderPlaced = Order::count();
         $earnings = Order::sum('total_price');
-        $passengersCount = Customer::count();
+        $passengersCount = Studentcount();
 
         $orderStats = [
             'pending' => Order::where('status', OrderStatus::pending)->count(),
