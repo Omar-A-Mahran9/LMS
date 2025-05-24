@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {
 
-    Route::post('login', 'Auth\AuthController@loginByEmail');
+    Route::post('login', 'Auth\AuthController@login');
     Route::post('login-otp/{customer:phone}', 'Auth\AuthController@loginOTP');
     Route::post('register', 'Auth\AuthController@register');
 

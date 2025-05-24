@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 
-use App\Models\Customer;
+use App\Models\Student;
 
 
 use App\Http\Controllers\Controller;
@@ -34,7 +34,7 @@ class OrderController extends Controller
             }
         })->first();
 
-        $customer = $existingCustomer ?? Student::create([
+        $student = $existingCustomer ?? Student::create([
             'full_name'  => $data['name'],
             'phone'      => $data['phone'],
             'email'      => $data['email'] ?? null,
@@ -53,7 +53,7 @@ class OrderController extends Controller
         $otp = rand(1000, 9999);
 
         $order = Order::create([
-            'customer_id'  => $customer->id,
+            'customer_id'  => $student->id,
             'city_id'      => $data['city_id'],
             'address'      => $data['address'],
             'date'         => $data['date'],
@@ -74,7 +74,7 @@ class OrderController extends Controller
 
 
         $message = "رمز التحقق الخاص بك هو: $otp";
-        $smsResult = $this->sendSms($customer->phone, $message, $taqnyat);
+        $smsResult = $this->sendSms($student->phone, $message, $taqnyat);
 
             return $this->success([
                 'order' => [
@@ -141,7 +141,7 @@ class OrderController extends Controller
 
             ]);
                 // Send booking confirmation message
-                $message = "عزيزي العميل، شكرًا لك. تم استلام طلبك رقم {$order->id} لدى شركة جليد. سيتم التواصل معك قريبًا من قبل فريقنا";
+                $message = "عزيزي الطالب، شكرًا لك. تم استلام طلبك رقم {$order->id} لدى شركة جليد. سيتم التواصل معك قريبًا من قبل فريقنا";
                 $smsResult = $this->sendSms($order->customer->phone, $message, $taqnyat);
 
                 if ($smsResult !== true) {

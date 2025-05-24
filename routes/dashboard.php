@@ -12,7 +12,7 @@ Route::get("admins/restore-selected", "AdminController@restoreSelected");
 Route::delete("categories/delete-selected", "CategoryController@deleteSelected");
 Route::get("categories/restore-selected", "CategoryController@restoreSelected");
 Route::delete("contact-requests/delete-selected", "ContactRequestController@deleteSelected");
-Route::delete("customers/delete-selected", "CustomerController@deleteSelected");
+Route::delete("students/delete-selected", "StudentController@deleteSelected");
 Route::delete("tags/delete-selected", "TagController@deleteSelected");
 Route::get("tags/restore-selected", "TagController@restoreSelected");
 Route::delete("cities/delete-selected", "GovernmentsController@deleteSelected");
@@ -81,11 +81,11 @@ Route::resource('maincategories', 'MainCategoryController')->except(['create', '
 Route::resource('design-types', 'DesignTypeController')->except(['create', 'edit']);
 Route::get('/parent-categories', 'CategoryController@parentCategories');
 Route::resource('contact-requests', 'ContactRequestController')->except(['create', 'edit', 'store', 'update']);
-Route::resource('customers', 'CustomerController')->except(['create', 'edit']);
-Route::resource('customers_rate', 'StudentsRatesController')->except(['create', 'edit']);
+Route::resource('students', 'StudentController')->except(['create', 'edit']);
+Route::resource('students_rate', 'StudentsRatesController')->except(['create', 'edit']);
 
-Route::get('customers/blocking/{customer}', 'CustomerController@blocked')->name('customers.blocked');
-Route::get('customers/blocked-selected', 'CustomerController@blockedSelected');
+Route::get('students/blocking/{student}', 'StudentController@blocked')->name('students.blocked');
+Route::get('students/blocked-selected', 'StudentController@blockedSelected');
 
 Route::get('vendor/{vendor}/shipping-details', 'VendorController@createShippingDetails')->name('vendor.shipping-details');
 Route::get('vendor/{vendor}/edit-shipping-details', 'VendorController@editShippingDetails')->name('vendor.edit-shipping-details');

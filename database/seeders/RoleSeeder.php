@@ -34,7 +34,7 @@ class RoleSeeder extends Seeder
             'settings' => ['unused_actions' => [1, 2, 4], 'extra_actions' => []], // 1,2,4 are the indices of unused action from $actions array
             'recycle_bin' => ['unused_actions' => [1, 2, 3], 'extra_actions' => ['restore']],
             'contact_us' => ['unused_actions' => [1, 2, 4], 'extra_actions' => []],
-            'customers' => ['unused_actions' => [1, 2, 4], 'extra_actions' => ['block']],
+            'students' => ['unused_actions' => [1, 2, 4], 'extra_actions' => ['block']],
         ];
 
 

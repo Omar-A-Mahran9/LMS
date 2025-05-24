@@ -34,7 +34,7 @@
                                     stroke="#1C1D22" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </div>
-                        <h4 class="fw-bold me-auto px-4 py-3">{{ __('Customers Rates') }}</h4>
+                        <h4 class="fw-bold me-auto px-4 py-3">{{ __('students Rates') }}</h4>
 
                         <!--end::Avatar-->
                     </div>
@@ -53,7 +53,7 @@
                     <div class="d-flex  justify-content-between flex-wrap ">
                         <!--begin::Due-->
                         <div class=" rounded min-w-125px py-1 px-4 me-7">
-                            <div class="fs-2 fw-bold">{{ __('Customers Rates count') }}</div>
+                            <div class="fs-2 fw-bold">{{ __('students Rates count') }}</div>
                             <div class="fs-4  ">{{ $count_Student_rate }}</div>
                         </div>
                         <!--end::Due-->
@@ -97,7 +97,7 @@
                                     stroke="#1C1D22" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </div>
-                        <h4 class="fw-bold me-auto px-4 py-3">{{ __('Customers Rates') }}</h4>
+                        <h4 class="fw-bold me-auto px-4 py-3">{{ __('students Rates') }}</h4>
 
                         <!--end::Avatar-->
                     </div>
@@ -157,7 +157,7 @@
             data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
             <!--begin::Card title-->
             <div class="card-title m-0">
-                <h3 class="fw-bold m-0">{{ __('Customers Rates List') }}</h3>
+                <h3 class="fw-bold m-0">{{ __('students Rates List') }}</h3>
             </div>
             <!--end::Card title-->
         </div>
@@ -225,7 +225,7 @@
 
     {{-- begin::Add Country Modal --}}
     {{-- begin::Add Rate Modal --}}
-    <form id="crud_form" class="ajax-form" action="{{ route('dashboard.customers_rate.store') }}" method="POST"
+    <form id="crud_form" class="ajax-form" action="{{ route('dashboard.students_rate.store') }}" method="POST"
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
         <div class="modal fade" tabindex="-1" id="crud_modal">
@@ -365,7 +365,7 @@
                 $("#form_title").text(__('Add new rate'));
                 $("[name='_method']").remove();
                 $("#crud_form").trigger('reset');
-                $("#crud_form").attr('action', `/dashboard/customers_rate`);
+                $("#crud_form").attr('action', `/dashboard/students_rate`);
                 $('.image-input-wrapper').css('background-image', `url('/placeholder_images/default.svg')`);
             });
 

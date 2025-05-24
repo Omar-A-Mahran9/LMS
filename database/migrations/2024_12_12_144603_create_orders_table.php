@@ -29,7 +29,7 @@ return new class extends Migration
             $table->timestamps();
             $table->boolean('is_paid')->default(false);
 
-            // $table->foreign('customer_id')->references('id')->on('customers');
+            // $table->foreign('customer_id')->references('id')->on('students');
             // $table->foreign('city_id')->references('id')->on('cities');
         });
 

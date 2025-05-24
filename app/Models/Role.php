@@ -31,13 +31,13 @@ class Role extends Model
 
         'home_content',
 
-        'customers_rate',
+        'students_rate',
 
         'CommonQuestion',
 
-        'customers',
+        'students',
 
-        'customersRate',
+        'students_rate',
 
          'roles',
 

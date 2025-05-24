@@ -7,74 +7,78 @@ use App\Rules\IsActive;
 use App\Rules\PasswordNumberAndLetter;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Rules\NotNumbersOnly;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\CustomerResource;
-use App\Http\Resources\UserResource;
-use App\Models\Customer;
+use App\Http\Resources\Api\StudentResource;
 use App\Models\Student;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Laravel\Socialite\Facades\Socialite;
+
 
 class AuthController extends Controller
 {
-    public function loginByEmail(Request $request)
-    {
-        $request->validate([
-            'email' => [
-                'required',
-                'email',
-                'exists:customers,email',
-                function ($attribute, $value, $fail) {
-                    $customer = Customer::whereEmail($value)->first();
+ public function login(Request $request)
+{
+    $request->validate([
+        'login' => ['required', 'string'], // هنا ممكن يكون إيميل أو رقم هاتف
+        'password' => ['required', 'min:6'],
+    ]);
 
-                    if ($customer && $customer->block_flag === 1 )
-                    {
-                        $fail(__("Your account is blocked. Please contact support."));
-                    }
-                }
-            ],
-            'password' => 'required|min:6',
+    $loginInput = $request->input('login');
+
+    // تحديد هل هو إيميل أو رقم هاتف
+    $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+
+    // جلب الطالب حسب النوع
+    $student = Student::where($fieldType, $loginInput)->first();
+
+    if (!$student) {
+        return $this->validationFailure([
+            'login' => [__('Your Data is not found')],
         ]);
-
-        $customer = Customer::whereEmail($request->email)->first();
-
-        if (Hash::check($request->password, $customer->password))
-        {
-            $token = $customer->createToken('Personal access token to apis')->plainTextToken;
-
-            return $this->success("logged in successfully", ['token' => $token, "user" => new CustomerResource($customer)]);
-
-        } else
-        {
-            return $this->validationFailure(["password" => [__("Password mismatch")]]);
-        }
     }
 
-    public function loginOTP(Request $request, Customer $customer)
+    if ($student->block_flag === 1) {
+        return $this->validationFailure([
+            'login' => [__('Your account is blocked. Please contact support.')],
+        ]);
+    }
+
+    if (Hash::check($request->password, $student->password)) {
+        $token = $student->createToken('Personal access token to apis')->plainTextToken;
+
+        return $this->success("logged in successfully", [
+            'token' => $token,
+            'user' => new StudentResource($student),
+        ]);
+    }
+
+    return $this->validationFailure([
+        'password' => [__("Password mismatch")],
+    ]);
+}
+
+
+    public function loginOTP(Request $request, Student $student)
     {
-        $request['phone'] = $customer->phone;
+        $request['phone'] = $student->phone;
         $request->validate([
-            'phone' => ['required', 'exists:customers'],
+            'phone' => ['required', 'exists:students'],
             'otp' => [
                 'required',
-                Rule::exists('customers')->where(function ($query) use ($customer) {
-                    return $query->where('id', $customer->id);
+                Rule::exists('students')->where(function ($query) use ($student) {
+                    return $query->where('id', $student->id);
                 })
             ],
         ]);
 
-        $customer->update([
+        $student->update([
             "otp" => null
         ]);
 
-        $customer->update(['fcm_token' => $request->fcm_token]);
-        $token = $customer->createToken('Personal access token to apis')->plainTextToken;
+        $student->update(['fcm_token' => $request->fcm_token]);
+        $token = $student->createToken('Personal access token to apis')->plainTextToken;
 
-        return $this->success("logged in successfully", ['token' => $token, "customer" => new CustomerResource($customer)]);
+        return $this->success("logged in successfully", ['token' => $token,  "student" => new StudentResource($student)]);
     }
 
 
@@ -128,7 +132,7 @@ public function register(Request $request)
     return response()->json([
         'message' => 'Registration successful',
         'token' => $token,
-        'student' => new StudentResource($student),,
+        'student' => new StudentResource($student),
     ], 201);
 }
 

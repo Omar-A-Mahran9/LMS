@@ -55,6 +55,14 @@
                 @endcan
 
                 <!--begin:Menu item-->
+                @can('view_students')
+                    <x-dashboard.aside-item :slug="'students'" :route="route('dashboard.students.index')" :title="__('Students')">
+                        <i class="ki-outline ki-people fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
                 @can('view_categories')
                     <x-dashboard.aside-item :slug="'categories'" :route="route('dashboard.categories.index', ['type' => 'parent'])" :title="__('Categories')">
                         <i class="ki-outline ki-category fs-2"></i>
@@ -107,17 +115,11 @@
                     </x-dashboard.aside-item>
                 @endcan
 
-                <!--begin:Menu item-->
-                {{-- @can('view_customers')
-                    <x-dashboard.aside-item :slug="'customers'" :route="route('dashboard.customers.index')" :title="__('Customers')">
-                        <i class="ki-outline ki-people fs-2"></i>
-                    </x-dashboard.aside-item>
-                @endcan --}}
-                <!--end:Menu item-->
+
 
                 <!--begin:Menu item-->
-                @can('view_customers_rate')
-                    <x-dashboard.aside-item :slug="'customers_rate'" :route="route('dashboard.customers_rate.index')" :title="__('customers Rate')">
+                @can('view_students_rate')
+                    <x-dashboard.aside-item :slug="'students_rate'" :route="route('dashboard.students_rate.index')" :title="__('students Rate')">
                         <i class="ki-outline ki-star fs-2 text-muted"></i>
                     </x-dashboard.aside-item>
                 @endcan

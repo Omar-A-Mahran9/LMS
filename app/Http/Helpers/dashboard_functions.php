@@ -39,7 +39,7 @@ if (!function_exists('uploadImageToDirectory')) {
         $model     = Str::plural($model);
         $model     = Str::ucfirst($model);
         $path      = "/Images/$model";
-        $imageName = str_replace(' ', '', 'jalid_' . time() . $imageFile->getClientOriginalName());  // Set Image name
+        $imageName = str_replace(' ', '', 'lms_' . time() . $imageFile->getClientOriginalName());  // Set Image name
         $imageFile->storeAs($path, $imageName, 'public');
         return $imageName;
     }
@@ -52,7 +52,7 @@ if (!function_exists('uploadAudioToDirectory')) {
         $model     = Str::plural($model);
         $model     = Str::ucfirst($model);
         $path      = "/Audio/$model"; // Folder structure: storage/app/public/Audio/Models
-        $audioName = str_replace(' ', '', 'jalid_' . time() . $audioFile->getClientOriginalName()); // Unique name
+        $audioName = str_replace(' ', '', 'lms_' . time() . $audioFile->getClientOriginalName()); // Unique name
         $audioFile->storeAs($path, $audioName, 'public');
         return $audioName; // Just the filename
     }

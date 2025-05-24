@@ -224,6 +224,15 @@ return [
 
     'attributes' => [
         'first_name' => 'الاسم الأول',
+        'middle_name' => 'الاسم الأوسط',
+        'parent_job' => 'وظيفة ولي الأمر',
+        'parentـphone' => 'تليفون ولي الأمر',
+        'question_ar' => 'السؤال بالعربية',
+        'question_en' => 'السؤال بالانجليزية',
+        'answer_en' => 'الاجابة بالانجليزية',
+        'answer_ar' => 'الاجابة بالعربية',
+
+        'government_id' => 'المحافظة',
         'last_name' => 'اسم العائلة',
         'message' => 'الرسالة',
         'email' => 'البريد الإلكتروني',

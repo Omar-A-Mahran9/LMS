@@ -1,7 +1,7 @@
 "use strict";
 
 // Class definition
-var KTCustomersList = (function () {
+var KT studentsList = (function () {
     // Define shared variables
     var datatable;
     var filterMonth;
@@ -194,7 +194,7 @@ var KTCustomersList = (function () {
         deleteSelected.addEventListener("click", function () {
             // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
             Swal.fire({
-                text: "Are you sure you want to delete selected customers?",
+                text: "Are you sure you want to delete selected  students?",
                 icon: "warning",
                 showCancelButton: true,
                 buttonsStyling: false,
@@ -207,7 +207,7 @@ var KTCustomersList = (function () {
             }).then(function (result) {
                 if (result.value) {
                     Swal.fire({
-                        text: "You have deleted all selected customers!.",
+                        text: "You have deleted all selected  students!.",
                         icon: "success",
                         buttonsStyling: false,
                         confirmButtonText: "Ok, got it!",
@@ -215,7 +215,7 @@ var KTCustomersList = (function () {
                             confirmButton: "btn fw-bold btn-primary",
                         },
                     }).then(function () {
-                        // Remove all selected customers
+                        // Remove all selected  students
                         checkboxes.forEach((c) => {
                             if (c.checked) {
                                 datatable
@@ -232,7 +232,7 @@ var KTCustomersList = (function () {
                     });
                 } else if (result.dismiss === "cancel") {
                     Swal.fire({
-                        text: "Selected customers was not deleted.",
+                        text: "Selected  students was not deleted.",
                         icon: "error",
                         buttonsStyling: false,
                         confirmButtonText: "Ok, got it!",
@@ -287,7 +287,7 @@ var KTCustomersList = (function () {
     // Public methods
     return {
         init: function () {
-            table = document.querySelector("#kt_customers_table");
+            table = document.querySelector("#kt_students_table");
 
             if (!table) {
                 return;
@@ -305,5 +305,5 @@ var KTCustomersList = (function () {
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
-    KTCustomersList.init();
+    KT studentsList.init();
 });

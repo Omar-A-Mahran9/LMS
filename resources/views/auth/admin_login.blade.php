@@ -16,7 +16,7 @@ License: For each use you must have a valid license purchased only from above li
 
 <head>
     <base href="../../../" />
-    <title>{{ __('JALID') }}</title>
+    <title>{{ __('Learning System') }}</title>
     <meta charset="utf-8" />
     <meta name="description"
         content="The most advanced Bootstrap 5 Admin Theme with 40 unique prebuilt layouts on Themeforest trusted by 100,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue, Asp.Net Core, Rails, Spring, Blazor, Django, Express.js, Node.js, Flask, Symfony & Laravel versions. Grab your copy now and get life-time updates for free." />
@@ -28,7 +28,7 @@ License: For each use you must have a valid license purchased only from above li
     <meta property="og:title"
         content="Metronic - Bootstrap Admin Template, HTML, VueJS, React, Angular. Laravel, Asp.Net Core, Ruby on Rails, Spring Boot, Blazor, Django, Express.js, Node.js, Flask Admin Dashboard Theme & Template" />
     <meta property="og:url" content="https://keenthemes.com/metronic" />
-    <meta property="og:site_name" content="JALID" />
+    <meta property="og:site_name" content="Learning System" />
     <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
     <link rel="shortcut icon" href="{{ asset('placeholder_images/favicon.svg') }}" />
     <!--begin::Fonts(mandatory for all pages)-->

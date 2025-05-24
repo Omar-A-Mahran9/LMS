@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\Customer;
+use App\Models\Student;
 use App\Models\Student;
 use App\Models\Student_rate;
  use Illuminate\Http\Request;
@@ -16,9 +16,9 @@ class StudentsRatesController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('view_customersRate');
+        $this->authorize('view_studentsRate');
 
-        $customers = Student::get(); // Get the count of blogs
+        $students = Student::get(); // Get the count of blogs
         $categories = Category::all();
 
          $count_Student_rate = Student_rate::count(); // Get the count of blogs
@@ -29,13 +29,13 @@ class StudentsRatesController extends Controller
             return response($data);
          }
         else
-            return view('dashboard.Student_rate.index',compact('count_Student_rate','visited_site','customers','categories'));
+            return view('dashboard.Student_rate.index',compact('count_Student_rate','visited_site','students','categories'));
     }
 
 
     public function store(Request $request)
     {
-        $this->authorize('update_customersRate');
+        $this->authorize('update_studentsRate');
 
             $data = $request->validate([
             'full_name'   => 'required|string|max:255',
@@ -69,7 +69,7 @@ class StudentsRatesController extends Controller
 
     public function update(Request $request, Student_rate $Student_rate)
     {
-        $this->authorize('update_customersRate');
+        $this->authorize('update_studentsRate');
 
         $data = $request->validate([
             'full_name' => 'required|string|max:255',
@@ -102,12 +102,12 @@ class StudentsRatesController extends Controller
 
 
 
-    public function destroy( $customers_rates)
+    public function destroy( $students_rates)
     {
-         $customrRate=Student_rate::find($customers_rates);
-        $this->authorize('delete_customersRate');
+         $customrRate=Student_rate::find($students_rates);
+        $this->authorize('delete_studentsRate');
 
         $customrRate->delete();
-        return response(["customers_rates deleted successfully"]);
+        return response(["students_rates deleted successfully"]);
     }
 }

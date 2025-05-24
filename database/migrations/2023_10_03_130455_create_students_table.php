@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
+            $table->string('login_code')->unique()->nullable();
 
             // Contact fields
             $table->string('phone')->unique();
@@ -55,6 +56,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('students');
     }
 };

@@ -41,8 +41,13 @@ class Student extends Authenticatable
         return asset(getImagePathFromDirectory($this->image, 'Students', "default.svg"));
     }
     public function category()
-{
-    return $this->belongsTo(Category::class);
-}
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function government()
+    {
+        return $this->belongsTo(Government::class);
+    }
 
 }

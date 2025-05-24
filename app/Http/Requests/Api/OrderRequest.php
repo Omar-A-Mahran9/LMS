@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
-use App\Models\Customer;
+use App\Models\Student;
 use App\Rules\PhoneNumber;
 use App\Rules\NotNumbersOnly;
 use Illuminate\Validation\Rule;

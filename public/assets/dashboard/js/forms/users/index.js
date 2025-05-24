@@ -15,7 +15,7 @@ $(document).ready(function () {
 var users = null;
 
 function retrieveusersFormBackend() {
-    let form = document.getElementById('filter-form');
+    let form = document.getElementById("filter-form");
     let isAdvancedSearch = $("#kt_advanced_search_form").hasClass("show");
 
     $("input[name='advanced_search']").val(isAdvancedSearch);
@@ -28,10 +28,10 @@ function retrieveusersFormBackend() {
             hideLoading();
             userItems(response);
         },
-        error: function(response){
+        error: function (response) {
             hideLoading();
             console.log(response);
-        }
+        },
     });
 }
 
@@ -56,7 +56,7 @@ var userItems = function (response) {
                             <!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-11-29-094551/core/html/src/media/icons/duotune/general/gen041.svg-->
                             <img class="w-50" src="/assets/web/images/User/gamer.svg" >
                             <!--end::Svg Icon-->
-                            ${ __('تسجيل عميل جديد') }
+                            ${__("تسجيل طالب جديد")}
                         </div>
                         <!--end::Label-->
                     </a>
@@ -69,13 +69,15 @@ var userItems = function (response) {
         <!--end::Col-->
         `;
 
-
     if (Object.keys(users).length > 0) {
         $("#no-results-alert").hide();
         $.each(users, function (index, user) {
-            let userNameToArray =  user.name.split(" ");
+            let userNameToArray = user.name.split(" ");
             let firstName = userNameToArray[0].charAt(0);
-            let lastName = userNameToArray.length > 1 ?userNameToArray[userNameToArray.length - 1].charAt(0):'';
+            let lastName =
+                userNameToArray.length > 1
+                    ? userNameToArray[userNameToArray.length - 1].charAt(0)
+                    : "";
             userCards += `
             <div class="col-md-6 col-xl-4" id="card-${user.id}">
                 <!--begin::Card-->
@@ -86,10 +88,16 @@ var userItems = function (response) {
                         <div class="card-title m-0">
                             <!--begin::Avatar-->
                             <div class="symbol symbol-50px">
-                                <div id="profileImage" style="background:${getRandomColorCode()}">${firstName+lastName} </div>
+                                <div id="profileImage" style="background:${getRandomColorCode()}">${
+                firstName + lastName
+            } </div>
                             </div>
                             <!--end::Avatar-->
-                            <a href="/dashboard/users/${user.id}" class="text-gray-900 text-hover-primary fs-2 fw-bold ms-3">${user.name}</a>
+                            <a href="/dashboard/users/${
+                                user.id
+                            }" class="text-gray-900 text-hover-primary fs-2 fw-bold ms-3">${
+                user.name
+            }</a>
                         </div>
                         <!--end::Car Title-->
                         <!--begin::Card toolbar-->
@@ -116,13 +124,17 @@ var userItems = function (response) {
                                     data-kt-menu="true">
                                     <!--begin::Heading-->
                                     <div class="menu-item px-3">
-                                        <div class="menu-content text-muted pb-2 px-3 fs-7 text-uppercase">${ __('الإجراءات') }</div>
+                                        <div class="menu-content text-muted pb-2 px-3 fs-7 text-uppercase">${__(
+                                            "الإجراءات"
+                                        )}</div>
                                     </div>
                                     <!--end::Heading-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
                                         <a href="/dashboard/users/${user.id}"
-                                            class="menu-link flex-stack px-3">${ __('بيانات العميل') }
+                                            class="menu-link flex-stack px-3">${__(
+                                                "بيانات الطالب"
+                                            )}
                                             <!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-12-26-231111/core/html/src/media/icons/duotune/general/gen045.svg-->
                                             <span class="svg-icon svg-icon-muted svg-icon-2">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -141,25 +153,36 @@ var userItems = function (response) {
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="#" onclick="editUser(${user.id})"
-                                            class="menu-link flex-stack px-3">${ __('تعديل') }
+                                        <a href="#" onclick="editUser(${
+                                            user.id
+                                        })"
+                                            class="menu-link flex-stack px-3">${__(
+                                                "تعديل"
+                                            )}
                                             <i class="fonticon-content-marketing fs-6"></i></a>
                                     </div>
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="#" class="menu-link flex-stack px-3" onclick="deleteUser(${user.id})">${ __('حذف') }
+                                        <a href="#" class="menu-link flex-stack px-3" onclick="deleteUser(${
+                                            user.id
+                                        })">${__("حذف")}
                                             <i class="fonticon-trash-bin fs-3"></i></a>
                                     </div>
                                     <!--end::Menu item-->
-                                    ${user.active ? `<div class="menu-item px-3">
-                                                        <a href="#" class="menu-link flex-stack px-3" onclick="blockUser(${user.id})">${ __('حظر') }
+                                    ${
+                                        user.active
+                                            ? `<div class="menu-item px-3">
+                                                        <a href="#" class="menu-link flex-stack px-3" onclick="blockUser(${
+                                                            user.id
+                                                        })">${__("حظر")}
                                                             <i class="fonticon-trash-bin fs-3"></i>
                                                         </a>
                                                     </div>`
-                                                    :
-                                                    `<div class="menu-item px-3">
-                                                        <a href="#" class="menu-link flex-stack px-3" onclick="activateUser(${user.id})">${ __('الغاء الحظر') }
+                                            : `<div class="menu-item px-3">
+                                                        <a href="#" class="menu-link flex-stack px-3" onclick="activateUser(${
+                                                            user.id
+                                                        })">${__("الغاء الحظر")}
                                                         <i class="fonticon-trash-bin fs-3"></i></a>
                                                     </div>`
                                     }
@@ -180,15 +203,19 @@ var userItems = function (response) {
                                 <a href="javascript:;" class="d-flex align-items-center text-gray-400 me-5 mb-2 cursor-default disabled">
                                     <i class="fa-solid fa-ranking-star fa-lg"> </i>
 
-                                    <!--end::Svg Icon-->${ user.rank? user.rank.name: __('لم يحدد بعد') }
+                                    <!--end::Svg Icon-->${
+                                        user.rank
+                                            ? user.rank.name
+                                            : __("لم يحدد بعد")
+                                    }
                                 </a>
-                                <a href="tel:${ user.phone }"
+                                <a href="tel:${user.phone}"
                                     class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
                                     <!--begin:: Icon | path: icons/duotune/general/gen018.svg-->
                                     <i class="fonticon-outgoing-call me-1"></i>
-                                    <!--end:: Icon-->${ user.phone }
+                                    <!--end:: Icon-->${user.phone}
                                 </a>
-                                <a href="mailto: ${ user.email }"
+                                <a href="mailto: ${user.email}"
                                     class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
                                     <!--begin::Svg Icon | path: icons/duotune/communication/com011.svg-->
                                     <span class="svg-icon svg-icon-4 me-1">
@@ -202,7 +229,7 @@ var userItems = function (response) {
                                                 fill="currentColor" />
                                         </svg>
                                     </span>
-                                    <!--end::Svg Icon-->${ user.email }
+                                    <!--end::Svg Icon-->${user.email}
                                 </a>
                             </div>
                             <!--end::Info-->
@@ -212,20 +239,32 @@ var userItems = function (response) {
                         <div class="d-flex flex-wrap">
                             <!--begin::Due-->
                             <div class="border border-gray-300 border-dashed rounded py-2 px-4 me-2 mb-3">
-                                <div class="fs-6 text-gray-800 fw-bold">${ user.created_at }</div>
-                                <div class="fw-semibold text-gray-400">${ __('تاريخ الاشتراك') }</div>
+                                <div class="fs-6 text-gray-800 fw-bold">${
+                                    user.created_at
+                                }</div>
+                                <div class="fw-semibold text-gray-400">${__(
+                                    "تاريخ الاشتراك"
+                                )}</div>
                             </div>
                             <!--end::Due-->
                             <!--begin::Budget-->
                             <div class="border border-gray-300 border-dashed rounded py-2 me-2 px-4 mb-3">
-                                <div class="fs-6 text-gray-800 fw-bold">${  user.wallet_balance + ' ' + __('دولار') }</div>
-                                <div class="fw-semibold text-gray-400">${ __('رصيد المحفظة') }</div>
+                                <div class="fs-6 text-gray-800 fw-bold">${
+                                    user.wallet_balance + " " + __("دولار")
+                                }</div>
+                                <div class="fw-semibold text-gray-400">${__(
+                                    "رصيد المحفظة"
+                                )}</div>
                             </div>
                             <!--end::Budget-->
                             <!--begin::Budget-->
                             <div class="border border-gray-300 border-dashed rounded py-2 px-4 mb-3">
-                                <div class="fs-6 text-gray-800 fw-bold">${ user.orders.length + ' ' + __('الطلبات')}</div>
-                                <div class="fw-semibold text-gray-400">${ __('عدد الطلبات') }</div>
+                                <div class="fs-6 text-gray-800 fw-bold">${
+                                    user.orders.length + " " + __("الطلبات")
+                                }</div>
+                                <div class="fw-semibold text-gray-400">${__(
+                                    "عدد الطلبات"
+                                )}</div>
                             </div>
                             <!--end::Budget-->
                         </div>
@@ -235,14 +274,11 @@ var userItems = function (response) {
                 </div>
                 <!--end::Card-->
             </div>
-            `
+            `;
         });
-
-
-    }else{
-
-
-        if(response.total > 0){ // check if database contains users
+    } else {
+        if (response.total > 0) {
+            // check if database contains users
             userCards = ``;
             $("#no-results-alert").fadeIn();
         }
@@ -252,26 +288,27 @@ var userItems = function (response) {
     deleteuser();
     paginator(response);
     KTMenu.createInstances();
-
-}
+};
 
 var paginator = function (response) {
-    var links = '';
-    var paginationContent = '';
+    var links = "";
+    var paginationContent = "";
     var users = response.users.data || [];
     var paginationData = response.users;
-    var prevUrl = paginationData.prev_page_url || 'javascript:;';
-    var nextUrl = paginationData.next_page_url || 'javascript:;';
+    var prevUrl = paginationData.prev_page_url || "javascript:;";
+    var nextUrl = paginationData.next_page_url || "javascript:;";
 
     if (users.length != 0) {
-        for (var i = 1; i <= paginationData.last_page ; i++) {
+        for (var i = 1; i <= paginationData.last_page; i++) {
             var isCurrentPage = paginationData.current_page == i;
-            var activeClass = isCurrentPage ? 'active' : '';
+            var activeClass = isCurrentPage ? "active" : "";
 
-            if(paginationData.links[i] !== undefined){
+            if (paginationData.links[i] !== undefined) {
                 links += `
                 <li class="page-item ${activeClass}">
-                    <a href="${isCurrentPage? '#': paginationData.links[i].url}" class="page-link">${i}</a>
+                    <a href="${
+                        isCurrentPage ? "#" : paginationData.links[i].url
+                    }" class="page-link">${i}</a>
                 </li>
                 `;
             }
@@ -280,20 +317,26 @@ var paginator = function (response) {
         <div class="spinner-border spinner-border-sm my-auto d-none" id="pagination-loading" role="status">
             <span class="sr-only">Loading...</span>
         </div>
-        <li class="page-item previous ${prevUrl == 'javascript:;'? 'disabled': ''}">
+        <li class="page-item previous ${
+            prevUrl == "javascript:;" ? "disabled" : ""
+        }">
             <a href="${prevUrl}" class="page-link">
                 <i class="previous"></i>
             </a>
         </li>
         ${links}
-        <li class="page-item next ${nextUrl == 'javascript:;'? 'disabled': ''}">
+        <li class="page-item next ${
+            nextUrl == "javascript:;" ? "disabled" : ""
+        }">
             <a href="${nextUrl}" class="page-link">
                 <i class="next"></i>
             </a>
         </li>
         `;
 
-        $(".pagination-info").text(`عرض 1 إلى ${paginationData.per_page} من إجمالي ${paginationData.total}`);
+        $(".pagination-info").text(
+            `عرض 1 إلى ${paginationData.per_page} من إجمالي ${paginationData.total}`
+        );
 
         $("#pagination-container").show();
     } else {
@@ -301,77 +344,79 @@ var paginator = function (response) {
     }
 
     $(".pagination").html(paginationContent);
-
-}
+};
 
 var pageTransition = function () {
-    $(document).on('click', '.page-link', function (e) {
+    $(document).on("click", ".page-link", function (e) {
         e.preventDefault();
 
-        var url = $(this).attr('href');
+        var url = $(this).attr("href");
 
-        if (url != '#') {
-            $("#pagination-loading").removeClass('d-none')
+        if (url != "#") {
+            $("#pagination-loading").removeClass("d-none");
 
             $.get(url, $("#filterForm").serialize(), function (response) {
-
-                $("#pagination-loading").addClass('d-none')
+                $("#pagination-loading").addClass("d-none");
                 userItems(response);
             });
-
         }
     });
-}
+};
 
-function showLoading(){
-    $('#users-container').html('');
-    $('#loading-alert').removeClass('d-none');
+function showLoading() {
+    $("#users-container").html("");
+    $("#loading-alert").removeClass("d-none");
 }
-function hideLoading(){
-    $('#loading-alert').addClass('d-none');
+function hideLoading() {
+    $("#loading-alert").addClass("d-none");
 }
 
 function deleteuser(params) {
-    $('.delete-item').on('click', function (e) {
+    $(".delete-item").on("click", function (e) {
         e.preventDefault();
 
-        let id = $(this).attr('data-id');
-        deleteElement('' , `/dashboard/users/${id}` , () => retrieveusersFormBackend())
+        let id = $(this).attr("data-id");
+        deleteElement("", `/dashboard/users/${id}`, () =>
+            retrieveusersFormBackend()
+        );
     });
 }
 
-function editUser(id){
-    let user = users.find(user => user.id === id);
+function editUser(id) {
+    let user = users.find((user) => user.id === id);
     console.log(user);
-    $("#form_title").text(__('تعديل بيانات الفئة'));
+    $("#form_title").text(__("تعديل بيانات الفئة"));
     // $("#name_en_inp").val(data.name_en);
     // $("#name_ar_inp").val(data.name_ar);
-    $('#name_inp').val(user.name??'')
-    $('#email_inp').val(user.email??'')
-    $('#phone_inp').val(user.phone??'')
-    $(`#rank_id_inp`).val(user.rank_id).attr('selected',true)
+    $("#name_inp").val(user.name ?? "");
+    $("#email_inp").val(user.email ?? "");
+    $("#phone_inp").val(user.phone ?? "");
+    $(`#rank_id_inp`).val(user.rank_id).attr("selected", true);
 
-    $(`#rank_id_inp`).trigger('change');
-    $('#affiliate_discount_inp').val(user.affiliate_discount??'')
+    $(`#rank_id_inp`).trigger("change");
+    $("#affiliate_discount_inp").val(user.affiliate_discount ?? "");
 
-    $("#crud_form").attr('action', `/dashboard/users/${user.id}`);
+    $("#crud_form").attr("action", `/dashboard/users/${user.id}`);
     $("#crud_form").prepend(`<input type="hidden" name="_method" value="PUT">`);
-    $("[for*='password']").removeClass('required');
-    $("#crud_modal").modal('show');
+    $("[for*='password']").removeClass("required");
+    $("#crud_modal").modal("show");
 }
 
-function addNew(){
-
-    $("#form_title").text(__('اضافة عميل جديد'));
+function addNew() {
+    $("#form_title").text(__("اضافة طالب جديد"));
     $("[name='_method']").remove();
-    $("#crud_form").trigger('reset');
-    $("#crud_form").attr('action', `/dashboard/users`);
+    $("#crud_form").trigger("reset");
+    $("#crud_form").attr("action", `/dashboard/users`);
 }
 
-function deleteUser(id){
-    deleteAlert(`${__('هل انت متاكد من حذف  ')} ${__('عناصر سيتم حذف البيانات المرتبطة بهم')}`).then(function (result) {
-        if (result.value){
-            loadingAlert(__("جار الحذف..."))
+function deleteUser(id) {
+    deleteAlert(
+        `${__("هل انت متاكد من حذف  ")} ${__(
+            "عناصر سيتم حذف البيانات المرتبطة بهم"
+        )}`
+    ).then(function (result) {
+        if (result.value) {
+            loadingAlert(__("جار الحذف..."));
             $.ajax({
                 type: "delete",
                 url: `/dashboard/users/${id}`,
@@ -380,23 +425,26 @@ function deleteUser(id){
                     retrieveusersFormBackend();
                 },
                 error: function (err) {
-                    if (err.hasOwnProperty('responseJSON')) {
-                        if (err.responseJSON.hasOwnProperty('message')) {
-                            errorAlert(err.responseJSON.message)
+                    if (err.hasOwnProperty("responseJSON")) {
+                        if (err.responseJSON.hasOwnProperty("message")) {
+                            errorAlert(err.responseJSON.message);
                         }
                     }
                     console.log(err);
-                }
+                },
             });
-
         }
     });
 }
 
-function blockUser(id){
-    blockAlert(`${__('هل انت متاكد من حظر  ')} ${__('المستخدم سيتم حذف البيانات المرتبطة به')}`).then(function (result) {
-        if (result.value){
-            loadingAlert(__("جار الحظر..."))
+function blockUser(id) {
+    blockAlert(
+        `${__("هل انت متاكد من حظر  ")} ${__(
+            "المستخدم سيتم حذف البيانات المرتبطة به"
+        )}`
+    ).then(function (result) {
+        if (result.value) {
+            loadingAlert(__("جار الحظر..."));
             $.ajax({
                 type: "get",
                 url: `/dashboard/users/${id}/block`,
@@ -405,41 +453,40 @@ function blockUser(id){
                     retrieveusersFormBackend();
                 },
                 error: function (err) {
-                    if (err.hasOwnProperty('responseJSON')) {
-                        if (err.responseJSON.hasOwnProperty('message')) {
-                            errorAlert(err.responseJSON.message)
+                    if (err.hasOwnProperty("responseJSON")) {
+                        if (err.responseJSON.hasOwnProperty("message")) {
+                            errorAlert(err.responseJSON.message);
                         }
                     }
                     console.log(err);
-                }
-            });
-
-        }
-    });
-}
-
-function activateUser(id){
-    activateAlert(`${__('هل انت متاكد من الغاء حظر هذا المستخدم')}`).then(function (result) {
-        if (result.value){
-            loadingAlert(__("جار الغاء الحظر..."))
-            $.ajax({
-                type: "get",
-                url: `/dashboard/users/${id}/activate`,
-                success: function () {
-                    showToast(__("تم الغاء حظر المستخدم بنجاح"));
-                    retrieveusersFormBackend();
                 },
-                error: function (err) {
-                    if (err.hasOwnProperty('responseJSON')) {
-                        if (err.responseJSON.hasOwnProperty('message')) {
-                            errorAlert(err.responseJSON.message)
-                        }
-                    }
-                    console.log(err);
-                }
             });
-
         }
     });
 }
 
+function activateUser(id) {
+    activateAlert(`${__("هل انت متاكد من الغاء حظر هذا المستخدم")}`).then(
+        function (result) {
+            if (result.value) {
+                loadingAlert(__("جار الغاء الحظر..."));
+                $.ajax({
+                    type: "get",
+                    url: `/dashboard/users/${id}/activate`,
+                    success: function () {
+                        showToast(__("تم الغاء حظر المستخدم بنجاح"));
+                        retrieveusersFormBackend();
+                    },
+                    error: function (err) {
+                        if (err.hasOwnProperty("responseJSON")) {
+                            if (err.responseJSON.hasOwnProperty("message")) {
+                                errorAlert(err.responseJSON.message);
+                            }
+                        }
+                        console.log(err);
+                    },
+                });
+            }
+        }
+    );
+}
