@@ -15,6 +15,7 @@ use App\Models\CityVendor;
 use Illuminate\Http\Request;
 use App\Enums\VendorStatusEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller

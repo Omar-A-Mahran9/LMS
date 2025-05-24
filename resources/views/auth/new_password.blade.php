@@ -192,54 +192,53 @@ License: For each use you must have a valid license purchased only from above li
                     <div class="d-flex flex-center flex-column-auto p-10">
                         <div class="copyrights">
                             <p>
-                                &copy; {{ __('Alsaber cars CO, All Rights Reserved') }}
+                                &copy; {{ __('LMS System') }}
                             </p>
                             <p class="my-3">
                                 {{ __('Developed by') }}
-                                <a title="ويب ستدي لتصميم و برمجة المواقع" target="_blank"
-                                    href="https://webstdy.com/ar?utm_source=sabr-foorter&utm_medium=referral">
-                                    <img src="{{ asset('web/img/webstdy.png') }}"
-                                        title="ويب ستدي لتصميم و برمجة المواقع" alt="شركة ويب ستيدي للبرمجيات">
+                                <a title="Omar A. Mahran on LinkedIn" target="_blank"
+                                    href="https://www.linkedin.com/in/omar-a-mahran">
+                                    Omar A. Mahran
                                 </a>
                             </p>
                         </div>
+
+                        <!--end::Footer-->
                     </div>
-                    <!--end::Footer-->
+                    <!--end::Wrapper-->
+
                 </div>
-                <!--end::Wrapper-->
-
+                <!--end::Card-->
             </div>
-            <!--end::Card-->
+            <!--end::Body-->
         </div>
-        <!--end::Body-->
-    </div>
-    <!--end::Root-->
-    <!--begin::Javascript-->
-    <script>
-        let locale = "{{ app()->getLocale() }}";
-    </script>
-    <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-    <script src="{{ asset('assets/dashboard/plugins/global/plugins.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/scripts.bundle.js') }}"></script>
-    <!--end::Global Javascript Bundle-->
-    <!--begin::Custom Javascript(used for this page only)-->
-    <script src="{{ asset('assets/dashboard/js/custom/authentication/sign-in/general.js') }}"></script>
-    <!--end::Custom Javascript-->
-    <!--end::Javascript-->
-    <script src="{{ asset('assets/shared/js/global.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/global/translations.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/global/scripts.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $("#submit-btn").prop('disabled', false);
-            $("#submit-btn").attr('data-kt-indicator', '');
+        <!--end::Root-->
+        <!--begin::Javascript-->
+        <script>
+            let locale = "{{ app()->getLocale() }}";
+        </script>
+        <!--begin::Global Javascript Bundle(mandatory for all pages)-->
+        <script src="{{ asset('assets/dashboard/plugins/global/plugins.bundle.js') }}"></script>
+        <script src="{{ asset('assets/dashboard/js/scripts.bundle.js') }}"></script>
+        <!--end::Global Javascript Bundle-->
+        <!--begin::Custom Javascript(used for this page only)-->
+        <script src="{{ asset('assets/dashboard/js/custom/authentication/sign-in/general.js') }}"></script>
+        <!--end::Custom Javascript-->
+        <!--end::Javascript-->
+        <script src="{{ asset('assets/shared/js/global.js') }}"></script>
+        <script src="{{ asset('assets/dashboard/js/global/translations.js') }}"></script>
+        <script src="{{ asset('assets/dashboard/js/global/scripts.js') }}"></script>
+        <script>
+            $(document).ready(function() {
+                $("#submit-btn").prop('disabled', false);
+                $("#submit-btn").attr('data-kt-indicator', '');
 
-            window['onAjaxSuccess'] = (response) => {
-                console.log(response.url);
-                window.location = response.url;
-            }
-        });
-    </script>
+                window['onAjaxSuccess'] = (response) => {
+                    console.log(response.url);
+                    window.location = response.url;
+                }
+            });
+        </script>
 </body>
 <!--end::Body-->
 

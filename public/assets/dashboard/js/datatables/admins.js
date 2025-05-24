@@ -2,8 +2,8 @@
 
 var datatable;
 // Class definition
-var KTDatatablesServerSide = function () {
-    let dbTable = 'admins';
+var KTDatatablesServerSide = (function () {
+    let dbTable = "admins";
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
@@ -14,18 +14,18 @@ var KTDatatablesServerSide = function () {
             order: [],
             stateSave: saveState,
             select: {
-                style: 'multi',
+                style: "multi",
                 selector: 'td:first-child input[type="checkbox"]',
-                className: 'row-selected'
+                className: "row-selected",
             },
             ajax: {
                 url: `/dashboard/${dbTable}`,
             },
             columns: [
-                { data: 'id' },
-                { data: 'name' },
-                { data: 'email' },
-                { data: 'created_at' },
+                { data: "id" },
+                { data: "name" },
+                { data: "email" },
+                { data: "created_at" },
                 { data: null },
             ],
             columnDefs: [
@@ -37,7 +37,7 @@ var KTDatatablesServerSide = function () {
                             <div class="form-check form-check-sm form-check-custom form-check-solid">
                                 <input class="form-check-input" type="checkbox" value="${data}" />
                             </div>`;
-                    }
+                    },
                 },
                 {
                     targets: 1,
@@ -52,7 +52,7 @@ var KTDatatablesServerSide = function () {
                                 <!--end::Info-->
                             </div>
                         `;
-                    }
+                    },
                 },
                 {
                     targets: 4,
@@ -77,18 +77,22 @@ var KTDatatablesServerSide = function () {
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
                                     <a href="javascript:;" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
-                                        ${__('Edit')}
+                                        ${__("Edit")}
                                     </a>
                                 </div>
                                 <!--end::Menu item-->
 
-                                ${data.id == 1 ? '' : `<!--begin::Menu item-->
+                                ${
+                                    data.id == 1
+                                        ? ""
+                                        : `<!--begin::Menu item-->
                                 <div class="menu-item px-3">
                                     <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
-                                        ${__('Delete')}
+                                        ${__("Delete")}
                                     </a>
                                 </div>
-                                <!--end::Menu item-->`}
+                                <!--end::Menu item-->`
+                                }
                             </div>
                             <!--end::Menu-->
                         </div
@@ -99,52 +103,95 @@ var KTDatatablesServerSide = function () {
             // Add data-filter attribute
             createdRow: function (row, data, dataIndex) {
                 // $(row).find('td:eq(4)').attr('data-filter', data.CreditCardType);
-            }
+            },
         });
 
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
-        datatable.on('draw', function () {
+        datatable.on("draw", function () {
             initToggleToolbar();
             toggleToolbars();
             handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({
                 url: `/dashboard/${dbTable}/delete-selected`,
-                restoreUrl: `/dashboard/${dbTable}/restore-selected`
+                restoreUrl: `/dashboard/${dbTable}/restore-selected`,
             });
             KTMenu.createInstances();
         });
-    }
+    };
 
     var handleEditRows = () => {
-        // Select all edit buttons
-        const editButtons = document.querySelectorAll('[data-kt-docs-table-filter="edit_row"]');
+        const editButtons = document.querySelectorAll(
+            '[data-kt-docs-table-filter="edit_row"]'
+        );
 
-        editButtons.forEach(d => {
-            // edit button on click
-            d.addEventListener('click', function (e) {
+        editButtons.forEach((btn) => {
+            btn.addEventListener("click", function (e) {
                 e.preventDefault();
 
-                let currentBtnIndex = $(editButtons).index(d)
+                let currentBtnIndex = $(editButtons).index(btn);
                 let data = datatable.row(currentBtnIndex).data();
 
-                $('#roles_inp').val('').trigger('change');
-                $('.image-input-wrapper').css('background-image', `url('${data.full_image_path}')`);
-                $("#form_title").text(__('Edit admin'));
+                // Reset form (clear errors, remove _method if exists)
+                $("#crud_form")[0].reset();
+                $("#crud_form input[name='_method']").remove();
+
+                // Clear select2 roles and then set
+                $("#roles_inp").val(null).trigger("change");
+
+                // Set image preview
+                $(".image-input-wrapper").css(
+                    "background-image",
+                    `url('${data.full_image_path}')`
+                );
+
+                // Set modal title
+                $("#form_title").text(__("Edit admin"));
+
+                // Fill form fields
                 $("#name_inp").val(data.name);
                 $("#email_inp").val(data.email);
                 $("#phone_inp").val(data.phone);
-                $.each(data.roles, function (index, role) {
-                    $(`#roles_inp`).val(role.id).attr('selected',true);
-                    $(`#roles_inp`).trigger('change');
-                });
-                $("#crud_form").attr('action', `/dashboard/${dbTable}/${data.id}`);
-                $("#crud_form").prepend(`<input type="hidden" name="_method" value="PUT">`);
-                $("[for*='password']").removeClass('required');
-                $("#crud_modal").modal('show');
-            })
+                $("#title_inp").val(data.title || "");
+                $("#bio_inp").val(data.bio || "");
+                $("#specialization_inp").val(data.specialization || "");
+                $("#linkedin_inp").val(data.linkedin || "");
+                $("#website_inp").val(data.website || "");
+                $("#experience_years_inp").val(data.experience_years || "");
+                $("#type_inp").val(data.type || "admin");
+
+                // Show/hide instructor fields based on type
+                if (data.type === "instructor") {
+                    $("#instructor_fields").show();
+                } else {
+                    $("#instructor_fields").hide();
+                }
+
+                // Set roles select2 with multiple selected roles
+                const roleIds = data.roles.map((role) => role.id);
+                $("#roles_inp").val(roleIds).trigger("change");
+
+                // Set form action and add PUT method for update
+                $("#crud_form").attr(
+                    "action",
+                    `/dashboard/${dbTable}/${data.id}`
+                );
+                $("#crud_form").prepend(
+                    `<input type="hidden" name="_method" value="PUT">`
+                );
+
+                // Remove password required label class on edit
+                $("[for*='password']").removeClass("required");
+
+                // Clear password fields (do not prefill passwords)
+                $("#password_inp").val("");
+                $("#password_confirmation_inp").val("");
+
+                // Show the modal
+                $("#crud_modal").modal("show");
+            });
         });
-    }
+    };
 
     // Public methods
     return {
@@ -154,13 +201,14 @@ var KTDatatablesServerSide = function () {
             initToggleToolbar();
             handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
-            deleteSelectedRowsWithURL({roles_inp,
+            deleteSelectedRowsWithURL({
+                roles_inp,
                 url: `/dashboard/${dbTable}/delete-selected`,
-                restoreUrl: `/dashboard/${dbTable}/restore-selected`
+                restoreUrl: `/dashboard/${dbTable}/restore-selected`,
             });
-        }
-    }
-}();
+        },
+    };
+})();
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {

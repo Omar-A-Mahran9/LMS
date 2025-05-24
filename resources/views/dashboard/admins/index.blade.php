@@ -103,7 +103,7 @@
         data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
         <div class="modal fade" tabindex="-1" id="crud_modal">
-            <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="form_title">{{ __('Add new admin') }}</h5>
@@ -116,83 +116,211 @@
                     </div>
 
                     <div class="modal-body">
-                        <div class="fv-row mb-0 fv-plugins-icon-container">
-                            <label for="name_inp"
-                                class="form-label required fs-6 fw-bold mb-3">{{ __('Name') }}</label>
-                            <input type="text" name="name" class="form-control form-control-lg form-control-solid"
-                                id="name_inp" placeholder="{{ __('Admin name') }}">
-                            <div class="fv-plugins-message-container invalid-feedback" id="name"></div>
+                        <div id="instructor_fields" style="display: none;"
+                            class="row justify-content-center align-items-center">
+                            {{-- Image Upload --}}
+                            <div class="col-6 d-flex flex-column ">
+                                <label for="image_inp" class="form-label required text-center fs-6 fw-bold mb-3">
+                                    {{ __('Image') }}
+                                </label>
+                                <x-dashboard.upload-image-inp name="image" :image="null" :directory="null"
+                                    placeholder="default.svg" type="editable" />
+                            </div>
+
+
+
+
+                            <div class="row">
+                                <!-- Title -->
+                                <div class="col-md-6">
+                                    <div class="fv-row mb-5">
+                                        <label for="title_inp"
+                                            class="form-label fs-6 fw-bold mb-3 required">{{ __('Title') }}</label>
+                                        <input id="title_inp" type="text" name="title"
+                                            class="form-control form-control-solid" placeholder="e.g. Professor">
+                                        <div class="fv-plugins-message-container invalid-feedback" id="title">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Bio -->
+                                <div class="col-md-6">
+                                    <div class="fv-row mb-5">
+                                        <label for="bio_inp"
+                                            class="form-label fs-6 fw-bold mb-3">{{ __('Bio') }}</label>
+                                        <textarea name="bio" id="bio_inp" class="form-control form-control-solid" rows="3"
+                                            placeholder="Short biography..."></textarea>
+                                        <div class="fv-plugins-message-container invalid-feedback" id="bio">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                {{-- Specialization --}}
+                                <div class="col-md-6">
+                                    <div class="fv-row mb-5">
+                                        <label for="specialization_inp"
+                                            class="form-label fs-6 fw-bold mb-3 required">{{ __('Specialization') }}</label>
+                                        <input type="text" id="specialization_inp" name="specialization"
+                                            class="form-control form-control-solid">
+                                        <div class="fv-plugins-message-container invalid-feedback" id="specialization">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- LinkedIn --}}
+                                <div class="col-md-6">
+                                    <div class="fv-row mb-5">
+                                        <label for="linkedin_inp"
+                                            class="form-label fs-6 fw-bold mb-3">{{ __('LinkedIn') }}</label>
+                                        <input type="url" id="linkedin_inp" name="linkedin"
+                                            class="form-control form-control-solid"
+                                            placeholder="https://linkedin.com/in/...">
+                                        <div class="fv-plugins-message-container invalid-feedback" id="linkedin">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                {{-- Website --}}
+                                <div class="col-md-6">
+                                    <div class="fv-row mb-5">
+                                        <label for="website_inp"
+                                            class="form-label fs-6 fw-bold mb-3">{{ __('Website') }}</label>
+                                        <input type="url" name="website" id="website_inp"
+                                            class="form-control form-control-solid" placeholder="https://...">
+                                        <div class="fv-plugins-message-container invalid-feedback" id="website">
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                {{-- Experience --}}
+                                <div class="col-md-6">
+                                    <div class="fv-row mb-5">
+                                        <label for="experience_years_inp"
+                                            class="form-label fs-6 fw-bold mb-3 required">{{ __('Years of Experience') }}</label>
+                                        <input type="number" id="experience_years_inp" name="experience_years"
+                                            min="0" class="form-control form-control-solid">
+                                        <div class="fv-plugins-message-container invalid-feedback" id="experience_years">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
                         </div>
-                        <div class="fv-row mb-0 fv-plugins-icon-container">
-                            <label for="email_inp"
-                                class="form-label required fs-6 fw-bold mb-3">{{ __('Email') }}</label>
-                            <input type="text" name="email" autocomplete="new-password"
-                                class="form-control form-control-lg form-control-solid" id="email_inp"
-                                placeholder="{{ __('Admin email') }}">
-                            <div class="fv-plugins-message-container invalid-feedback" id="email"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 fv-row mb-5 fv-plugins-icon-container">
+                                <label for="name_inp"
+                                    class="form-label required fs-6 fw-bold mb-3">{{ __('Name') }}</label>
+                                <input type="text" name="name"
+                                    class="form-control form-control-lg form-control-solid" id="name_inp"
+                                    placeholder="{{ __('Admin name') }}">
+                                <div class="fv-plugins-message-container invalid-feedback" id="name"></div>
+                            </div>
+
+                            <div class="col-md-6 fv-row mb-5 fv-plugins-icon-container">
+                                <label for="email_inp"
+                                    class="form-label required fs-6 fw-bold mb-3">{{ __('Email') }}</label>
+                                <input type="text" name="email"
+                                    class="form-control form-control-lg form-control-solid" id="email_inp"
+                                    placeholder="{{ __('Admin email') }}">
+                                <div class="fv-plugins-message-container invalid-feedback" id="email"></div>
+                            </div>
                         </div>
-                        <div class="fv-row mb-0 fv-plugins-icon-container">
-                            <label for="phone_inp"
-                                class="form-label required fs-6 fw-bold mb-3">{{ __('Phone') }}</label>
-                            <div class="input-group input-group-solid mb-5">
-                                <span class="input-group-text">+966</span>
-                                <input type="text" name="phone"
-                                    class="form-control form-control-lg form-control-solid no-arrow" id="phone_inp"
-                                    placeholder="0xxxxxxxx">
+
+                        <div class="row">
+                            <!-- Phone Field -->
+                            <div class="col-md-6 fv-row mb-5 fv-plugins-icon-container">
+                                <label for="phone_inp"
+                                    class="form-label required fs-6 fw-bold mb-3">{{ __('Phone') }}</label>
+                                <div class="input-group input-group-solid">
+                                    <input type="text" name="phone"
+                                        class="form-control form-control-lg form-control-solid no-arrow" id="phone_inp"
+                                        placeholder="0xxxxxxxx">
+                                </div>
                                 <div class="fv-plugins-message-container invalid-feedback" id="phone"></div>
                             </div>
+
+                            <!-- Roles Field -->
+                            <div class="col-md-6 fv-row mb-5 fv-plugins-icon-container">
+                                <label for="roles_inp"
+                                    class="form-label required fs-6 fw-bold mb-3">{{ __('Roles') }}</label>
+                                <select class="form-select form-select-solid" multiple="multiple"
+                                    data-dir="{{ getDirection() }}" name="roles[]" id="roles_inp"
+                                    data-control="select2" data-placeholder="{{ __('Select roles') }}"
+                                    data-allow-clear="true">
+                                    @foreach ($roles as $role)
+                                        <option value="{{ $role->id }}"> {{ $role->name }} </option>
+                                    @endforeach
+                                </select>
+
+
+                                <div class="fv-plugins-message-container invalid-feedback" id="roles"></div>
+                            </div>
                         </div>
-                        <div class="fv-row mb-0 fv-plugins-icon-container">
-                            <label for="roles_inp"
-                                class="form-label required fs-6 fw-bold mb-3">{{ __('Roles') }}</label>
-                            <select class="form-select form-select-solid" multiple="multiple"
-                                data-dir="{{ getDirection() }}" name="roles[]" id="roles_inp" data-control="select2"
-                                data-placeholder="{{ __('Select roles') }}" data-allow-clear="true">
-                                @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}"> {{ $role->name }} </option>
-                                @endforeach
+
+                        <div class="row">
+                            <label for="type_inp"
+                                class="form-label required fs-6 fw-bold mb-3">{{ __('Type') }}</label>
+                            <select name="type" id="type_inp" class="form-select  ">
+                                <option value="admin">{{ __('admin') }}</option>
+                                <option value="instructor">{{ __('instructor') }}</option>
                             </select>
-                            <div class="fv-plugins-message-container invalid-feedback" id="roles"></div>
+                            <div class="fv-plugins-message-container invalid-feedback" id="type"></div>
                         </div>
-                        <div class="fv-row mb-0 fv-plugins-icon-container">
-                            <label for="password_inp" class="form-label fs-6 fw-bold mb-3">{{ __('Password') }}</label>
-                            <!--begin::Input wrapper-->
-                            <div class="position-relative mb-3" data-kt-password-meter="true">
-                                <input class="form-control form-control-lg form-control-solid" type="password"
-                                    name="password" autocomplete="new-password" id="password_inp"
-                                    placeholder="{{ __('Password') }}" />
-                                <!--begin::Visibility toggle-->
-                                <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
-                                    data-kt-password-meter-control="visibility">
-                                    <i class="bi bi-eye-slash fs-2"></i>
 
-                                    <i class="bi bi-eye fs-2 d-none"></i>
-                                </span>
-                                <!--end::Visibility toggle-->
+                        <div class="row mt-5">
+                            <!-- Password -->
+                            <div class="col-md-6">
+                                <div class="fv-row mb-5 fv-plugins-icon-container">
+                                    <label for="password_inp"
+                                        class="form-label fs-6 fw-bold mb-3">{{ __('Password') }}</label>
+                                    <div class="position-relative mb-3" data-kt-password-meter="true">
+                                        <input class="form-control form-control-lg form-control-solid" type="password"
+                                            name="password" autocomplete="new-password" id="password_inp"
+                                            placeholder="{{ __('Password') }}" />
+                                        <span
+                                            class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
+                                            data-kt-password-meter-control="visibility">
+                                            <i class="bi bi-eye-slash fs-2"></i>
+                                            <i class="bi bi-eye fs-2 d-none"></i>
+                                        </span>
+                                    </div>
+                                    <div class="fv-plugins-message-container invalid-feedback" id="password">
+                                    </div>
+                                </div>
                             </div>
-                            <!--end::Input wrapper-->
-                            <div class="fv-plugins-message-container invalid-feedback" id="password"></div>
-                        </div>
-                        <div class="fv-row mb-0 fv-plugins-icon-container">
-                            <label for="password_confirmation_inp"
-                                class="form-label fs-6 fw-bold mb-3">{{ __('Password confirmation') }}</label>
-                            <!--begin::Input wrapper-->
-                            <div class="position-relative mb-3" data-kt-password-meter="true">
-                                <input class="form-control form-control-lg form-control-solid" type="password"
-                                    name="password_confirmation" autocomplete="off" id="password_confirmation_inp"
-                                    placeholder="{{ __('Password') }}" />
-                                <!--begin::Visibility toggle-->
-                                <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
-                                    data-kt-password-meter-control="visibility">
-                                    <i class="bi bi-eye-slash fs-2"></i>
 
-                                    <i class="bi bi-eye fs-2 d-none"></i>
-                                </span>
-                                <!--end::Visibility toggle-->
+                            <!-- Password Confirmation -->
+                            <div class="col-md-6">
+                                <div class="fv-row mb-5 fv-plugins-icon-container">
+                                    <label for="password_confirmation_inp"
+                                        class="form-label fs-6 fw-bold mb-3">{{ __('Password confirmation') }}</label>
+                                    <div class="position-relative mb-3" data-kt-password-meter="true">
+                                        <input class="form-control form-control-lg form-control-solid" type="password"
+                                            name="password_confirmation" autocomplete="off"
+                                            id="password_confirmation_inp" placeholder="{{ __('Password') }}" />
+                                        <span
+                                            class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
+                                            data-kt-password-meter-control="visibility">
+                                            <i class="bi bi-eye-slash fs-2"></i>
+                                            <i class="bi bi-eye fs-2 d-none"></i>
+                                        </span>
+                                    </div>
+                                    <div class="fv-plugins-message-container invalid-feedback" id="password_confirmation">
+                                    </div>
+                                </div>
                             </div>
-                            <!--end::Input wrapper-->
-                            <div class="fv-plugins-message-container invalid-feedback" id="password_confirmation"></div>
                         </div>
+
+
                     </div>
 
                     <div class="modal-footer">
@@ -210,7 +338,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </form>
     {{-- end::Add Country Modal --}}
 @endsection
@@ -219,7 +346,23 @@
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/admins.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
+    <script>
+        function toggleInstructorFields() {
+            const type = $('#type_inp').val();
+            const $fields = $('#instructor_fields');
 
+            if (type === 'instructor') {
+                $fields.show();
+            } else {
+                $fields.hide();
+            }
+        }
+
+        $(document).ready(function() {
+            $('#type_inp').on('change', toggleInstructorFields);
+            toggleInstructorFields(); // initialize
+        });
+    </script>
     <script>
         $(document).ready(function() {
             $("#add_btn").click(function(e) {

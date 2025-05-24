@@ -26,7 +26,7 @@ class StoreContact_usRequest extends FormRequest
             'name' => ['required'],
             'phone' => ['required', new PhoneNumber()],
             'email' => ['nullable', 'string', 'email:rfc,dns'],
-             'addon_service_id' => ['required_if:main_contactUs,true', 'numeric'],
+            'category_id' => ['required', 'numeric', 'exists:categories,id'],
 
             'message' => ['required']
         ];

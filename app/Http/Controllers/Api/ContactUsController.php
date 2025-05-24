@@ -9,21 +9,6 @@ use Illuminate\Http\Request;
 
 class ContactUsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -33,39 +18,24 @@ class ContactUsController extends Controller
 
         $contact_us = $request->validated();
         $contact_us_data = Contact_us::create($contact_us);
-        return $this->success(__('Contact Us has been registered successfully'));
+        return $this->success(__('َquestion has been registered successfully'));
 
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+    public function data(){
+    $locale = app()->getLocale(); // 'ar' or 'en'
+    $suffix = $locale === 'ar' ? '_ar' : '_en';
+
+    return $this->success('', [
+
+            'label'           => setting('label_contact' . $suffix),
+            'description'     => setting('description_contact' . $suffix),
+            'count_of_experince'=>20,
+            'count_of_students'=>20,
+
+    ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

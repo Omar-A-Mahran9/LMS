@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Customer;
+use App\Models\Student;
 use App\Models\Student_rate;
  use Illuminate\Http\Request;
 
@@ -17,7 +18,7 @@ class StudentsRatesController extends Controller
     {
         $this->authorize('view_customersRate');
 
-        $customers = Studentget(); // Get the count of blogs
+        $customers = Student::get(); // Get the count of blogs
         $categories = Category::all();
 
          $count_Student_rate = Student_rate::count(); // Get the count of blogs

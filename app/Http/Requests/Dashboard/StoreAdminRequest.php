@@ -18,16 +18,31 @@ class StoreAdminRequest extends FormRequest
     {
         return abilities()->contains('create_admins');
     }
+public function rules()
+{
+      $rules = [
+        'name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
+        'phone' => ['required', 'string', new PhoneNumber(), 'max:20', new ExistButDeleted(new Admin()), 'unique:admins', new ExistPhone(new Admin())],
+        'email' => ['required', 'string', 'email:rfc,dns', new ExistButDeleted(new Admin()), 'unique:admins'],
+        'roles' => ['required', 'array', 'min:1'],
+        'type' => ['required', 'in:admin,instructor'],
+        'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d).+$/'],
+        'password_confirmation' => ['required', 'same:password'],
+    ];
 
-    public function rules()
-    {
-        return [
-            'name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
-            'phone' => ['required', 'string', new PhoneNumber(), 'max:20', new ExistButDeleted(new Admin()), 'unique:admins', new ExistPhone(new Admin())],
-            'email' => ['required', 'string', 'email:rfc,dns', new ExistButDeleted(new Admin()), 'unique:admins'],
-            'roles' => ['required', 'array', 'min:1'],
-            'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d).+$/'],
-            'password_confirmation' => ['required', 'same:password'],
-        ];
+    if ($this->type === 'instructor') {
+        $rules = array_merge($rules, [
+            'title' => ['required', 'string', 'max:255'],
+            'bio' => ['required', 'string'],
+            'specialization' => ['required', 'string', 'max:255'],
+            'linkedin' => ['required', 'url'],
+            'website' => ['required', 'url'],
+            'experience_years' => ['required', 'integer', 'min:0'],
+            'image' => ['required', 'image', 'max:2048'], // optional but must be image
+        ]);
     }
+
+    return $rules;
+}
+
 }

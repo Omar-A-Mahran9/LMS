@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\Api\CustomerResource;
+use App\Models\Student;
 
 class ForgetPasswordController extends Controller
 {
@@ -51,7 +52,7 @@ class ForgetPasswordController extends Controller
         $customer->sendOTP();
         return $this->success("Re-send otp is successfully", ["customer" => new CustomerResource($customer)]);
     }
-    public function checkOTP(Request $request, Customer $customer)
+    public function checkOTP(Request $request, Student $customer)
     {
         $request->validate([
             'otp' => [
@@ -69,7 +70,7 @@ class ForgetPasswordController extends Controller
         return $this->success("verified successfully", ['token' => $token, "customer" => new CustomerResource($customer)]);
      }
 
-    public function changePassword(Request $request, Customer $customer)
+    public function changePassword(Request $request, Student $customer)
     {
         $request->validate([
             'password' => ['required', 'min:6', new PasswordNumberAndLetter()],

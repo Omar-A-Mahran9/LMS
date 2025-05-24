@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\CustomerResource;
 use App\Http\Resources\UserResource;
 use App\Models\Customer;
+use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;

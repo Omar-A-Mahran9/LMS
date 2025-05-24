@@ -17,11 +17,7 @@ public function __invoke(Request $request)
     $address = $locale === 'ar' ? setting('address_ar') : setting('address_en');
 
     return $this->success('', [
-        'contact_banner_data' => [
-            'label'           => setting('label_contact' . $suffix),
-            'description'     => setting('description_contact' . $suffix),
-            'contact_banner'  => getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
-        ],
+ 
         'instagram_link'   => setting('instagram_link'),
         'facebook_link'    => setting('facebook_link'),
         'youtube_link'     => setting('youtube_link'),

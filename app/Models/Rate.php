@@ -27,6 +27,10 @@ class Rate extends Model
 
     public function customer()
     {
+<<<<<<< HEAD
         return $this->belongsTo(Student::class);
+=======
+        return $this->belongsTo(Studentclass);
+>>>>>>> 157b6b9fd352801b60ca819ea76ffd9e68536d9b
     }
 }

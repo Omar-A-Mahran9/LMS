@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreCustomerRequest;
 use App\Http\Requests\Dashboard\UpdateCustomerRequest;
 use App\Models\Customer;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -33,7 +34,7 @@ class CustomerController extends Controller
         return response(["Customer created successfully"]);
     }
 
-    public function update(UpdateCustomerRequest $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, Student $customer)
     {
         $data = $request->validated();
         if ($request->has('image'))
@@ -44,7 +45,7 @@ class CustomerController extends Controller
         return response(["Customer updated successfully"]);
     }
 
-    public function destroy(Customer $customer)
+    public function destroy(Student $customer)
     {
         $this->authorize('delete_customers');
 
@@ -61,7 +62,7 @@ class CustomerController extends Controller
 
         return response(["selected customers deleted successfully"]);
     }
-    public function blocked(Request $request, Customer $customer)
+    public function blocked(Request $request, Student $customer)
     {
         $this->authorize('delete_customers');
         if ($customer->block_flag === 0)
