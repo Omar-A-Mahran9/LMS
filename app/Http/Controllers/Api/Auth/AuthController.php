@@ -29,7 +29,7 @@ class AuthController extends Controller
                 'exists:customers,email',
                 function ($attribute, $value, $fail) {
                     $customer = Customer::whereEmail($value)->first();
-                     
+
                     if ($customer && $customer->block_flag === 1 )
                     {
                         $fail(__("Your account is blocked. Please contact support."));
@@ -76,63 +76,56 @@ class AuthController extends Controller
         return $this->success("logged in successfully", ['token' => $token, "customer" => new CustomerResource($customer)]);
     }
 
-    public function register(Request $request)
-    {
-        $data                        = $request->validate([
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg',
-            'full_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
+ 
 
-            // 'first_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
-            // 'last_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
-            'phone' => ['required', 'string', 'regex:/^[0-9]+$/', 'max:20', 'unique:customers'],
-            'email' => 'required|string|email|unique:customers',
-            'password' => ['required', 'string', 'min:8', 'max:255', new PasswordNumberAndLetter()],
-            // 'password_confirmation' => 'required|same:password',
-            'privacy_flag' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    if ($value == 0 || $value == false || $value == "false")
-                    {
-                        $fail(__('Must be approved first'));
+public function register(Request $request)
+{
+    $data = $request->validate([
+        'image'           => 'nullable|image|mimes:jpg,png,jpeg,gif,svg',
+        'first_name'      => ['required', 'string', 'max:255', new NotNumbersOnly()],
+        'middle_name'     => ['nullable', 'string', 'max:255'],
+        'last_name'       => ['required', 'string', 'max:255', new NotNumbersOnly()],
+        'phone'           => ['required', 'string', 'regex:/^[0-9]+$/', 'max:20', 'unique:students'],
+        'parent_phone'    => ['nullable', 'string', 'max:20'],
+        'email'           => 'nullable|string|email|unique:students',
+        'password'        => ['required', 'string', 'min:8', 'max:255', 'confirmed', new PasswordNumberAndLetter()],
+        'password_confirmation' => 'required|same:password',
+        'parent_job'      => ['nullable', 'string', 'max:255'],
+        'gender'          => ['nullable', 'in:male,female'],
+        'governorate_id'  => ['nullable', 'exists:governorates,id'],
+        'category_id'     => ['nullable', 'exists:categories,id'],
+    ]);
 
-                    }
-                }
-            ],
-            // 'power_attorney_flag' => [
-            //     'required',
-            //     function ($attribute, $value, $fail) {
-            //         if ($value == 0 || $value == false || $value == "false")
-            //         {
-            //             $fail(__('Must be approved first'));
-
-            //         }
-            //     }
-            // ],
-        ]);
-         $data['password_confirmation'] = $data['password']; // Remaining words as last_name or empty string if not provided
-
-        $names = explode(' ', trim($data['full_name']), 2);
-        $data['first_name'] = $names[0]; // First word as first_name
-        $data['last_name'] = isset($names[1]) ? $names[1] : ''; // Remaining words as last_name or empty string if not provided
-
-        $data['privacy_flag']        = $data['privacy_flag'] ? 1 : 0;
-        $data['power_attorney_flag'] = 1;
-        if ($request->image)
-            $data['image'] = uploadImageToDirectory($request->file('image'), "Customers");
-        $data['block_flag']       = 0;
-        $customer                 = Customer::create($data);
-        $customer->remember_token = Str::random(10);
-        $customer->save();
-
-        $customer->sendOTP();
-        /* Mail::send('emails.otp',['user' =>  $customer],function($message) use($customer){
-            $message->to($customer->email)->subject('Otp verification');
-        }); */
-
-        $token = $customer->createToken('Personal access token to apis')->plainTextToken;
-
-        return $this->success("registered in successfully", ['token' => $token, "customer" => new CustomerResource($customer)]);
+    // Upload image if present
+    if ($request->hasFile('image')) {
+        $data['image'] = uploadImageToDirectory($request->file('image'), 'Students');
     }
+
+    // Generate unique login code
+    do {
+        $code = strtoupper(Str::random(6)); // Example: "AB12CD"
+    } while (Student::where('code', $code)->exists());
+
+    $data['code'] = $code;
+
+    // Set flags
+    $data['block_flag'] = 0;
+
+    // Create student
+    $student = Student::create($data);
+    $student->remember_token = Str::random(10);
+    $student->save();
+
+    // Create Sanctum token
+    $token = $student->createToken('Student Access Token')->plainTextToken;
+
+    return $this->success("Student registered successfully", [
+        'token' => $token,
+        'login_code' => $student->code, // Return the code for future login
+        'student' => new StudentResource($student),
+    ]);
+}
+
 
     /* function socialLogin(Request $request) {
         $request->validate([

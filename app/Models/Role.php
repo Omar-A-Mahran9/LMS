@@ -25,8 +25,12 @@ class Role extends Model
 
         'sliders',
 
+        'categories',
+
         'addonService',
 
+        'home_content',
+        
         'customers_rate',
 
         'CommonQuestion',

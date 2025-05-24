@@ -11,13 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_rates', function (Blueprint $table) {
+        Schema::create('student_rate', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
             $table->string('image')->nullable();
             $table->integer('rate')->default(5); // Default rating
-             $table->enum('status', ['approve', 'reject', 'pending'])->default('pending'); // Review status
+            $table->enum('status', ['approve', 'reject', 'pending'])->default('pending'); // Review status
             $table->string('audio')->nullable(); // Optional audio feedback
+            $table->text('text')->nullable(); // ✅ New text field for written feedback
+
+            $table->unsignedBigInteger('category_id')->nullable();
+
+            // Foreign key constraint.
+            $table->foreign('category_id')
+                  ->references('id')
+                  ->on('categories')
+                  ->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customer_rates');
+        Schema::dropIfExists('student_rate');
     }
 };

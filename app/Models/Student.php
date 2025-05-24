@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
-class Customer extends Authenticatable
+class Student extends Authenticatable
 {
     use HasFactory, HasApiTokens, SMSTrait;
 
@@ -17,11 +17,7 @@ class Customer extends Authenticatable
     protected $guarded = ["password_confirmation"];
     protected $casts   = ['created_at' => 'date:Y-m-d', 'updated_at' => 'date:Y-m-d', 'otp' => 'string'];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -40,30 +36,13 @@ class Customer extends Authenticatable
         $this->attributes['password'] = Hash::make($value);
     }
 
-
-
-    public function orders()
-    {
-        return $this->HasMany(Order::class);
-    }
-
-    public function rates()
-    {
-        return $this->hasMany(Rate::class);
-    }
-
-
-
-
-    public function sendOTP(){
-        $this->otp = rand(111111, 999999);
-        $appName = setting("website_name") ?? "Platin";
-        // $this->sendSMS("$appName: $this->otp هو رمز الحماية,لا تشارك الرمز");
-        $this->save();
-    }
-
     public function getFullImagePathAttribute()
     {
-        return asset(getImagePathFromDirectory($this->image, 'Customers', "default.svg"));
+        return asset(getImagePathFromDirectory($this->image, 'Students', "default.svg"));
     }
+    public function category()
+{
+    return $this->belongsTo(Category::class);
+}
+
 }

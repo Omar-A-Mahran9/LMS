@@ -69,6 +69,25 @@
 
                         <!--begin::Card body-->
                         <div class="card-body border-top p-9">
+                            <div class="row mb-6">
+                                <label class="col-lg-4 col-form-label fw-semibold fs-6">{{ __('Is this a video?') }}</label>
+                                <div class="col-lg-8 d-flex align-items-center">
+                                    <label class="form-check form-switch form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="checkbox" value="1" id="is_video_switch"
+                                            name="is_video">
+                                        <span class="form-check-label" for="is_video_switch">{{ __('Yes') }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row mb-6" id="video_url_group" style="display: none;">
+                                <label class="col-lg-4 col-form-label fw-semibold fs-6">{{ __('Video URL') }}</label>
+                                <div class="col-lg-8 fv-row">
+                                    <input type="text" name="video_url" id="video_url_inp"
+                                        class="form-control form-control-lg form-control-solid"
+                                        placeholder="{{ __('Enter video URL') }}" value="" />
+                                    <div class="fv-plugins-message-container invalid-feedback" id="video_url"></div>
+                                </div>
+                            </div>
                             <!--begin::Input group-->
                             <div class="row mb-10" style="display: flex;justify-content: center;flex-wrap: nowrap;">
                                 <!--begin::Col-->
@@ -133,7 +152,8 @@
                                                 class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
                                                 placeholder="{{ __('Title in English') }}"
                                                 value="{{ $slider->title_en }}" />
-                                            <div class="fv-plugins-message-container invalid-feedback" id="title_en"></div>
+                                            <div class="fv-plugins-message-container invalid-feedback" id="title_en">
+                                            </div>
                                         </div>
                                         <!--end::Col-->
                                     </div>
@@ -269,10 +289,24 @@
     <!--end::Content-->
 @endsection
 @push('scripts')
-    {{--  <script>
-        var logo = `{{ $slider->full_image_path }}`;
-        $(document).ready(function() {
-            $('#background_inp').css('background-image', `url('${logo}')`);
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const isVideoCheckbox = document.getElementById('is_video_switch');
+            const videoUrlGroup = document.getElementById('video_url_group');
+            const backgroundGroup = document.getElementById('background_group');
+
+            function toggleVideoFields() {
+                if (isVideoCheckbox.checked) {
+                    videoUrlGroup.style.display = 'flex';
+                    backgroundGroup.style.display = 'none';
+                } else {
+                    videoUrlGroup.style.display = 'none';
+                    backgroundGroup.style.display = 'flex';
+                }
+            }
+
+            isVideoCheckbox.addEventListener('change', toggleVideoFields);
+            toggleVideoFields(); // On load
         });
-    </script>  --}}
+    </script>
 @endpush

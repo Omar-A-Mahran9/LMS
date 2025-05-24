@@ -54,7 +54,7 @@
                         <!--begin::Due-->
                         <div class=" rounded min-w-125px py-1 px-4 me-7">
                             <div class="fs-2 fw-bold">{{ __('Customers Rates count') }}</div>
-                            <div class="fs-4  ">{{ $count_customerRate }}</div>
+                            <div class="fs-4  ">{{ $count_Student_rate }}</div>
                         </div>
                         <!--end::Due-->
 
@@ -274,6 +274,27 @@
                                 @endfor
                             </select>
                             <div class="fv-plugins-message-container invalid-feedback" id="rate"></div>
+                        </div>
+                        {{-- Text Feedback --}}
+
+                        {{-- Category --}}
+                        <div class="fv-row mb-5">
+                            <label class="required form-label">{{ __('Category') }}</label>
+                            <select class="form-select form-select-solid" name="category_id" id="category_id"
+                                data-control="select2" data-placeholder="{{ __('Select category') }}"
+                                data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                <option value="" selected disabled>{{ __('Select category') }}</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                            <div class="fv-plugins-message-container invalid-feedback" id="category_id"></div>
+                        </div>
+                        <div class="fv-row mb-5">
+                            <label class="form-label">{{ __('Text') }}</label>
+                            <textarea name="text" class="form-control form-control-solid" rows="4"
+                                placeholder="{{ __('Write your feedback...') }}"></textarea>
+                            <div class="fv-plugins-message-container invalid-feedback" id="text"></div>
                         </div>
 
                         {{-- Status --}}

@@ -180,28 +180,21 @@ License: For each use you must have a valid license purchased only from above li
                         <!--begin::Footer-->
                         <!--begin::Footer-->
                         <div class="d-flex flex-center flex-column-auto">
-                            <!--begin::Links-->
-                            {{-- <div class="d-flex align-items-center fw-bold fs-6">
-                                <a href="https://webstdy.com/{{ app()->getLocale() }}" target="_blank"
-                                    class="text-muted text-hover-primary px-2" id="developed_by">
-                                    {{ __('Developed by') }} <img class="mx-4"
-                                        src="https://webstdy.com/CDN/cr_dark.png">
-                                </a>
-                            </div> --}}
-                            <div class="d-flex flex-center flex-column-auto p-10" dir={{ app()->getLocale() }}>
+                            <div class="d-flex flex-center flex-column-auto p-10" dir="{{ app()->getLocale() }}">
                                 <!--begin::Links-->
-                                <div class="d-flex align-items-center fw-bold fs-6" dir={{ app()->getLocale() }}>
-                                    <a href="https://webstdy.com/{{ app()->getLocale() }}" target="_blank"
+                                <div class="d-flex align-items-center fw-bold fs-6" dir="{{ app()->getLocale() }}">
+                                    <a href="https://www.linkedin.com/in/omar-a-mahran" target="_blank"
                                         class="text-muted text-hover-primary px-2">
-
-                                        <img class="mx-4" src="https://webstdy.com/CDN/cr_dark.png">
-                                        <span>{{ __('Developed by') }}</span>
+                                        <img class="mx-4"
+                                            src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="24"
+                                            alt="LinkedIn">
+                                        <span>{{ __('Developed by') }} Omar A. Mahran</span>
                                     </a>
                                 </div>
                                 <!--end::Links-->
                             </div>
                         </div>
-                        <!--end::Footer-->
+
                         <!--end::Footer-->
                     </div>
                     <!--end::Wrapper-->

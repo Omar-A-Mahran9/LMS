@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-
+use App\Models\Category;
 use App\Models\Customer;
-use App\Models\CustomerRate;
+use App\Models\Student_rate;
  use Illuminate\Http\Request;
 
-class CustomersRatesController extends Controller
+class StudentsRatesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,16 +18,17 @@ class CustomersRatesController extends Controller
         $this->authorize('view_customersRate');
 
         $customers = Customer::get(); // Get the count of blogs
+        $categories = Category::all();
 
-         $count_customerRate = CustomerRate::count(); // Get the count of blogs
+         $count_Student_rate = Student_rate::count(); // Get the count of blogs
          $visited_site=10000;
          if ($request->ajax()){
-         $data = getModelData(model: new CustomerRate(), relations: ['customer' => ['id', 'full_name']]);
+         $data = getModelData(model: new Student_rate(), relations: ['customer' => ['id', 'full_name']]);
 
             return response($data);
          }
         else
-            return view('dashboard.customerRate.index',compact('count_customerRate','visited_site','customers'));
+            return view('dashboard.Student_rate.index',compact('count_Student_rate','visited_site','customers','categories'));
     }
 
 
@@ -35,13 +36,17 @@ class CustomersRatesController extends Controller
     {
         $this->authorize('update_customersRate');
 
-        $data = $request->validate([
-            'full_name' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
-            'rate'      => 'required|numeric|min:1|max:5',
-            'status'    => 'required|in:pending,reject,approve',
-             'audio'     => 'required|file|mimetypes:audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/ogg|max:5120',
+            $data = $request->validate([
+            'full_name'   => 'required|string|max:255',
+            'image'       => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
+            'rate'        => 'required|numeric|min:1|max:5',
+            'status'      => 'required|in:pending,reject,approve',
+            'category_id' => 'required|exists:categories,id',
+            'text'        => 'required_without:audio|string|max:2000',
+             'audio'       => 'required_without:text|file|mimetypes:audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/ogg|max:5120',
+
         ]);
+
         // Upload image
         if ($request->hasFile('image')) {
             $imageName = uploadImageToDirectory($request->file('image'), 'Customer');
@@ -55,13 +60,13 @@ class CustomersRatesController extends Controller
         }
 
 
-        CustomerRate::create($data);
+        Student_rate::create($data);
 
         return response(["message" => "Rate submitted successfully"]);
     }
 
 
-    public function update(Request $request, CustomerRate $customerRate)
+    public function update(Request $request, Student_rate $Student_rate)
     {
         $this->authorize('update_customersRate');
 
@@ -70,7 +75,10 @@ class CustomersRatesController extends Controller
             'image'     => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:512',
             'rate'      => 'required|numeric|min:1|max:5',
             'status'    => 'required|in:pending,reject,approve',
-            'audio'     => 'nullable|file|mimetypes:audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/ogg|max:5120',
+            'category_id' => 'required|exists:categories,id',
+            'text'        => 'required_without:audio|string|max:2000',
+            'audio'       => 'required_without:text|file|mimetypes:audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/ogg|max:5120',
+
         ]);
 
         // Replace image if uploaded
@@ -85,7 +93,7 @@ class CustomersRatesController extends Controller
             $data['audio'] = $audioName;
         }
 
-        $customerRate->update($data);
+        $Student_rate->update($data);
 
         return response(["message" => "Rate updated successfully"]);
     }
@@ -95,7 +103,7 @@ class CustomersRatesController extends Controller
 
     public function destroy( $customers_rates)
     {
-         $customrRate=CustomerRate::find($customers_rates);
+         $customrRate=Student_rate::find($customers_rates);
         $this->authorize('delete_customersRate');
 
         $customrRate->delete();

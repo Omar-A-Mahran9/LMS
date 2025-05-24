@@ -6,10 +6,10 @@ use App\Models\Scopes\SortingScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CustomerRate extends Model
+class Student_rate extends Model
 {
     use HasFactory;
-    protected $table = 'customer_rates';
+    protected $table = 'student_rate';
     protected $guarded = [];
     protected $appends = ['full_image_path', 'audio_full_path'];
 

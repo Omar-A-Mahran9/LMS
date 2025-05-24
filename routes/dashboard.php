@@ -82,7 +82,7 @@ Route::resource('design-types', 'DesignTypeController')->except(['create', 'edit
 Route::get('/parent-categories', 'CategoryController@parentCategories');
 Route::resource('contact-requests', 'ContactRequestController')->except(['create', 'edit', 'store', 'update']);
 Route::resource('customers', 'CustomerController')->except(['create', 'edit']);
-Route::resource('customers_rate', 'CustomersRatesController')->except(['create', 'edit']);
+Route::resource('customers_rate', 'StudentsRatesController')->except(['create', 'edit']);
 
 Route::get('customers/blocking/{customer}', 'CustomerController@blocked')->name('customers.blocked');
 Route::get('customers/blocked-selected', 'CustomerController@blockedSelected');
@@ -99,18 +99,8 @@ Route::resource('skin-colors', 'SkinColorController')->except(['create', 'edit']
 Route::resource('ads', 'AdController')->except(['create', 'edit']);
 Route::resource('offers', 'OfferController')->except(['create', 'edit']);
 Route::resource('orders', 'OrderController');
-Route::resource('refund-cancel-orders', 'RefundCancelOrderController');
+
 Route::resource('sliders', 'SliderController');
-Route::post('change-order-status/{id}', 'OrderController@changeOrderStatus')->name('change-order-status');
-Route::post("products/{step?}", "ProductController@store")->name('products.store');
-Route::put("products/{product}/{step?}", "ProductController@update")->name('products.update');
-Route::get("cars/{car}/images", "CarsController@images");
-Route::resource('products', 'ProductController')->except(['store', 'update']);
-
-Route::resource('cars', 'CarsController')->except(['store', 'update']);
-
-Route::post("cars/{step?}", "CarsController@store")->name('cars.store');
-Route::put("cars/{car}/{step?}", "CarsController@update")->name('cars.update');
 
 Route::resource('newsletter', 'NewsLetterController')->only(['index', 'destroy']);
 Route::get('profile-info', 'ProfileController@profileInfo')->name('profile-info');

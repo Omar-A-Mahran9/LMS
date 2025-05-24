@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email');
-            $table->integer('phone');
- 
-            $table->unsignedBigInteger('addon_service_id')->nullable();
+            $table->string('phone');
+
+            $table->unsignedBigInteger('category_id')->nullable();
 
             // Foreign key constraint.
-            $table->foreign('addon_service_id')
+            $table->foreign('category_id')
                   ->references('id')
-                  ->on('addon_services')
+                  ->on('categories')
                   ->onDelete('cascade');
 
             $table->string('message');

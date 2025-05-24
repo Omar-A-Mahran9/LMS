@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\CategoryResource;
 use App\Http\Resources\Api\CitiesResource;
 use App\Http\Resources\Api\CommonQuestionResource;
 use App\Http\Resources\Api\HowuseResource;
@@ -13,9 +14,10 @@ use App\Http\Resources\Api\SliderResource;
 use App\Http\Resources\Api\WhyusResource;
 
 use App\Models\AddonService;
+use App\Models\Category;
 use App\Models\City;
 use App\Models\CommonQuestion;
-use App\Models\CustomerRate;
+use App\Models\Student_rate;
 use App\Models\Howuse;
 use App\Models\NewsLetter;
 
@@ -50,23 +52,18 @@ class HomeController extends Controller
     }
 
 
-public function getServices()
+public function getCategories()
 {
-  $locale = app()->getLocale(); // 'ar' or 'en'
+    $locale = app()->getLocale(); // 'ar' or 'en'
     $suffix = $locale === 'ar' ? '_ar' : '_en';
 
-    $services = AddonService::where('is_publish', '1')->get();
-
-    $serviceBannerData = [
-        'label'           => setting('label_service' . $suffix),
-        'description'     => setting('description_service' . $suffix),
-        'service_banner'  => getImagePathFromDirectory(setting('service_banner'), 'Settings'),
-    ];
+    // Get only published categories that are parent-level or subcategories if needed
+    $categories = Category::where('is_publish', 1)
+        ->whereNull('parent_id') // Only main categories; remove this to get all
+        ->get();
 
     return $this->success('', [
-        'service_banner_data' => $serviceBannerData,
-
-        'services' => ServiceResource::collection($services),
+         'categories' => CategoryResource::collection($categories),
     ]);
 }
 
@@ -84,10 +81,10 @@ public function getServices()
 
         return $this->success('', CitiesResource::collection($cities));
     }
-    public function getrates()
+      public function getrates()
         {
             // Fetch all rates from the Rate model
-            $rates = CustomerRate::all(); // Or you can use a query like ->where('status', 'approved') to filter rates
+            $rates = Student_rate::all(); // Or you can use a query like ->where('status', 'approved') to filter rates
 
 
             return $this->success('', RateResource::collection($rates));

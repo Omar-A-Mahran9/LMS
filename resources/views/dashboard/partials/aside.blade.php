@@ -48,12 +48,26 @@
                     </x-dashboard.aside-item>
                 @endcan
 
-                {{-- @can('view_sliders')
+                @can('view_sliders')
                     <x-dashboard.aside-item :slug="'sliders'" :route="route('dashboard.sliders.index')" :title="__('Sliders')">
                         <i class="ki-outline ki-slider-horizontal-2 fs-2"></i>
                     </x-dashboard.aside-item>
-                @endcan --}}
+                @endcan
 
+                <!--begin:Menu item-->
+                @can('view_categories')
+                    <x-dashboard.aside-item :slug="'categories'" :route="route('dashboard.categories.index', ['type' => 'parent'])" :title="__('Categories')">
+                        <i class="ki-outline ki-category fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
+                <!--end:Menu item-->
+                @can('view_contact_us')
+                    <x-dashboard.aside-item :slug="'contact-requests'" :route="route('dashboard.contact-requests.index')" :title="__('Contact us')">
+                        <i class="ki-outline ki-phone fs-1"></i>
+                    </x-dashboard.aside-item>
+                @endcan
+
+                
                 @can('view_orders')
                     <x-dashboard.aside-item :slug="'orders'" :route="route('dashboard.orders.index')" :title="__('Orders')">
                         <i class="ki-outline ki-parcel fs-1"></i>
@@ -108,11 +122,7 @@
                 @endcan
                 <!--end:Menu item-->
 
-                @can('view_contact_us')
-                    <x-dashboard.aside-item :slug="'contact-requests'" :route="route('dashboard.contact-requests.index')" :title="__('Contact us')">
-                        <i class="ki-outline ki-phone fs-1"></i>
-                    </x-dashboard.aside-item>
-                @endcan
+
 
 
 
