@@ -7,6 +7,7 @@ use App\Http\Requests\Dashboard\StoreCourseRequest;
 use App\Http\Requests\Dashboard\UpdateAddonRequest;
 use App\Models\Admin;
 use App\Models\Category;
+use App\Models\CategorySubCategory;
 use App\Models\Course;
 use Illuminate\Http\Request;
 
@@ -28,47 +29,65 @@ public function index(Request $request)
     // Get only published categories that are parent-level or subcategories if needed
     $categories = Category::where('is_publish', 1)
         ->get();
+    $subcategories = CategorySubCategory::where('is_publish', 1)
+        ->get();
 
     if ($request->ajax()) {
         // Return JSON data for AJAX requests
         return response()->json(getModelData(model: new Course()));
     } else {
         // Return the main view with data
-        return view('dashboard.courses.index', compact('categories', 'visited_site', 'instructors'));
+        return view('dashboard.courses.index', compact('categories', 'visited_site', 'instructors','subcategories'));
     }
 }
 
 
 
-    public function store(StoreCourseRequest $request)
-    {
-        $data = $request->validated();
+  public function store(StoreCourseRequest $request)
+{
+     $data = $request->validated();
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $data['image'] = uploadImageToDirectory($request->file('image'), "Courses");
-        }
-
-        // Handle icon upload
-        if ($request->hasFile('icon')) {
-            $data['icon'] = uploadImageToDirectory($request->file('icon'), "Courses");
-        }
-
-        // is_publish toggle
-        $data['is_publish'] = $request->has('is_publish') ? 1 : 0;
-
-        // have_price_after_visiting toggle
-        $data['have_price_after_visiting'] = $request->has('have_price_after_visiting') ? 1 : 0;
-
-        // If have_price_after_visiting is true, nullify price
-        if ($data['have_price_after_visiting']) {
-            $data['price'] = null;
-        }
-
-        // Create the AddonService
-        $addon = Course::create($data);
-
+    // Handle image uploads
+    if ($request->hasFile('image')) {
+        $data['image'] = uploadImageToDirectory($request->file('image'), 'courses');
     }
+
+    if ($request->hasFile('slide_image')) {
+        $data['slide_image'] = uploadImageToDirectory($request->file('slide_image'), 'courses');
+    }
+
+    // If course is free, set price to 0
+    if ($request->filled('is_free') && $request->boolean('is_free')) {
+        $data['price'] = 0;
+    }
+
+    // If course doesn't have a discount, remove discount field
+    if (!$request->boolean('have_discount')) {
+        $data['discount_percentage'] = null;
+    }
+
+    // Handle boolean flags
+    $data['is_free'] = $request->boolean('is_free');
+    $data['have_discount'] = $request->boolean('have_discount');
+    $data['is_enrollment_open'] = $request->boolean('is_enrollment_open');
+    $data['show_in_home'] = $request->boolean('show_in_home');
+    $data['featured'] = $request->boolean('featured');
+    $data['certificate_available'] = $request->boolean('certificate_available');
+
+    // Create course
+    $course =Course::create($data);
+
+    // Attach subcategories if any
+    if ($request->filled('subcategory_ids')) {
+        $course->subcategories()->sync($request->input('subcategory_ids'));
+    }
+
+    return response()->json([
+        'status' => true,
+        'message' => __('Course created successfully.'),
+        'data' => $course,
+    ]);
+}
 
 
 

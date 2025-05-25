@@ -385,7 +385,7 @@ function deleteuser(params) {
 function editUser(id) {
     let user = users.find((user) => user.id === id);
     console.log(user);
-    $("#form_title").text(__("تعديل بيانات الفئة"));
+    $("#form_title").text(__("تعديل بيانات القسم"));
     // $("#name_en_inp").val(data.name_en);
     // $("#name_ar_inp").val(data.name_ar);
     $("#name_inp").val(user.name ?? "");

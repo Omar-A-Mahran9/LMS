@@ -135,7 +135,7 @@
                                 <label for="slide_image_inp"
                                     class="form-label  text-center fs-6 fw-bold mb-3">{{ __('Slide Image') }}</label>
                                 <x-dashboard.upload-image-inp name="slide_image" :image="null" :directory="'courses'"
-                                    placeholder="default-slide.svg" type="editable" />
+                                    placeholder="default.svg" type="editable" />
                             </div>
                         </div>
 
@@ -160,9 +160,9 @@
                             <div class="col-6">
                                 <label for="description_ar_inp"
                                     class="form-label">{{ __('Description (Arabic)') }}</label>
-                                <textarea name="description_ar" id="description_ar_inp" data-kt-autosize="true"
-                                    class="form-control form-control-lg form-control-solid" rows="4"
-                                    placeholder="{{ __('Enter description in Arabic') }}"></textarea>
+
+                                <textarea name="description_ar" id="description_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
+
                                 <div class="fv-plugins-message-container invalid-feedback" id="description_ar"></div>
 
                             </div>
@@ -171,8 +171,9 @@
                             <div class="col-6">
                                 <label for="description_en_inp"
                                     class="form-label">{{ __('Description (English)') }}</label>
-                                <textarea name="description_en" id="description_en_inp" class="form-control form-control-lg form-control-solid"
-                                    rows="4" data-kt-autosize="true" placeholder="{{ __('Enter description in English') }}"></textarea>
+
+                                <textarea name="description_en" id="description_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
+
                                 <div class="fv-plugins-message-container invalid-feedback" id="description_en"></div>
 
                             </div>
@@ -184,15 +185,19 @@
                         <div class="row mb-4">
                             <div class="col-6">
                                 <label for="note_ar_inp" class="form-label">{{ __('Note (Arabic)') }}</label>
-                                <textarea name="note_ar" id="note_ar_inp" class="form-control form-control-lg form-control-solid" rows="3"
-                                    placeholder="{{ __('Enter note in Arabic') }}" data-kt-autosize="true"></textarea>
+                    
+
+                                <textarea name="note_ar" id="note_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
+
                                 <div class="fv-plugins-message-container invalid-feedback" id="note_ar"></div>
 
                             </div>
                             <div class="col-6">
                                 <label for="note_en_inp" class="form-label">{{ __('Note (English)') }}</label>
-                                <textarea name="note_en" id="note_en_inp" class="form-control form-control-lg form-control-solid" rows="3"
-                                    placeholder="{{ __('Enter note in English') }}" data-kt-autosize="true"></textarea>
+                               
+
+                                                                    <textarea name="note_en" id="note_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
+
                                 <div class="fv-plugins-message-container invalid-feedback" id="note_en"></div>
 
                             </div>
@@ -201,7 +206,7 @@
 
                         {{-- Video URL --}}
                         <div class="row mb-4">
-                            <div class="col-12 fv-row">
+                            <div class="col-4 fv-row">
                                 <label for="video_url_inp" class="form-label">{{ __('Promo Video URL') }}</label>
                                 <input type="url" name="video_url" id="video_url_inp" class="form-control"
                                     placeholder="{{ __('Enter video URL') }}">
@@ -209,67 +214,56 @@
                                 <div class="fv-plugins-message-container invalid-feedback" id="video_url"></div>
 
                             </div>
-                        </div>
 
-                        {{-- SEO --}}
-                        <div class="row mb-4">
+                            {{-- Relationships --}}
                             <div class="col-4">
-                                <label for="slug_inp" class="form-label ">{{ __('Slug') }}</label>
-                                <input type="text" name="slug" id="slug_inp" class="form-control"
-                                    placeholder="{{ __('Unique slug') }}">
-                            </div>
-                            <div class="col-4">
-                                <label for="meta_title_inp" class="form-label">{{ __('Meta Title') }}</label>
-                                <input type="text" name="meta_title" id="meta_title_inp" class="form-control"
-                                    placeholder="{{ __('Meta title for SEO') }}">
-                            </div>
-                            <div class="col-4">
-                                <label for="meta_description_inp" class="form-label">{{ __('Meta Description') }}</label>
-                                <textarea name="meta_description" id="meta_description_inp" class="form-control" rows="2"
-                                    placeholder="{{ __('Meta description for SEO') }}"></textarea>
-                            </div>
-                        </div>
+                                <label for="instructor_id_inp" class="form-label">{{ __('Instructor') }}</label>
+                                <select name="instructor_id" id="instructor_id_inp" class="form-select"
+                                    data-control="select2" data-placeholder="{{ __('Select Instructor') }}"
+                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                    <option value="" selected></option>
+                                    @foreach ($instructors as $instructor)
+                                        <option value="{{ $instructor->id }}">{{ $instructor->name }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="fv-plugins-message-container invalid-feedback" id="instructor_id"></div>
 
+                            </div>
+                            <div class="col-4">
+                                <label for="category_id_inp" class="form-label">{{ __('Category') }}</label>
+                                <select name="category_id" id="category_id_inp" class="form-select"
+                                    data-control="select2" data-placeholder="{{ __('Select Category') }}"
+                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                    <option value="" selected></option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="fv-plugins-message-container invalid-feedback" id="category_id"></div>
+
+                            </div>
+
+
+                        </div>
                         {{-- Pricing --}}
                         <div class="row mb-4">
                             {{-- Price --}}
                             <div class="col-4">
-                                <label for="price_inp" class="form-label">{{ __('Price') }}</label>
+                                <div class="d-flex align-items-center justify-content-between">
+
+                                    <label for="price_inp" class="form-label">{{ __('Price') }}</label>
+                                    <label class="form-check form-switch form-check-custom form-check-solid  mb-2">
+                                        <input class="form-check-input" name="is_free" type="checkbox" value="1"
+                                            id="is_free_switch">
+                                        <span class="form-check-label"
+                                            for="is_free_switch">{{ __('Is Free Course?') }}</span>
+                                    </label>
+                                </div>
                                 <input type="number" name="price" id="price_inp" class="form-control" min="0"
                                     step="0.01" value="0">
-                            </div>
+                                <div class="fv-plugins-message-container invalid-feedback" id="price"></div>
 
-                            {{-- Is Free --}}
-                            <div class="col-4 d-flex align-items-center">
-                                <label class="form-check form-switch form-check-custom form-check-solid mt-4">
-                                    <input class="form-check-input" name="is_free" type="checkbox" value="1"
-                                        id="is_free_switch">
-                                    <span class="form-check-label"
-                                        for="is_free_switch">{{ __('Is Free Course?') }}</span>
-                                </label>
                             </div>
-
-                            {{-- Is Active --}}
-                            <div class="col-4 d-flex align-items-center">
-                                <label class="form-check form-switch form-check-custom form-check-solid mt-4">
-                                    <input class="form-check-input" name="is_active" type="checkbox" value="1"
-                                        id="is_active_switch" checked>
-                                    <span class="form-check-label" for="is_active_switch">{{ __('Is Active?') }}</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="row mb-4">
-                            {{-- Have Discount --}}
-                            <div class="col-4 d-flex align-items-center">
-                                <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="have_discount" type="checkbox" value="1"
-                                        id="have_discount_switch">
-                                    <span class="form-check-label"
-                                        for="have_discount_switch">{{ __('Has Discount?') }}</span>
-                                </label>
-                            </div>
-
                             {{-- Discount Percentage --}}
                             <div class="col-4">
                                 <div class="d-flex align-items-center justify-content-between">
@@ -278,6 +272,7 @@
                                     <label class="form-check form-switch form-check-custom form-check-solid mb-2">
                                         <input class="form-check-input" name="have_discount" type="checkbox"
                                             value="1" id="have_discount_switch">
+
                                         <span class="form-check-label"
                                             for="have_discount_switch">{{ __('Has Discount?') }}</span>
                                     </label>
@@ -286,144 +281,122 @@
 
                                 <input type="number" name="discount_percentage" id="discount_percentage_inp"
                                     class="form-control" min="1" max="100" disabled>
+                                <div class="fv-plugins-message-container invalid-feedback" id="discount_percentage"></div>
+
+                            </div>
+
+                            {{-- Enrollment --}}
+                            <div class="col-4">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label for="max_students_inp" class="form-label">{{ __('Max Students') }}</label>
+
+                                    <label class="form-check form-switch form-check-custom form-check-solid mb-2">
+                                        <input class="form-check-input" name="is_enrollment_open" type="checkbox"
+                                            value="1" id="enrollment_open_switch" checked>
+                                        <span class="form-check-label"
+                                            for="enrollment_open_switch">{{ __('Enrollment Open?') }}</span>
+                                    </label>
+
+                                </div>
+                                <input type="number" name="max_students" id="max_students_inp" class="form-control"
+                                    min="1" placeholder="{{ __('Leave empty for unlimited') }}">
+                            </div>
+
+
+                        </div>
+
+                        {{-- SEO --}}
+                        <div class="row mb-4">
+                            <div class="col-4">
+                                <label for="slug_inp" class="form-label ">{{ __('Slug') }}</label>
+                                <input type="text" name="slug" id="slug_inp" class="form-control"
+                                    placeholder="{{ __('Unique slug') }}">
+                                <div class="fv-plugins-message-container invalid-feedback" id="slug"></div>
+
+                            </div>
+                            <div class="col-4">
+                                <label for="meta_title_inp" class="form-label">{{ __('Meta Title') }}</label>
+                                <input type="text" name="meta_title" id="meta_title_inp" class="form-control"
+                                    placeholder="{{ __('Meta title for SEO') }}">
+                                <div class="fv-plugins-message-container invalid-feedback" id="meta_title"></div>
+
+                            </div>
+                            <div class="col-4">
+                                <label for="meta_description_inp" class="form-label">{{ __('Meta Description') }}</label>
+                                <textarea name="meta_description" id="meta_description_inp" class="form-control" rows="2"
+                                    placeholder="{{ __('Meta description for SEO') }}"></textarea>
+                                <div class="fv-plugins-message-container invalid-feedback" id="meta_description">
+                                </div>
+
                             </div>
                         </div>
 
 
-                        {{-- Level and Status --}}
-                        <div class="row mb-4">
-                            <div class="col-6">
-                                <label for="level_inp" class="form-label ">{{ __('Level') }}</label>
-                                <select name="level" id="level_inp" class="form-select">
-                                    <option value="beginner" selected>{{ __('Beginner') }}</option>
-                                    <option value="intermediate">{{ __('Intermediate') }}</option>
-                                    <option value="advanced">{{ __('Advanced') }}</option>
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <label for="status_inp" class="form-label ">{{ __('Status') }}</label>
-                                <select name="status" id="status_inp" class="form-select">
-                                    <option value="draft" selected>{{ __('Draft') }}</option>
-                                    <option value="published">{{ __('Published') }}</option>
-                                    <option value="archived">{{ __('Archived') }}</option>
-                                </select>
-                            </div>
-                        </div>
 
-                        {{-- Certificate --}}
+
+
+
+
+
+                        {{-- Duration and Dates --}}
                         <div class="row mb-4">
-                            <div class="col-6 d-flex align-items-center">
+
+                            <div class="col-6">
+                                <label for="start_date_inp" class="form-label">{{ __('Start Date') }}</label>
+                                <input type="date" name="start_date" id="start_date_inp" class="form-control">
+                                <div class="fv-plugins-message-container invalid-feedback" id="start_date"></div>
+
+                            </div>
+                            <div class="col-6">
+                                <label for="end_date_inp" class="form-label">{{ __('End Date') }}</label>
+                                <input type="date" name="end_date" id="end_date_inp" class="form-control">
+                                <div class="fv-plugins-message-container invalid-feedback" id="end_date"></div>
+
+                            </div>
+
+                        </div>
+                        {{-- Flags --}}
+                        <div class="row mb-4 mt-5">
+                            <div class="col-3">
+                                <label for="subcategory_ids_inp" class="form-label">{{ __('Subcategories') }}</label>
+                                <select name="subcategory_ids[]" id="subcategory_ids_inp" class="form-select"
+                                    data-control="select2" data-placeholder="{{ __('Select Subcategories') }}"
+                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}" multiple>
+                                    <option value="" selected></option>
+                                    @foreach ($subcategories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="fv-plugins-message-container invalid-feedback" id="subcategory_ids"></div>
+
+                            </div>
+                            <div class="col-3 d-flex align-items-center mt-2">
+                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input" name="show_in_home" type="checkbox" value="1"
+                                        id="show_in_home_switch">
+                                    <span class="form-check-label text-dark"
+                                        for="show_in_home_switch">{{ __('Show in Home') }}</span>
+                                </label>
+                            </div>
+
+                            <div class="col-3 d-flex align-items-center mt-2">
+                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input" name="featured" type="checkbox" value="1"
+                                        id="featured_switch">
+                                    <span class="form-check-label text-dark"
+                                        for="featured_switch">{{ __('Featured') }}</span>
+                                </label>
+                            </div>
+                            <div class="col-3 d-flex align-items-center mt-2">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
                                     <input class="form-check-input" name="certificate_available" type="checkbox"
                                         value="1" id="certificate_switch">
-                                    <span class="form-check-label"
+                                    <span class="form-check-label text-dark"
                                         for="certificate_switch">{{ __('Certificate Available?') }}</span>
                                 </label>
                             </div>
                         </div>
 
-                        {{-- Duration and Dates --}}
-                        <div class="row mb-4">
-                            <div class="col-3">
-                                <label for="duration_inp" class="form-label">{{ __('Duration (minutes)') }}</label>
-                                <input type="number" name="duration_minutes" id="duration_inp" class="form-control"
-                                    min="1" placeholder="{{ __('Total duration in minutes') }}">
-                            </div>
-                            <div class="col-3">
-                                <label for="start_date_inp" class="form-label">{{ __('Start Date') }}</label>
-                                <input type="date" name="start_date" id="start_date_inp" class="form-control">
-                            </div>
-                            <div class="col-3">
-                                <label for="end_date_inp" class="form-label">{{ __('End Date') }}</label>
-                                <input type="date" name="end_date" id="end_date_inp" class="form-control">
-                            </div>
-                            <div class="col-3">
-                                <label for="start_time_inp" class="form-label">{{ __('Start Time') }}</label>
-                                <input type="time" name="start_time" id="start_time_inp" class="form-control">
-                            </div>
-                            <div class="col-3 mt-3">
-                                <label for="end_time_inp" class="form-label">{{ __('End Time') }}</label>
-                                <input type="time" name="end_time" id="end_time_inp" class="form-control">
-                            </div>
-                        </div>
-
-                        {{-- Enrollment --}}
-                        <div class="row mb-4">
-                            <div class="col-4">
-                                <label for="max_students_inp" class="form-label">{{ __('Max Students') }}</label>
-                                <input type="number" name="max_students" id="max_students_inp" class="form-control"
-                                    min="1" placeholder="{{ __('Leave empty for unlimited') }}">
-                            </div>
-                            <div class="col-4 d-flex align-items-center">
-                                <label class="form-check form-switch form-check-custom form-check-solid mt-4">
-                                    <input class="form-check-input" name="is_enrollment_open" type="checkbox"
-                                        value="1" id="enrollment_open_switch" checked>
-                                    <span class="form-check-label"
-                                        for="enrollment_open_switch">{{ __('Enrollment Open?') }}</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        {{-- Zoom Details --}}
-                        <div class="row mb-4">
-                            <div class="col-4">
-                                <label for="zoom_link_inp" class="form-label">{{ __('Zoom Link') }}</label>
-                                <input type="url" name="zoom_link" id="zoom_link_inp" class="form-control"
-                                    placeholder="{{ __('Enter Zoom meeting link') }}">
-                            </div>
-                            <div class="col-4">
-                                <label for="zoom_meeting_id_inp" class="form-label">{{ __('Zoom Meeting ID') }}</label>
-                                <input type="text" name="zoom_meeting_id" id="zoom_meeting_id_inp"
-                                    class="form-control" placeholder="{{ __('Enter Zoom meeting ID') }}">
-                            </div>
-                            <div class="col-4">
-                                <label for="zoom_password_inp" class="form-label">{{ __('Zoom Password') }}</label>
-                                <input type="text" name="zoom_password" id="zoom_password_inp" class="form-control"
-                                    placeholder="{{ __('Enter Zoom password') }}">
-                            </div>
-                        </div>
-
-                        {{-- Relationships --}}
-                        <div class="row mb-4">
-                            <div class="col-4">
-                                <label for="instructor_id_inp" class="form-label">{{ __('Instructor') }}</label>
-                                <select name="instructor_id" id="instructor_id_inp" class="form-select">
-                                    <option value="">{{ __('Select Instructor') }}</option>
-                                    @foreach ($instructors as $instructor)
-                                        <option value="{{ $instructor->id }}">{{ $instructor->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-4">
-                                <label for="category_id_inp" class="form-label">{{ __('Category') }}</label>
-                                <select name="category_id" id="category_id_inp" class="form-select">
-                                    <option value="">{{ __('Select Category') }}</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                        </div>
-
-                        {{-- Flags --}}
-                        <div class="row mb-4">
-                            <div class="col-6 d-flex align-items-center">
-                                <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="show_in_home" type="checkbox" value="1"
-                                        id="show_in_home_switch">
-                                    <span class="form-check-label"
-                                        for="show_in_home_switch">{{ __('Show in Home') }}</span>
-                                </label>
-                            </div>
-                            <div class="col-6 d-flex align-items-center">
-                                <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="featured" type="checkbox" value="1"
-                                        id="featured_switch">
-                                    <span class="form-check-label" for="featured_switch">{{ __('Featured') }}</span>
-                                </label>
-                            </div>
-                        </div>
 
                     </div>
 
@@ -448,7 +421,20 @@
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/addon.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
+
+    <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
+
+    <script>
+        $(document).ready(() => {
+
+            initTinyMc();
+
+            new Tagify(document.getElementById('tags_inp'), {
+                originalInputValueFormat: valuesArr => valuesArr.map(item => item.value).join(',')
+            });
+
+        });
+    </script>
 
     <script>
         function toggleDiscountFields() {

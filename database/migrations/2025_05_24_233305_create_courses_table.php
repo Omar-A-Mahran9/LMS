@@ -30,20 +30,19 @@ Schema::create('courses', function (Blueprint $table) {
             $table->string('video_url')->nullable(); // Promo/intro video
 
             // SEO
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->nullable();
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
 
             // Course details
             $table->decimal('price', 8, 2)->default(0);
             $table->boolean('have_discount')->default(false);
-            $table->integer('discount_percentage');
+            $table->integer('discount_percentage')->nullable();
 
             $table->boolean('is_free')->default(false);
             $table->boolean('is_active')->default(true);
-            $table->enum('level', ['beginner', 'intermediate', 'advanced'])->default('beginner');
-            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
-            $table->boolean('certificate_available')->default(false);
+            $table->enum('level', ['beginner', 'intermediate', 'advanced'])->nullable();
+             $table->boolean('certificate_available')->default(false);
 
             // Timing and availability
             $table->unsignedInteger('duration_minutes')->nullable(); // total course time

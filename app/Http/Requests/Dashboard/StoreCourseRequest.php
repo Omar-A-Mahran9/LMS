@@ -27,7 +27,7 @@ class StoreCourseRequest extends FormRequest
 return [
     // Required image
     'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
-    'slide_image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
+    'slide_image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
 
     // Multilingual Titles and Descriptions
     'title_ar' => ['required', 'max:255', new NotNumbersOnly()],
@@ -48,37 +48,45 @@ return [
     'meta_title' => ['nullable', 'string', 'max:255'],
     'meta_description' => ['nullable', 'string'],
 
+   // Relationships
+    'instructor_id' => ['required', 'exists:admins,id'],
+    'category_id' => ['required', 'exists:categories,id'],
+
+
     // Pricing
-    'price' => ['nullable', 'numeric', 'min:0'],
+    'price' => ['required_unless:is_free,1', 'numeric', 'min:1'],
     'is_free' => ['nullable', 'boolean'],
+
+    // Discount
+    'have_discount' => ['nullable', 'boolean'],
+    'discount_percentage' => [
+        'required_if:have_discount,1',
+        'nullable',
+        'integer',
+        'min:1',
+        'max:100',
+    ],
+
+
     'is_active' => ['nullable', 'boolean'],
 
     // Level & Status
-    'level' => ['required', 'in:beginner,intermediate,advanced'],
-    'status' => ['required', 'in:draft,published,archived'],
+    'level' => ['nullable', 'in:beginner,intermediate,advanced'],
+    'status' => ['nullable', 'in:draft,published,archived'],
 
     // Certificate
     'certificate_available' => ['nullable', 'boolean'],
 
     // Duration & Dates
-    'duration_minutes' => ['nullable', 'integer', 'min:1'],
-    'start_date' => ['nullable', 'date'],
-    'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
-    'start_time' => ['nullable', 'date_format:H:i'],
-    'end_time' => ['nullable', 'date_format:H:i'],
+    'start_date' => ['required', 'date', 'after_or_equal:today'],
+    'end_date' => ['required', 'date', 'after_or_equal:start_date'],
+
 
     // Enrollment
     'max_students' => ['nullable', 'integer', 'min:1'],
     'is_enrollment_open' => ['nullable', 'boolean'],
 
-    // Zoom
-    'zoom_link' => ['nullable', 'url'],
-    'zoom_meeting_id' => ['nullable', 'string'],
-    'zoom_password' => ['nullable', 'string'],
 
-    // Relationships
-    'instructor_id' => ['nullable', 'exists:users,id'],
-    'category_id' => ['nullable', 'exists:categories,id'],
 
     // Flags
     'show_in_home' => ['nullable', 'boolean'],

@@ -233,6 +233,11 @@ return [
         'answer_ar' => 'الاجابة بالعربية',
         'note_en' => 'الملاحظة',
         'note_ar' => 'الملاحظة',
+        'is_free' => 'مجاني',
+        'have_discount' => 'يوجد خصم',
+        'end_date' => 'تاريخ النهاية',
+        'slide_image' => 'الشريحة',
+        'today' => 'اليوم',
 
         'government_id' => 'المحافظة',
         'last_name' => 'اسم العائلة',
@@ -288,6 +293,7 @@ return [
     'is_video'           => 'الفيديو',
     'full_name'           => 'الاسم',
     'audio'           => 'الصوت',
+        'today' => 'اليوم',
 
     'description_contact_en'   => 'وصف قسم التواصل (بالإنجليزية)',
     'description_contact_ar'   => 'وصف قسم التواصل (بالعربية)',
@@ -307,7 +313,7 @@ return [
         'addon_service_id' => 'نوع الكورس',
         'date' => 'تاريخ الزيارة',
 
-        'category_id' => 'الفئة',
+        'category_id' => 'القسم',
         'categories' => 'الأقسام',
         'subcategories' => 'الأقسام الفرعية',
         'tags' => 'الكلمات المفتاحية',
@@ -463,7 +469,7 @@ return [
         'return_policy_en' => 'سياسة الإسترجاع بالانجليزية',
         'return_policy_ar' => 'سياسة الإسترجاع بالعربية',
         'parent_id' => 'القسم الرئيسي',
-        'category_type' => 'نوع الفئة',
+        'category_type' => 'نوع القسم',
         'sub' => 'قسم فرعي',
         'country_code' => 'كود الدولة',
         'street_address' => 'عنوان الشارع الخاص بنقطة الالتقاء',
