@@ -27,7 +27,7 @@ class Role extends Model
 
         'categories',
 
-        'addonService',
+        'courses',
 
         'home_content',
 
@@ -37,9 +37,10 @@ class Role extends Model
 
         'students',
 
-        'students_rate',
+        'newsletter',
 
-         'roles',
+
+        'roles',
 
         'governments',
 

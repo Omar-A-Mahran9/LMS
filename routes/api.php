@@ -37,12 +37,13 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('privacy_policy', 'HomeController@getprivacypolicy');
 
     Route::post('news-letter', 'HomeController@newsLetter');
-    Route::get('services', 'HomeController@getservices');
+    Route::get("Courses", 'HomeController@getservices');
     Route::get('whyus', 'HomeController@getwhyus');
     Route::get('questions', 'HomeController@getQuestions');
-    Route::get('how-make-order', 'HomeController@getMakeOrder');
+    Route::get('how-use', 'HomeController@getHowUse');
     Route::get('governments', 'HomeController@getgovernments');
     Route::get('rates', 'HomeController@getrates');
+    Route::get('footer', 'HomeController@getfooter');
 
  // Step 1 - 4: Progressive validation (you may store values in session/temp)
 Route::post('/step/{step}', [OrderController::class, 'handleStep']);

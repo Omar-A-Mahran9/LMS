@@ -36,11 +36,11 @@ Route::get("fast-shipping-city/restore/{fastCity}", "FastShippingGovernmentsCont
 Route::delete("packageCategories/delete-selected", "PackageCategoryController@deleteSelected");
 Route::delete("packages/delete-selected", "PackagesController@deleteSelected");
 
- Route::delete("addon/delete-selected", "AddonServiceController@deleteSelected");
- Route::get("addon/restore-selected", "AddonServiceController@restoreSelected");
+ Route::delete("Course/delete-selected", "CourseController@deleteSelected");
+ Route::get("Course/restore-selected", "CourseController@restoreSelected");
 
- Route::delete("addon/delete-selected", "AddonServiceController@deleteSelected");
- Route::get("addon/restore-selected", "AddonServiceController@restoreSelected");
+ Route::delete("Course/delete-selected", "CourseController@deleteSelected");
+ Route::get("Course/restore-selected", "CourseController@restoreSelected");
 
  Route::delete("whyus/delete-selected", "WhyusController@deleteSelected");
  Route::get("whyus/restore-selected", "WhyusController@restoreSelected");
@@ -51,7 +51,7 @@ Route::delete("packages/delete-selected", "PackagesController@deleteSelected");
  Route::delete("howuse/delete-selected", "HowuseController@deleteSelected");
  Route::get("howuse/restore-selected", "HowuseController@restoreSelected");
 
- Route::resource('addon', 'AddonServiceController')->except(['create', 'edit']);
+ Route::resource('courses', 'CourseController')->except(['create', 'edit']);
  Route::resource('whyus', 'WhyusController')->except(['create', 'edit']);
  Route::resource('howuse', 'HowuseController')->except(['create', 'edit']);
 

@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Student;
-use App\Models\Student;
-use App\Models\Student_rate;
+ use App\Models\Student_rate;
  use Illuminate\Http\Request;
 
 class StudentsRatesController extends Controller

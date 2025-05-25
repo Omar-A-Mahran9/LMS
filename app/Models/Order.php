@@ -29,7 +29,7 @@ class Order extends Model
 
     public function addonServices()
     {
-        return $this->belongsToMany(AddonService::class, 'order_addon_service')
+        return $this->belongsToMany(Course::class, 'order_addon_service')
                     ->withPivot('count')
                     ->withTimestamps();
     }

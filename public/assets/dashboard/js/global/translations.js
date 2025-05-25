@@ -27,8 +27,8 @@ let translations = {
         "Edit Question": "تعديل السوال",
         "Add Payment ways": "أضف خيارات الدفع",
         "Add Payment parteners": "أضف شريك",
-        "Add new Service": " أضف خدمة ",
-        "Edit addon": "تعديل الخدمة",
+        "Add new Service": " أضف كورس ",
+        "Edit addon": "تعديل الكورس",
         "Add new rate": "اضافة تقييم",
         "Add new awars": "اضافة انجاز جديد",
 
@@ -100,7 +100,7 @@ let translations = {
         "Searching…": "جار البحث ...",
         "Remove all items": "حذف الجميع",
         "Remove item": "حذف",
-                "Student blocked successfully": "تم حظر الطالب",
+        "Student blocked successfully": "تم حظر الطالب",
         "Student unblocked successfully": "تم إلفاء حظر الطالب",
 
         Search: "ابحث",

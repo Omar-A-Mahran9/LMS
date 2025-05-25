@@ -41,16 +41,16 @@ class OrderController extends Controller
 
         // Calculate total price (assuming each addon service has a price attribute)
         $totalPrice = $order->addonServices->sum(function ($addonService) {
-            return $addonService->price * $addonService->pivot->count;
+            return $course->price * $course->pivot->count;
         });
 
         // Organize data for the view
-        $addonServices = $order->addonServices->map(function ($addonService) {
+        $courses = $order->addonServices->map(function ($addonService) {
             return [
-                'service_name' => $addonService->name,
-                'count' => $addonService->pivot->count,
-                'price' => $addonService->price, // Assuming addon_service has a price field
-                'total' => $addonService->price * $addonService->pivot->count, // Calculate total for this service
+                'service_name' => $course->name,
+                'count' => $course->pivot->count,
+                'price' => $course->price, // Assuming addon_service has a price field
+                'total' => $course->price * $course->pivot->count, // Calculate total for this service
             ];
         });
 

@@ -30,7 +30,7 @@ class DashboardController extends Controller
             ->limit(5)
             ->get()
             ->map(function ($item) {
-                $service = \App\Models\AddonService::find($item->addon_service_id);
+                $service = \App\Models\CourseController::find($item->addon_service_id);
                 return [
                     'name' => $service?->name ?? 'N/A',
                     'total_usage' => $item->total_usage,

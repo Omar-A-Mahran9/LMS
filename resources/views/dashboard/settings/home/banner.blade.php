@@ -177,7 +177,7 @@
                                             title="{{ __('تغير الصورة') }}">
                                             <i class="bi bi-pencil-fill fs-7"></i>
                                             <!--begin::Inputs-->
-                                            <input type="file" name="service_banner" accept=".png, .jpg, .jpeg" />
+                                            <input type="file" name="Course_banner" accept=".png, .jpg, .jpeg" />
                                             <input type="hidden" name="avatar_remove" />
                                             <!--end::Inputs-->
                                         </label>
@@ -205,7 +205,7 @@
                                         {{ __('صيغة الصورة يجب ان تكون من نوع *.jpg, *.jpeg, *.gif, *.svg') }}
                                     </div>
                                     <!--end::Description-->
-                                    <div class="invalid-feedback" id="service_banner"></div>
+                                    <div class="invalid-feedback" id="Course_banner"></div>
                                 </div>
                                 <!--end::Card body-->
                                 <div class="mb-10 row">
@@ -285,7 +285,7 @@
                             <!--begin::Card header-->
                             <div class="card-header">
                                 <div class="card-title">
-                                    <h2>{{ __('Services') }}</h2>
+                                    <h2>{{ __('Courses') }}</h2>
                                 </div>
                             </div>
                             <!--end::Card header-->

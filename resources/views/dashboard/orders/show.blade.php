@@ -95,7 +95,7 @@
                                         <tr>
                                             <td class="text-muted">
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fa-solid fa-wallet fs-4 me-2"></i>{{ __('Service') }}
+                                                    <i class="fa-solid fa-wallet fs-4 me-2"></i>{{ __('Course') }}
                                                 </div>
                                             </td>
                                             <td class="fw-bold text-end">

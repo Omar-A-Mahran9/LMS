@@ -54,6 +54,8 @@
                     </x-dashboard.aside-item>
                 @endcan
 
+
+
                 <!--begin:Menu item-->
                 @can('view_students')
                     <x-dashboard.aside-item :slug="'students'" :route="route('dashboard.students.index')" :title="__('Students')">
@@ -77,6 +79,11 @@
                     </x-dashboard.aside-item>
                 @endcan
                 <!--end:Menu item-->
+                @can('view_courses')
+                    <x-dashboard.aside-item :slug="'courses'" :route="route('dashboard.courses.index')" :title="__('Courses')">
+                        <i class="ki-outline ki-plus fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
 
 
                 @can('view_contact_us')
@@ -91,9 +98,9 @@
                         <i class="ki-outline ki-parcel fs-1"></i>
                     </x-dashboard.aside-item>
                 @endcan
-                @can('view_addonService')
-                    <x-dashboard.aside-item :slug="'addonService'" :route="route('dashboard.addon.index')" :title="__('Services')">
-                        <i class="ki-outline ki-plus fs-2"></i>
+                @can('view_newsletter')
+                    <x-dashboard.aside-item :slug="'newsletter'" :route="route('dashboard.newsletter.index')" :title="__('Newsletter')">
+                        <i class="ki-outline ki-book-square fs-1"></i>
                     </x-dashboard.aside-item>
                 @endcan
 
@@ -103,11 +110,7 @@
                     </x-dashboard.aside-item>
                 @endcan
 
-                @can('view_howuse')
-                    <x-dashboard.aside-item :slug="'howuse'" :route="route('dashboard.howuse.index')" :title="__('How make Order')">
-                        <i class="ki-outline ki-discount fs-2"></i>
-                    </x-dashboard.aside-item>
-                @endcan --}}
+
 
                 @can('view_CommonQuestion')
                     <x-dashboard.aside-item :slug="'CommonQuestion'" :route="route('dashboard.CommonQuestion.index')" :title="__('Common Question')">

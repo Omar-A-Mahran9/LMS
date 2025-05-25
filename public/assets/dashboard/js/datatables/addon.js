@@ -3,7 +3,7 @@
 var datatable;
 // Class definition
 var KTDatatablesServerSide = (function () {
-    let dbTable = "addon";
+    let dbTable = "Course";
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({

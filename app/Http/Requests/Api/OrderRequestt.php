@@ -27,7 +27,7 @@ class OrderRequestt extends FormRequest
     public function rules(): array
     {
         return [
-            'services'         => ['required', 'array', 'min:1'],
+            "Courses"         => ['required', 'array', 'min:1'],
             'services.*.id'    => ['required', 'exists:addon_services,id'],
             'services.*.count' => ['required', 'integer', 'min:1'],
 

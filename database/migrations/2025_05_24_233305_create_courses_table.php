@@ -36,6 +36,9 @@ Schema::create('courses', function (Blueprint $table) {
 
             // Course details
             $table->decimal('price', 8, 2)->default(0);
+            $table->boolean('have_discount')->default(false);
+            $table->integer('discount_percentage');
+
             $table->boolean('is_free')->default(false);
             $table->boolean('is_active')->default(true);
             $table->enum('level', ['beginner', 'intermediate', 'advanced'])->default('beginner');
@@ -60,8 +63,9 @@ Schema::create('courses', function (Blueprint $table) {
             $table->string('zoom_password')->nullable();
 
             // Relationships
-            $table->foreignId('instructor_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
+            $table->foreignId('instructor_id')->nullable()->constrained('admins')->nullOnDelete();
+             $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
+
             $table->foreignId('admin_id')->nullable()->constrained('admins')->nullOnDelete();
 
             // Control flags

@@ -13,7 +13,7 @@ use App\Http\Resources\Api\SliderResource;
 
 use App\Http\Resources\Api\WhyusResource;
 
-use App\Models\AddonService;
+use App\Models\CourseController;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\CommonQuestion;
@@ -29,8 +29,6 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-
-
 
     public function newsLetter(Request $request)
     {
@@ -100,11 +98,19 @@ public function getCategories()
         return $this->success('', CommonQuestionResource::collection($CommonQuestion));
     }
 
-    public function getMakeOrder()
+    public function getHowUse()
     {
-        $makeOrder = Howuse::get();
+        $locale = app()->getLocale(); // 'ar' or 'en'
+        $suffix = $locale === 'ar' ? '_ar' : '_en';
 
-        return $this->success('', HowuseResource::collection($makeOrder));
+        $data = [
+            'label'           => setting('label_about_us' . $suffix),
+            'description'     => setting('description_about_us' . $suffix),
+            'image_url' => getImagePathFromDirectory(setting('about_us_banner'), 'Settings') ,
+            'video_url' => "https://www.youtube.com/watch?v=jaj9CPvLdy0&list=RDMMjaj9CPvLdy0&start_radio=1",
+
+        ];
+        return $this->success('',  $data);
     }
 
 
@@ -140,6 +146,31 @@ public function getprivacypolicy()
 
     return $this->success('', $data);
 }
+
+
+public function getfooter()
+{
+    $locale = app()->getLocale(); // 'ar' or 'en'
+    $suffix = $locale === 'ar' ? '_ar' : '_en';
+
+    $data = [
+
+            'logo' => getImagePathFromDirectory(setting('about_us_banner'), 'Settings') ,
+            'Site_name'           => setting('label_about_us' . $suffix),
+            'description'     => setting('description_about_us' . $suffix),
+            'instagram_link'   => setting('instagram_link'),
+            'facebook_link'    => setting('facebook_link'),
+            'youtube_link'     => setting('youtube_link'),
+            'telegram_link'     => setting('youtube_link'),
+            'tiktok_link'     => setting('youtube_link'),
+            'whatsapp_number'  => setting('whatsapp_number'),
+            'sms_number'       => setting('sms_number'),
+
+    ];
+
+    return $this->success('', $data);
+}
+
 
 
 }

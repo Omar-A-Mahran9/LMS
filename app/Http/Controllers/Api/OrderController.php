@@ -13,8 +13,6 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Api\OrderRequest;
 use App\Http\Requests\Api\OrderRequestt;
- use App\Models\AddonService;
-use App\Models\Student;
 use App\Services\TaqnyatSmsService;
 
 class OrderController extends Controller
@@ -41,8 +39,8 @@ class OrderController extends Controller
             'block_flag' => 0,
         ]);
         $totalPrice = 0;
-        foreach ($data['services'] as $service) {
-            $serviceModel = AddonService::findOrFail($service['id']); // Load service from DB
+        foreach ($data["Courses"] as $service) {
+            $serviceModel = Course::findOrFail($service['id']); // Load service from DB
             if (!is_null($serviceModel->price)) {
                 $totalPrice += $serviceModel->price * $service['count'];
             } else {
@@ -67,10 +65,7 @@ class OrderController extends Controller
             'validated_at' => null,
         ]);
 
-        // Attach multiple addon services with counts
-        foreach ($data['services'] as $service) {
-            $order->addonServices()->attach($service['id'], ['count' => $service['count']]);
-        }
+
 
 
         $message = "رمز التحقق الخاص بك هو: $otp";
