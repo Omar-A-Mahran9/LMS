@@ -55,6 +55,6 @@ Route::post('/create', [OrderController::class, 'preCreateOrder']);
 
 
 
-categories
+
 
 });
