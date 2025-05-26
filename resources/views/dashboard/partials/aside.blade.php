@@ -104,12 +104,6 @@
                     </x-dashboard.aside-item>
                 @endcan
 
-                {{-- @can('view_whyus')
-                    <x-dashboard.aside-item :slug="'whyus'" :route="route('dashboard.whyus.index')" :title="__('Why us')">
-                        <i class="ki-outline ki-abstract-29 fs-2"></i>
-                    </x-dashboard.aside-item>
-                @endcan
-
 
 
                 @can('view_CommonQuestion')
@@ -128,8 +122,7 @@
                 @endcan
                 <!--end:Menu item-->
 
-                <!--begin:Menu item-->
-
+ 
 
 
 
