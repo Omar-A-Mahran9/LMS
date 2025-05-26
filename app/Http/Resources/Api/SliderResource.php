@@ -20,7 +20,7 @@ class SliderResource extends JsonResource
             "description" => $this->description,
             "btn_name" => $this->btn_title,
             "btn_link" => $this->btn_link,
-            'image' => $this->full_image_path
+            'image_or_video' => $this->is_video == 1 ? $this->video_url : $this->full_image_path,
         ];
     }
 }
