@@ -45,11 +45,12 @@ class HomeController extends Controller
     $address = $locale === 'ar' ? setting('address_ar') : setting('address_en');
 
     $ask_mr_mohamed = [
-        'label'           => setting('label_service' . $suffix),
-        'description'     => setting('description_service' . $suffix),
-        'experince_year'     => 20,
-        'lecture_count'     => 200,
-    ];
+            'image_url'=>getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
+            'label'           => setting('label' . $suffix),
+            'description'     => setting('about_us' . $suffix),
+            'experince_year'     => 20,
+            'lecture_count'     => 200,
+        ];
    $HowUse = [
             'label'           => setting('label_about_us' . $suffix),
             'description'     => setting('description_about_us' . $suffix),
