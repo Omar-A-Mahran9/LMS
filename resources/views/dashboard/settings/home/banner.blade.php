@@ -244,7 +244,7 @@
                                     <label for="video_how_to_use_url_inp"
                                         class="col-lg-2 col-form-label fw-semibold fs-6">{{ __('Video URL') }}</label>
                                     <div class="col-lg-10 fv-row">
-                                        <input type="text" name="video_how_to_use_url" id="video_how_to_use_url_inp"
+                                        <input type="text" name="video_how_to_use_url" value="{{ setting('video_how_to_use_url') }}" id="video_how_to_use_url_inp"
                                             class="form-control form-control-lg form-control-solid"
                                             placeholder="{{ __('Enter video URL') }}" value="" />
                                         <div class="fv-plugins-message-container invalid-feedback"
