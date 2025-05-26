@@ -15,7 +15,7 @@ class StudentsRatesController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('view_studentsRate');
+        $this->authorize('view_students_rate');
 
         $students = Student::get(); // Get the count of blogs
         $categories = Category::all();
@@ -34,7 +34,7 @@ class StudentsRatesController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorize('update_studentsRate');
+        $this->authorize('update_students_rate');
 
             $data = $request->validate([
             'full_name'   => 'required|string|max:255',
@@ -68,7 +68,7 @@ class StudentsRatesController extends Controller
 
     public function update(Request $request, Student_rate $Student_rate)
     {
-        $this->authorize('update_studentsRate');
+        $this->authorize('update_students_rate');
 
         $data = $request->validate([
             'full_name' => 'required|string|max:255',
@@ -104,7 +104,7 @@ class StudentsRatesController extends Controller
     public function destroy( $students_rates)
     {
          $customrRate=Student_rate::find($students_rates);
-        $this->authorize('delete_studentsRate');
+        $this->authorize('delete_students_rate');
 
         $customrRate->delete();
         return response(["students_rates deleted successfully"]);
