@@ -205,7 +205,7 @@
                                         {{ __('صيغة الصورة يجب ان تكون من نوع *.jpg, *.jpeg, *.gif, *.svg') }}
                                     </div>
                                     <!--end::Description-->
-                                    <div class="invalid-feedback" id="Course_banner"></div>
+                                    <div class="invalid-feedback" id="how_to_use_banner"></div>
                                 </div>
                                 <!--end::Card body-->
                                 <div class="mb-10 row">
