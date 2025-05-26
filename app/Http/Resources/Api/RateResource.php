@@ -17,6 +17,7 @@ class RateResource extends JsonResource
         'created_at' => $this->created_at->toDateString(),
         'updated_at' => $this->updated_at->toDateString(),
         'content' => $this->text ?? $this->audio_full_path,
+        'is_sound' => $this->text ? 0 : 1,
 
         // Only return 'text' if available; otherwise return 'audio'
     ];
