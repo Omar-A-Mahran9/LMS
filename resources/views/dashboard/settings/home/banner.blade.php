@@ -153,7 +153,7 @@
                             <!--begin::Card header-->
                             <div class="card-header">
                                 <div class="card-title">
-                                    <h2>{{ __('Contact us data') }}</h2>
+                                    <h2>{{ __('How to use data website') }}</h2>
                                 </div>
                             </div>
                             <!--end::Card header-->
@@ -167,7 +167,7 @@
                                         data-kt-image-input="true">
                                         <!--begin::Preview existing avatar-->
                                         <div class="image-input-wrapper w-150px h-150px"
-                                            style="background-image: url({{ asset(getImagePathFromDirectory(setting('service_banner'), 'Settings')) }})">
+                                            style="background-image: url({{ asset(getImagePathFromDirectory(setting('how_to_use_banner'), 'Settings')) }})">
                                         </div>
                                         <!--end::Preview existing avatar-->
                                         <!--begin::Label-->
@@ -177,7 +177,7 @@
                                             title="{{ __('تغير الصورة') }}">
                                             <i class="bi bi-pencil-fill fs-7"></i>
                                             <!--begin::Inputs-->
-                                            <input type="file" name="Course_banner" accept=".png, .jpg, .jpeg" />
+                                            <input type="file" name="how_to_use_banner" accept=".png, .jpg, .jpeg" />
                                             <input type="hidden" name="avatar_remove" />
                                             <!--end::Inputs-->
                                         </label>
@@ -214,12 +214,13 @@
                                         <label class="form-label">{{ __('Label in arabic') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <input class="form-control" value="{{ setting('label_service_ar') }}"
-                                            name="label_service_ar" id="label_service_ar_inp"
+                                        <input class="form-control" value="{{ setting('label_how_to_use_ar') }}"
+                                            name="label_how_to_use_ar" id="label_how_to_use_ar_inp"
                                             placeholder="{{ __('Label in arabic') }}" />
                                         <!--end::Editor-->
                                         <!--begin::Description-->
-                                        <div class="fv-plugins-message-container invalid-feedback" id="label_service_ar">
+                                        <div class="fv-plugins-message-container invalid-feedback"
+                                            id="label_how_to_use_ar">
                                         </div>
                                         <!--end::Description-->
                                     </div>
@@ -228,14 +229,26 @@
                                         <label class="form-label">{{ __('Label in english') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <input class="form-control" value="{{ setting('label_service_en') }}"
-                                            name="label_service_en" id="label_service_en_inp"
+                                        <input class="form-control" value="{{ setting('label_how_to_use_en') }}"
+                                            name="label_how_to_use_en" id="label_how_to_use_en_inp"
                                             placeholder="{{ __('Label in english') }}" />
                                         <!--end::Editor-->
                                         <!--begin::Description-->
-                                        <div class="fv-plugins-message-container invalid-feedback" id="label_service_en">
+                                        <div class="fv-plugins-message-container invalid-feedback"
+                                            id="label_how_to_use_en">
                                         </div>
                                         <!--end::Description-->
+                                    </div>
+                                </div>
+                                <div class="row mb-6" id="video_how_to_use_url_group">
+                                    <label for="video_how_to_use_url_inp"
+                                        class="col-lg-2 col-form-label fw-semibold fs-6">{{ __('Video URL') }}</label>
+                                    <div class="col-lg-10 fv-row">
+                                        <input type="text" name="video_how_to_use_url" id="video_how_to_use_url_inp"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="{{ __('Enter video URL') }}" value="" />
+                                        <div class="fv-plugins-message-container invalid-feedback"
+                                            id="video_how_to_use_url"></div>
                                     </div>
                                 </div>
                                 <!--end::Input group-->
@@ -246,14 +259,14 @@
                                         <label class="form-label">{{ __('contact in arabic') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <textarea name="description_service_ar" id="description_service_ar_inp" data-kt-autosize="true"
+                                        <textarea name="description_how_to_use_ar" id="description_how_to_use_ar_inp" data-kt-autosize="true"
                                             placeholder="{{ __('contact in arabic') }}" class="tox-target">
-                                            {{ setting('description_service_ar') }}
+                                            {{ setting('description_how_to_use_ar') }}
                                             </textarea>
                                         <!--end::Editor-->
                                         <!--begin::Description-->
                                         <div class="fv-plugins-message-container invalid-feedback"
-                                            id="description_service_ar"></div>
+                                            id="description_how_to_use_ar"></div>
                                         <!--end::Description-->
                                     </div>
                                     <div class="col-lg-6">
@@ -261,14 +274,14 @@
                                         <label class="form-label">{{ __('contact in english') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <textarea name="description_service_en" id="description_service_en_inp" data-kt-autosize="true"
+                                        <textarea name="description_how_to_use_en" id="description_how_to_use_en_inp" data-kt-autosize="true"
                                             placeholder="{{ __('contact in english') }}" class="tox-target">
-                                            {{ setting('description_service_en') }}
+                                            {{ setting('description_how_to_use_en') }}
                                             </textarea>
                                         <!--end::Editor-->
                                         <!--begin::Description-->
                                         <div class="fv-plugins-message-container invalid-feedback"
-                                            id="description_service_en"></div>
+                                            id="description_how_to_use_en"></div>
                                         <!--end::Description-->
                                     </div>
                                 </div>
@@ -455,8 +468,8 @@
         };
 
         // Initialize editors for all targeted selectors
-        ["#description_about_us_ar_inp", "#description_about_us_en_inp", "#description_service_ar_inp",
-            "#description_service_en_inp", "#description_contact_en_inp", "#description_contact_ar_inp"
+        ["#description_about_us_ar_inp", "#description_about_us_en_inp", "#description_how_to_use_ar_inp",
+            "#description_how_to_use_en_inp", "#description_contact_en_inp", "#description_contact_ar_inp"
         ]
         .forEach(selector => {
             tinymce.init({

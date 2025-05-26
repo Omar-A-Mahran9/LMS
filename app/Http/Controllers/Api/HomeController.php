@@ -52,8 +52,8 @@ class HomeController extends Controller
             'lecture_count'     => 200,
         ];
    $HowUse = [
-            'label'           => setting('label_about_us' . $suffix),
-            'description'     => setting('description_about_us' . $suffix),
+            'label'           => setting('label_how_to_use' . $suffix),
+            'description'     => setting('description_how_to_use' . $suffix),
             'image_url' => getImagePathFromDirectory(setting('about_us_banner'), 'Settings') ,
             'video_url' => "https://www.youtube.com/watch?v=jaj9CPvLdy0&list=RDMMjaj9CPvLdy0&start_radio=1",
 
