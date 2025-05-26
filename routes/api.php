@@ -37,8 +37,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('privacy_policy', 'HomeController@getprivacypolicy');
 
     Route::post('news-letter', 'HomeController@newsLetter');
-        Route::get('governments', 'HomeController@getgovernments');
-         Route::get('home', 'HomeController@getHome');
+    Route::get('governments', 'HomeController@getgovernments');
+    Route::get('home', 'HomeController@getHome');
+    Route::get('categories', 'HomeController@getCategory');
 
     Route::get('footer', 'HomeController@getfooter');
 
@@ -54,6 +55,6 @@ Route::post('/create', [OrderController::class, 'preCreateOrder']);
 
 
 
-
+categories
 
 });

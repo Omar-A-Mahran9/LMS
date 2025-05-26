@@ -103,6 +103,13 @@ class HomeController extends Controller
 
 
 
+public function getCategory()
+    {
+ $categories = Category::where('is_publish', 1)
+        ->whereNull('parent_id') // Only main categories; remove this to get all
+        ->get();
+        return $this->success('', CategoryResource::collection($categories));
+    }
 
 
 
