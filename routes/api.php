@@ -37,12 +37,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('privacy_policy', 'HomeController@getprivacypolicy');
 
     Route::post('news-letter', 'HomeController@newsLetter');
-    Route::get("Courses", 'HomeController@getservices');
-    Route::get('whyus', 'HomeController@getwhyus');
-    Route::get('questions', 'HomeController@getQuestions');
-    Route::get('how-use', 'HomeController@getHowUse');
-    Route::get('governments', 'HomeController@getgovernments');
-    Route::get('rates', 'HomeController@getrates');
+        Route::get('governments', 'HomeController@getgovernments');
+         Route::get('home', 'HomeController@getHome');
+
     Route::get('footer', 'HomeController@getfooter');
 
  // Step 1 - 4: Progressive validation (you may store values in session/temp)
@@ -53,15 +50,10 @@ Route::post('/orders/{order}/resend-otp', [OrderController::class, 'resendOtp'])
 Route::post('/create', [OrderController::class, 'preCreateOrder']);
 
 // Step 5: Confirm Order with OTP
-    Route::post('/confirm', [OrderController::class, 'confirmOrderOtp']);
 
-    Route::get('general', 'GeneralInvokableController');
 
-    Route::get('sliders', 'HomeController@getSliders');
-    Route::get('categories', 'HomeController@getCategories');
 
-    Route::post('Ask_us', 'ContactUsController@store');
-    Route::get('Ask_us', 'ContactUsController@data');
+
 
 
 });

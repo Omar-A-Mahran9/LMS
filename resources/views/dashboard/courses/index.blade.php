@@ -91,9 +91,15 @@
                                     data-kt-check-target="#kt_datatable .form-check-input" value="1" />
                             </div>
                         </th>
-                        <th>{{ __('Name') }}</th>
+                        <th>{{ __('Title') }}</th>
                         <th>{{ __('Image') }}</th>
+                        <th>{{ __('Price') }}</th>
+                        <th>{{ __('Instructor') }}</th>
+                        <th>{{ __('Start Date') }}</th>
+                        <th>{{ __('Status') }}</th>
                         <th>{{ __('Created at') }}</th>
+                        <th>{{ __('views') }}</th>
+
                         <th class=" min-w-100px">{{ __('Actions') }}</th>
                     </tr>
                 </thead>
@@ -185,7 +191,7 @@
                         <div class="row mb-4">
                             <div class="col-6">
                                 <label for="note_ar_inp" class="form-label">{{ __('Note (Arabic)') }}</label>
-                    
+
 
                                 <textarea name="note_ar" id="note_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
 
@@ -194,9 +200,9 @@
                             </div>
                             <div class="col-6">
                                 <label for="note_en_inp" class="form-label">{{ __('Note (English)') }}</label>
-                               
 
-                                                                    <textarea name="note_en" id="note_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
+
+                                <textarea name="note_en" id="note_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
 
                                 <div class="fv-plugins-message-container invalid-feedback" id="note_en"></div>
 
@@ -419,7 +425,7 @@
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/addon.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/courses.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
@@ -451,6 +457,60 @@
 
             $('#is_free_switch, #have_discount_switch').on('change', function() {
                 toggleDiscountFields();
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $("#add_btn").click(function(e) {
+                e.preventDefault();
+
+                // Remove method override inputs (_method) used for PUT/PATCH on edit
+                $("[title='_method']").remove();
+
+                // Reset the form fields
+                $("#crud_form")[0].reset();
+
+                // Reset Select2 selects by title attribute
+                $("#instructor_id_inp, #category_id_inp, #subcategory_ids_inp").val(null).trigger('change');
+
+                // Reset image previews to placeholder (assuming your image wrapper has this class)
+                $('.image-input-wrapper').css('background-image', "url('/placeholder_images/default.svg')");
+
+                // Clear validation errors and invalid classes
+                $("#crud_form").find('.invalid-feedback').text('');
+                $("#crud_form").find('.is-invalid').removeClass('is-invalid');
+
+                // Reset TinyMCE editors content if present
+                if (typeof tinymce !== 'undefined') {
+                    tinymce.editors.forEach(editor => editor.setContent(''));
+                }
+
+                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
+                $("#is_free_switch, #have_discount_switch, #enrollment_open_switch, #show_in_home_switch, #featured_switch, #certificate_switch")
+                    .prop('checked', false);
+
+                // Set defaults for some checkboxes if needed
+                $("#enrollment_open_switch").prop('checked', true);
+
+                // Disable discount percentage input initially (since discount checkbox is unchecked)
+                $("#discount_percentage_inp").prop('disabled', true).val('');
+
+                // Set price default to 0
+                $("#price_inp").val('0');
+
+                // Reset form action to store route (adjust as needed)
+                $("#crud_form").attr('action', "{{ route('dashboard.courses.store') }}");
+
+                // Reset modal title
+                $("#form_title").text("{{ __('Add new Course') }}");
+
+                // Optionally, reset date inputs
+                $("#start_date_inp, #end_date_inp").val('');
+
+                // Open modal if you want to show it on "Add"
+                $("#crud_modal").modal('show');
             });
         });
     </script>

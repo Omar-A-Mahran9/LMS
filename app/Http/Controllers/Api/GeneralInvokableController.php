@@ -17,8 +17,7 @@ public function __invoke(Request $request)
     $address = $locale === 'ar' ? setting('address_ar') : setting('address_en');
 
     return $this->success('', [
- 
-        'instagram_link'   => setting('instagram_link'),
+         'instagram_link'   => setting('instagram_link'),
         'facebook_link'    => setting('facebook_link'),
         'youtube_link'     => setting('youtube_link'),
         'whatsapp_number'  => setting('whatsapp_number'),

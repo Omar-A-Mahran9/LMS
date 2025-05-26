@@ -15,6 +15,7 @@ return new class extends Migration
            $table->id();
 
             $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
+             $table->foreignId('course_section_id')->constrained()->onDelete('cascade');
 
             // Multilingual content
             $table->string('title_en');

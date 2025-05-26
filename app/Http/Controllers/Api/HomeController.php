@@ -30,6 +30,63 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
 
+
+    public function getHome()
+{
+    $locale = app()->getLocale();
+    $suffix = $locale === 'ar' ? '_ar' : '_en';
+
+    // Sliders
+    $sliders = Slider::where('status', '1')->get();
+   $categories = Category::where('is_publish', 1)
+        ->whereNull('parent_id') // Only main categories; remove this to get all
+        ->get();
+  $rates = Student_rate::all(); // Or you can use a query like ->where('status', 'approved') to filter rate
+    $address = $locale === 'ar' ? setting('address_ar') : setting('address_en');
+
+    $ask_mr_mohamed = [
+        'label'           => setting('label_service' . $suffix),
+        'description'     => setting('description_service' . $suffix),
+        'experince_year'     => 20,
+        'lecture_count'     => 200,
+    ];
+   $HowUse = [
+            'label'           => setting('label_about_us' . $suffix),
+            'description'     => setting('description_about_us' . $suffix),
+            'image_url' => getImagePathFromDirectory(setting('about_us_banner'), 'Settings') ,
+            'video_url' => "https://www.youtube.com/watch?v=jaj9CPvLdy0&list=RDMMjaj9CPvLdy0&start_radio=1",
+
+        ];
+        $CommonQuestion = CommonQuestion::get();
+        $contact_us_data=[
+            'label'           => setting('label_about_us' . $suffix),
+            'description'     => setting('description_about_us' . $suffix),
+            'phone_number'       => setting('sms_number'),
+            'email'            => setting('email'),
+            'address'          => $address,
+            'google_map_url'   => setting('google_map_url'),
+
+        ];
+    // Combine and return
+    return $this->success('', [
+        'sliders' => SliderResource::collection($sliders),
+        'categories' => CategoryResource::collection($categories),
+        'rates' => RateResource::collection($rates),
+        'ask_mr_mohamed' =>$ask_mr_mohamed,
+        'HowUse' =>$HowUse,
+        'CommonQuestion' =>[
+            'label'           => setting('label_about_us' . $suffix),
+            'description'     => setting('description_about_us' . $suffix),
+            'image_url' => getImagePathFromDirectory(setting('about_us_banner'), 'Settings') ,
+            'questionandanswer'=>CommonQuestionResource::collection($CommonQuestion),
+        ],
+        'contact_us_data'=>$contact_us_data
+
+    ]);
+}
+
+
+
     public function newsLetter(Request $request)
     {
         $request->validate([
@@ -43,37 +100,13 @@ class HomeController extends Controller
         return $this->success(__('Created Successfully'));
     }
 
-    public function getSliders()
-    {
-        $sliders = Slider::where('status', '1')->get();
-
-        return $this->success('', SliderResource::collection($sliders));
-    }
-
-
-public function getCategories()
-{
-    $locale = app()->getLocale(); // 'ar' or 'en'
-    $suffix = $locale === 'ar' ? '_ar' : '_en';
-
-    // Get only published categories that are parent-level or subcategories if needed
-    $categories = Category::where('is_publish', 1)
-        ->whereNull('parent_id') // Only main categories; remove this to get all
-        ->get();
-
-    return $this->success('', [
-         'categories' => CategoryResource::collection($categories),
-    ]);
-}
 
 
 
-    public function getwhyus()
-    {
-        $Whyus = Whyus::get();
 
-        return $this->success('', WhyusResource::collection($Whyus));
-    }
+
+
+
     public function getgovernments()
     {
         $cities = Government::get();
@@ -81,37 +114,6 @@ public function getCategories()
         return $this->success('', GovernmentsResource::collection($cities));
     }
 
-      public function getrates()
-        {
-            // Fetch all rates from the Rate model
-            $rates = Student_rate::all(); // Or you can use a query like ->where('status', 'approved') to filter rates
-
-
-            return $this->success('', RateResource::collection($rates));
-
-        }
-
-    public function getQuestions()
-    {
-        $CommonQuestion = CommonQuestion::get();
-
-        return $this->success('', CommonQuestionResource::collection($CommonQuestion));
-    }
-
-    public function getHowUse()
-    {
-        $locale = app()->getLocale(); // 'ar' or 'en'
-        $suffix = $locale === 'ar' ? '_ar' : '_en';
-
-        $data = [
-            'label'           => setting('label_about_us' . $suffix),
-            'description'     => setting('description_about_us' . $suffix),
-            'image_url' => getImagePathFromDirectory(setting('about_us_banner'), 'Settings') ,
-            'video_url' => "https://www.youtube.com/watch?v=jaj9CPvLdy0&list=RDMMjaj9CPvLdy0&start_radio=1",
-
-        ];
-        return $this->success('',  $data);
-    }
 
 
 
@@ -119,13 +121,15 @@ public function getAboutUs()
 {
     $locale = app()->getLocale(); // 'ar' or 'en'
     $suffix = $locale === 'ar' ? '_ar' : '_en';
-
+    $ask_mr_mohamed = [
+            'label'           => setting('label_service' . $suffix),
+            'description'     => setting('description_service' . $suffix),
+            'experince_year'     => 20,
+            'lecture_count'     => 200,
+        ];
     $data = [
-        'about_us_banner_data' => [
-            'label'           => setting('label_about_us' . $suffix),
-            'description'     => setting('description_about_us' . $suffix),
-            'about_us_banner' => getImagePathFromDirectory(setting('about_us_banner'), 'Settings') ,
-        ],
+        'ask_mr_mohamed' =>$ask_mr_mohamed,
+
         'about_us_image' => getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
         'about_us'       => setting('about_us' . $suffix),
         'our_mission'    => setting('our_mission' . $suffix),
@@ -157,6 +161,8 @@ public function getfooter()
 
             'logo' => getImagePathFromDirectory(setting('about_us_banner'), 'Settings') ,
             'Site_name'           => setting('label_about_us' . $suffix),
+            'Site_description'           => setting('label_about_us' . $suffix),
+
             'description'     => setting('description_about_us' . $suffix),
             'instagram_link'   => setting('instagram_link'),
             'facebook_link'    => setting('facebook_link'),

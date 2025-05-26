@@ -102,6 +102,7 @@ let translations = {
         "Remove item": "حذف",
         "Student blocked successfully": "تم حظر الطالب",
         "Student unblocked successfully": "تم إلفاء حظر الطالب",
+        Free: "مجاني",
 
         Search: "ابحث",
         active: "فعال",

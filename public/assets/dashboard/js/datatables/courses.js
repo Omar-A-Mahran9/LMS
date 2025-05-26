@@ -3,7 +3,7 @@
 var datatable;
 // Class definition
 var KTDatatablesServerSide = (function () {
-    let dbTable = "Course";
+    let dbTable = "courses";
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
@@ -23,9 +23,14 @@ var KTDatatablesServerSide = (function () {
             },
             columns: [
                 { data: "id" },
-                { data: "name" },
+                { data: "title" },
                 { data: "image" },
+                { data: "price" },
+                { data: "instructor" },
+                { data: "start_date" },
+                { data: "is_active" },
                 { data: "created_at" },
+                { data: "views" },
                 { data: null },
             ],
             columnDefs: [
@@ -46,7 +51,7 @@ var KTDatatablesServerSide = (function () {
                             <div>
                                 <!--begin::Info-->
                                 <div class="d-flex flex-column justify-content-center">
-                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.name}</a>
+                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.title}</a>
                                 </div>
                                 <!--end::Info-->
                             </div>
@@ -77,20 +82,69 @@ var KTDatatablesServerSide = (function () {
                         `;
                     },
                 },
+
                 {
-                    targets: 3,
+                    targets: 3, // Price column
+                    render: function (data, type, row) {
+                        // If course is marked free or price is 0
+                        if (row.is_free || !data || data == 0) {
+                            return '<span class="text-muted">Free</span>';
+                        }
+
+                        // If there is a discount
+                        if (row.have_discount && row.discount_percentage) {
+                            let originalPrice = parseFloat(data).toFixed(2);
+                            let discount = parseFloat(row.discount_percentage);
+                            let discountedPrice = (
+                                originalPrice *
+                                (1 - discount / 100)
+                            ).toFixed(2);
+
+                            return `
+                <span class="text-muted text-decoration-line-through">${originalPrice} EGP</span>
+                <br/>
+                <span class="text-danger fw-bold">${discountedPrice} EGP</span>
+            `;
+                        }
+
+                        // No discount, show regular price
+                        return `${parseFloat(data).toFixed(2)} EGP`;
+                    },
+                },
+                {
+                    targets: 4,
                     render: function (data, type, row) {
                         return `
                             <div>
                                 <!--begin::Info-->
                                 <div class="d-flex flex-column justify-content-center">
-                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.created_at}</a>
+                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.instructor.name}</a>
                                 </div>
                                 <!--end::Info-->
                             </div>
                         `;
                     },
                 },
+                {
+                    targets: 6, // This is the "Status" column
+                    render: function (data, type, row) {
+                        if (row.is_active) {
+                            return `
+                                     <span class="badge badge-success">${__(
+                                         "active"
+                                     )}</span>
+
+                            `;
+                        } else {
+                            return `
+                                     <span class="badge badge-danger">${__(
+                                         "inactive"
+                                     )}</span>
+                             `;
+                        }
+                    },
+                },
+
                 {
                     targets: -1,
                     data: null,
@@ -111,6 +165,17 @@ var KTDatatablesServerSide = (function () {
                                 <div class="menu-item px-3">
                                     <a href="javascript:;" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
                                         ${__("Edit")}
+                                    </a>
+                                </div>
+                                <!--end::Menu item-->
+
+                                   <!--end::Menu item-->
+                                    <!--begin::Menu item-->
+                                <div class="menu-item px-3">
+                                    <a href="/dashboard/courses/${
+                                        data.id
+                                    }" class="menu-link px-3 show_button" data-kt-docs-table-filter="show_row">
+                                        ${__("Show")}
                                     </a>
                                 </div>
                                 <!--end::Menu item-->
@@ -155,41 +220,116 @@ var KTDatatablesServerSide = (function () {
             '[data-kt-docs-table-filter="edit_row"]'
         );
 
-        editButtons.forEach((d) => {
-            d.addEventListener("click", function (e) {
+        editButtons.forEach((btn) => {
+            btn.addEventListener("click", function (e) {
                 e.preventDefault();
 
-                let currentBtnIndex = $(editButtons).index(d);
+                let currentBtnIndex = $(editButtons).index(btn);
                 let data = datatable.row(currentBtnIndex).data();
 
-                $("#form_title").text(__("Edit addon"));
-                $("#image_inp").css(
+                // Set form title
+                $("#form_title").text(__("Edit Course"));
+
+                $(".image-input-wrapper").css(
                     "background-image",
                     `url('${data.full_image_path}')`
                 );
-                $("#icon_inp").css(
-                    "background-image",
-                    `url('${data.full_icon_path}')`
-                );
-                $("#name_ar_inp").val(data.name_ar);
-                $("#name_en_inp").val(data.name_en);
-                $("#description_ar_inp").val(data.description_ar);
-                $("#description_en_inp").val(data.description_en);
 
-                // Handle is_publish switch
-                if (data.is_publish) {
-                    $("#kt_modal_add_customer_billing").prop("checked", true);
+                $("#slide_image_inp").css(
+                    "background-image",
+                    `url('${data.full_slide_image_path}')`
+                );
+
+                // Titles
+                $("#title_ar_inp").val(data.title_ar);
+                $("#title_en_inp").val(data.title_en);
+
+                tinymce
+                    .get("description_ar_inp")
+                    .setContent(data.description_ar);
+                tinymce
+                    .get("description_en_inp")
+                    .setContent(data.description_en);
+
+                tinymce.get("note_ar_inp").setContent(data.note_ar);
+                tinymce.get("note_en_inp").setContent(data.note_en);
+
+                // Video URL
+                $("#video_url_inp").val(data.video_url);
+
+                // Relationships
+                $("#instructor_id_inp")
+                    .val(data.instructor_id)
+                    .trigger("change");
+                $("#category_id_inp").val(data.category_id).trigger("change");
+
+                // Pricing controls
+                if (data.is_free) {
+                    $("#is_free_switch").prop("checked", true);
+                    $("#price_inp").val(0).prop("disabled", true);
                 } else {
-                    $("#kt_modal_add_customer_billing").prop("checked", false);
+                    $("#is_free_switch").prop("checked", false);
+                    $("#price_inp").val(data.price).prop("disabled", false);
                 }
 
-                $("#crud_form").attr(
-                    "action",
-                    `/dashboard/${dbTable}/${data.id}`
+                if (data.have_discount) {
+                    $("#have_discount_switch").prop("checked", true);
+                    $("#discount_percentage_inp")
+                        .val(data.discount_percentage)
+                        .prop("disabled", false);
+                } else {
+                    $("#have_discount_switch").prop("checked", false);
+                    $("#discount_percentage_inp")
+                        .val("")
+                        .prop("disabled", true);
+                }
+
+                // Enrollment
+                $("#max_students_inp").val(data.max_students);
+                $("#enrollment_open_switch").prop(
+                    "checked",
+                    data.is_enrollment_open
                 );
+
+                // SEO
+                $("#slug_inp").val(data.slug);
+                $("#meta_title_inp").val(data.meta_title);
+                $("#meta_description_inp").val(data.meta_description);
+
+                // Dates
+                $("#start_date_inp").val(data.start_date);
+                $("#end_date_inp").val(data.end_date);
+
+                // Flags
+                $("#show_in_home_switch").prop("checked", data.show_in_home);
+                $("#featured_switch").prop("checked", data.featured);
+                $("#certificate_switch").prop(
+                    "checked",
+                    data.certificate_available
+                );
+
+                // If you have subcategories
+                if (
+                    data.subcategory_ids &&
+                    Array.isArray(data.subcategory_ids)
+                ) {
+                    $("#subcategory_ids_inp")
+                        .val(data.subcategory_ids)
+                        .trigger("change");
+                } else {
+                    $("#subcategory_ids_inp").val([]).trigger("change");
+                }
+
+                // Reset form method & action
+                $("#crud_form").attr("action", `/dashboard/courses/${data.id}`);
+
+                // Remove previous _method input if any, then add PUT
+                $("#crud_form").find('input[name="_method"]').remove();
                 $("#crud_form").prepend(
                     `<input type="hidden" name="_method" value="PUT">`
                 );
+
+                // Show modal
                 $("#crud_modal").modal("show");
             });
         });
