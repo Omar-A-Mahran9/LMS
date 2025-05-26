@@ -122,16 +122,16 @@ public function getAboutUs()
     $locale = app()->getLocale(); // 'ar' or 'en'
     $suffix = $locale === 'ar' ? '_ar' : '_en';
     $ask_mr_mohamed = [
-            'label'           => setting('label_service' . $suffix),
-            'description'     => setting('description_service' . $suffix),
+            'image_url'=>getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
+            'label'           => setting('label' . $suffix),
+            'description'     => setting('about_us' . $suffix),
             'experince_year'     => 20,
             'lecture_count'     => 200,
         ];
     $data = [
         'ask_mr_mohamed' =>$ask_mr_mohamed,
 
-        'about_us_image' => getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
-        'about_us'       => setting('about_us' . $suffix),
+
         'our_mission'    => setting('our_mission' . $suffix),
         'our_vision'     => setting('our_vission' . $suffix), // double-check spelling
     ];
