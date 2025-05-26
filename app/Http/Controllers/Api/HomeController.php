@@ -76,8 +76,8 @@ class HomeController extends Controller
         'ask_mr_mohamed' =>$ask_mr_mohamed,
         'HowUse' =>$HowUse,
         'CommonQuestion' =>[
-            'label'           => setting('label_common_question_us' . $suffix),
-            'description'     => setting('description_common_question_us' . $suffix),
+            'label'           => setting('label_common_question' . $suffix),
+            'description'     => setting('description_common_question' . $suffix),
             'image_url' => getImagePathFromDirectory(setting('common_question_banner'), 'Settings') ,
             'question_and_answer'=>CommonQuestionResource::collection($CommonQuestion),
         ],
