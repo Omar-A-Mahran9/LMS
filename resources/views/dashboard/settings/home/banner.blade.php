@@ -35,7 +35,7 @@
                                         data-kt-image-input="true">
                                         <!--begin::Preview existing avatar-->
                                         <div class="image-input-wrapper w-150px h-150px"
-                                            style="background-image: url({{ asset(getImagePathFromDirectory(setting('about_us_banner'), 'Settings')) }})">
+                                            style="background-image: url({{ asset(getImagePathFromDirectory(setting('common_question_banner'), 'Settings')) }})">
                                         </div>
                                         <!--end::Preview existing avatar-->
                                         <!--begin::Label-->
@@ -45,7 +45,8 @@
                                             title="{{ __('تغير الصورة') }}">
                                             <i class="bi bi-pencil-fill fs-7"></i>
                                             <!--begin::Inputs-->
-                                            <input type="file" name="about_us_banner" accept=".png, .jpg, .jpeg" />
+                                            <input type="file" name="common_question_banner"
+                                                accept=".png, .jpg, .jpeg" />
                                             <input type="hidden" name="avatar_remove" />
                                             <!--end::Inputs-->
                                         </label>
@@ -73,7 +74,7 @@
                                         {{ __('صيغة الصورة يجب ان تكون من نوع *.jpg, *.jpeg, *.gif, *.svg') }}
                                     </div>
                                     <!--end::Description-->
-                                    <div class="invalid-feedback" id="about_us_banner"></div>
+                                    <div class="invalid-feedback" id="common_question_banner"></div>
                                 </div>
                                 <!--end::Card body-->
                                 <!--begin::Input group-->
@@ -83,12 +84,13 @@
                                         <label class="form-label">{{ __('Label in arabic') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <input class="form-control" value="{{ setting('label_about_us_ar') }}"
-                                            name="label_about_us_ar" id="label_about_us_ar_inp"
+                                        <input class="form-control" value="{{ setting('label_common_question_ar') }}"
+                                            name="label_common_question_ar" id="label_common_question_ar_inp"
                                             placeholder="{{ __('Label in arabic') }}" />
                                         <!--end::Editor-->
                                         <!--begin::Description-->
-                                        <div class="fv-plugins-message-container invalid-feedback" id="label_about_us_ar">
+                                        <div class="fv-plugins-message-container invalid-feedback"
+                                            id="label_common_question_ar">
                                         </div>
                                         <!--end::Description-->
                                     </div>
@@ -97,12 +99,13 @@
                                         <label class="form-label">{{ __('Label in english') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <input class="form-control" value="{{ setting('label_about_us_en') }}"
-                                            name="label_about_us_en" id="label_about_us_en_inp"
+                                        <input class="form-control" value="{{ setting('label_common_question_en') }}"
+                                            name="label_common_question_en" id="label_common_question_en_inp"
                                             placeholder="{{ __('Label in english') }}" />
                                         <!--end::Editor-->
                                         <!--begin::Description-->
-                                        <div class="fv-plugins-message-container invalid-feedback" id="label_about_us_en">
+                                        <div class="fv-plugins-message-container invalid-feedback"
+                                            id="label_common_question_en">
                                         </div>
                                         <!--end::Description-->
                                     </div>
@@ -115,14 +118,14 @@
                                         <label class="form-label">{{ __('About us in arabic') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <textarea name="description_about_us_ar" id="description_about_us_ar_inp" data-kt-autosize="true"
+                                        <textarea name="description_common_question_ar" id="description_common_question_ar_inp" data-kt-autosize="true"
                                             placeholder="{{ __('About us in arabic') }}" class="tox-target">
-                                            {{ setting('description_about_us_ar') }}
+                                            {{ setting('description_common_question_ar') }}
                                             </textarea>
                                         <!--end::Editor-->
                                         <!--begin::Description-->
                                         <div class="fv-plugins-message-container invalid-feedback"
-                                            id="description_about_us_ar"></div>
+                                            id="description_common_question_ar"></div>
                                         <!--end::Description-->
                                     </div>
                                     <div class="col-lg-6">
@@ -130,14 +133,14 @@
                                         <label class="form-label">{{ __('About us in english') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <textarea name="description_about_us_en" id="description_about_us_en_inp" data-kt-autosize="true"
+                                        <textarea name="description_common_question_en" id="description_common_question_en_inp" data-kt-autosize="true"
                                             placeholder="{{ __('About us in english') }}" class="tox-target">
-                                            {{ setting('description_about_us_en') }}
+                                            {{ setting('description_common_question_en') }}
                                             </textarea>
                                         <!--end::Editor-->
                                         <!--begin::Description-->
                                         <div class="fv-plugins-message-container invalid-feedback"
-                                            id="description_about_us_en"></div>
+                                            id="description_common_question_en"></div>
                                         <!--end::Description-->
                                     </div>
                                 </div>
@@ -244,7 +247,8 @@
                                     <label for="video_how_to_use_url_inp"
                                         class="col-lg-2 col-form-label fw-semibold fs-6">{{ __('Video URL') }}</label>
                                     <div class="col-lg-10 fv-row">
-                                        <input type="text" name="video_how_to_use_url" value="{{ setting('video_how_to_use_url') }}" id="video_how_to_use_url_inp"
+                                        <input type="text" name="video_how_to_use_url"
+                                            value="{{ setting('video_how_to_use_url') }}" id="video_how_to_use_url_inp"
                                             class="form-control form-control-lg form-control-solid"
                                             placeholder="{{ __('Enter video URL') }}" value="" />
                                         <div class="fv-plugins-message-container invalid-feedback"
@@ -468,7 +472,7 @@
         };
 
         // Initialize editors for all targeted selectors
-        ["#description_about_us_ar_inp", "#description_about_us_en_inp", "#description_how_to_use_ar_inp",
+        ["#description_common_question_ar_inp", "#description_common_question_en_inp", "#description_how_to_use_ar_inp",
             "#description_how_to_use_en_inp", "#description_contact_en_inp", "#description_contact_ar_inp"
         ]
         .forEach(selector => {

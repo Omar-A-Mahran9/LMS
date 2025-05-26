@@ -34,7 +34,7 @@ class HomeController extends Controller
 
         // Define the list of banner keys you expect to handle
         $bannerKeys = [
-            'about_us_banner',
+            'common_question_banner',
             'how_to_use_banner',
             'contact_banner',
             'home_banner',

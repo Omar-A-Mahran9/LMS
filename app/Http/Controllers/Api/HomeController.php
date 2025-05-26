@@ -76,10 +76,10 @@ class HomeController extends Controller
         'ask_mr_mohamed' =>$ask_mr_mohamed,
         'HowUse' =>$HowUse,
         'CommonQuestion' =>[
-            'label'           => setting('label_about_us' . $suffix),
-            'description'     => setting('description_about_us' . $suffix),
-            'image_url' => getImagePathFromDirectory(setting('about_us_banner'), 'Settings') ,
-            'questionandanswer'=>CommonQuestionResource::collection($CommonQuestion),
+            'label'           => setting('label_common_question_us' . $suffix),
+            'description'     => setting('description_common_question_us' . $suffix),
+            'image_url' => getImagePathFromDirectory(setting('common_question_banner'), 'Settings') ,
+            'question_and_answer'=>CommonQuestionResource::collection($CommonQuestion),
         ],
         'contact_us_data'=>$contact_us_data
 
@@ -160,7 +160,7 @@ public function getfooter()
 
     $data = [
 
-            'logo' => getImagePathFromDirectory(setting('about_us_banner'), 'Settings') ,
+            'logo' => getImagePathFromDirectory(setting('common_question_banner'), 'Settings') ,
             'Site_name'           => setting('label_about_us' . $suffix),
             'Site_description'           => setting('label_about_us' . $suffix),
 

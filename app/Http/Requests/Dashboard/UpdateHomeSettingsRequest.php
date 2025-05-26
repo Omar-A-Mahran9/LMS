@@ -36,10 +36,10 @@ class UpdateHomeSettingsRequest extends FormRequest
 
             ],
             "banner" => [
-                'label_about_us_ar' => 'required|string',
-                'label_about_us_en' => 'required|string',
-                'description_about_us_ar' => 'required|string',
-                'description_about_us_en' => 'required|string',
+                'label_common_question_ar' => 'required|string',
+                'label_common_question_en' => 'required|string',
+                'description_common_question_ar' => 'required|string',
+                'description_common_question_en' => 'required|string',
 
                 'label_how_to_use_ar' => 'required|string',
                 'label_how_to_use_en' => 'required|string',
@@ -52,13 +52,13 @@ class UpdateHomeSettingsRequest extends FormRequest
                 'description_contact_en' => 'required|string',
 
 
-                'label_about_us_ar' => 'required|string',
-                'label_about_us_en' => 'required|string',
-                'description_about_us_ar' => 'required|string',
-                'description_about_us_en' => 'required|string',
+                'label_common_question_ar' => 'required|string',
+                'label_common_question_en' => 'required|string',
+                'description_common_question_ar' => 'required|string',
+                'description_common_question_en' => 'required|string',
 
 
-                'about_us_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
+                'common_question_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
                 'how_to_use_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
                 'contact_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
                 'video_how_to_use_url' => 'required|url',
