@@ -52,9 +52,4 @@ Route::post('/create', [OrderController::class, 'preCreateOrder']);
 
 // Step 5: Confirm Order with OTP
 
-
-
-
-
-
 });
