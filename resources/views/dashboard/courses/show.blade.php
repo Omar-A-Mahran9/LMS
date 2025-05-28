@@ -7,12 +7,19 @@
             <div class="d-flex flex-column gap-5 gap-lg-10">
                 <!--begin::Course Card-->
                 <div class="card card-flush">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <div class="card-title">
                             <h2>{{ __('Course Details') }}</h2>
                         </div>
+
+                        @can('view_videos')
+                            <a href="{{ route('dashboard.videos.index') }}" class="btn btn-primary d-flex align-items-center">
+                                <i class="ki-outline ki-plus fs-2 me-2"></i> {{ __('Add New video') }}
+                            </a>
+                        @endcan
                     </div>
                 </div>
+
                 <div class="card card-flush">
 
                     <div class="card-body">

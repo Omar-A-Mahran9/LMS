@@ -166,7 +166,7 @@ var KTDatatablesServerSide = (function () {
                                     <a href="/dashboard/videos/${
                                         data.id
                                     }" class="menu-link px-3 show_button" data-kt-docs-table-filter="show_row">
-                                        ${__("Show")}
+                                        ${__("Show Video")}
                                     </a>
                                 </div>
                                 <!--end::Menu item-->

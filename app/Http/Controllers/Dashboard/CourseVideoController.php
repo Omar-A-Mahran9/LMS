@@ -87,6 +87,14 @@ $courseVideo=CourseVideo::find($id);
 
 }
 
+public function show($id)
+{
+    $this->authorize('view_videos'); // Optional: permission check
+
+    $video = CourseVideo::findOrFail($id);
+
+    return view('dashboard.videos.show', compact('video'));
+}
 
 public function destroy( $id)
 {

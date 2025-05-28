@@ -1,166 +1,117 @@
 @extends('dashboard.partials.master')
 
 @section('content')
-    <div id="kt_app_content" class="app-content flex-column-fluid">
-        <div id="kt_app_content_container" class="app-container container-fluid">
+    <div class="container mt-5">
 
-            <div class="d-flex flex-column gap-5 gap-lg-10">
-                <!--begin::Course Card-->
-                <div class="card card-flush">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <h2>{{ __('Course Details') }}</h2>
-                        </div>
-                    </div>
+        <div class="row">
+            <!-- Left column: width 3 -->
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-light">
+                    <h5 class="mb-5">{{ __('Video Info') }}</h5>
+
+                    <p><strong>{{ __('Title') }}:</strong><br> {{ $video->title ?? 'N/A' }}</p>
+
+                    @if (!empty($video->duration_seconds))
+                        <p><strong>{{ __('Duration') }}:</strong><br>
+                            {{ intdiv($video->duration_seconds, 60) }}m {{ $video->duration_seconds % 60 }}s
+                        </p>
+                    @endif
+
+                    <p><strong>{{ __('Views') }}:</strong><br> {{ $video->views ?? 0 }}</p>
+
+                    <p><strong>{{ __('Preview') }}:</strong><br>
+                        @if ($video->is_preview)
+                            <span class="badge bg-success">{{ __('Yes') }}</span>
+                        @else
+                            <span class="badge bg-secondary">{{ __('No') }}</span>
+                        @endif
+                    </p>
+
+                    <p><strong>{{ __('Status') }}:</strong><br>
+                        @if ($video->is_active)
+                            <span class="badge bg-primary">{{ __('Active') }}</span>
+                        @else
+                            <span class="badge bg-danger">{{ __('Inactive') }}</span>
+                        @endif
+                    </p>
+
+                    @if (isset($video->created_at))
+                        <p><strong>{{ __('Uploaded on') }}:</strong><br> {{ $video->created_at->format('d M Y') }}</p>
+                    @endif
                 </div>
-                <div class="card card-flush">
-
-                    <div class="card-body">
-                        <!--begin::Row-->
-                        <div class="row">
-                            <!--begin::Image-->
-                            <div class="col-md-2 text-start">
-                                <img src="{{ $course->full_image_path }}" alt="Course Image"
-                                    class="img-fluid rounded w-150px h-150px object-fit-cover" />
-                            </div>
-                            <!--end::Image-->
-
-                            <!--begin::Details-->
-                            <div class="col-md-10">
-                                <div class="row gap-5 align-items-center justify-content-center">
-                                    <!-- Left Column -->
-                                    <div class="col-md-5">
-                                        <table class="table table-row-bordered align-middle">
-                                            <tbody class="fw-semibold text-gray-600">
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Title') }}</td>
-                                                    <td class="text-end text-dark">{{ $course->title }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Instructor') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        {{ optional($course->instructor)->name ?? '-' }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Category') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        {{ optional($course->category)->name ?? '-' }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Subcategories') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        @forelse ($course->subCategories as $subcategory)
-                                                            <span
-                                                                class="badge badge-light-primary fw-bold me-1">{{ $subcategory->name }}</span>
-                                                        @empty
-                                                            {{ __('No subcategories') }}
-                                                        @endforelse
-                                                    </td>
-                                                </tr>
+            </div>
 
 
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Show in Home') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        {{ $course->show_in_home ? __('Yes') : __('No') }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Featured') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        {{ $course->featured ? __('Yes') : __('No') }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Certificate Available?') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        {{ $course->certificate_available ? __('Yes') : __('No') }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Enrollment Open') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        {{ $course->is_enrollment_open ? __('Yes') : __('No') }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Enrolled Students') }}</td>
-                                                    <td class="text-end text-dark">{{ $course->enrolled_students }}</td>
-                                                </tr>
+            <!-- Right column: width 9 -->
+            <div class="col-md-9">
+                @php
+                    function getYoutubeVideoId($url)
+                    {
+                        $parsed_url = parse_url($url);
 
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Created At') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        {{ $course->created_at->format('Y-m-d') }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('views') }}</td>
-                                                    <td class="text-end text-dark">{{ $course->views }}</td>
-                                                </tr>
+                        if (!isset($parsed_url['host'])) {
+                            return null;
+                        }
 
-                                            </tbody>
-                                        </table>
-                                    </div>
+                        $host = $parsed_url['host'];
 
-                                    <!-- Right Column -->
-                                    <div class="col-md-5">
-                                        <table class="table table-row-bordered align-middle">
-                                            <tbody class="fw-semibold text-gray-600">
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Description') }}</td>
-                                                    <td class="text-end text-dark">{!! $course->description !!}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Note') }}</td>
-                                                    <td class="text-end text-dark">{!! $course->note !!}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Price') }}</td>
-                                                    <td class="text-end text-dark">{{ number_format($course->price, 2) }}
-                                                        EGP</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Has Discount') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        {{ $course->have_discount ? __('Yes') : __('No') }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Discount %') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        {{ $course->discount_percentage ?? '-' }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Is Free Course?') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        {{ $course->is_free ? __('Yes') : __('No') }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Start Date') }}</td>
-                                                    <td class="text-end text-dark">{{ $course->start_date ?? '-' }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('End Date') }}</td>
-                                                    <td class="text-end text-dark">{{ $course->end_date ?? '-' }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Max Students') }}</td>
-                                                    <td class="text-end text-dark">
-                                                        {{ $course->max_students ?? __('Unlimited') }}
-                                                    </td>
-                                                </tr>
+                        if (strpos($host, 'youtu.be') !== false) {
+                            return trim($parsed_url['path'], '/');
+                        }
 
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                        if (strpos($host, 'youtube.com') !== false) {
+                            if (isset($parsed_url['path'])) {
+                                if ($parsed_url['path'] == '/watch') {
+                                    parse_str($parsed_url['query'] ?? '', $query);
+                                    return $query['v'] ?? null;
+                                }
+                                if (strpos($parsed_url['path'], '/embed/') === 0) {
+                                    $videoPart = substr($parsed_url['path'], strlen('/embed/'));
+                                    $videoId = explode('?', $videoPart)[0];
+                                    return $videoId;
+                                }
+                            }
+                        }
 
-                            </div>
-                            <!--end::Details-->
-                        </div>
-                        <!--end::Row-->
+                        return null;
+                    }
+
+                    $videoId = getYoutubeVideoId($video->video_url);
+                @endphp
+
+                @if ($videoId)
+                    <div class="video-responsive mb-3">
+                        <iframe src="https://www.youtube.com/embed/{{ $videoId }}" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
                     </div>
-                </div>
-                <!--end::Course Card-->
+                @else
+                    <p>Invalid YouTube URL</p>
+                @endif
+
+
             </div>
         </div>
     </div>
 @endsection
+
+<style>
+    .video-responsive {
+        position: relative;
+        padding-bottom: 56.25%;
+        /* 16:9 aspect ratio */
+        border-radius: 25px;
+        height: 0;
+        overflow: hidden;
+        max-width: 100%;
+    }
+
+    .video-responsive iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>

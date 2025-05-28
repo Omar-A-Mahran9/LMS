@@ -63,7 +63,7 @@ class UpdateVideoRequest extends FormRequest
             'regex:/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/'
         ],
 
- 
+
 
 
 
