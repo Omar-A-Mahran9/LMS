@@ -13,7 +13,7 @@
             data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
             <!--begin::Card title-->
             <div class="card-title m-0">
-                <h3 class="fw-bold m-0">{{ __('Courses list') }}</h3>
+                <h3 class="fw-bold m-0">{{ __('Videos list') }}</h3>
             </div>
             <!--end::Card title-->
 
@@ -36,7 +36,7 @@
                                     fill="currentColor"></rect>
                             </svg>
                         </span>
-                        <!--end::Svg Icon-->{{ __('Add Course') }}
+                        <!--end::Svg Icon-->{{ __('Add new video') }}
                     </button>
                     <!--end::Add customer-->
                 </div>
@@ -111,8 +111,7 @@
         <!--end::Content-->
     </div>
 
-    {{-- begin::Add Country Modal --}}
-    <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.courses.store') }}" method="post"
+    <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.videos.store') }}" method="post"
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
 
@@ -120,7 +119,7 @@
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="form_title">{{ __('Add new Course') }}</h5>
+                        <h5 class="modal-title" id="form_title">{{ __('Add New video') }}</h5>
                         <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                             aria-label="Close">
                             <i class="ki-outline ki-cross fs-1"></i>
@@ -128,279 +127,106 @@
                     </div>
 
                     <div class="modal-body">
-
-                        {{-- Images --}}
                         <div class="row mb-4">
-                            <div class="col-6 d-flex flex-column justify-content-center">
+                            <div class="col-12 d-flex flex-column justify-content-center">
                                 <label for="image_inp"
                                     class="form-label  text-center fs-6 fw-bold mb-3">{{ __('Thumbnail Image') }}</label>
                                 <x-dashboard.upload-image-inp name="image" :image="null" :directory="'courses'"
                                     placeholder="default.svg" type="editable" />
                             </div>
-                            <div class="col-6 d-flex flex-column justify-content-center">
-                                <label for="slide_image_inp"
-                                    class="form-label  text-center fs-6 fw-bold mb-3">{{ __('Slide Image') }}</label>
-                                <x-dashboard.upload-image-inp name="slide_image" :image="null" :directory="'courses'"
-                                    placeholder="default.svg" type="editable" />
+                        </div>
+                        {{-- Course & Section --}}
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <label for="course_id_inp" class="form-label">{{ __('Course') }}</label>
+                                <select name="course_id" id="course_id_inp" class="form-select" data-control="select2"
+                                    data-placeholder="{{ __('Select Course') }}"
+                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                    <option value="" selected></option>
+                                    @foreach ($courses as $course)
+                                        <option value="{{ $course->id }}">{{ $course->title_en }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
+                            </div>
+                            <div class="col-6">
+                                <label for="course_section_id_inp" class="form-label">{{ __('Course Section') }}</label>
+                                <select name="course_section_id" id="course_section_id_inp" class="form-select"
+                                    data-control="select2" data-placeholder="{{ __('Select Section (optional)') }}"
+                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                    <option value="" selected></option>
+                                    @foreach ($sections as $section)
+                                        <option value="{{ $section->id }}">{{ $section->title_en }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="fv-plugins-message-container invalid-feedback" id="course_section_id"></div>
                             </div>
                         </div>
 
-                        {{-- Title --}}
+                        {{-- Titles --}}
                         <div class="row mb-4">
                             <div class="col-6">
-                                <label for="title_ar_inp" class="form-label ">{{ __('Title (Arabic)') }}</label>
+                                <label for="title_ar_inp" class="form-label">{{ __('Title (Arabic)') }}</label>
                                 <input type="text" name="title_ar" id="title_ar_inp" class="form-control"
-                                    placeholder="{{ __('Enter title in Arabic') }}">
+                                    placeholder="{{ __('Enter Arabic title') }}">
                                 <div class="invalid-feedback" id="title_ar"></div>
                             </div>
                             <div class="col-6">
-                                <label for="title_en_inp" class="form-label ">{{ __('Title (English)') }}</label>
+                                <label for="title_en_inp" class="form-label">{{ __('Title (English)') }}</label>
                                 <input type="text" name="title_en" id="title_en_inp" class="form-control"
-                                    placeholder="{{ __('Enter title in English') }}">
+                                    placeholder="{{ __('Enter English title') }}">
                                 <div class="invalid-feedback" id="title_en"></div>
                             </div>
                         </div>
 
-                        {{-- Description --}}
+                        {{-- Descriptions --}}
                         <div class="row mb-4">
                             <div class="col-6">
                                 <label for="description_ar_inp"
                                     class="form-label">{{ __('Description (Arabic)') }}</label>
-
                                 <textarea name="description_ar" id="description_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
-
                                 <div class="fv-plugins-message-container invalid-feedback" id="description_ar"></div>
-
                             </div>
-                            <!--begin::Col-->
-
                             <div class="col-6">
                                 <label for="description_en_inp"
                                     class="form-label">{{ __('Description (English)') }}</label>
-
                                 <textarea name="description_en" id="description_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
-
                                 <div class="fv-plugins-message-container invalid-feedback" id="description_en"></div>
-
-                            </div>
-
-
-                        </div>
-
-                        {{-- Notes --}}
-                        <div class="row mb-4">
-                            <div class="col-6">
-                                <label for="note_ar_inp" class="form-label">{{ __('Note (Arabic)') }}</label>
-
-
-                                <textarea name="note_ar" id="note_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
-
-                                <div class="fv-plugins-message-container invalid-feedback" id="note_ar"></div>
-
-                            </div>
-                            <div class="col-6">
-                                <label for="note_en_inp" class="form-label">{{ __('Note (English)') }}</label>
-
-
-                                <textarea name="note_en" id="note_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
-
-                                <div class="fv-plugins-message-container invalid-feedback" id="note_en"></div>
-
                             </div>
                         </div>
 
-
-                        {{-- Video URL --}}
+                        {{-- Video Info --}}
                         <div class="row mb-4">
-                            <div class="col-4 fv-row">
-                                <label for="video_url_inp" class="form-label">{{ __('Promo Video URL') }}</label>
+                            <div class="col-5">
+                                <label for="video_url_inp" class="form-label">{{ __('Video URL') }}</label>
                                 <input type="url" name="video_url" id="video_url_inp" class="form-control"
                                     placeholder="{{ __('Enter video URL') }}">
-
                                 <div class="fv-plugins-message-container invalid-feedback" id="video_url"></div>
-
                             </div>
-
-                            {{-- Relationships --}}
-                            <div class="col-4">
-                                <label for="instructor_id_inp" class="form-label">{{ __('Instructor') }}</label>
-                                <select name="instructor_id" id="instructor_id_inp" class="form-select"
-                                    data-control="select2" data-placeholder="{{ __('Select Instructor') }}"
-                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
-                                    <option value="" selected></option>
-                                    @foreach ($instructors as $instructor)
-                                        <option value="{{ $instructor->id }}">{{ $instructor->name }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback" id="instructor_id"></div>
-
-                            </div>
-                            <div class="col-4">
-                                <label for="category_id_inp" class="form-label">{{ __('Category') }}</label>
-                                <select name="category_id" id="category_id_inp" class="form-select"
-                                    data-control="select2" data-placeholder="{{ __('Select Category') }}"
-                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
-                                    <option value="" selected></option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback" id="category_id"></div>
-
-                            </div>
-
-
-                        </div>
-                        {{-- Pricing --}}
-                        <div class="row mb-4">
-                            {{-- Price --}}
-                            <div class="col-4">
-                                <div class="d-flex align-items-center justify-content-between">
-
-                                    <label for="price_inp" class="form-label">{{ __('Price') }}</label>
-                                    <label class="form-check form-switch form-check-custom form-check-solid  mb-2">
-                                        <input class="form-check-input" name="is_free" type="checkbox" value="1"
-                                            id="is_free_switch">
-                                        <span class="form-check-label"
-                                            for="is_free_switch">{{ __('Is Free Course?') }}</span>
-                                    </label>
-                                </div>
-                                <input type="number" name="price" id="price_inp" class="form-control" min="0"
-                                    step="0.01" value="0">
-                                <div class="fv-plugins-message-container invalid-feedback" id="price"></div>
-
-                            </div>
-                            {{-- Discount Percentage --}}
-                            <div class="col-4">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <label for="discount_percentage_inp"
-                                        class="form-label">{{ __('Discount Percentage') }}</label>
-                                    <label class="form-check form-switch form-check-custom form-check-solid mb-2">
-                                        <input class="form-check-input" name="have_discount" type="checkbox"
-                                            value="1" id="have_discount_switch">
-
-                                        <span class="form-check-label"
-                                            for="have_discount_switch">{{ __('Has Discount?') }}</span>
-                                    </label>
-
-                                </div>
-
-                                <input type="number" name="discount_percentage" id="discount_percentage_inp"
-                                    class="form-control" min="1" max="100" disabled>
-                                <div class="fv-plugins-message-container invalid-feedback" id="discount_percentage"></div>
-
-                            </div>
-
-                            {{-- Enrollment --}}
-                            <div class="col-4">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <label for="max_students_inp" class="form-label">{{ __('Max Students') }}</label>
-
-                                    <label class="form-check form-switch form-check-custom form-check-solid mb-2">
-                                        <input class="form-check-input" name="is_enrollment_open" type="checkbox"
-                                            value="1" id="enrollment_open_switch" checked>
-                                        <span class="form-check-label"
-                                            for="enrollment_open_switch">{{ __('Enrollment Open?') }}</span>
-                                    </label>
-
-                                </div>
-                                <input type="number" name="max_students" id="max_students_inp" class="form-control"
-                                    min="1" placeholder="{{ __('Leave empty for unlimited') }}">
-                            </div>
-
-
-                        </div>
-
-                        {{-- SEO --}}
-                        <div class="row mb-4">
-                            <div class="col-4">
-                                <label for="slug_inp" class="form-label ">{{ __('Slug') }}</label>
-                                <input type="text" name="slug" id="slug_inp" class="form-control"
-                                    placeholder="{{ __('Unique slug') }}">
-                                <div class="fv-plugins-message-container invalid-feedback" id="slug"></div>
-
-                            </div>
-                            <div class="col-4">
-                                <label for="meta_title_inp" class="form-label">{{ __('Meta Title') }}</label>
-                                <input type="text" name="meta_title" id="meta_title_inp" class="form-control"
-                                    placeholder="{{ __('Meta title for SEO') }}">
-                                <div class="fv-plugins-message-container invalid-feedback" id="meta_title"></div>
-
-                            </div>
-                            <div class="col-4">
-                                <label for="meta_description_inp" class="form-label">{{ __('Meta Description') }}</label>
-                                <textarea name="meta_description" id="meta_description_inp" class="form-control" rows="2"
-                                    placeholder="{{ __('Meta description for SEO') }}"></textarea>
-                                <div class="fv-plugins-message-container invalid-feedback" id="meta_description">
-                                </div>
-
-                            </div>
-                        </div>
-
-
-
-
-
-
-
-
-                        {{-- Duration and Dates --}}
-                        <div class="row mb-4">
-
-                            <div class="col-6">
-                                <label for="start_date_inp" class="form-label">{{ __('Start Date') }}</label>
-                                <input type="date" name="start_date" id="start_date_inp" class="form-control">
-                                <div class="fv-plugins-message-container invalid-feedback" id="start_date"></div>
-
-                            </div>
-                            <div class="col-6">
-                                <label for="end_date_inp" class="form-label">{{ __('End Date') }}</label>
-                                <input type="date" name="end_date" id="end_date_inp" class="form-control">
-                                <div class="fv-plugins-message-container invalid-feedback" id="end_date"></div>
-
-                            </div>
-
-                        </div>
-                        {{-- Flags --}}
-                        <div class="row mb-4 mt-5">
                             <div class="col-3">
-                                <label for="subcategory_ids_inp" class="form-label">{{ __('Subcategories') }}</label>
-                                <select name="subcategory_ids[]" id="subcategory_ids_inp" class="form-select"
-                                    data-control="select2" data-placeholder="{{ __('Select Subcategories') }}"
-                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}" multiple>
-                                    <option value="" selected></option>
-                                    @foreach ($subcategories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback" id="subcategory_ids"></div>
-
+                                <label for="duration_seconds_inp"
+                                    class="form-label">{{ __('Duration (Seconds)') }}</label>
+                                <input type="number" name="duration_seconds" id="duration_seconds_inp"
+                                    class="form-control" min="0">
+                                <div class="fv-plugins-message-container invalid-feedback" id="duration_seconds"></div>
                             </div>
-                            <div class="col-3 d-flex align-items-center mt-2">
+                            <div class="col-2 d-flex align-items-center mt-4">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="show_in_home" type="checkbox" value="1"
-                                        id="show_in_home_switch">
+                                    <input class="form-check-input" name="is_preview" type="checkbox" value="1"
+                                        id="is_preview_switch">
                                     <span class="form-check-label text-dark"
-                                        for="show_in_home_switch">{{ __('Show in Home') }}</span>
+                                        for="is_preview_switch">{{ __('Free Preview?') }}</span>
+                                </label>
+                            </div>
+                            <div class="col-2 d-flex align-items-center mt-4">
+                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input" name="is_active" type="checkbox" value="1"
+                                        id="is_active_switch" checked>
+                                    <span class="form-check-label text-dark"
+                                        for="is_active_switch">{{ __('Active') }}</span>
                                 </label>
                             </div>
 
-                            <div class="col-3 d-flex align-items-center mt-2">
-                                <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="featured" type="checkbox" value="1"
-                                        id="featured_switch">
-                                    <span class="form-check-label text-dark"
-                                        for="featured_switch">{{ __('Featured') }}</span>
-                                </label>
-                            </div>
-                            <div class="col-3 d-flex align-items-center mt-2">
-                                <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="certificate_available" type="checkbox"
-                                        value="1" id="certificate_switch">
-                                    <span class="form-check-label text-dark"
-                                        for="certificate_switch">{{ __('Certificate Available?') }}</span>
-                                </label>
-                            </div>
                         </div>
 
 
@@ -421,11 +247,16 @@
             </div>
         </div>
     </form>
+    <!-- Hidden div for YouTube Player -->
+    <div id="player-container" style="display: none;">
+        <div id="yt-player"></div>
+    </div>
+    {{-- begin::Add Country Modal --}}
 @endsection
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/courses.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/videos.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
@@ -501,16 +332,63 @@
                 $("#price_inp").val('0');
 
                 // Reset form action to store route (adjust as needed)
-                $("#crud_form").attr('action', "{{ route('dashboard.courses.store') }}");
+                $("#crud_form").attr('action', "{{ route('dashboard.videos.store') }}");
 
                 // Reset modal title
-                $("#form_title").text("{{ __('Add new Course') }}");
+                $("#form_title").text("{{ __('Add new video') }}");
 
                 // Optionally, reset date inputs
                 $("#start_date_inp, #end_date_inp").val('');
 
                 // Open modal if you want to show it on "Add"
                 $("#crud_modal").modal('show');
+            });
+        });
+    </script>
+
+
+    <script>
+        let ytPlayer;
+
+        function extractYouTubeVideoId(url) {
+            const regex =
+                /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        }
+
+        // Load the YouTube IFrame API script
+        let tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+
+        // YouTube API will call this function when ready
+        function onYouTubeIframeAPIReady() {
+            // Nothing yet – we create player when needed
+        }
+
+        document.getElementById('video_url_inp').addEventListener('change', function() {
+            const url = this.value;
+            const videoId = extractYouTubeVideoId(url);
+
+            if (!videoId) return;
+
+            // If a player already exists, destroy it first
+            if (ytPlayer && ytPlayer.destroy) {
+                ytPlayer.destroy();
+            }
+
+            // Create a hidden YouTube player
+            ytPlayer = new YT.Player('yt-player', {
+                height: '0',
+                width: '0',
+                videoId: videoId,
+                events: {
+                    'onReady': function(event) {
+                        const duration = ytPlayer.getDuration();
+                        document.getElementById('duration_seconds_inp').value = Math.round(duration);
+                    }
+                }
             });
         });
     </script>

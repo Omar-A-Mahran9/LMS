@@ -29,6 +29,8 @@ class Role extends Model
 
         'courses',
 
+        'videos',
+
         'home_content',
 
         'students_rate',

@@ -48,7 +48,7 @@ public function index(Request $request)
 
 public function store(StoreCourseRequest $request)
 {
-                $this->authorize('store_courses');
+    $this->authorize('create_courses');
 
      $data = $request->validated();
 

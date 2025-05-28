@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('course_videos', function (Blueprint $table) {
            $table->id();
+            $table->string('image')->nullable(); // Thumbnail
 
             $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
-             $table->foreignId('course_section_id')->constrained()->onDelete('cascade');
+             $table->foreignId('course_section_id')->constrained()->onDelete('cascade')->nullable();
 
             // Multilingual content
             $table->string('title_en');

@@ -24,6 +24,10 @@
     "Has Discount?": "يوجد خصم",
     "Discount Percentage": "نسبة الخصم",
     "Select Subcategories": "حدد الأقسام الفرعية",
+    "Select Course": "اختر الكورس",
+    "Select Section (optional)": "اختر قسم الكورس",
+    "Enter English title": "إضافة عنوان إنجليزي",
+    "Enter Arabic title": "إضافة عنوان بالعربية",
 
     "Add new Course": "إضافة دورة جديدة",
     "Title (Arabic)": "العنوان (عربي)",
@@ -67,9 +71,11 @@
     "Archived": "مؤرشفة",
     "Certificate Available?": "هل الشهادة متوفرة؟",
     "Duration (minutes)": "المدة (بالدقائق)",
+    "Duration (Seconds)": "المدة (بالثانية)",
     "Total duration in minutes": "المدة الكلية بالدقائق",
     "Start Date": "تاريخ البداية",
     "views": "المشاهدين",
+    "Free Preview?": "مشاهدة مجانا",
 
     "End Date": "تاريخ الانتهاء",
     "Start Time": "وقت البداية",
@@ -312,8 +318,9 @@
     "Courses list": "قائمة الكورسات",
     "Search for Courses": "البحث عن كورس",
     "students Rate": "تقييمات الطلاب",
+    "Course Section": "قسم الكورس",
 
-    "Add Addon": "اضافة كورس",
+    "Add Course": "اضافة كورس",
 
     "Choose the color": "اختر اللون",
     "Choose the type": "اختر النوع",
@@ -552,13 +559,8 @@
 
     "Add city": "أضف محافظة",
     "Fast shipping": "شحن سريع",
-    "Skin Colors list": "قائمة الوان ",
     "Search for skin colors": "البحث عن الوان ",
-    "Add skin color": "أضف لون ",
-    "skin color name in arabic": "لون  بالعربي",
-    "skin color name in english": "لون  بالانجليزي",
-    "Edit Skin Color": "تعديل لون ",
-    "Ads list": "قائمة الاعلانات",
+
     "Search for ads": "البحث عن الاعلانات",
     "Add ad": "أضف اعلان",
     "Title in Arabic": "العنوان باللغة العربية",
@@ -566,6 +568,9 @@
     "Description in Arabic": "الوصف باللغة العربية",
     "Description in English": "الوصف باللغة الإنجليزية",
     "Active": "نشط",
+    "Videos list": "قائمة الفيديوهات",
+    "Add new video": "إضافة فيديو جديد",
+
     "Expired": "منتهي",
     "Edit ad": "تعديل الاعلان",
     "Edit admin": "تعديل بيانات المشرف",
