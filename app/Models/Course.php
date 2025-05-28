@@ -15,48 +15,52 @@ class Course extends Model
         'updated_at' => 'date:Y-m-d',
     ];
 
-public function getFullImagePathAttribute()
-{
-    return asset(getImagePathFromDirectory($this->image, 'Courses', 'default.svg'));
-}
- public function getFullSlideImagePathAttribute()
-{
-    return asset(getImagePathFromDirectory($this->slide_image, 'Courses/Slides', 'default.svg'));
-}
+    public function getFullImagePathAttribute()
+    {
+        return asset(getImagePathFromDirectory($this->image, 'Courses', 'default.svg'));
+    }
+    public function getFullSlideImagePathAttribute()
+    {
+        return asset(getImagePathFromDirectory($this->slide_image, 'Courses/Slides', 'default.svg'));
+    }
 
 
     public function getTitleAttribute()
-{
-    return app()->getLocale() === 'ar' ? $this->title_ar : $this->title_en;
-}
+    {
+        return app()->getLocale() === 'ar' ? $this->title_ar : $this->title_en;
+    }
 
-public function getDescriptionAttribute()
-{
-    return app()->getLocale() === 'ar' ? $this->description_ar : $this->description_en;
-}
-public function getNoteAttribute()
-{
-    return app()->getLocale() === 'ar' ? $this->note_ar : $this->note_en;
-}
+    public function getDescriptionAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->description_ar : $this->description_en;
+    }
+    public function getNoteAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->note_ar : $this->note_en;
+    }
 
 
-public function instructor()
-{
-    return $this->belongsTo(Admin::class, 'instructor_id');
-}
-public function category()
-{
-    return $this->belongsTo(Category::class);
-}
+    public function instructor()
+    {
+        return $this->belongsTo(Admin::class, 'instructor_id');
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
-public function subCategories()
-{
-    return $this->belongsToMany(Category::class, 'category_course');
-}
+    public function subCategories()
+    {
+        return $this->belongsToMany(Category::class, 'category_course');
+    }
 
-public function sections()
+    public function sections()
+    {
+        return $this->hasMany(CourseSection::class);
+    }
+public function videos()
 {
-    return $this->hasMany(CourseSection::class);
+    return $this->hasMany(CourseVideo::class);
 }
 
 

@@ -33,7 +33,10 @@ return [
         'title_en' => 'required|string|max:255',
         'description_ar' => 'nullable|string',
         'description_en' => 'nullable|string',
-        'video_url' => 'required|url',
+        'video_url' => [
+            'required',
+            'regex:/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/'
+        ],
         'duration_seconds' => 'nullable|integer|min:0',
         'is_preview' => 'sometimes|boolean',
         'is_active' => 'sometimes|boolean',

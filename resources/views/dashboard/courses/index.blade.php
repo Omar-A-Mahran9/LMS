@@ -65,7 +65,7 @@
                     </span>
                     <!--end::Svg Icon-->
                     <input type="text" data-kt-docs-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Search for Addons') }}">
+                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Courses') }}">
                 </div>
                 <!--end::Search-->
 

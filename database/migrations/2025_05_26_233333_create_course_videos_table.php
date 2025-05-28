@@ -32,6 +32,7 @@ return new class extends Migration
             $table->unsignedInteger('order')->default(0); // sort videos
             $table->boolean('is_preview')->default(false); // free preview toggle
             $table->boolean('is_active')->default(true);
+            $table->integer('views')->default(0);
 
             $table->timestamps();
         });

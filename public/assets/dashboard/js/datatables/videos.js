@@ -25,11 +25,10 @@ var KTDatatablesServerSide = (function () {
                 { data: "id" },
                 { data: "title" },
                 { data: "image" },
-                { data: "price" },
-                { data: "instructor" },
-                { data: "start_date" },
+                { data: "course" },
                 { data: "is_active" },
                 { data: "created_at" },
+                { data: "is_preview" },
                 { data: "views" },
                 { data: null },
             ],
@@ -84,41 +83,13 @@ var KTDatatablesServerSide = (function () {
                 },
 
                 {
-                    targets: 3, // Price column
-                    render: function (data, type, row) {
-                        // If course is marked free or price is 0
-                        if (row.is_free || !data || data == 0) {
-                            return '<span class="text-muted">Free</span>';
-                        }
-
-                        // If there is a discount
-                        if (row.have_discount && row.discount_percentage) {
-                            let originalPrice = parseFloat(data).toFixed(2);
-                            let discount = parseFloat(row.discount_percentage);
-                            let discountedPrice = (
-                                originalPrice *
-                                (1 - discount / 100)
-                            ).toFixed(2);
-
-                            return `
-                <span class="text-muted text-decoration-line-through">${originalPrice} EGP</span>
-                <br/>
-                <span class="text-danger fw-bold">${discountedPrice} EGP</span>
-            `;
-                        }
-
-                        // No discount, show regular price
-                        return `${parseFloat(data).toFixed(2)} EGP`;
-                    },
-                },
-                {
-                    targets: 4,
+                    targets: 3,
                     render: function (data, type, row) {
                         return `
                             <div>
                                 <!--begin::Info-->
                                 <div class="d-flex flex-column justify-content-center">
-                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.instructor.name}</a>
+                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.course.title}</a>
                                 </div>
                                 <!--end::Info-->
                             </div>
@@ -126,9 +97,29 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
-                    targets: 6, // This is the "Status" column
+                    targets: 4, // This is the "Status" column
                     render: function (data, type, row) {
                         if (row.is_active) {
+                            return `
+                                     <span class="badge badge-success">${__(
+                                         "active"
+                                     )}</span>
+
+                            `;
+                        } else {
+                            return `
+                                     <span class="badge badge-danger">${__(
+                                         "inactive"
+                                     )}</span>
+                             `;
+                        }
+                    },
+                },
+
+                {
+                    targets: 6, // This is the "Status" column
+                    render: function (data, type, row) {
+                        if (row.is_preview) {
                             return `
                                      <span class="badge badge-success">${__(
                                          "active"
@@ -172,7 +163,7 @@ var KTDatatablesServerSide = (function () {
                                    <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="/dashboard/courses/${
+                                    <a href="/dashboard/videos/${
                                         data.id
                                     }" class="menu-link px-3 show_button" data-kt-docs-table-filter="show_row">
                                         ${__("Show")}
@@ -235,11 +226,6 @@ var KTDatatablesServerSide = (function () {
                     `url('${data.full_image_path}')`
                 );
 
-                $("#slide_image_inp").css(
-                    "background-image",
-                    `url('${data.full_slide_image_path}')`
-                );
-
                 // Titles
                 $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
@@ -251,77 +237,26 @@ var KTDatatablesServerSide = (function () {
                     .get("description_en_inp")
                     .setContent(data.description_en);
 
-                tinymce.get("note_ar_inp").setContent(data.note_ar);
-                tinymce.get("note_en_inp").setContent(data.note_en);
-
                 // Video URL
                 $("#video_url_inp").val(data.video_url);
 
                 // Relationships
-                $("#instructor_id_inp")
-                    .val(data.instructor_id)
+                $("#course_section_id_inp")
+                    .val(data.course_section_id)
                     .trigger("change");
-                $("#category_id_inp").val(data.category_id).trigger("change");
 
-                // Pricing controls
-                if (data.is_free) {
-                    $("#is_free_switch").prop("checked", true);
-                    $("#price_inp").val(0).prop("disabled", true);
-                } else {
-                    $("#is_free_switch").prop("checked", false);
-                    $("#price_inp").val(data.price).prop("disabled", false);
-                }
+                // Relationships
+                $("#course_id_inp").val(data.course_id).trigger("change");
 
-                if (data.have_discount) {
-                    $("#have_discount_switch").prop("checked", true);
-                    $("#discount_percentage_inp")
-                        .val(data.discount_percentage)
-                        .prop("disabled", false);
-                } else {
-                    $("#have_discount_switch").prop("checked", false);
-                    $("#discount_percentage_inp")
-                        .val("")
-                        .prop("disabled", true);
-                }
-
-                // Enrollment
-                $("#max_students_inp").val(data.max_students);
-                $("#enrollment_open_switch").prop(
-                    "checked",
-                    data.is_enrollment_open
-                );
-
-                // SEO
-                $("#slug_inp").val(data.slug);
-                $("#meta_title_inp").val(data.meta_title);
-                $("#meta_description_inp").val(data.meta_description);
-
-                // Dates
-                $("#start_date_inp").val(data.start_date);
-                $("#end_date_inp").val(data.end_date);
+                $("#duration_seconds_inp").val(data.duration_seconds);
+                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
 
                 // Flags
-                $("#show_in_home_switch").prop("checked", data.show_in_home);
-                $("#featured_switch").prop("checked", data.featured);
-                $("#certificate_switch").prop(
-                    "checked",
-                    data.certificate_available
-                );
-
-                // If you have subcategories
-                if (
-                    data.subcategory_ids &&
-                    Array.isArray(data.subcategory_ids)
-                ) {
-                    $("#subcategory_ids_inp")
-                        .val(data.subcategory_ids)
-                        .trigger("change");
-                } else {
-                    $("#subcategory_ids_inp").val([]).trigger("change");
-                }
+                $("#is_active_switch").prop("checked", data.is_active);
+                $("#is_preview_switch").prop("checked", data.is_preview);
 
                 // Reset form method & action
-                $("#crud_form").attr("action", `/dashboard/courses/${data.id}`);
+                $("#crud_form").attr("action", `/dashboard/videos/${data.id}`);
 
                 // Remove previous _method input if any, then add PUT
                 $("#crud_form").find('input[name="_method"]').remove();

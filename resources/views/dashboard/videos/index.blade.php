@@ -65,7 +65,7 @@
                     </span>
                     <!--end::Svg Icon-->
                     <input type="text" data-kt-docs-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Search for Addons') }}">
+                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Courses') }}">
                 </div>
                 <!--end::Search-->
 
@@ -93,11 +93,10 @@
                         </th>
                         <th>{{ __('Title') }}</th>
                         <th>{{ __('Image') }}</th>
-                        <th>{{ __('Price') }}</th>
-                        <th>{{ __('Instructor') }}</th>
-                        <th>{{ __('Start Date') }}</th>
+                        <th>{{ __('Course') }}</th>
                         <th>{{ __('Status') }}</th>
                         <th>{{ __('Created at') }}</th>
+                        <th>{{ __('Is Preview') }}</th>
                         <th>{{ __('views') }}</th>
 
                         <th class=" min-w-100px">{{ __('Actions') }}</th>
@@ -303,8 +302,6 @@
                 // Reset the form fields
                 $("#crud_form")[0].reset();
 
-                // Reset Select2 selects by title attribute
-                $("#instructor_id_inp, #category_id_inp, #subcategory_ids_inp").val(null).trigger('change');
 
                 // Reset image previews to placeholder (assuming your image wrapper has this class)
                 $('.image-input-wrapper').css('background-image', "url('/placeholder_images/default.svg')");
@@ -319,19 +316,9 @@
                 }
 
                 // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#is_free_switch, #have_discount_switch, #enrollment_open_switch, #show_in_home_switch, #featured_switch, #certificate_switch")
+                $("#is_active_switch", "#is_preview_switch")
                     .prop('checked', false);
 
-                // Set defaults for some checkboxes if needed
-                $("#enrollment_open_switch").prop('checked', true);
-
-                // Disable discount percentage input initially (since discount checkbox is unchecked)
-                $("#discount_percentage_inp").prop('disabled', true).val('');
-
-                // Set price default to 0
-                $("#price_inp").val('0');
-
-                // Reset form action to store route (adjust as needed)
                 $("#crud_form").attr('action', "{{ route('dashboard.videos.store') }}");
 
                 // Reset modal title

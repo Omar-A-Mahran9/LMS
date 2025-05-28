@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreVideoRequest;
+use App\Http\Requests\Dashboard\UpdateVideoRequest;
 use App\Models\Course;
 use App\Models\CourseSection;
 use App\Models\CourseVideo;
@@ -25,7 +26,7 @@ class CourseVideoController extends Controller
 
         if ($request->ajax()) {
             // Return JSON data for AJAX requests
-            return response()->json(getModelData(model: new CourseVideo()));
+            return response()->json(getModelData(model: new CourseVideo(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
         } else {
             // Return the main view with data
             return view('dashboard.videos.index', compact( 'visited_site','courses','sections'));
@@ -36,12 +37,12 @@ class CourseVideoController extends Controller
 
   public function store(StoreVideoRequest $request)
 {
-    $this->authorize('store_videos');
+    $this->authorize('create_videos');
 
      $validated = $request->validated();
    // Handle image uploads
     if ($request->hasFile('image')) {
-        $data['image'] = uploadImageToDirectory($request->file('image'), 'courses_videos');
+        $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_videos');
     }
 
     // Auto fetch YouTube duration if duration is not provided
@@ -54,38 +55,54 @@ class CourseVideoController extends Controller
     $validated['is_active'] = $request->boolean('is_active');
 
     $video = CourseVideo::create($validated);
- 
+
 }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(CourseVideo $courseVideo)
-    {
-        //
+
+public function update(UpdateVideoRequest $request, $id)
+{
+    $this->authorize('update_videos');
+$courseVideo=CourseVideo::find($id);
+    $validated = $request->validated();
+
+    // Handle image update
+    if ($request->hasFile('image')) {
+        // Optionally: delete the old image if needed
+        // deleteFile($courseVideo->image);
+
+        $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_videos');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CourseVideo $courseVideo)
-    {
-        //
+    // Auto-fetch YouTube duration if not provided
+    if (empty($validated['duration_seconds']) && !empty($validated['video_url'])) {
+        $validated['duration_seconds'] = 0;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, CourseVideo $courseVideo)
-    {
-        //
+    // Set boolean flags
+    $validated['is_preview'] = $request->boolean('is_preview');
+    $validated['is_active'] = $request->boolean('is_active');
+
+    $courseVideo->update($validated);
+
+
+}
+
+
+public function destroy( $id)
+{
+    $this->authorize('delete_videos');
+$courseVideo=CourseVideo::find($id);
+    // Optionally delete the associated image file
+    if ($courseVideo->image) {
+        deleteImageFromDirectory($courseVideo->image, 'courses_videos'); // This should be your helper function to delete a file
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(CourseVideo $courseVideo)
-    {
-        //
-    }
+    $courseVideo->delete();
+
+    return response()->json([
+        'status' => true,
+        'message' => __('Course video deleted successfully.'),
+    ]);
+}
+
 }

@@ -87,11 +87,7 @@ public function store(StoreCourseRequest $request)
         $course->subCategories()->sync($request->input('subcategory_ids'));
     }
 
-    return response()->json([
-        'status' => true,
-        'message' => __('Course created successfully.'),
-        'data' => $course,
-    ]);
+
 }
 
 
