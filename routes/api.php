@@ -1,8 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\BookingController;
-use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\ProfileController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,21 +33,16 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
     Route::get('about_us', 'HomeController@getAboutUs');
     Route::get('privacy_policy', 'HomeController@getprivacypolicy');
-
-    Route::post('news-letter', 'HomeController@newsLetter');
     Route::get('governments', 'HomeController@getgovernments');
     Route::get('home', 'HomeController@getHome');
     Route::get('categories', 'HomeController@getCategory');
-
     Route::get('footer', 'HomeController@getfooter');
+    Route::get('courses_by_category', 'CourseController@getCoursesByCategory');
+    Route::get('courses_by_id/{id}', 'CourseController@getCoursesById');
+    Route::get('videos_by_course/{id}', 'CourseController@getVideosByCourse');
 
- // Step 1 - 4: Progressive validation (you may store values in session/temp)
-Route::post('/step/{step}', [OrderController::class, 'handleStep']);
-Route::post('/orders/{order}/resend-otp', [OrderController::class, 'resendOtp']);
 
-// Step 4: Create Order with OTP after validating customer info
-Route::post('/create', [OrderController::class, 'preCreateOrder']);
+    Route::post('news-letter', 'HomeController@newsLetter');
 
-// Step 5: Confirm Order with OTP
 
 });

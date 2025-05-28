@@ -6,26 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\CategoryResource;
 use App\Http\Resources\Api\GovernmentsResource;
 use App\Http\Resources\Api\CommonQuestionResource;
-use App\Http\Resources\Api\HowuseResource;
+use App\Http\Resources\Api\CourseDetailsResource;
+use App\Http\Resources\Api\CoursesDetailsResource;
 use App\Http\Resources\Api\RateResource;
-use App\Http\Resources\Api\ServiceResource;
-use App\Http\Resources\Api\SliderResource;
+ use App\Http\Resources\Api\SliderResource;
 
-use App\Http\Resources\Api\WhyusResource;
 
-use App\Models\CourseController;
 use App\Models\Category;
-use App\Models\City;
-use App\Models\CommonQuestion;
+ use App\Models\CommonQuestion;
+use App\Models\Course;
 use App\Models\Government;
 use App\Models\Student_rate;
-use App\Models\Howuse;
-use App\Models\NewsLetter;
+ use App\Models\NewsLetter;
 
 use App\Models\Slider;
 
-use App\Models\Whyus;
-use Illuminate\Http\Request;
+ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -103,13 +99,19 @@ class HomeController extends Controller
 
 
 
-public function getCategory()
+    public function getCategory()
     {
- $categories = Category::where('is_publish', 1)
+        $categories = Category::where('is_publish', 1)
         ->whereNull('parent_id') // Only main categories; remove this to get all
         ->get();
+
         return $this->success('', CategoryResource::collection($categories));
     }
+
+
+
+
+
 
 
 

@@ -18,7 +18,7 @@ class CategoryResource extends JsonResource
             "id"=> $this->id,
             "image"=> $this->full_image_path,
             "name"=> $this->name,
-            "count_of_courses" => 33,
+            "count_of_courses" => $this->courses->count(),
          ];
     }
 }

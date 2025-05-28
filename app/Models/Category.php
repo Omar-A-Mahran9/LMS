@@ -81,4 +81,10 @@ class Category extends Model
     {
         return asset(getImagePathFromDirectory($this->image, 'Categories', "default.svg"));
     }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class);
+    }
+
 }

@@ -51,7 +51,7 @@ class Course extends Model
 
     public function subCategories()
     {
-        return $this->belongsToMany(Category::class, 'category_course');
+        return $this->belongsToMany(Category::class, 'course_category');
     }
 
     public function sections()
