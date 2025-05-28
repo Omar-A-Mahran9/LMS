@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
  use App\Http\Resources\Api\CourseDetailsResource;
 use App\Http\Resources\Api\CoursesDetailsResource;
 use App\Http\Resources\Api\VideoResource;
- 
+
 
 use App\Models\Category;
  use App\Models\CommonQuestion;
@@ -63,24 +63,18 @@ public function getVideosByCourse($id)
 {
     // Find the course by ID and make sure it's published
     $course = Course::where('id', $id)
-                    ->where('is_publish', 1)
+                    ->where('is_active', 1)
                     ->first();
 
     if (!$course) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Course not found or unpublished',
-        ], 404);
+        return $this->failure('Course not found or unpublished') ;
     }
 
     // Get videos related to this course (assuming relation `videos`)
     $videos = $course->videos()->get();
 
     // Return the videos collection as JSON, optionally use a resource collection if you have one
-    return response()->json([
-        'success' => true,
-        'data' => VideoResource::collection($videos), // replace with your VideoResource
-    ]);
+    return $this->success('',VideoResource::collection($videos) );
 }
 
 

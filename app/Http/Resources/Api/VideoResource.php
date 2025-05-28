@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CourseDetailsResource extends JsonResource
+class VideoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,14 +15,19 @@ class CourseDetailsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $user = $request->user(); // Get authenticated user or null
+
+    $showVideoUrl =
+        ($user && $this->is_active)  // Authenticated user + active
+        || ($this->is_active && $this->is_preview); // Active + preview for guests
+
       return [
             'id' => $this->id,
             'title' => $this->title,
-            'duration_seconds' => $this->duration_seconds,
             'is_preview' => $this->is_preview,
             'is_active' => $this->is_active,
-            'video_url' => $this->video_url,
-            // add other fields you want to expose
+            'video_url' => $showVideoUrl ? base64_encode($this->video_url) : null,
+          // add other fields you want to expose
         ];
     }
 }

@@ -17,8 +17,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+
 });
 
+Route::middleware(['auth:api'])->group(function () {
+    Route::get('videos_by_course/{id}', 'CourseController@getVideosByCourse');
+
+
+});
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {
 
@@ -39,9 +45,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('footer', 'HomeController@getfooter');
     Route::get('courses_by_category', 'CourseController@getCoursesByCategory');
     Route::get('courses_by_id/{id}', 'CourseController@getCoursesById');
-    Route::get('videos_by_course/{id}', 'CourseController@getVideosByCourse');
-
-
     Route::post('news-letter', 'HomeController@newsLetter');
 
 
