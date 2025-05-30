@@ -1,0 +1,88 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('quizzes', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            $table->foreignId('course_section_id')->nullable()->constrained()->onDelete('cascade');
+
+            $table->string('title_en');
+            $table->string('title_ar');
+            $table->text('description_en')->nullable();
+            $table->text('description_ar')->nullable();
+
+            $table->integer('duration_minutes')->nullable(); // Time limit
+            $table->boolean('is_active')->default(true);
+
+            $table->timestamps();
+        });
+
+        Schema::create('quiz_questions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('quiz_id')->constrained()->onDelete('cascade');
+
+            $table->text('question_en');
+            $table->text('question_ar');
+            $table->enum('type', ['multiple_choice', 'true_false', 'short_answer'])->default('multiple_choice');
+
+            $table->integer('points')->default(1);
+            $table->timestamps();
+        });
+
+        Schema::create('quiz_answers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('quiz_question_id')->constrained()->onDelete('cascade');
+
+            $table->text('answer_en');
+            $table->text('answer_ar');
+            $table->boolean('is_correct')->default(false);
+
+            $table->timestamps();
+        });
+
+        Schema::create('quiz_attempts', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('quiz_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
+
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('submitted_at')->nullable();
+            $table->integer('score')->nullable();
+
+            $table->timestamps();
+        });
+
+        Schema::create('quiz_attempt_answers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('quiz_attempt_id')->constrained()->onDelete('cascade');
+            $table->foreignId('quiz_question_id')->constrained()->onDelete('cascade');
+
+            $table->text('answer_text')->nullable(); // for short answers
+            $table->foreignId('quiz_answer_id')->nullable()->constrained()->onDelete('set null'); // for MCQ
+
+            $table->timestamps();
+        });
+
+
+
+
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('quizzes');
+    }
+};

@@ -58,10 +58,10 @@ class Course extends Model
     {
         return $this->hasMany(CourseSection::class);
     }
-public function videos()
-{
-    return $this->hasMany(CourseVideo::class);
-}
+    public function videos()
+    {
+        return $this->hasMany(CourseVideo::class);
+    }
 
 
 }
