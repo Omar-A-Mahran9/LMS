@@ -40,7 +40,7 @@ class HomeController extends Controller
   $rates = Student_rate::all(); // Or you can use a query like ->where('status', 'approved') to filter rate
     $address = $locale === 'ar' ? setting('address_ar') : setting('address_en');
 
-    $ask_mr_mohamed = [
+    $ask_us = [
             'image_url'=>getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
             'label'           => setting('label' . $suffix),
             'description'     => setting('about_us' . $suffix),
@@ -69,7 +69,7 @@ class HomeController extends Controller
         'sliders' => SliderResource::collection($sliders),
         'categories' => CategoryResource::collection($categories),
         'rates' => RateResource::collection($rates),
-        'ask_mr_mohamed' =>$ask_mr_mohamed,
+        'ask_us' =>$ask_us,
         'HowUse' =>$HowUse,
         'CommonQuestion' =>[
             'label'           => setting('label_common_question' . $suffix),
@@ -131,7 +131,7 @@ public function getAboutUs()
 {
     $locale = app()->getLocale(); // 'ar' or 'en'
     $suffix = $locale === 'ar' ? '_ar' : '_en';
-    $ask_mr_mohamed = [
+    $ask_us = [
             'image_url'=>getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
             'label'           => setting('label' . $suffix),
             'description'     => setting('about_us' . $suffix),
@@ -139,7 +139,7 @@ public function getAboutUs()
             'lecture_count'     => 200,
         ];
     $data = [
-        'ask_mr_mohamed' =>$ask_mr_mohamed,
+        'ask_us' =>$ask_us,
 
 
         'our_mission'    => setting('our_mission' . $suffix),

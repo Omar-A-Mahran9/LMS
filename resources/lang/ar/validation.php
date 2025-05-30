@@ -254,6 +254,8 @@ return [
                 'course_id'=> "الكورس",
                 'answers'=> "الاجابات",
                 'correct_tf'=> "الاجابة الصحيحة",
+        'points'=> "النقاط",
+        'short_answer'=> "الاجابة المتوقعة",
 
         'website'=> "الموقع",
         "experience_years"=> "سنين الخبرة",

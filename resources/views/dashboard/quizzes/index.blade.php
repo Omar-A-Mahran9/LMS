@@ -111,7 +111,6 @@
     <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.quizzes.store') }}" method="post"
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
-
         <div class="modal fade" tabindex="-1" id="crud_modal">
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
@@ -149,7 +148,8 @@
                                         <option value="{{ $section->id }}">{{ $section->title_en }}</option>
                                     @endforeach
                                 </select>
-                                <div class="fv-plugins-message-container invalid-feedback" id="course_section_id"></div>
+                                <div class="fv-plugins-message-container invalid-feedback" id="course_section_id">
+                                </div>
                             </div>
                         </div>
 
@@ -192,7 +192,8 @@
                                     class="form-label">{{ __('Duration (Minutes)') }}</label>
                                 <input type="number" name="duration_minutes" id="duration_minutes_inp"
                                     class="form-control" min="0">
-                                <div class="fv-plugins-message-container invalid-feedback" id="duration_minutes"></div>
+                                <div class="fv-plugins-message-container invalid-feedback" id="duration_minutes">
+                                </div>
                             </div>
                             <div class="col-2 d-flex align-items-center mt-4">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
@@ -226,7 +227,6 @@
     <form id="question_form" class="ajax-form" method="post" action="{{ route('dashboard.questions.store') }}"
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
-        <input type="hidden" name="quiz_id" value="">
 
         <div class="modal fade" id="questionModal" tabindex="-1">
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -238,6 +238,8 @@
 
                     <div class="modal-body">
                         {{-- Question Arabic --}}
+                        <input type="hidden" name="quiz_id" value="">
+
                         <div class="mb-3">
                             <label for="question_ar_inp">{{ __('Question (Arabic)') }}</label>
                             <input type="text" name="question_ar" class="form-control" id="question_ar_inp">
@@ -282,7 +284,7 @@
                                         </div>
                                         <div class="col-md-2 d-flex align-items-center">
                                             <label class="form-check-label">
-                                                <input type="checkbox" name="is_correct" value="1"
+                                                <input type="checkbox" name="is_correct" value="true"
                                                     class="form-check-input">
                                                 {{ __('Correct') }}
                                             </label>
@@ -369,6 +371,8 @@
         $('#type_inp').on('change', function() {
             let type = $(this).val();
             $('.answer-type').addClass('d-none');
+            $("#answers").html('');
+
             $('.answer-' + type).removeClass('d-none');
         }).trigger('change'); // Trigger on load
     </script>

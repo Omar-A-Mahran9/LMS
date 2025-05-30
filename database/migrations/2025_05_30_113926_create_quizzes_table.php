@@ -34,6 +34,8 @@ return new class extends Migration
 
             $table->text('question_en');
             $table->text('question_ar');
+            $table->text('expected_answer')->nullable();
+
             $table->enum('type', ['multiple_choice', 'true_false', 'short_answer'])->default('multiple_choice');
 
             $table->integer('points')->default(1);

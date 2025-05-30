@@ -96,7 +96,7 @@ public function getAboutUs()
 {
     $locale = app()->getLocale(); // 'ar' or 'en'
     $suffix = $locale === 'ar' ? '_ar' : '_en';
-    $ask_mr_mohamed = [
+    $ask_us = [
             'image_url'=>getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
             'label'           => setting('label' . $suffix),
             'description'     => setting('about_us' . $suffix),
@@ -104,7 +104,7 @@ public function getAboutUs()
             'lecture_count'     => 200,
         ];
     $data = [
-        'ask_mr_mohamed' =>$ask_mr_mohamed,
+        'ask_us' =>$ask_us,
 
 
         'our_mission'    => setting('our_mission' . $suffix),

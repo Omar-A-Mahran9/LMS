@@ -35,7 +35,7 @@ class StoreQuestionRequest extends FormRequest
         $rules['answers'] = ['required', 'array', 'min:2'];
         $rules['answers.*.text_ar'] = ['required', 'string'];
         $rules['answers.*.text_en'] = ['required', 'string'];
-        $rules['answers.*.is_correct'] = ['nullable', 'boolean'];
+        $rules['answers.*.is_correct'] = ['nullable','in:true,false,1,0'];
     }
 
     if ($this->type === 'true_false') {
