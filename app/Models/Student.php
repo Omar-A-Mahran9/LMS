@@ -50,4 +50,9 @@ class Student extends Authenticatable
         return $this->belongsTo(Government::class);
     }
 
+     public function quizAttempts()
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
+
 }

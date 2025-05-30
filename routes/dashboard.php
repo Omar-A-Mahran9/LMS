@@ -52,9 +52,10 @@ Route::delete("packages/delete-selected", "PackagesController@deleteSelected");
  Route::get("howuse/restore-selected", "HowuseController@restoreSelected");
 
  Route::resource('courses', 'CourseController')->except(['create', 'edit']);
-  Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
-  Route::resource('quizzes', 'CourseQuizController')->except(['create', 'edit']);
-  Route::resource('homeworks', 'CourseVideoController')->except(['create', 'edit']);
+ Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
+ Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
+ Route::resource('homeworks', 'CourseVideoController')->except(['create', 'edit']);
+ Route::resource('questions', 'QuestionController')->except(['create', 'edit']);
 
  Route::resource('whyus', 'WhyusController')->except(['create', 'edit']);
  Route::resource('howuse', 'HowuseController')->except(['create', 'edit']);

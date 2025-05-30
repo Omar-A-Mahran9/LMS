@@ -31,6 +31,7 @@ let translations = {
         "Edit addon": "تعديل الكورس",
         "Add new rate": "اضافة تقييم",
         "Add new awars": "اضافة انجاز جديد",
+        "Add Question": "إضافة سؤال",
 
         "Yes, Delete !": "نعــم, أحذف !",
         "No, Cancel": "لا , ألغي",
@@ -46,8 +47,7 @@ let translations = {
         "Add shipping data": "أضف بيانات الشحن",
         Approve: "موافقة",
         Reject: "رفض",
-        "Vendor approved successfully": "تم قبول التاجر بنجاح",
-        "Vendor rejected": "تم رفض التاجر",
+
         Edit: "تعديل",
         per_hour: "رحلة بالساعة",
         per_trip: "رحلة",

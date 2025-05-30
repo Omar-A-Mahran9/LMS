@@ -21,7 +21,7 @@
                                 </a>
                             @endcan
 
-                            @can('view_quiz')
+                            @can('view_quizzes')
                                 <a href="{{ route('dashboard.quizzes.index') }}"
                                     class="btn btn-primary d-flex align-items-center">
                                     <i class="ki-outline ki-plus fs-2 me-2"></i> {{ __('Add New quiz') }}

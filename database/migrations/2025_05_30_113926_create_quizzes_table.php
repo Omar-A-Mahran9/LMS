@@ -23,6 +23,7 @@ return new class extends Migration
 
             $table->integer('duration_minutes')->nullable(); // Time limit
             $table->boolean('is_active')->default(true);
+            $table->integer('attempt')->default(0);
 
             $table->timestamps();
         });
@@ -53,7 +54,7 @@ return new class extends Migration
         Schema::create('quiz_attempts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('quiz_id')->constrained()->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
 
             $table->timestamp('started_at')->nullable();
             $table->timestamp('submitted_at')->nullable();

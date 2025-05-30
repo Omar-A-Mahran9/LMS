@@ -251,6 +251,10 @@ return [
         'specialization'=> "التخصص",
         'bio'=> "النبذة",
         'linkedin'=> "لينكدان",
+                'course_id'=> "الكورس",
+                'answers'=> "الاجابات",
+                'correct_tf'=> "الاجابة الصحيحة",
+
         'website'=> "الموقع",
         "experience_years"=> "سنين الخبرة",
         'old_password' => 'كلمة المرور القديمة',
