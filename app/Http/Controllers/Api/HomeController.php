@@ -51,7 +51,8 @@ class HomeController extends Controller
             'label'           => setting('label_how_to_use' . $suffix),
             'description'     => setting('description_how_to_use' . $suffix),
             'image_url' => getImagePathFromDirectory(setting('how_to_use_banner'), 'Settings') ,
-            'video_url' => setting('video_how_to_use_url'),
+            'video_url' => convertToYoutubeEmbed(setting('video_how_to_use_url')),
+
 
         ];
         $CommonQuestion = CommonQuestion::get();

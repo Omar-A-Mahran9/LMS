@@ -58,6 +58,17 @@ if (!function_exists('uploadAudioToDirectory')) {
     }
 }
 
+if(!function_exists('convertToYoutubeEmbed')){
+    function convertToYoutubeEmbed($url)
+{
+    preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $url, $matches);
+    if (isset($matches[1])) {
+        return 'https://www.youtube.com/embed/' . $matches[1];
+    }
+    return null; // or return $url as fallback
+}
+
+}
 
 if (!function_exists('updateModelImage')) {
 
