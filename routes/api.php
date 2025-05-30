@@ -46,6 +46,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('courses_by_category', 'CourseController@getCoursesByCategory');
     Route::get('courses_by_id/{id}', 'CourseController@getCoursesById');
     Route::post('news-letter', 'HomeController@newsLetter');
+    Route::post('Ask_us', 'ContactUsController@store');
 
 
 });
