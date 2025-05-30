@@ -9,7 +9,7 @@ class QuizAttemptAnswer extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['title', 'full_image_path','full_slide_image_path','description', 'note'];
+    protected $appends = [];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
