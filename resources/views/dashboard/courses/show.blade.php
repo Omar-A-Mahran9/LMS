@@ -11,12 +11,30 @@
                         <div class="card-title">
                             <h2>{{ __('Course Details') }}</h2>
                         </div>
+                        <div class="d-flex gap-2">
 
-                        @can('view_videos')
-                            <a href="{{ route('dashboard.videos.index') }}" class="btn btn-primary d-flex align-items-center">
-                                <i class="ki-outline ki-plus fs-2 me-2"></i> {{ __('Add New video') }}
-                            </a>
-                        @endcan
+
+
+                            @can('view_videos')
+                                <a href="{{ route('dashboard.videos.index') }}" class="btn btn-primary d-flex align-items-center">
+                                    <i class="ki-outline ki-plus fs-2 me-2"></i> {{ __('Add New video') }}
+                                </a>
+                            @endcan
+
+                            @can('view_quiz')
+                                <a href="{{ route('dashboard.quizzes.index') }}"
+                                    class="btn btn-primary d-flex align-items-center">
+                                    <i class="ki-outline ki-plus fs-2 me-2"></i> {{ __('Add New quiz') }}
+                                </a>
+                            @endcan
+
+                             @can('view_homework')
+                                <a href="{{ route('dashboard.homeworks.index') }}"
+                                    class="btn btn-primary d-flex align-items-center">
+                                    <i class="ki-outline ki-plus fs-2 me-2"></i> {{ __('Add New homework') }}
+                                </a>
+                            @endcan
+                        </div>
                     </div>
                 </div>
 
@@ -34,7 +52,7 @@
 
                             <!--begin::Details-->
                             <div class="col-md-10">
-                                <div class="row gap-5 align-items-center justify-content-center">
+                                <div class="row gap-5 align-items-start justify-content-center">
                                     <!-- Left Column -->
                                     <div class="col-md-5">
                                         <table class="table table-row-bordered align-middle">

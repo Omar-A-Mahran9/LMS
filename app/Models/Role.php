@@ -31,6 +31,10 @@ class Role extends Model
 
         'videos',
 
+        'quiz',
+
+        'homework',
+
         'home_content',
 
         'students_rate',
