@@ -3,69 +3,63 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\StoreClassRequest;
 use App\Http\Requests\Dashboard\StoreVideoRequest;
+use App\Http\Requests\Dashboard\UpdateClassRequest;
 use App\Http\Requests\Dashboard\UpdateVideoRequest;
 use App\Models\Course;
+use App\Models\CourseClass;
 use App\Models\CourseSection;
 use App\Models\CourseVideo;
 use App\Models\Quiz;
 use Illuminate\Http\Request;
 
-class CourseVideoController extends Controller
+class ClassController extends Controller
 {
     public function index(Request $request)
     {
-         $this->authorize('view_videos');
+         $this->authorize('view_classes');
 
         // Count total courses
         $count_addon = CourseVideo::count();
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
-
-        $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
-
         // Example static visited site count (you may want to make this dynamic)
         $visited_site = 10000;
 
         if ($request->ajax()) {
             // Return JSON data for AJAX requests
-            return response()->json(getModelData(model: new CourseVideo(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
+            return response()->json(getModelData(model: new CourseClass(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
         } else {
             // Return the main view with data
-            return view('dashboard.videos.index', compact( 'visited_site','courses','sections','quizzes'));
+            return view('dashboard.classes.index', compact( 'visited_site','courses'));
         }
     }
 
 
 
-  public function store(StoreVideoRequest $request)
+  public function store(StoreClassRequest $request)
 {
-    $this->authorize('create_videos');
+    $this->authorize('create_classes');
 
      $validated = $request->validated();
    // Handle image uploads
     if ($request->hasFile('image')) {
-        $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_videos');
+        $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_classes');
     }
-
-    // Auto fetch YouTube duration if duration is not provided
-    if (empty($validated['duration_seconds'])) {
-        $validated['duration_seconds'] = 0;
-    }
-
     // Set default values for checkboxes
     $validated['is_preview'] = $request->boolean('is_preview');
     $validated['is_active'] = $request->boolean('is_active');
     $validated['quiz_required'] = $request->boolean('quiz_required');
 
-    $video = CourseVideo::create($validated);
+    $CourseClass = CourseClass::create($validated);
 
 }
 
 
-public function update(UpdateVideoRequest $request, $id)
+public function update(UpdateClassRequest $request, $id)
 {
-    $this->authorize('update_videos');
-$courseVideo=CourseVideo::find($id);
+    $this->authorize('update_classes');
+$courseVideo=CourseClass::find($id);
     $validated = $request->validated();
 
     // Handle image update
@@ -73,13 +67,9 @@ $courseVideo=CourseVideo::find($id);
         // Optionally: delete the old image if needed
         // deleteFile($courseVideo->image);
 
-        $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_videos');
+        $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_classes');
     }
 
-    // Auto-fetch YouTube duration if not provided
-    if (empty($validated['duration_seconds']) && !empty($validated['video_url'])) {
-        $validated['duration_seconds'] = 0;
-    }
 
     // Set boolean flags
     $validated['is_preview'] = $request->boolean('is_preview');
@@ -91,29 +81,22 @@ $courseVideo=CourseVideo::find($id);
 
 }
 
-public function show($id)
-{
-    $this->authorize('view_videos'); // Optional: permission check
 
-    $video = CourseVideo::findOrFail($id);
-
-    return view('dashboard.videos.show', compact('video'));
-}
 
 public function destroy( $id)
 {
-    $this->authorize('delete_videos');
-    $courseVideo=CourseVideo::find($id);
+    $this->authorize('delete_classes');
+    $courseVideo=CourseClass::find($id);
     // Optionally delete the associated image file
     if ($courseVideo->image) {
-        deleteImageFromDirectory($courseVideo->image, 'courses_videos'); // This should be your helper function to delete a file
+        deleteImageFromDirectory($courseVideo->image, 'courses_classes'); // This should be your helper function to delete a file
     }
 
     $courseVideo->delete();
 
     return response()->json([
         'status' => true,
-        'message' => __('Course video deleted successfully.'),
+        'message' => __('Course class deleted successfully.'),
     ]);
 }
 

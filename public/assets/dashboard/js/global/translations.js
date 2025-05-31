@@ -96,6 +96,7 @@ let translations = {
         linkedin: "لينكدان",
         website: "الموقع",
         "experience years": "سنين الخبرة",
+        "Edit Class": "تعديل الحصة",
 
         "No results found": "لا يوجد نتائج",
         "Searching…": "جار البحث ...",

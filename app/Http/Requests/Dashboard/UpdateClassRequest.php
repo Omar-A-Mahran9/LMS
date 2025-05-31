@@ -2,21 +2,22 @@
 
 namespace App\Http\Requests\Dashboard;
 
+use App\Models\CourseClass;
 use App\Models\CourseVideo;
 use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateVideoRequest extends FormRequest
+class UpdateClassRequest extends FormRequest
 {
-    /**UpdateClassRequest
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
     public function authorize()
     {
-        return abilities()->contains('update_videos');
+        return abilities()->contains('update_classes');
     }
 
     /**
@@ -26,19 +27,17 @@ class UpdateVideoRequest extends FormRequest
      */
     public function rules()
     {
-  $courseVideoId = request()->route('video');
+  $classId = request()->route('class');
 
     // Manually resolve the CourseVideo model
-    $courseVideo = (new CourseVideo())->resolveRouteBinding($courseVideoId);
+    $class = (new CourseClass())->resolveRouteBinding($classId);
   return [
         'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
         'course_id' => 'required|exists:courses,id',
         'quiz_required' => 'sometimes|boolean',
-        'quiz_id' => 'required_if:quiz_required,1|exists:quizzes,id',
 
         'course_section_id' => 'nullable|exists:course_sections,id',
 
-        'duration_seconds' => 'nullable|integer|min:0',
         'is_preview' => 'sometimes|boolean',
         'is_active' => 'sometimes|boolean',
 
@@ -47,13 +46,13 @@ class UpdateVideoRequest extends FormRequest
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('course_videos', 'title_ar')->ignore($courseVideo->id)
+            Rule::unique('classes', 'title_ar')->ignore($class->id)
         ],
         'title_en' => [
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('course_videos', 'title_en')->ignore($courseVideo->id)
+            Rule::unique('classes', 'title_en')->ignore($class->id)
         ],
 
     'description_ar' => ['required', new NotNumbersOnly()],

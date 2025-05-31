@@ -73,7 +73,9 @@
     "Is Active?": "هل الدورة مفعلة؟",
     "Level": "المستوى",
     "required": "مطلوب",
-
+    "Classes": "الحصص",
+    "classes list": "قائمة الحصص",
+    "Add new class": "إضافة حصة جديدة",
     "Enrollment Open": "التسجيل مفتوح",
     "Enrolled Students": "عدد الطلاب المسجلين",
     "Course Details": "بيانات الكورس",

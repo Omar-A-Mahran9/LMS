@@ -85,15 +85,10 @@
                     </x-dashboard.aside-item>
                 @endcan
 
-                @can('view_courses')
-                    <x-dashboard.aside-item :slug="'courses'" :route="route('dashboard.courses.index')" :title="__('Courses')">
-                        <i class="ki-outline ki-plus fs-2"></i>
-                    </x-dashboard.aside-item>
-                @endcan
 
                 @can('view_classes')
-                    <x-dashboard.aside-item :slug="'courses'" :route="route('dashboard.classes.index')" :title="__('Courses')">
-                        <i class="ki-outline ki-plus fs-2"></i>
+                    <x-dashboard.aside-item :slug="'classes'" :route="route('dashboard.classes.index')" :title="__('Classes')">
+                        <i class="ki-outline ki-book fs-2"></i>
                     </x-dashboard.aside-item>
                 @endcan
 
@@ -223,8 +218,7 @@
                         <!--end::Menu item-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-3 my-0">
-                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
-                                data-kt-value="dark">
+                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="dark">
                                 <span class="menu-icon" data-kt-element="icon">
                                     <i class="ki-outline ki-moon fs-2"></i>
                                 </span>

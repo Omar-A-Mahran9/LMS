@@ -13,7 +13,7 @@
             data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
             <!--begin::Card title-->
             <div class="card-title m-0">
-                <h3 class="fw-bold m-0">{{ __('Videos list') }}</h3>
+                <h3 class="fw-bold m-0">{{ __('classes list') }}</h3>
             </div>
             <!--end::Card title-->
 
@@ -36,7 +36,7 @@
                                     fill="currentColor"></rect>
                             </svg>
                         </span>
-                        <!--end::Svg Icon-->{{ __('Add new video') }}
+                        <!--end::Svg Icon-->{{ __('Add new class') }}
                     </button>
                     <!--end::Add customer-->
                 </div>
@@ -110,7 +110,7 @@
         <!--end::Content-->
     </div>
 
-    <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.videos.store') }}" method="post"
+    <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.classes.store') }}" method="post"
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
 
@@ -118,7 +118,7 @@
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="form_title">{{ __('Add New video') }}</h5>
+                        <h5 class="modal-title" id="form_title">{{ __('Add new class') }}</h5>
                         <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                             aria-label="Close">
                             <i class="ki-outline ki-cross fs-1"></i>
@@ -136,7 +136,7 @@
                         </div>
                         {{-- Course & Section --}}
                         <div class="row mb-4">
-                            <div class="col-4">
+                            <div class="col-12">
                                 <label for="course_id_inp" class="form-label">{{ __('Course') }}</label>
                                 <select name="course_id" id="course_id_inp" class="form-select" data-control="select2"
                                     data-placeholder="{{ __('Select Course') }}"
@@ -148,25 +148,8 @@
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
                             </div>
-                            <div class="col-4">
-                                <label for="course_section_id_inp" class="form-label">{{ __('Course Section') }}</label>
-                                <select name="course_section_id" id="course_section_id_inp" class="form-select"
-                                    data-control="select2" data-placeholder="{{ __('Select Section (optional)') }}"
-                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
-                                    <option value="" selected></option>
-                                    @foreach ($sections as $section)
-                                        <option value="{{ $section->id }}">{{ $section->title_en }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback" id="course_section_id"></div>
-                            </div>
-                            <div class="col-4">
-                                <label for="duration_seconds_inp"
-                                    class="form-label">{{ __('Duration (Seconds)') }}</label>
-                                <input type="number" name="duration_seconds" id="duration_seconds_inp"
-                                    class="form-control" min="0">
-                                <div class="fv-plugins-message-container invalid-feedback" id="duration_seconds"></div>
-                            </div>
+
+
                         </div>
 
                         {{-- Titles --}}
@@ -201,35 +184,22 @@
                             </div>
                         </div>
 
-                        {{-- Video Info --}}
+                        {{-- class Info --}}
                         <div class="row mb-4">
-                            <div class="col-4">
+                            <div class="col-6">
                                 <label for="video_url_inp" class="form-label">{{ __('Video URL') }}</label>
                                 <input type="url" name="video_url" id="video_url_inp" class="form-control"
                                     placeholder="{{ __('Enter video URL') }}">
                                 <div class="fv-plugins-message-container invalid-feedback" id="video_url"></div>
                             </div>
 
-                            <div class="col-3" id="quiz_select_wrapper">
-                                <div class="d-flex justify-content-between">
-                                    <label for="quiz_id_inp" class="form-label">{{ __('Quiz') }}</label>
-                                    <label class="form-check form-switch form-check-custom form-check-solid  ">
-                                        <input class="form-check-input " name="quiz_required" type="checkbox"
-                                            value="1" id="quiz_required_switch">
-                                        <span class="form-check-label text-dark"
-                                            for="quiz_required_switch">{{ __('required') }}</span>
-                                    </label>
-                                </div>
-
-                                <select name="quiz_id" id="quiz_id_inp" class="form-select" data-control="select2"
-                                    data-placeholder="{{ __('Select Quiz') }}"
-                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
-                                    <option value="" selected></option>
-                                    @foreach ($quizzes as $quiz)
-                                        <option value="{{ $quiz->id }}">{{ $quiz->title_en }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback" id="quiz_id"></div>
+                            <div class="col-2 d-flex align-items-center mt-4">
+                                <label class="form-check form-switch form-check-custom form-check-solid  ">
+                                    <input class="form-check-input " name="quiz_required" type="checkbox" value="1"
+                                        id="quiz_required_switch">
+                                    <span class="form-check-label text-dark"
+                                        for="quiz_required_switch">{{ __('required') }}</span>
+                                </label>
                             </div>
 
                             <div class="col-2 d-flex align-items-center mt-4">
@@ -271,19 +241,21 @@
             </div>
         </div>
     </form>
-    <!-- Hidden div for YouTube Player -->
-    <div id="player-container" style="display: none;">
-        <div id="yt-player"></div>
-    </div>
-    {{-- begin::Add Country Modal --}}
 @endsection
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/videos.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/classes.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
+    <script>
+        $(document).ready(() => {
+
+            initTinyMc();
+
+        });
+    </script>
     <script>
         $(document).ready(function() {
             $("#add_btn").click(function(e) {
@@ -312,10 +284,10 @@
                 $("#is_active_switch", "#is_preview_switch", "#quiz_required_switch")
                     .prop('checked', false);
 
-                $("#crud_form").attr('action', "{{ route('dashboard.videos.store') }}");
+                $("#crud_form").attr('action', "{{ route('dashboard.classes.store') }}");
 
                 // Reset modal title
-                $("#form_title").text("{{ __('Add new video') }}");
+                $("#form_title").text("{{ __('Add new class') }}");
 
                 // Optionally, reset date inputs
                 $("#start_date_inp, #end_date_inp").val('');
@@ -325,82 +297,4 @@
             });
         });
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const quizRequiredSwitch = document.getElementById('quiz_required_switch');
-            const quizSelect = document.getElementById('quiz_id_inp');
-
-            function toggleSelects() {
-                if (quizRequiredSwitch.checked) {
-                    quizSelect.disabled = false;
-                } else {
-                    quizSelect.disabled = true;
-                    quizSelect.value = ''; // clear value when disabled
-                }
-            }
-
-            // Initial toggle on page load
-            toggleSelects();
-
-            // Listen for checkbox change
-            quizRequiredSwitch.addEventListener('change', toggleSelects);
-        });
-    </script>
-
-
-    <script>
-        let ytPlayer;
-
-        function extractYouTubeVideoId(url) {
-            const regex =
-                /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-            const match = url.match(regex);
-            return match ? match[1] : null;
-        }
-
-        // Load the YouTube IFrame API script
-        let tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        document.head.appendChild(tag);
-
-        // YouTube API will call this function when ready
-        function onYouTubeIframeAPIReady() {
-            // Nothing yet – we create player when needed
-        }
-
-        document.getElementById('video_url_inp').addEventListener('change', function() {
-            const url = this.value;
-            const videoId = extractYouTubeVideoId(url);
-
-            if (!videoId) return;
-
-            // If a player already exists, destroy it first
-            if (ytPlayer && ytPlayer.destroy) {
-                ytPlayer.destroy();
-            }
-
-            // Create a hidden YouTube player
-            ytPlayer = new YT.Player('yt-player', {
-                height: '0',
-                width: '0',
-                videoId: videoId,
-                events: {
-                    'onReady': function(event) {
-                        const duration = ytPlayer.getDuration();
-                        document.getElementById('duration_seconds_inp').value = Math.round(duration);
-                    }
-                }
-            });
-        });
-    </script>
-@endpush
-@push("styles")
-<style>
-  input#quiz_required_switch.form-check-input {
-    width: 16px;
-    height: 16px;
-    margin-top: 0.2rem;
-  }
-</style>
-
 @endpush
