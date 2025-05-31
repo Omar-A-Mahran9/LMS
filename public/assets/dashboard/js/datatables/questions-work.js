@@ -3,7 +3,7 @@
 var datatable;
 // Class definition
 var KTDatatablesServerSide = (function () {
-    let dbTable = "home_work_questions";
+    let dbTable = "homeworks-questions";
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
@@ -24,7 +24,7 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" },
                 { data: "question" },
-                { data: "quiz" },
+                { data: "homework" },
                 { data: "created_at" },
                 { data: null },
             ],
@@ -61,7 +61,7 @@ var KTDatatablesServerSide = (function () {
                             <div>
                                 <!--begin::Info-->
                                 <div class="d-flex flex-column justify-content-center">
-                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.quiz.title}</a>
+                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.homework.title}</a>
                                 </div>
                                 <!--end::Info-->
                             </div>
@@ -225,7 +225,7 @@ var KTDatatablesServerSide = (function () {
                 // Reset form method & action
                 $("#crud_form").attr(
                     "action",
-                    `/dashboard/questions/${data.id}`
+                    `/dashboard/homeworks-questions/${data.id}`
                 );
                 $("#crud_form").find('input[name="_method"]').remove();
                 $("#crud_form").prepend(

@@ -31,13 +31,16 @@ class UpdateVideoRequest extends FormRequest
     // Manually resolve the CourseVideo model
     $courseVideo = (new CourseVideo())->resolveRouteBinding($courseVideoId);
   return [
-         'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
+        'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
         'course_id' => 'required|exists:courses,id',
+        'quiz_id' => 'required|exists:quizzes,id',
+
         'course_section_id' => 'nullable|exists:course_sections,id',
 
         'duration_seconds' => 'nullable|integer|min:0',
         'is_preview' => 'sometimes|boolean',
         'is_active' => 'sometimes|boolean',
+        'quiz_required' => 'sometimes|boolean',
 
             // Multilingual Titles and Descriptions
         'title_ar' => [

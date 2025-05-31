@@ -28,6 +28,8 @@ return [
     // Required image
         'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
         'course_id' => 'required|exists:courses,id',
+        'quiz_id' => 'required|exists:quizzes,id',
+
         'course_section_id' => 'nullable|exists:course_sections,id',
         'title_ar' => 'required|string|max:255',
         'title_en' => 'required|string|max:255',
@@ -40,6 +42,8 @@ return [
         'duration_seconds' => 'nullable|integer|min:0',
         'is_preview' => 'sometimes|boolean',
         'is_active' => 'sometimes|boolean',
+        'quiz_required' => 'sometimes|boolean',
+
 ];
 
     }

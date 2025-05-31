@@ -92,7 +92,7 @@
                             </div>
                         </th>
                         <th>{{ __('Question') }}</th>
-                        <th>{{ __('Quiz') }}</th>
+                        <th>{{ __('homeworks') }}</th>
                         <th>{{ __('Created at') }}</th>
 
                         <th class=" min-w-100px">{{ __('Actions') }}</th>
@@ -109,6 +109,7 @@
 
     <form id="crud_form" class="ajax-form" method="post" action="{{ route('dashboard.homeworks-questions.store') }}"
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
+        
         @csrf
 
         <div class="modal fade" id="crud_modal" tabindex="-1">
@@ -124,7 +125,8 @@
                         <div class="mb-3">
                             <label for="home_work_id_inp">{{ __('Select homework') }}</label>
                             <select name="home_work_id" id="home_work_id_inp" class="form-select" data-control="select2"
-                                data-placeholder="{{ __('Select homework') }}" data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                data-placeholder="{{ __('Select homework') }}"
+                                data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
                                 <option value="" selected></option>
                                 @foreach ($homeworks as $homework)
                                     <option value="{{ $homework->id }}">{{ $homework->title }}</option>
@@ -262,7 +264,7 @@
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/questions.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/questions-work.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
@@ -315,7 +317,7 @@
                 $("#is_active_switch")
                     .prop('checked', false);
 
-                $("#crud_form").attr('action', "{{ route('dashboard.questions.store') }}");
+                $("#crud_form").attr('action', "{{ route('dashboard.homeworks-questions.store') }}");
 
                 // Reset modal title
                 $("#form_title").text("{{ __('Add new question') }}");

@@ -136,7 +136,7 @@
                         </div>
                         {{-- Course & Section --}}
                         <div class="row mb-4">
-                            <div class="col-6">
+                            <div class="col-4">
                                 <label for="course_id_inp" class="form-label">{{ __('Course') }}</label>
                                 <select name="course_id" id="course_id_inp" class="form-select" data-control="select2"
                                     data-placeholder="{{ __('Select Course') }}"
@@ -148,7 +148,7 @@
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
                                 <label for="course_section_id_inp" class="form-label">{{ __('Course Section') }}</label>
                                 <select name="course_section_id" id="course_section_id_inp" class="form-select"
                                     data-control="select2" data-placeholder="{{ __('Select Section (optional)') }}"
@@ -159,6 +159,13 @@
                                     @endforeach
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback" id="course_section_id"></div>
+                            </div>
+                            <div class="col-4">
+                                <label for="duration_seconds_inp"
+                                    class="form-label">{{ __('Duration (Seconds)') }}</label>
+                                <input type="number" name="duration_seconds" id="duration_seconds_inp"
+                                    class="form-control" min="0">
+                                <div class="fv-plugins-message-container invalid-feedback" id="duration_seconds"></div>
                             </div>
                         </div>
 
@@ -196,19 +203,26 @@
 
                         {{-- Video Info --}}
                         <div class="row mb-4">
-                            <div class="col-5">
+                            <div class="col-3">
                                 <label for="video_url_inp" class="form-label">{{ __('Video URL') }}</label>
                                 <input type="url" name="video_url" id="video_url_inp" class="form-control"
                                     placeholder="{{ __('Enter video URL') }}">
                                 <div class="fv-plugins-message-container invalid-feedback" id="video_url"></div>
                             </div>
-                            <div class="col-3">
-                                <label for="duration_seconds_inp"
-                                    class="form-label">{{ __('Duration (Seconds)') }}</label>
-                                <input type="number" name="duration_seconds" id="duration_seconds_inp"
-                                    class="form-control" min="0">
-                                <div class="fv-plugins-message-container invalid-feedback" id="duration_seconds"></div>
+
+                            <div class="col-6 d-none" id="quiz_select_wrapper">
+                                <label for="quiz_id_inp" class="form-label">{{ __('Quiz') }}</label>
+                                <select name="quiz_id" id="quiz_id_inp" class="form-select" data-control="select2"
+                                    data-placeholder="{{ __('Select Quiz') }}"
+                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                    <option value="" selected></option>
+                                    @foreach ($quizzes as $quiz)
+                                        <option value="{{ $quiz->id }}">{{ $quiz->title_en }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="fv-plugins-message-container invalid-feedback" id="quiz_id"></div>
                             </div>
+
                             <div class="col-2 d-flex align-items-center mt-4">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
                                     <input class="form-check-input" name="is_preview" type="checkbox" value="1"
@@ -223,6 +237,15 @@
                                         id="is_active_switch" checked>
                                     <span class="form-check-label text-dark"
                                         for="is_active_switch">{{ __('Active') }}</span>
+                                </label>
+                            </div>
+
+                            <div class="col-2 d-flex align-items-center mt-4">
+                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input" name="quiz_required" type="checkbox" value="1"
+                                        id="quiz_required_switch">
+                                    <span class="form-check-label text-dark"
+                                        for="quiz_required_switch">{{ __('Quiz Required') }}</span>
                                 </label>
                             </div>
 
@@ -259,38 +282,6 @@
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
-
-    <script>
-        $(document).ready(() => {
-
-            initTinyMc();
-
-            new Tagify(document.getElementById('tags_inp'), {
-                originalInputValueFormat: valuesArr => valuesArr.map(item => item.value).join(',')
-            });
-
-        });
-    </script>
-
-    <script>
-        function toggleDiscountFields() {
-            const isFree = $('#is_free_switch').is(':checked');
-            const hasDiscount = $('#have_discount_switch').is(':checked');
-
-            $('#price_inp').prop('disabled', isFree);
-            $('#have_discount_switch').prop('disabled', isFree);
-            $('#discount_percentage_inp').prop('disabled', isFree || !hasDiscount);
-        }
-
-        $(document).ready(function() {
-            toggleDiscountFields();
-
-            $('#is_free_switch, #have_discount_switch').on('change', function() {
-                toggleDiscountFields();
-            });
-        });
-    </script>
-
     <script>
         $(document).ready(function() {
             $("#add_btn").click(function(e) {
@@ -316,7 +307,7 @@
                 }
 
                 // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#is_active_switch", "#is_preview_switch")
+                $("#is_active_switch", "#is_preview_switch", "#quiz_required_switch")
                     .prop('checked', false);
 
                 $("#crud_form").attr('action', "{{ route('dashboard.videos.store') }}");
@@ -330,6 +321,30 @@
                 // Open modal if you want to show it on "Add"
                 $("#crud_modal").modal('show');
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const quizRequiredSwitch = document.getElementById('quiz_required_switch');
+            const quizSelectWrapper = document.getElementById('quiz_select_wrapper');
+
+            function toggleSelects() {
+                if (quizRequiredSwitch.checked) {
+                    quizSelectWrapper.classList.remove('d-none');
+
+                } else {
+                    quizSelectWrapper.classList.add('d-none');
+
+                    // Optional: clear quiz select value when quiz is not required
+                    document.getElementById('quiz_id_inp').value = '';
+                }
+            }
+
+            // Initial toggle on page load
+            toggleSelects();
+
+            // Listen for checkbox change
+            quizRequiredSwitch.addEventListener('change', toggleSelects);
         });
     </script>
 

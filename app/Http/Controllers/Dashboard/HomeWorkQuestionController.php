@@ -4,15 +4,13 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreQuestionHomeWorkRequest;
-use App\Http\Requests\Dashboard\StoreQuestionRequest;
-use App\Http\Requests\Dashboard\StoreQuizRequest;
+
 use App\Http\Requests\Dashboard\UpdateQuestionHomeWorkRequest;
-use App\Http\Requests\Dashboard\UpdateQuestionRequest;
-use App\Http\Requests\Dashboard\UpdateQuizRequest;
+
 use App\Models\Course;
 use App\Models\CourseSection;
 use App\Models\HomeWork;
-use App\Models\Quiz;
+
 use App\Models\HomeWorkQuestion;
 use Illuminate\Http\Request;
 
@@ -22,7 +20,7 @@ class HomeWorkQuestionController extends Controller
     {
         $this->authorize('view_homework');
         // Total quizzes count
-        $count_quizzes = HomeWorkQuestion::count();
+        $count_homework = HomeWorkQuestion::count();
 
         // Example static value (customize as needed)
         $total_attempts = 1000;
@@ -43,7 +41,7 @@ class HomeWorkQuestionController extends Controller
         } else {
             // Return Blade view with variables
             return view('dashboard.homeworks_questions.index', compact(
-                'count_quizzes',
+                'count_homework',
                 'total_attempts',
                 'courses',
                 'sections',
@@ -59,7 +57,7 @@ class HomeWorkQuestionController extends Controller
 
  public function store(StoreQuestionHomeWorkRequest $request)
 {
-    $this->authorize('create_quizzes');
+    $this->authorize('create_homework');
 
     // Create the question
     $question = HomeWorkQuestion::create([
@@ -101,18 +99,18 @@ class HomeWorkQuestionController extends Controller
         $question->expected_answer = $request->short_answer;
         $question->save();
     }
-    // return redirect()->route('dashboard.quizzes.index');
-
+ 
 }
 
 
-public function update(UpdateQuestionHomeWorkRequest $request, HomeWorkQuestion $question)
+public function update(UpdateQuestionHomeWorkRequest $request, $id)
 {
-    $this->authorize('update_quizzes');
+    $this->authorize('update_homework');
+        $question=HomeWorkQuestion::find($id);
 
     // Update base fields
     $question->update([
-        'home_work_id'     => $request->home_work_id,
+        'home_work_id'=> $request->home_work_id,
         'question_ar' => $request->question_ar,
         'question_en' => $request->question_en,
         'type'        => $request->type,
@@ -147,9 +145,10 @@ public function update(UpdateQuestionHomeWorkRequest $request, HomeWorkQuestion 
 }
 
 
-    public function destroy(HomeWorkQuestion $question)
+    public function destroy($id)
     {
-        $this->authorize('delete_quizzes');
+        $question=HomeWorkQuestion::find($id);
+        $this->authorize('delete_homework');
 
         $question->delete();
 

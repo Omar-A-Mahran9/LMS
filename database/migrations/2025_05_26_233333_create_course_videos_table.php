@@ -17,6 +17,7 @@ return new class extends Migration
 
             $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
              $table->foreignId('course_section_id')->constrained()->onDelete('cascade')->nullable();
+            $table->foreignId('quiz_id')->constrained()->onDelete('cascade')->nullable();
 
             // Multilingual content
             $table->string('title_en');
@@ -32,6 +33,8 @@ return new class extends Migration
             $table->unsignedInteger('order')->default(0); // sort videos
             $table->boolean('is_preview')->default(false); // free preview toggle
             $table->boolean('is_active')->default(true);
+            $table->boolean('quiz_required')->default(false);
+
             $table->integer('views')->default(0);
 
             $table->timestamps();

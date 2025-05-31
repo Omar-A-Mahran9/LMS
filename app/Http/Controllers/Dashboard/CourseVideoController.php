@@ -8,6 +8,7 @@ use App\Http\Requests\Dashboard\UpdateVideoRequest;
 use App\Models\Course;
 use App\Models\CourseSection;
 use App\Models\CourseVideo;
+use App\Models\Quiz;
 use Illuminate\Http\Request;
 
 class CourseVideoController extends Controller
@@ -18,8 +19,9 @@ class CourseVideoController extends Controller
 
         // Count total courses
         $count_addon = CourseVideo::count();
-        $courses = Course::select('id', 'title_en')->get();
-          $sections = CourseSection::select('id', 'title_en')->get();
+        $courses = Course::select('id', 'title_en', 'title_ar')->get();
+        $sections = CourseSection::select('id', 'title_en', 'title_ar')->get();
+        $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
 
         // Example static visited site count (you may want to make this dynamic)
         $visited_site = 10000;
@@ -53,6 +55,7 @@ class CourseVideoController extends Controller
     // Set default values for checkboxes
     $validated['is_preview'] = $request->boolean('is_preview');
     $validated['is_active'] = $request->boolean('is_active');
+    $validated['quiz_required'] = $request->boolean('quiz_required');
 
     $video = CourseVideo::create($validated);
 
@@ -81,6 +84,7 @@ $courseVideo=CourseVideo::find($id);
     // Set boolean flags
     $validated['is_preview'] = $request->boolean('is_preview');
     $validated['is_active'] = $request->boolean('is_active');
+    $validated['quiz_required'] = $request->boolean('quiz_required');
 
     $courseVideo->update($validated);
 
@@ -99,7 +103,7 @@ public function show($id)
 public function destroy( $id)
 {
     $this->authorize('delete_videos');
-$courseVideo=CourseVideo::find($id);
+    $courseVideo=CourseVideo::find($id);
     // Optionally delete the associated image file
     if ($courseVideo->image) {
         deleteImageFromDirectory($courseVideo->image, 'courses_videos'); // This should be your helper function to delete a file
