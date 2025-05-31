@@ -27,6 +27,6 @@ class HomeWorkAttemptAnswer extends Model
 
     public function answer()
     {
-        return $this->belongsTo(HomeWorkAnswer::class, 'homework_answer_id');
+        return $this->belongsTo(HomeWorkAnswer::class, 'home_work_answer_id');
     }
 }

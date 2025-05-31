@@ -29,7 +29,7 @@ class HomeWorkQuestion extends Model
 
     public function answers()
     {
-        return $this->hasMany(HomeWorkAnswer::class, 'homework_question_id');
+        return $this->hasMany(HomeWorkAnswer::class, 'home_work_question_id');
     }
 
 }

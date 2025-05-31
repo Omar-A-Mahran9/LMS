@@ -37,6 +37,7 @@
     "Preview": "معاينة",
     "Add New quiz": "إضافة امتحان جديد",
     "Add New homework": "إضافة واجب جديد",
+    "Add new homework": "إضافة واجب جديد",
 
     "Inactive": "غير نشط",
     "Uploaded on": "تم الرفع في",
@@ -76,8 +77,10 @@
     "Course Details": "بيانات الكورس",
     "How to use data website": "ازاي تستخدم المنصة",
     "quizzes list": "قائمة الاختبارات",
+    "homeworks list": "قائمة الواجبات",
     "Add new quiz": "إضافة اختبار جديد",
     "quizzes": "الاختبارات",
+    "homeworks": "الواجبات",
     "Beginner": "مبتدئ",
     "Intermediate": "متوسط",
     "Advanced": "متقدم",
@@ -108,7 +111,8 @@
     "questions list": "قائمة الأسئلة",
     "Add new question": "إضافة سؤال جديد",
     "Edit Question": "تعديل السؤال",
-
+    "homework": "الاختبار",
+    "Select homework": "حدد اختبار",
     "Add Answer": "إضافة إجابة",
     "Correct Answer": "الإجابة الصحيحة",
     "True": "صحيح",

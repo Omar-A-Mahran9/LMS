@@ -17,7 +17,7 @@ class HomeWorkAnswer extends Model
 
     public function question()
     {
-        return $this->belongsTo(HomeWorkQuestion::class, 'homework_question_id');
+        return $this->belongsTo(HomeWorkQuestion::class, 'home_work_question_id');
     }
 
     public function getAnswerAttribute()

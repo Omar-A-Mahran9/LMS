@@ -4238,16 +4238,16 @@ var KTSearch = function (element, options) {
 
     // Handlera
     var _handlers = function () {
-        // Focus
-        the.inputElement.addEventListener('focus', _focus);
+        // // Focus
+        // the.inputElement.addEventListener('focus', _focus);
 
-        // Blur
-        the.inputElement.addEventListener('blur', _blur);
+        // // Blur
+        // the.inputElement.addEventListener('blur', _blur);
 
         // Keypress
-        if (_getOption('keypress') === true) {
-            the.inputElement.addEventListener('input', _input);
-        }
+        // if (_getOption('keypress') === true) {
+        //     the.inputElement.addEventListener('input', _input);
+        // }
 
         // Submit
         if (the.submitElement) {
