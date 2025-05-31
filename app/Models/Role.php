@@ -29,6 +29,9 @@ class Role extends Model
 
         'courses',
 
+        'classes',
+
+
         'videos',
 
         'quizzes',
