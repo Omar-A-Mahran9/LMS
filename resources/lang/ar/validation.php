@@ -256,6 +256,8 @@ return [
                 'correct_tf'=> "الاجابة الصحيحة",
         'points'=> "النقاط",
         'short_answer'=> "الاجابة المتوقعة",
+        'quiz_required'=> "الاختبار مطلوب",
+        'quiz_id'=> "الاختبار",
 
         'website'=> "الموقع",
         "experience_years"=> "سنين الخبرة",

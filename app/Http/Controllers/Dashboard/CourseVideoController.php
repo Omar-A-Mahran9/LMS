@@ -31,7 +31,7 @@ class CourseVideoController extends Controller
             return response()->json(getModelData(model: new CourseVideo(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
         } else {
             // Return the main view with data
-            return view('dashboard.videos.index', compact( 'visited_site','courses','sections'));
+            return view('dashboard.videos.index', compact( 'visited_site','courses','sections','quizzes'));
         }
     }
 

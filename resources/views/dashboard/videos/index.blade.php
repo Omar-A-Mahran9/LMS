@@ -203,15 +203,24 @@
 
                         {{-- Video Info --}}
                         <div class="row mb-4">
-                            <div class="col-3">
+                            <div class="col-4">
                                 <label for="video_url_inp" class="form-label">{{ __('Video URL') }}</label>
                                 <input type="url" name="video_url" id="video_url_inp" class="form-control"
                                     placeholder="{{ __('Enter video URL') }}">
                                 <div class="fv-plugins-message-container invalid-feedback" id="video_url"></div>
                             </div>
 
-                            <div class="col-6 d-none" id="quiz_select_wrapper">
-                                <label for="quiz_id_inp" class="form-label">{{ __('Quiz') }}</label>
+                            <div class="col-3" id="quiz_select_wrapper">
+                                <div class="d-flex justify-content-between">
+                                    <label for="quiz_id_inp" class="form-label">{{ __('Quiz') }}</label>
+                                    <label class="form-check form-switch form-check-custom form-check-solid  ">
+                                        <input class="form-check-input " name="quiz_required" type="checkbox"
+                                            value="1" id="quiz_required_switch">
+                                        <span class="form-check-label text-dark"
+                                            for="quiz_required_switch">{{ __('required') }}</span>
+                                    </label>
+                                </div>
+
                                 <select name="quiz_id" id="quiz_id_inp" class="form-select" data-control="select2"
                                     data-placeholder="{{ __('Select Quiz') }}"
                                     data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
@@ -240,14 +249,7 @@
                                 </label>
                             </div>
 
-                            <div class="col-2 d-flex align-items-center mt-4">
-                                <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="quiz_required" type="checkbox" value="1"
-                                        id="quiz_required_switch">
-                                    <span class="form-check-label text-dark"
-                                        for="quiz_required_switch">{{ __('Quiz Required') }}</span>
-                                </label>
-                            </div>
+
 
                         </div>
 
@@ -326,17 +328,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const quizRequiredSwitch = document.getElementById('quiz_required_switch');
-            const quizSelectWrapper = document.getElementById('quiz_select_wrapper');
+            const quizSelect = document.getElementById('quiz_id_inp');
 
             function toggleSelects() {
                 if (quizRequiredSwitch.checked) {
-                    quizSelectWrapper.classList.remove('d-none');
-
+                    quizSelect.disabled = false;
                 } else {
-                    quizSelectWrapper.classList.add('d-none');
-
-                    // Optional: clear quiz select value when quiz is not required
-                    document.getElementById('quiz_id_inp').value = '';
+                    quizSelect.disabled = true;
+                    quizSelect.value = ''; // clear value when disabled
                 }
             }
 
@@ -394,4 +393,13 @@
             });
         });
     </script>
+@endpush
+@push('styles')
+    <style>
+        input#quiz_required_switch.form-check-input {
+            width: 16px;
+            height: 16px;
+            margin-top: 0.2rem;
+        }
+    </style>
 @endpush

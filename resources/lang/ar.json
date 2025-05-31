@@ -72,6 +72,8 @@
     "Is Free Course?": "هل الدورة مجانية؟",
     "Is Active?": "هل الدورة مفعلة؟",
     "Level": "المستوى",
+    "required": "مطلوب",
+
     "Enrollment Open": "التسجيل مفتوح",
     "Enrolled Students": "عدد الطلاب المسجلين",
     "Course Details": "بيانات الكورس",

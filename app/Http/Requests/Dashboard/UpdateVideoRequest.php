@@ -33,14 +33,14 @@ class UpdateVideoRequest extends FormRequest
   return [
         'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
         'course_id' => 'required|exists:courses,id',
-        'quiz_id' => 'required|exists:quizzes,id',
+        'quiz_required' => 'sometimes|boolean',
+        'quiz_id' => 'required_if:quiz_required,1|exists:quizzes,id',
 
         'course_section_id' => 'nullable|exists:course_sections,id',
 
         'duration_seconds' => 'nullable|integer|min:0',
         'is_preview' => 'sometimes|boolean',
         'is_active' => 'sometimes|boolean',
-        'quiz_required' => 'sometimes|boolean',
 
             // Multilingual Titles and Descriptions
         'title_ar' => [
