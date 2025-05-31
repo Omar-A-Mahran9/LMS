@@ -7,21 +7,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreQuestionRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+
     public function authorize()
     {
         return abilities()->contains('create_quizzes');
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
     $rules = [
@@ -35,7 +26,7 @@ class StoreQuestionRequest extends FormRequest
         $rules['answers'] = ['required', 'array', 'min:2'];
         $rules['answers.*.text_ar'] = ['required', 'string'];
         $rules['answers.*.text_en'] = ['required', 'string'];
-        $rules['answers.*.is_correct'] = ['nullable','in:true,false,1,0'];
+$rules['answers.*.is_correct'] = ['nullable'];
     }
 
     if ($this->type === 'true_false') {

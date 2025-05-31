@@ -13,7 +13,7 @@
             data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
             <!--begin::Card title-->
             <div class="card-title m-0">
-                <h3 class="fw-bold m-0">{{ __('quizzes list') }}</h3>
+                <h3 class="fw-bold m-0">{{ __('questions list') }}</h3>
             </div>
             <!--end::Card title-->
 
@@ -36,7 +36,7 @@
                                     fill="currentColor"></rect>
                             </svg>
                         </span>
-                        <!--end::Svg Icon-->{{ __('Add new quiz') }}
+                        <!--end::Svg Icon-->{{ __('Add new question') }}
                     </button>
                     <!--end::Add customer-->
                 </div>
@@ -65,7 +65,7 @@
                     </span>
                     <!--end::Svg Icon-->
                     <input type="text" data-kt-docs-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('quizzes') }}">
+                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('question') }}">
                 </div>
                 <!--end::Search-->
 
@@ -91,11 +91,9 @@
                                     data-kt-check-target="#kt_datatable .form-check-input" value="1" />
                             </div>
                         </th>
-                        <th>{{ __('Title') }}</th>
-                        <th>{{ __('Course') }}</th>
-                        <th>{{ __('Status') }}</th>
+                        <th>{{ __('Question') }}</th>
+                        <th>{{ __('Quiz') }}</th>
                         <th>{{ __('Created at') }}</th>
-                        <th>{{ __('views') }}</th>
 
                         <th class=" min-w-100px">{{ __('Actions') }}</th>
                     </tr>
@@ -108,137 +106,36 @@
         <!--end::Content-->
     </div>
 
-    <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.quizzes.store') }}" method="post"
-        enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
-        @csrf
-        <div class="modal fade" tabindex="-1" id="crud_modal">
-            <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="form_title">{{ __('Add New quiz') }}</h5>
-                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                            aria-label="Close">
-                            <i class="ki-outline ki-cross fs-1"></i>
-                        </div>
-                    </div>
 
-                    <div class="modal-body">
-
-                        {{-- Course & Section --}}
-                        <div class="row mb-4">
-                            <div class="col-6">
-                                <label for="course_id_inp" class="form-label">{{ __('Course') }}</label>
-                                <select name="course_id" id="course_id_inp" class="form-select" data-control="select2"
-                                    data-placeholder="{{ __('Select Course') }}"
-                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
-                                    <option value="" selected></option>
-                                    @foreach ($courses as $course)
-                                        <option value="{{ $course->id }}">{{ $course->title_en }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
-                            </div>
-                            <div class="col-6">
-                                <label for="course_section_id_inp" class="form-label">{{ __('Course Section') }}</label>
-                                <select name="course_section_id" id="course_section_id_inp" class="form-select"
-                                    data-control="select2" data-placeholder="{{ __('Select Section (optional)') }}"
-                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
-                                    <option value="" selected></option>
-                                    @foreach ($sections as $section)
-                                        <option value="{{ $section->id }}">{{ $section->title_en }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback" id="course_section_id">
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Titles --}}
-                        <div class="row mb-4">
-                            <div class="col-6">
-                                <label for="title_ar_inp" class="form-label">{{ __('Title (Arabic)') }}</label>
-                                <input type="text" name="title_ar" id="title_ar_inp" class="form-control"
-                                    placeholder="{{ __('Enter Arabic title') }}">
-                                <div class="invalid-feedback" id="title_ar"></div>
-                            </div>
-                            <div class="col-6">
-                                <label for="title_en_inp" class="form-label">{{ __('Title (English)') }}</label>
-                                <input type="text" name="title_en" id="title_en_inp" class="form-control"
-                                    placeholder="{{ __('Enter English title') }}">
-                                <div class="invalid-feedback" id="title_en"></div>
-                            </div>
-                        </div>
-
-                        {{-- Descriptions --}}
-                        <div class="row mb-4">
-                            <div class="col-6">
-                                <label for="description_ar_inp"
-                                    class="form-label">{{ __('Description (Arabic)') }}</label>
-                                <textarea name="description_ar" id="description_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
-                                <div class="fv-plugins-message-container invalid-feedback" id="description_ar"></div>
-                            </div>
-                            <div class="col-6">
-                                <label for="description_en_inp"
-                                    class="form-label">{{ __('Description (English)') }}</label>
-                                <textarea name="description_en" id="description_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
-                                <div class="fv-plugins-message-container invalid-feedback" id="description_en"></div>
-                            </div>
-                        </div>
-
-                        {{-- quiz Info --}}
-                        <div class="row mb-4">
-                            <div class="col-3">
-                                <label for="duration_minutes_inp"
-                                    class="form-label">{{ __('Duration (Minutes)') }}</label>
-                                <input type="number" name="duration_minutes" id="duration_minutes_inp"
-                                    class="form-control" min="0">
-                                <div class="fv-plugins-message-container invalid-feedback" id="duration_minutes">
-                                </div>
-                            </div>
-                            <div class="col-2 d-flex align-items-center mt-4">
-                                <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="is_active" type="checkbox" value="1"
-                                        id="is_active_switch" checked>
-                                    <span class="form-check-label text-dark"
-                                        for="is_active_switch">{{ __('Active') }}</span>
-                                </label>
-                            </div>
-
-                        </div>
-
-
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light"
-                            data-bs-dismiss="modal">{{ __('Close') }}</button>
-                        <button type="submit" class="btn btn-primary">
-                            <span class="indicator-label">{{ __('Save') }}</span>
-                            <span class="indicator-progress">
-                                {{ __('Please wait...') }} <span
-                                    class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-    <form id="question_form" class="ajax-form" method="post" action="{{ route('dashboard.questions.store') }}"
+    <form id="crud_form" class="ajax-form" method="post" action="{{ route('dashboard.questions.store') }}"
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
 
-        <div class="modal fade" id="questionModal" tabindex="-1">
+        <div class="modal fade" id="crud_modal" tabindex="-1">
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{ __('Add New Question') }}</h5>
+                        <h5 class="modal-title" id="form_title">{{ __('Add New Question') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
                     <div class="modal-body">
                         {{-- Question Arabic --}}
-                        <input type="hidden" name="quiz_id" value="">
+                        <div class="mb-3">
+                            <label for="quiz_id_inp">{{ __('Select Quiz') }}</label>
+                            <select name="quiz_id" id="quiz_id_inp" class="form-select" data-control="select2"
+                                data-placeholder="{{ __('Select Quiz') }}" data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                <option value="" selected></option>
+                                @foreach ($quizzes as $quiz)
+                                    <option value="{{ $quiz->id }}">{{ $quiz->title }}</option>
+                                @endforeach
+                            </select>
+
+
+
+                            <div class="invalid-feedback" id="quiz_id"></div>
+
+                        </div>
 
                         <div class="mb-3">
                             <label for="question_ar_inp">{{ __('Question (Arabic)') }}</label>
@@ -273,6 +170,7 @@
                             <label>{{ __('Answers') }}</label>
                             <div id="form_repeater">
                                 <div data-repeater-list="answers">
+
                                     <div data-repeater-item class="row mb-2">
                                         <div class="col-md-4">
                                             <input type="text" name="text_ar" class="form-control answer-text-ar">
@@ -310,16 +208,19 @@
                         {{-- True/False Answers --}}
                         <div class="mb-3 answer-type answer-true_false d-none">
                             <label>{{ __('Correct Answer') }}</label>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="correct_tf" value="true"
-                                    id="true_tf_inp">
-                                <label class="form-check-label" for="true_tf_inp">{{ __('True') }}</label>
+                            <div class="d-flex  gap-5 mt-5">
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="correct_tf" value="true"
+                                        id="true_tf_inp">
+                                    <label class="form-check-label" for="true_tf_inp">{{ __('True') }}</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="correct_tf" value="false"
+                                        id="true_tf_inp">
+                                    <label class="form-check-label" for="true_tf_inp">{{ __('False') }}</label>
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="correct_tf" value="false"
-                                    id="true_tf_inp">
-                                <label class="form-check-label" for="true_tf_inp">{{ __('False') }}</label>
-                            </div>
+
                             <div class="invalid-feedback" id="correct_tf"></div>
 
                         </div>
@@ -343,7 +244,15 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
+                        <button type="button" class="btn btn-light"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="indicator-label">{{ __('Save') }}</span>
+                            <span class="indicator-progress">
+                                {{ __('Please wait...') }} <span
+                                    class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -353,7 +262,7 @@
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/quizzes.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/questions.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
@@ -361,7 +270,7 @@
     <script>
         $(document).on('click', '.open-question-modal', function() {
             const quizId = $(this).data('quiz-id');
-            $('#question_form input[name="quiz_id"]').val(quizId);
+            $('#crud_form input[name="quiz_id"]').val(quizId);
         });
     </script>
     {{-- Plugins --}}
@@ -406,10 +315,10 @@
                 $("#is_active_switch")
                     .prop('checked', false);
 
-                $("#crud_form").attr('action', "{{ route('dashboard.quizzes.store') }}");
+                $("#crud_form").attr('action', "{{ route('dashboard.questions.store') }}");
 
                 // Reset modal title
-                $("#form_title").text("{{ __('Add new quiz') }}");
+                $("#form_title").text("{{ __('Add new question') }}");
 
                 // Optionally, reset date inputs
                 $(" #duration_minutes_inp").val('');

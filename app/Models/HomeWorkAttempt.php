@@ -5,31 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class QuizQuestion extends Model
+class HomeWorkAttempt extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['question'];
+    protected $appends = [];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
     ];
 
-       public function getQuestionAttribute()
+
+     public function homework()
     {
-        return app()->getLocale() === 'ar' ? $this->question_ar : $this->question_en;
+        return $this->belongsTo(HomeWork::class);
     }
 
-    public function quiz()
+    public function student()
     {
-        return $this->belongsTo(Quiz::class);
+        return $this->belongsTo(Student::class, 'student_id');
     }
-
-
 
     public function answers()
     {
-        return $this->hasMany(QuizAnswer::class, 'quiz_question_id');
+        return $this->hasMany(HomeWorkAttemptAnswer::class);
     }
 
 }

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('homeworks', function (Blueprint $table) {
+        Schema::create('quizzes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->foreignId('course_section_id')->nullable()->constrained()->onDelete('cascade');
@@ -28,9 +28,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('homework_questions', function (Blueprint $table) {
+        Schema::create('quiz_questions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('homework_id')->constrained()->onDelete('cascade');
+            $table->foreignId('quiz_id')->constrained()->onDelete('cascade');
 
             $table->text('question_en');
             $table->text('question_ar');
@@ -42,9 +42,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('homework_answers', function (Blueprint $table) {
+        Schema::create('quiz_answers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('homework_question_id')->constrained()->onDelete('cascade');
+            $table->foreignId('quiz_question_id')->constrained()->onDelete('cascade');
 
             $table->text('answer_en');
             $table->text('answer_ar');
@@ -53,9 +53,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('homework_attempts', function (Blueprint $table) {
+        Schema::create('quiz_attempts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('homework_id')->constrained()->onDelete('cascade');
+            $table->foreignId('quiz_id')->constrained()->onDelete('cascade');
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
 
             $table->timestamp('started_at')->nullable();
@@ -65,13 +65,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('homework_attempt_answers', function (Blueprint $table) {
+        Schema::create('quiz_attempt_answers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('homework_attempt_id')->constrained()->onDelete('cascade');
-            $table->foreignId('homework_question_id')->constrained()->onDelete('cascade');
+            $table->foreignId('quiz_attempt_id')->constrained()->onDelete('cascade');
+            $table->foreignId('quiz_question_id')->constrained()->onDelete('cascade');
 
             $table->text('answer_text')->nullable(); // for short answers
-            $table->foreignId('homework_answer_id')->nullable()->constrained()->onDelete('set null'); // for MCQ
+            $table->foreignId('quiz_answer_id')->nullable()->constrained()->onDelete('set null'); // for MCQ
 
             $table->timestamps();
         });
@@ -86,6 +86,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('homeworks');
+        Schema::dropIfExists('quizzes');
     }
 };

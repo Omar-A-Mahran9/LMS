@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class QuizQuestion extends Model
+class HomeWorkQuestion extends Model
 {
     use HasFactory;
     protected $guarded = [];
@@ -20,16 +20,16 @@ class QuizQuestion extends Model
         return app()->getLocale() === 'ar' ? $this->question_ar : $this->question_en;
     }
 
-    public function quiz()
+    public function homework()
     {
-        return $this->belongsTo(Quiz::class);
+        return $this->belongsTo(HomeWork::class);
     }
 
 
 
     public function answers()
     {
-        return $this->hasMany(QuizAnswer::class, 'quiz_question_id');
+        return $this->hasMany(HomeWorkAnswer::class, 'homework_question_id');
     }
 
 }

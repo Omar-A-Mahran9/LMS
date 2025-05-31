@@ -103,6 +103,12 @@
     "Answer (Arabic)": "الإجابة (بالعربية)",
     "Answer (English)": "الإجابة (بالإنجليزية)",
     "Correct": "صحيح",
+    "Quiz": "الاختبار",
+    "Select Quiz": "حدد اختبار",
+    "questions list": "قائمة الأسئلة",
+    "Add new question": "إضافة سؤال جديد",
+    "Edit Question": "تعديل السؤال",
+
     "Add Answer": "إضافة إجابة",
     "Correct Answer": "الإجابة الصحيحة",
     "True": "صحيح",

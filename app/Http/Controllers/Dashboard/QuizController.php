@@ -15,6 +15,7 @@ class QuizController extends Controller
 {
     public function index(Request $request)
     {
+
         $this->authorize('view_quizzes');
         // Total quizzes count
         $count_quizzes = Quiz::count();

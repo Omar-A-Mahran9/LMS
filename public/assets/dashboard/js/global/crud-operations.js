@@ -1,6 +1,8 @@
 window["onAjaxSuccess"] = () => {
     $("#crud_modal").modal("hide");
     datatable.draw();
+    $("#questionModal").modal("hide");
+    datatable.draw();
 };
 
 window["onAjaxError"] = (status, response) => {
