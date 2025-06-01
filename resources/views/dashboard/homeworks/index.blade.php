@@ -138,19 +138,7 @@
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
                             </div>
-                            <div class="col-6">
-                                <label for="course_section_id_inp" class="form-label">{{ __('Course Section') }}</label>
-                                <select name="course_section_id" id="course_section_id_inp" class="form-select"
-                                    data-control="select2" data-placeholder="{{ __('Select Section (optional)') }}"
-                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
-                                    <option value="" selected></option>
-                                    @foreach ($sections as $section)
-                                        <option value="{{ $section->id }}">{{ $section->title_en }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback" id="course_section_id">
-                                </div>
-                            </div>
+           
                         </div>
 
                         {{-- Titles --}}

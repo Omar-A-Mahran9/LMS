@@ -21,7 +21,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:api'])->group(function () {
+    Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');
+
     Route::get('videos_by_course/{id}', 'CourseController@getVideosByCourse');
+    Route::get('videos_by_classes/{id}', 'CourseController@getClassesByCoursesDetails');
     Route::get('quiz_by_course/{id}', 'CourseController@getVideosByCourse');
     Route::get('homework_by_course/{id}', 'CourseController@getVideosByCourse');
 
@@ -47,6 +50,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('footer', 'HomeController@getfooter');
     Route::get('courses_by_category', 'CourseController@getCoursesByCategory');
     Route::get('courses_by_id/{id}', 'CourseController@getCoursesById');
+
     Route::post('news-letter', 'HomeController@newsLetter');
     Route::post('Ask_us', 'ContactUsController@store');
 

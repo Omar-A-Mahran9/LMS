@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Notifications\NewNotification;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\NewNotificationDashboard;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('isArabic')) {
     function isArabic(): bool
@@ -44,6 +45,20 @@ if (!function_exists('uploadImageToDirectory')) {
         return $imageName;
     }
 }
+if (!function_exists('uploadAttachmentToDirectory')) {
+    function uploadAttachmentToDirectory($file, $model = '')
+    {
+        $model     = Str::plural($model);
+        $model     = Str::ucfirst($model);
+        $path      = "attachments/$model";
+        $fileName  = str_replace(' ', '', 'lms_' . time() . '_' . $file->getClientOriginalName());
+
+        $file->storeAs($path, $fileName, 'public');
+
+        return $fileName;
+    }
+}
+
 
 if (!function_exists('uploadAudioToDirectory')) {
 
@@ -126,6 +141,34 @@ if (!function_exists('getImagePathFromDirectory')) {
             return asset("/placeholder_images/$defaultImage");
     }
 }
+
+if (!function_exists('deleteAttachmentFromDirectory')) {
+    function deleteAttachmentFromDirectory($fileName, $model)
+    {
+        $model = Str::plural($model);
+        $model = Str::ucfirst($model);
+
+        if (!empty($fileName)) {
+            $path = "attachments/$model/$fileName";
+            Storage::disk('public')->delete($path);
+        }
+    }
+}
+
+if (!function_exists('getAttachmentPathFromDirectory')) {
+    function getAttachmentPathFromDirectory($fileName = null, $directory = null)
+    {
+        $directory = Str::plural($directory);
+        $directory = Str::ucfirst($directory);
+
+        if ($fileName && $directory && Storage::disk('public')->exists("attachments/$directory/$fileName")) {
+            return asset("storage/attachments/$directory/$fileName");
+        }
+
+        return null;
+    }
+}
+
 
 
 if (!function_exists('getAudioPathFromDirectory')) {

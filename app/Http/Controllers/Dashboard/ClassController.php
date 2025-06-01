@@ -46,6 +46,9 @@ class ClassController extends Controller
     if ($request->hasFile('image')) {
         $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_classes');
     }
+    if ($request->hasFile('attachment')) {
+    $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'courses_classes');
+    }
     // Set default values for checkboxes
     $validated['is_preview'] = $request->boolean('is_preview');
     $validated['is_active'] = $request->boolean('is_active');
@@ -59,15 +62,25 @@ class ClassController extends Controller
 public function update(UpdateClassRequest $request, $id)
 {
     $this->authorize('update_classes');
-$courseVideo=CourseClass::find($id);
+    $courseClass=CourseClass::find($id);
     $validated = $request->validated();
 
-    // Handle image update
+// Handle image update
     if ($request->hasFile('image')) {
-        // Optionally: delete the old image if needed
-        // deleteFile($courseVideo->image);
+        if ($courseClass->image) {
+            deleteImageFromDirectory($courseClass->image, 'courses_classes');
+        }
 
         $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_classes');
+    }
+
+    // Handle attachment update
+    if ($request->hasFile('attachment')) {
+        if ($courseClass->attachment) {
+            deleteAttachmentFromDirectory($courseClass->attachment, 'courses_classes');
+        }
+
+        $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'courses_classes');
     }
 
 
@@ -76,12 +89,18 @@ $courseVideo=CourseClass::find($id);
     $validated['is_active'] = $request->boolean('is_active');
     $validated['quiz_required'] = $request->boolean('quiz_required');
 
-    $courseVideo->update($validated);
-
-
+    $courseClass->update($validated);
 }
 
+public function show($id)
+{
+    $class = CourseClass::findOrFail($id); // Prefer findOrFail for proper error handling
+    $this->authorize('view_classes');
 
+    $class->load(['course']); // Preload course relation
+
+    return view('dashboard.classes.show', compact('class'));
+}
 
 public function destroy( $id)
 {

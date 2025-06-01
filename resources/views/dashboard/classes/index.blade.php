@@ -136,7 +136,7 @@
                         </div>
                         {{-- Course & Section --}}
                         <div class="row mb-4">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <label for="course_id_inp" class="form-label">{{ __('Course') }}</label>
                                 <select name="course_id" id="course_id_inp" class="form-select" data-control="select2"
                                     data-placeholder="{{ __('Select Course') }}"
@@ -149,6 +149,13 @@
                                 <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
                             </div>
 
+                            <div class="col-6">
+                                <label for="attachment_inp"
+                                    class="form-label">{{ __('Attachment') }}</label>
+                                <input type="file" name="attachment" id="attachment_inp" class="form-control"
+                                    accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx">
+                                <div class="fv-plugins-message-container invalid-feedback" id="attachment"></div>
+                            </div>
 
                         </div>
 

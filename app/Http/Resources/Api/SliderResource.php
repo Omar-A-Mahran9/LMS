@@ -21,7 +21,8 @@ class SliderResource extends JsonResource
             "btn_name" => $this->btn_title,
             "btn_link" => $this->btn_link,
             "is_video"=> $this->is_video,
-            'image_or_video' => $this->is_video == 1 ? $this->video_url : $this->full_image_path,
+        'image_or_video' => $this->is_video ? convertToYoutubeEmbed($this->video_url) : $this->full_image_path,
+
         ];
     }
 }

@@ -25,6 +25,7 @@ return new class extends Migration
 
             // Video info
             $table->string('video_url'); // Or use a file upload path
+            $table->string('attachment')->nullable();
 
             // Additional fields
             $table->boolean('is_preview')->default(false); // free preview toggle

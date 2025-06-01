@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
- use App\Http\Resources\Api\GovernmentsResource;
+use App\Http\Resources\Api\ClassesDetailsResource;
+use App\Http\Resources\Api\GovernmentsResource;
  use App\Http\Resources\Api\CourseDetailsResource;
 use App\Http\Resources\Api\CoursesDetailsResource;
 use App\Http\Resources\Api\VideoResource;
@@ -12,6 +13,7 @@ use App\Http\Resources\Api\VideoResource;
 use App\Models\Category;
  use App\Models\CommonQuestion;
 use App\Models\Course;
+use App\Models\CourseClass;
 use App\Models\Government;
 use App\Models\Student_rate;
  use App\Models\NewsLetter;
@@ -56,6 +58,31 @@ class CourseController extends Controller
 
 
     return $this->success('',         new CourseDetailsResource($course));
+
+}
+
+   public function getClassesByCoursesId($id)
+{
+    $class = CourseClass::where('course_id', $id)
+                    ->where('is_active', 1)
+                    ->get();
+
+    if (!$class) {
+        return $this->failure('Class not found or unpublished');
+    }
+
+
+    return $this->success('',         ClassesDetailsResource::collection($class));
+}
+
+   public function getClassesByCoursesDetails($id)
+{
+    $class = CourseClass::where('is_active', 1)->find($id);
+     if (!$class) {
+        return $this->failure('Class not found or unpublished');
+    }
+
+    return $this->success('',         new ClassesDetailsResource($class));
 
 }
 

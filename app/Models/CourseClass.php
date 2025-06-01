@@ -23,7 +23,7 @@ class CourseClass extends Model
 
     public function getFullImagePathAttribute()
     {
-        return asset(getImagePathFromDirectory($this->image, 'Courses_videos', 'default.svg'));
+        return asset(getImagePathFromDirectory($this->image, 'courses_classes', 'default.svg'));
     }
 
     public function getTitleAttribute()
@@ -40,6 +40,11 @@ class CourseClass extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+     public function videos()
+    {
+        return $this->hasMany(CourseVideo::class,'class_id');
     }
 
 
