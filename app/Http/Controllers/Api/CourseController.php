@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\ClassDetailsResource;
 use App\Http\Resources\Api\ClassesDetailsResource;
 use App\Http\Resources\Api\GovernmentsResource;
  use App\Http\Resources\Api\CourseDetailsResource;
@@ -62,29 +63,29 @@ class CourseController extends Controller
 }
 
    public function getClassesByCoursesId($id)
-{
-    $class = CourseClass::where('course_id', $id)
-                    ->where('is_active', 1)
-                    ->get();
+    {
+        $class = CourseClass::where('course_id', $id)
+                        ->where('is_active', 1)
+                        ->get();
 
-    if (!$class) {
-        return $this->failure('Class not found or unpublished');
+        if (!$class) {
+            return $this->failure('Class not found or unpublished');
+        }
+
+
+        return $this->success('',         ClassesDetailsResource::collection($class));
     }
 
+   public function getClassById($id)
+    {
+        $class = CourseClass::where('is_active', 1)->find($id);
+         if (!$class) {
+            return $this->failure('Class not found or unpublished');
+        }
 
-    return $this->success('',         ClassesDetailsResource::collection($class));
-}
+        return $this->success('',         new ClassDetailsResource($class));
 
-   public function getClassesByCoursesDetails($id)
-{
-    $class = CourseClass::where('is_active', 1)->find($id);
-     if (!$class) {
-        return $this->failure('Class not found or unpublished');
     }
-
-    return $this->success('',         new ClassesDetailsResource($class));
-
-}
 
 public function getVideosByCourse($id)
 {

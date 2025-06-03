@@ -32,6 +32,7 @@ let translations = {
         "Add new rate": "اضافة تقييم",
         "Add new awars": "اضافة انجاز جديد",
         "Add Question": "إضافة سؤال",
+        "Current Attachment": "عرض المذكرة",
 
         "Yes, Delete !": "نعــم, أحذف !",
         "No, Cancel": "لا , ألغي",

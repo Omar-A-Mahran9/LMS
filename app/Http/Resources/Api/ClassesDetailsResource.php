@@ -21,6 +21,7 @@ class ClassesDetailsResource extends JsonResource
             'title' => $this->title,
             'started_at' => $this->course->start_date,
             'quiz_required'=>$this->quiz_required,
+            'quiz_required'=>$this->quiz_required,
 
         ];
     }

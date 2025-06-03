@@ -237,8 +237,19 @@ var KTDatatablesServerSide = (function () {
 
                 // Video URL
                 $("#video_url_inp").val(data.video_url);
+                // Attachment preview (link or filename)
+                if (data.full_attachment_path) {
+                    $("#attachment_preview").html(
+                        `<a href="${data.full_attachment_path}" target="_blank" class="btn btn-sm btn-info">
+                        ${ __('Current Attachment') }
+                    </a>`
+                    );
+                } else {
+                    $("#attachment_preview").html("");
+                }
 
-
+                // Reset file input (clear any previously selected file)
+                $("#attachment_inp").val("");
                 // Relationships
                 $("#course_id_inp").val(data.course_id).trigger("change");
 

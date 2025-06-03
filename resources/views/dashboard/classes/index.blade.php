@@ -150,8 +150,11 @@
                             </div>
 
                             <div class="col-6">
-                                <label for="attachment_inp"
-                                    class="form-label">{{ __('Attachment') }}</label>
+                                <div class="d-flex justify-content-between justify-content-center"> <label for="attachment_inp"
+                                        class="form-label">{{ __('Attachment') }}</label>
+                                    <div id="attachment_preview" ></div>
+                                </div>
+
                                 <input type="file" name="attachment" id="attachment_inp" class="form-control"
                                     accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx">
                                 <div class="fv-plugins-message-container invalid-feedback" id="attachment"></div>

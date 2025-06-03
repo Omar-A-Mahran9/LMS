@@ -12,7 +12,7 @@ class CourseClass extends Model
     protected $table = 'classes'; // specify table if not the plural of model
 
     protected $guarded = [];
-    protected $appends = ['title', 'full_image_path','description'];
+    protected $appends = ['title', 'full_image_path','full_attachment_path','description'];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
@@ -25,6 +25,11 @@ class CourseClass extends Model
     {
         return asset(getImagePathFromDirectory($this->image, 'courses_classes', 'default.svg'));
     }
+    public function getFullAttachmentPathAttribute()
+    {
+        return getAttachmentPathFromDirectory($this->attachment, 'courses_classes');
+    }
+
 
     public function getTitleAttribute()
     {
