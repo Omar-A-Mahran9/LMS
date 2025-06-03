@@ -65,7 +65,7 @@ public function update(UpdateClassRequest $request, $id)
     $courseClass=CourseClass::find($id);
     $validated = $request->validated();
 
-// Handle image update
+    // Handle image update
     if ($request->hasFile('image')) {
         if ($courseClass->image) {
             deleteImageFromDirectory($courseClass->image, 'courses_classes');

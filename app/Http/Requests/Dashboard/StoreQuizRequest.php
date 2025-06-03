@@ -26,10 +26,11 @@ class StoreQuizRequest extends FormRequest
      */
     public function rules()
     {
-  $quiz = request()->route('quiz');
-     // Manually resolve the CourseVideo model
+
    return [
-         'course_id' => 'required|exists:courses,id',
+             'class_id' => 'nullable|exists:classes,id',
+
+        'course_id' => 'nullable|exists:courses,id',
         'course_section_id' => 'nullable|exists:course_sections,id',
 
         'duration_minutes' => 'nullable|integer|min:0',
@@ -40,13 +41,11 @@ class StoreQuizRequest extends FormRequest
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('course_videos', 'title_ar')->ignore($quiz->id)
         ],
         'title_en' => [
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('course_videos', 'title_en')->ignore($quiz->id)
         ],
 
     'description_ar' => ['required', new NotNumbersOnly()],

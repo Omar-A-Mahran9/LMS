@@ -138,7 +138,7 @@
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
                             </div>
-                     
+
                         </div>
 
                         {{-- Titles --}}
@@ -212,131 +212,7 @@
             </div>
         </div>
     </form>
-    <form id="question_form" class="ajax-form" method="post" action="{{ route('dashboard.questions.store') }}"
-        enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
-        @csrf
 
-        <div class="modal fade" id="questionModal" tabindex="-1">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ __('Add New Question') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        {{-- Question Arabic --}}
-                        <input type="hidden" name="quiz_id" value="">
-
-                        <div class="mb-3">
-                            <label for="question_ar_inp">{{ __('Question (Arabic)') }}</label>
-                            <input type="text" name="question_ar" class="form-control" id="question_ar_inp">
-                            <div class="invalid-feedback" id="question_ar"></div>
-                        </div>
-
-                        {{-- Question English --}}
-                        <div class="mb-3">
-                            <label for="question_en_inp">{{ __('Question (English)') }}</label>
-                            <input type="text" name="question_en" class="form-control" id="question_en_inp">
-                            <div class="invalid-feedback" id="question_en"></div>
-                        </div>
-
-                        {{-- Question Type --}}
-                        <div class="mb-3">
-                            <label for="type_inp">{{ __('Question Type') }}</label>
-                            <select name="type"id="type_inp" class="form-select" data-control="select2"
-                                data-placeholder="{{ __('Select Type') }}" data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
-                                <option value="multiple_choice">{{ __('Multiple Choice') }}</option>
-                                <option value="true_false">{{ __('True / False') }}</option>
-                                <option value="short_answer">{{ __('Short Answer') }}</option>
-                            </select>
-                            <div class="invalid-feedback" id="type"></div>
-                        </div>
-
-                        {{-- Repeater Error --}}
-                        <div class="text-danger mb-2" id="answers"></div>
-
-                        {{-- Multiple Choice Answers --}}
-                        <div class="mb-3 answer-type answer-multiple_choice">
-                            <label>{{ __('Answers') }}</label>
-                            <div id="form_repeater">
-                                <div data-repeater-list="answers">
-                                    <div data-repeater-item class="row mb-2">
-                                        <div class="col-md-4">
-                                            <input type="text" name="text_ar" class="form-control answer-text-ar">
-                                            <div class="invalid-feedback"></div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="text" name="text_en" class="form-control answer-text-en">
-                                            <div class="invalid-feedback"></div>
-                                        </div>
-                                        <div class="col-md-2 d-flex align-items-center">
-                                            <label class="form-check-label">
-
-                                                <input type="checkbox" name="is_correct" value="1"
-                                                    class="form-check-input">
-                                                <div class="invalid-feedback"></div>
-
-                                                {{ __('Correct') }}
-                                            </label>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-danger">
-                                                {{ __('Delete') }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <a href="javascript:;" data-repeater-create class="btn btn-sm btn-secondary mt-2">
-                                        {{ __('Add Answer') }}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- True/False Answers --}}
-                        <div class="mb-3 answer-type answer-true_false d-none">
-                            <label>{{ __('Correct Answer') }}</label>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="correct_tf" value="true"
-                                    id="true_tf_inp">
-                                <label class="form-check-label" for="true_tf_inp">{{ __('True') }}</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="correct_tf" value="false"
-                                    id="true_tf_inp">
-                                <label class="form-check-label" for="true_tf_inp">{{ __('False') }}</label>
-                            </div>
-                            <div class="invalid-feedback" id="correct_tf"></div>
-
-                        </div>
-
-                        {{-- Short Answer --}}
-                        <div class="mb-3 answer-type answer-short_answer d-none">
-                            <label for="short_answer_inp">{{ __('Expected Answer') }}</label>
-                            <input type="text" name="short_answer" class="form-control" id="short_answer_inp">
-                            <div class="invalid-feedback" id="short_answer"></div>
-
-                        </div>
-
-                        {{-- Points --}}
-                        <div class="mb-3">
-                            <label for="points_inp">{{ __('Points') }}</label>
-                            <input type="number" name="points" class="form-control" value="1" min="1"
-                                id="points_inp">
-                            <div class="invalid-feedback" id="points"></div>
-
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
 @endsection
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
@@ -345,28 +221,18 @@
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
-
     <script>
-        $(document).on('click', '.open-question-modal', function() {
-            const quizId = $(this).data('quiz-id');
-            $('#question_form input[name="quiz_id"]').val(quizId);
+        $(document).ready(() => {
+
+            initTinyMc();
+
         });
     </script>
-    {{-- Plugins --}}
+   
     <script src="{{ asset('assets/dashboard/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/components/form_repeater.js') }}"></script>
 
-    {{-- Repeater Init --}}
-    <script>
-        // Dynamic question type switching
-        $('#type_inp').on('change', function() {
-            let type = $(this).val();
-            $('.answer-type').addClass('d-none');
-            $("#answers").html('');
 
-            $('.answer-' + type).removeClass('d-none');
-        }).trigger('change'); // Trigger on load
-    </script>
 
 
     <script>

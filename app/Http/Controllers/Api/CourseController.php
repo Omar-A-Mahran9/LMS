@@ -87,6 +87,17 @@ class CourseController extends Controller
 
     }
 
+       public function getQuizClassById($id)
+    {
+        $class = CourseClass::where('is_active', 1)->find($id);
+         if (!$class) {
+            return $this->failure('Class not found or unpublished');
+        }
+
+        return $this->success('',         new ClassDetailsResource($class));
+
+    }
+
 public function getVideosByCourse($id)
 {
     // Find the course by ID and make sure it's published
