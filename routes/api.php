@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Api\StudentQuizController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +26,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('videos_by_course/{id}', 'CourseController@getVideosByCourse');
     Route::get('class/{id}', 'CourseController@getClassById');
     Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
+    Route::get('quiz/{id}', 'CourseController@getQuizById');
+    Route::post('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
+    Route::post('student-quizzes/{studentQuizId}/submit', [StudentQuizController::class, 'submitQuiz']);
+    Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
     Route::get('homework_by_course/{id}', 'CourseController@getVideosByCourse');
 
 

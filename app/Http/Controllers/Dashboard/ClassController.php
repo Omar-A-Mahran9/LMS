@@ -30,6 +30,7 @@ class ClassController extends Controller
             // Return JSON data for AJAX requests
             return response()->json(getModelData(model: new CourseClass(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
         } else {
+
             // Return the main view with data
             return view('dashboard.classes.index', compact( 'visited_site','courses'));
         }
@@ -94,13 +95,14 @@ public function update(UpdateClassRequest $request, $id)
 
 public function show($id)
 {
-    $class = CourseClass::findOrFail($id); // Prefer findOrFail for proper error handling
+    $class = CourseClass::with('course')->findOrFail($id); // Eager load course
     $this->authorize('view_classes');
 
-    $class->load(['course']); // Preload course relation
+    $quizExists = $class->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
 
-    return view('dashboard.classes.show', compact('class'));
+    return view('dashboard.classes.show', compact('class', 'quizExists'));
 }
+
 
 public function destroy( $id)
 {

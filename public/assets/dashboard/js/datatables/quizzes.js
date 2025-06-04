@@ -1,9 +1,28 @@
 "use strict";
 
 var datatable;
-// Class definition
+
 var KTDatatablesServerSide = (function () {
-    let dbTable = "quizzes";
+    if (typeof classId !== "undefined" && classId) {
+        var dbTable = `classes/${classId}/quizzes`;
+    } else {
+        var dbTable = "quizzes";
+    }
+
+    let columns = [{ data: "id" }, { data: "title" }];
+
+    if (typeof classId == "undefined" && !classId) {
+        columns.push({ data: "course" });
+    } else {
+        columns.push({ data: "class" });
+    }
+
+    columns.push(
+        { data: "is_active" },
+        { data: "created_at" },
+        { data: "attempt" },
+        { data: null }
+    );
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
@@ -21,15 +40,8 @@ var KTDatatablesServerSide = (function () {
             ajax: {
                 url: `/dashboard/${dbTable}`,
             },
-            columns: [
-                { data: "id" },
-                { data: "title" },
-                { data: "course" },
-                { data: "is_active" },
-                { data: "created_at" },
-                { data: "attempt" },
-                { data: null },
-            ],
+            columns: columns,
+
             columnDefs: [
                 {
                     targets: 0,
@@ -63,13 +75,14 @@ var KTDatatablesServerSide = (function () {
                             <div>
                                 <!--begin::Info-->
                                 <div class="d-flex flex-column justify-content-center">
-                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.course.title}</a>
+                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.class?.title_ar}</a>
                                 </div>
                                 <!--end::Info-->
                             </div>
                         `;
                     },
                 },
+
                 {
                     targets: 3, // This is the "Status" column
                     render: function (data, type, row) {
@@ -147,7 +160,14 @@ var KTDatatablesServerSide = (function () {
                 // $(row).find('td:eq(4)').attr('data-filter', data.CreditCardType);
             },
         });
-
+        if (classId) {
+            const courseIndex = columns.findIndex(
+                (col) => col.data === "course"
+            );
+            if (courseIndex !== -1) {
+                columns.splice(courseIndex, 1);
+            }
+        }
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
         datatable.on("draw", function () {
             initToggleToolbar();

@@ -13,7 +13,10 @@ class QuizAttempt extends Model
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
+        'started_at' => 'datetime',
+         'submitted_at' => 'datetime',
     ];
+    protected $dates = ['started_at', 'submitted_at'];
 
 
      public function quiz()
@@ -30,5 +33,7 @@ class QuizAttempt extends Model
     {
         return $this->hasMany(QuizAttemptAnswer::class);
     }
-
+    public function answer() {
+        return $this->belongsTo(QuizAnswer::class, 'quiz_answer_id');
+    }
 }

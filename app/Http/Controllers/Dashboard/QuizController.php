@@ -9,11 +9,12 @@ use App\Models\Admin;
 use App\Models\Course;
 use App\Models\CourseSection;
 use App\Models\Quiz;
+use App\Models\QuizAttempt;
 use Illuminate\Http\Request;
 
 class QuizController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request )
     {
 
         $this->authorize('view_quizzes');
@@ -43,6 +44,41 @@ class QuizController extends Controller
             ));
         }
     }
+
+
+public function show(Request $request, Quiz $quiz)
+{
+    $this->authorize('view_quizzes');
+$questionTypeCounts = $quiz->questions
+    ->groupBy('type')
+    ->map(fn($group) => $group->count());
+
+    // Load related data
+    $quiz->load([
+        'course:id,title_en,title_ar',
+        'section:id,title_en,title_ar',
+        'questions.answers'
+    ]);
+
+    // Load all attempts with student info for this quiz
+    $attempts = QuizAttempt::where('quiz_id', $quiz->id)
+        ->with('student')
+        ->get();
+
+    $totalAttempts = $attempts->count();
+
+    if ($request->ajax()) {
+        return response()->json([
+            'quiz' => $quiz,
+            'attempts' => $attempts,
+            'total_attempts' => $totalAttempts,
+        ]);
+    } else {
+        return view('dashboard.quizzes.show', compact('quiz', 'attempts', 'totalAttempts','questionTypeCounts'));
+    }
+}
+
+
 
 
 

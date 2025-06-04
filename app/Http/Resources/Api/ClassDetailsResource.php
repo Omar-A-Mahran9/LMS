@@ -15,6 +15,8 @@ class ClassDetailsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+            $activeQuiz = $this->quizzes()->where('is_active', true)->first();
+
         return [
                "id" => $this->id,
             'image' => $this->full_image_path,
@@ -22,7 +24,7 @@ class ClassDetailsResource extends JsonResource
             'started_at' => $this->course->start_date,
             'quiz_required'=>$this->quiz_required,
             'attachment' => $this->full_attachment_path,
-
+            'quiz_id'=>$activeQuiz->id,
 
         ];
     }

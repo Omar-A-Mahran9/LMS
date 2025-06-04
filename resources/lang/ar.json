@@ -73,7 +73,15 @@
     "Is Active?": "هل الدورة مفعلة؟",
     "Level": "المستوى",
     "required": "مطلوب",
+    "Minutes": "دقائق",
+    "count of attempt": "عدد الحضور",
+    "Count of Question": "عدد الأسئلة",
+
     "Classes": "الحصص",
+    "A quiz already exists for this class.": "يوجد بالفعل اختبار للحصة",
+    "The quiz time has expired. You cannot submit your answers.": "",
+    "Quiz submitted successfully": "",
+    "Invalid answer submitted for question ID {$question->id}.": "",
     "classes list": "قائمة الحصص",
     "Add new class": "إضافة حصة جديدة",
     "Enrollment Open": "التسجيل مفتوح",
@@ -86,6 +94,7 @@
     "quizzes": "الاختبارات",
     "homeworks": "الواجبات",
     "Quiz Required": "مطلوب امتحان",
+    "Quizzes": "الاختبارات",
 
     "Beginner": "مبتدئ",
     "Intermediate": "متوسط",

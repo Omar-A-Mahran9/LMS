@@ -8,6 +8,7 @@ use App\Http\Resources\Api\ClassesDetailsResource;
 use App\Http\Resources\Api\GovernmentsResource;
  use App\Http\Resources\Api\CourseDetailsResource;
 use App\Http\Resources\Api\CoursesDetailsResource;
+use App\Http\Resources\Api\QuizResource;
 use App\Http\Resources\Api\VideoResource;
 
 
@@ -18,7 +19,7 @@ use App\Models\CourseClass;
 use App\Models\Government;
 use App\Models\Student_rate;
  use App\Models\NewsLetter;
-
+use App\Models\Quiz;
 use App\Models\Slider;
 
  use Illuminate\Http\Request;
@@ -95,6 +96,17 @@ class CourseController extends Controller
         }
 
         return $this->success('',         new ClassDetailsResource($class));
+
+    }
+
+        public function getQuizById($id)
+    {
+        $data = Quiz::find($id);
+         if (!$data) {
+            return $this->failure('Quiz not found or unpublished');
+        }
+
+        return $this->success('',  new QuizResource($data));
 
     }
 

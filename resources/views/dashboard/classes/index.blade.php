@@ -150,9 +150,9 @@
                             </div>
 
                             <div class="col-6">
-                                <div class="d-flex justify-content-between justify-content-center"> <label for="attachment_inp"
-                                        class="form-label">{{ __('Attachment') }}</label>
-                                    <div id="attachment_preview" ></div>
+                                <div class="d-flex justify-content-between justify-content-center"> <label
+                                        for="attachment_inp" class="form-label">{{ __('Attachment') }}</label>
+                                    <div id="attachment_preview"></div>
                                 </div>
 
                                 <input type="file" name="attachment" id="attachment_inp" class="form-control"
@@ -253,6 +253,13 @@
     </form>
 @endsection
 @push('scripts')
+    {{-- <script>
+        // Pass the $classId variable from Laravel to JS
+        let classId = @json($classId)??;
+
+        // Then build the endpoint dynamically
+    </script> --}}
+
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/classes.js') }}"></script>

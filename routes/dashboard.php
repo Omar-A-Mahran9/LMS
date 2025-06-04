@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\QuizByClassController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +57,8 @@ Route::delete("packages/delete-selected", "PackagesController@deleteSelected");
  Route::resource('classes', 'ClassController')->except(['create', 'edit']);
 
  Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
+ Route::resource('classes.quizzes', QuizByClassController::class);
+
  Route::resource('homeworks', 'HomeWorkController')->except(['create', 'edit']);
   Route::resource('questions', 'QuestionController')->except(['create', 'edit']);
 
