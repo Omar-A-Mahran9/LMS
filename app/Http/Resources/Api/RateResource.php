@@ -18,6 +18,7 @@ class RateResource extends JsonResource
         'content' => $this->text ?? $this->audio_full_path,
         'is_sound' => $this->text ? 0 : 1,
         'isPlaying' => $this->text ? 0 : 1,
+        'category' => $this->category->name,
 
         // Only return 'text' if available; otherwise return 'audio'
     ];
