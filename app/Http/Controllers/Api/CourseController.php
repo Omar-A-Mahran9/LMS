@@ -17,11 +17,9 @@ use App\Models\Category;
 use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\Government;
-use App\Models\Student_rate;
- use App\Models\NewsLetter;
-use App\Models\Quiz;
-use App\Models\Slider;
 
+use App\Models\Quiz;
+ 
  use Illuminate\Http\Request;
 
 class CourseController extends Controller

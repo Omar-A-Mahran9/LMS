@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
+
     use HasFactory;
     protected $guarded = [];
     protected $appends = ['title', 'full_image_path','full_slide_image_path','description', 'note'];
@@ -14,7 +15,6 @@ class Course extends Model
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
     ];
-
     public function getFullImagePathAttribute()
     {
         return asset(getImagePathFromDirectory($this->image, 'Courses', 'default.svg'));
@@ -62,6 +62,14 @@ class Course extends Model
     {
         return $this->hasMany(CourseVideo::class);
     }
+
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'course_student', 'course_id', 'student_id')->withTimestamps();
+
+    }
+
 
 
 }

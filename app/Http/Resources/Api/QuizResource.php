@@ -18,16 +18,8 @@ class QuizResource extends JsonResource
         return [
             "id" => $this->id,
             'duration_minutes' => $this->duration_minutes,
-            'questions' => $this->whenLoaded('questions', function () {
-                    return [
-                        'data' => QuestionResource::collection($this->questions),
-                        'meta' => [
-                            'current_page' => $this->questions->currentPage(),
-                            'last_page' => $this->questions->lastPage(),
-                            'per_page' => $this->questions->perPage(),
-                            'total' => $this->questions->total(),
-                        ]
-                    ];
-                }),      ];
+            'questions' => $this->whenLoaded('questions')
+            ? QuestionResource::collection($this->questions)
+            : [],        ];
     }
 }
