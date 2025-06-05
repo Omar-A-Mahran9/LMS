@@ -30,7 +30,10 @@ class Student_rate extends Model
     {
         return $this->belongsTo(Student::class,'customer_id');
     }
-
+   public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
     public function getFullImagePathAttribute()
     {
         return getImagePathFromDirectory($this->image, 'Customer', 'default.svg');
