@@ -1,14 +1,10 @@
 <?php
 
 
-use App\Models\Admin;
-use App\Models\Vendor;
-use Illuminate\Support\Facades\Http;
+
 use Illuminate\Support\Facades\Cache;
-use App\Notifications\NewNotification;
-use Illuminate\Database\Eloquent\Model;
-use App\Notifications\NewNotificationDashboard;
-use Illuminate\Support\Facades\Storage;
+ use Illuminate\Database\Eloquent\Model;
+ use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('isArabic')) {
     function isArabic(): bool

@@ -62,7 +62,7 @@ class HomeController extends Controller
             'phone_number'       => setting('sms_number'),
             'email'            => setting('email'),
             'address'          => $address,
-'google_map_iframe' => $this->convertToIframe(setting('google_map_url')),
+'google_map_url' => $this->convertToIframe(setting('google_map_url')),
 
         ];
     // Combine and return
