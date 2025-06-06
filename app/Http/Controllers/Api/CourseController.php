@@ -19,8 +19,9 @@ use App\Models\CourseClass;
 use App\Models\Government;
 
 use App\Models\Quiz;
- 
+
  use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
@@ -63,6 +64,25 @@ class CourseController extends Controller
 
    public function getClassesByCoursesId($id)
     {
+    $student = auth('api')->user(); // or just auth()->user() if using Sanctum properly
+
+    if (!$student) {
+        return response()->json([
+            'message' => 'Unauthorized'
+        ], 401);
+    }
+
+    $isEnrolled = DB::table('course_student')
+        ->where('course_id', $id)
+        ->where('student_id', $student->id)
+        ->exists();
+
+    if (!$isEnrolled) {
+        return response()->json([
+            'message' => 'You are not enrolled in this course.'
+        ], 403);
+    }
+
         $class = CourseClass::where('course_id', $id)
                         ->where('is_active', 1)
                         ->get();
