@@ -142,7 +142,7 @@
                                         <span class="input-group-text">
                                             <i class="la la-map fs-2"></i>
                                         </span>
-                                        <input type="url" class="form-control" name="google_map_url"
+                                        <input type="text" class="form-control" name="google_map_url"
                                             value="{{ setting('google_map_url') }}" id="google_map_url_inp"
                                             placeholder="https://www.google.com/maps/..." aria-describedby="basic-addon3" />
                                     </div>
