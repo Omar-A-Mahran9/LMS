@@ -62,7 +62,10 @@ class HomeController extends Controller
             'phone_number'       => setting('sms_number'),
             'email'            => setting('email'),
             'address'          => $address,
-            'google_map_url'   => setting('google_map_url'),
+            'google_map_url' => setting('google_map_url')
+                ? '<iframe src="https://www.google.com/maps?q=' . urlencode('LOCATION NAME or ADDRESS') . '&output=embed" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>'
+                : null,
+
 
         ];
     // Combine and return
