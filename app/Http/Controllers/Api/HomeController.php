@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\CategoryResource;
 use App\Http\Resources\Api\GovernmentsResource;
 use App\Http\Resources\Api\CommonQuestionResource;
-use App\Http\Resources\Api\CourseDetailsResource;
-use App\Http\Resources\Api\CoursesDetailsResource;
+use Illuminate\Support\Str;
+
 use App\Http\Resources\Api\RateResource;
  use App\Http\Resources\Api\SliderResource;
 
