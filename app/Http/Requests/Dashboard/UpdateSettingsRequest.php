@@ -45,7 +45,7 @@ class UpdateSettingsRequest extends FormRequest
                 'email' => ['required','email'],
                 'address_ar' => ['required'],
                 'address_en' => ['required'],
-                'google_map_url' => ['required','url'],
+                'google_map_url' => ['required'],
 
             ],
             "tax" => [
