@@ -62,10 +62,7 @@ class HomeController extends Controller
             'phone_number'       => setting('sms_number'),
             'email'            => setting('email'),
             'address'          => $address,
-            'google_map_url' => setting('google_map_url')
-                ? '<iframe src="https://www.google.com/maps?q=' . urlencode('LOCATION NAME or ADDRESS') . '&output=embed" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>'
-                : null,
-
+'google_map_iframe' => $this->convertToIframe(setting('google_map_url')),
 
         ];
     // Combine and return
@@ -86,6 +83,23 @@ class HomeController extends Controller
     ]);
 }
 
+protected function convertToIframe($url)
+{
+    // If already iframe, just return it
+    if (Str::contains($url, '<iframe')) {
+        return $url;
+    }
+
+    // Fallback iframe using q param (not perfect, but works)
+    return '<iframe
+                src="https://www.google.com/maps?q=' . urlencode($url) . '&output=embed"
+                width="600"
+                height="450"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy">
+            </iframe>';
+}
 
 
     public function newsLetter(Request $request)
