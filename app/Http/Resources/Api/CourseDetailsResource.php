@@ -5,6 +5,8 @@ namespace App\Http\Resources\Api;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CourseDetailsResource extends JsonResource
 {
@@ -19,7 +21,7 @@ class CourseDetailsResource extends JsonResource
         $isEnrolled = false;
 
         if ($student) {
-            $isEnrolled = \DB::table('course_student')
+            $isEnrolled = DB::table('course_student')
                 ->where('course_id', $this->id)
                 ->where('student_id', $student->id)
                 ->exists();
