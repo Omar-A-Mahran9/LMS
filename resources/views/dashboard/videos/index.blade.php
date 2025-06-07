@@ -148,7 +148,12 @@
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
                             </div>
-            
+                            <div class="col-4">
+                                <label for="video_url_inp" class="form-label">{{ __('Video URL') }}</label>
+                                <input type="url" name="video_url" id="video_url_inp" class="form-control"
+                                    placeholder="{{ __('Enter video URL') }}">
+                                <div class="fv-plugins-message-container invalid-feedback" id="video_url"></div>
+                            </div>
                             <div class="col-4">
                                 <label for="duration_seconds_inp"
                                     class="form-label">{{ __('Duration (Seconds)') }}</label>
@@ -192,12 +197,7 @@
 
                         {{-- Video Info --}}
                         <div class="row mb-4">
-                            <div class="col-4">
-                                <label for="video_url_inp" class="form-label">{{ __('Video URL') }}</label>
-                                <input type="url" name="video_url" id="video_url_inp" class="form-control"
-                                    placeholder="{{ __('Enter video URL') }}">
-                                <div class="fv-plugins-message-container invalid-feedback" id="video_url"></div>
-                            </div>
+
 
                             <div class="col-3" id="quiz_select_wrapper">
                                 <div class="d-flex justify-content-between">
@@ -273,6 +273,14 @@
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
+    </script>
+    <script>
+        $(document).ready(() => {
+
+            initTinyMc();
+
+        });
+    </script>
     <script>
         $(document).ready(function() {
             $("#add_btn").click(function(e) {
@@ -383,13 +391,12 @@
         });
     </script>
 @endpush
-@push("styles")
-<style>
-  input#quiz_required_switch.form-check-input {
-    width: 16px;
-    height: 16px;
-    margin-top: 0.2rem;
-  }
-</style>
-
+@push('styles')
+    <style>
+        input#quiz_required_switch.form-check-input {
+            width: 16px;
+            height: 16px;
+            margin-top: 0.2rem;
+        }
+    </style>
 @endpush

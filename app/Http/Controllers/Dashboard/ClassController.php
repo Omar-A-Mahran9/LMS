@@ -39,68 +39,71 @@ class ClassController extends Controller
 
 
   public function store(StoreClassRequest $request)
-{
-    $this->authorize('create_classes');
+    {
+        $this->authorize('create_classes');
 
-     $validated = $request->validated();
-   // Handle image uploads
-    if ($request->hasFile('image')) {
-        $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_classes');
-    }
-    if ($request->hasFile('attachment')) {
-    $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'courses_classes');
-    }
-    // Set default values for checkboxes
-    $validated['is_preview'] = $request->boolean('is_preview');
-    $validated['is_active'] = $request->boolean('is_active');
-    $validated['quiz_required'] = $request->boolean('quiz_required');
-
-    $CourseClass = CourseClass::create($validated);
-
-}
-
-
-public function update(UpdateClassRequest $request, $id)
-{
-    $this->authorize('update_classes');
-    $courseClass=CourseClass::find($id);
-    $validated = $request->validated();
-
-    // Handle image update
-    if ($request->hasFile('image')) {
-        if ($courseClass->image) {
-            deleteImageFromDirectory($courseClass->image, 'courses_classes');
+        $validated = $request->validated();
+    // Handle image uploads
+        if ($request->hasFile('image')) {
+            $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_classes');
         }
-
-        $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_classes');
-    }
-
-    // Handle attachment update
-    if ($request->hasFile('attachment')) {
-        if ($courseClass->attachment) {
-            deleteAttachmentFromDirectory($courseClass->attachment, 'courses_classes');
-        }
-
+        if ($request->hasFile('attachment')) {
         $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'courses_classes');
+        }
+        // Set default values for checkboxes
+        $validated['is_preview'] = $request->boolean('is_preview');
+        $validated['is_active'] = $request->boolean('is_active');
+        $validated['quiz_required'] = $request->boolean('quiz_required');
+
+        $CourseClass = CourseClass::create($validated);
+
     }
 
 
-    // Set boolean flags
-    $validated['is_preview'] = $request->boolean('is_preview');
-    $validated['is_active'] = $request->boolean('is_active');
-    $validated['quiz_required'] = $request->boolean('quiz_required');
+    public function update(UpdateClassRequest $request, $id)
+    {
+        $this->authorize('update_classes');
+        $courseClass=CourseClass::find($id);
+        $validated = $request->validated();
 
-    $courseClass->update($validated);
-}
+        // Handle image update
+        if ($request->hasFile('image')) {
+            if ($courseClass->image) {
+                deleteImageFromDirectory($courseClass->image, 'courses_classes');
+            }
+
+            $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_classes');
+        }
+
+        // Handle attachment update
+        if ($request->hasFile('attachment')) {
+            if ($courseClass->attachment) {
+                deleteAttachmentFromDirectory($courseClass->attachment, 'courses_classes');
+            }
+
+            $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'courses_classes');
+        }
+
+
+        // Set boolean flags
+        $validated['is_preview'] = $request->boolean('is_preview');
+        $validated['is_active'] = $request->boolean('is_active');
+        $validated['quiz_required'] = $request->boolean('quiz_required');
+
+        $courseClass->update($validated);
+    }
 
 public function show($id)
 {
     $class = CourseClass::with('course')->findOrFail($id); // Eager load course
     $this->authorize('view_classes');
+        $courses = Course::select('id', 'title_en', 'title_ar')->get();
+
+        $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
 
     $quizExists = $class->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
 
-    return view('dashboard.classes.show', compact('class', 'quizExists'));
+    return view('dashboard.classes.show', compact('class', 'quizExists','courses','quizzes'));
 }
 
 

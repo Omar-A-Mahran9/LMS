@@ -3,6 +3,8 @@ window["onAjaxSuccess"] = () => {
     datatable.draw();
     $("#questionModal").modal("hide");
     datatable.draw();
+       $("#videoModal").modal("hide");
+    datatable.draw();
 };
 
 window["onAjaxError"] = (status, response) => {
