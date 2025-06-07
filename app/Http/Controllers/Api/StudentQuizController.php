@@ -238,7 +238,7 @@ public function results($studentQuizId)
 {
     $attempt = QuizAttempt::with([
         'quiz.questions.answers',
-        'answers.answer' // assuming 'answer' relation on QuizAttemptAnswer links to QuizAnswer model
+        'answers.answer' // assuming 'answer' relationship gives the selected QuizAnswer model
     ])->findOrFail($studentQuizId);
 
     $results = [];
@@ -250,7 +250,7 @@ public function results($studentQuizId)
 
         $attemptAnswer = $attempt->answers->firstWhere('quiz_question_id', $question->id);
 
-        // Format correct_answers as array of objects with id and answer
+        // Prepare correct answers as array of objects {id, answer}
         $correctAnswers = $question->answers
             ->where('is_correct', 1)
             ->map(fn($ans) => [
@@ -264,20 +264,30 @@ public function results($studentQuizId)
         $isCorrect = false;
 
         if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-            // Get student's selected answer text if any
-            $studentAnswer = optional($attemptAnswer?->answer)->answer_en ?? null;
-
-            // Check if student's selected answer is correct
             if ($attemptAnswer?->quiz_answer_id) {
-                $isCorrect = $question->answers
-                    ->where('is_correct', 1)
-                    ->pluck('id')
-                    ->contains($attemptAnswer->quiz_answer_id);
+                // Find the selected answer object for student answer
+                $selectedAnswer = $question->answers->firstWhere('id', $attemptAnswer->quiz_answer_id);
+                if ($selectedAnswer) {
+                    $studentAnswer = [
+                        'id' => $selectedAnswer->id,
+                        'answer' => $selectedAnswer->answer_en,
+                    ];
+                }
             }
-        } elseif ($question->type === 'short_answer') {
-            $studentAnswer = $attemptAnswer?->answer_text ?? null;
 
-            if ($studentAnswer && strtolower(trim($studentAnswer)) === strtolower(trim($question->expected_answer))) {
+            // Check if student's selected answer id is in correct answers
+            $isCorrect = $correctAnswers && collect($correctAnswers)
+                ->pluck('id')
+                ->contains($attemptAnswer?->quiz_answer_id);
+        } elseif ($question->type === 'short_answer') {
+            // For short answer, student_answer is the text typed, with id null
+            $studentAnswerText = $attemptAnswer?->answer_text ?? null;
+            $studentAnswer = $studentAnswerText !== null ? [
+                'id' => null,
+                'answer' => $studentAnswerText,
+            ] : null;
+
+            if ($studentAnswerText && strtolower(trim($studentAnswerText)) === strtolower(trim($question->expected_answer))) {
                 $isCorrect = true;
             }
         }
@@ -305,6 +315,7 @@ public function results($studentQuizId)
         'results'      => $results,
     ]);
 }
+
 
 
 
