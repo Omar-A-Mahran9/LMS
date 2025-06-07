@@ -49,13 +49,13 @@ class StudentQuizController extends Controller
         ]);
     }
 // Select only needed fields from $attempt
-$attemptData = [
-    'attempt_id' => $attempt->id,
-    'student_id' => $attempt->student_id,
-    'started_at' => $attempt->started_at->format('H:i:s'),
-];
-    return $this->success('',[ 'attempt' => $attemptData,
-        'quiz' => new QuizResource($quiz)]);
+    $attemptData = [
+        'attempt_id' => $attempt->id,
+        'student_id' => $attempt->student_id,
+        'started_at' => $attempt->started_at->format('H:i:s'),
+    ];
+        return $this->success('',[ 'attempt' => $attemptData,
+            'quiz' => new QuizResource($quiz)]);
 }
 
 

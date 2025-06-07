@@ -29,7 +29,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
     Route::get('quiz/{id}', 'CourseController@getQuizById');
     Route::post('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
-    Route::post('student-quizzes/{studentQuizId}/submit', [StudentQuizController::class, 'submitQuiz']);
+    Route::post('student-quizzes/{quizAttemptId}/submit', [StudentQuizController::class, 'submitQuiz']);
     Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
     Route::get('homework_by_course/{id}', 'CourseController@getVideosByCourse');
     Route::post('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
