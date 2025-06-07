@@ -27,25 +27,30 @@ class CourseController extends Controller
 {
 
    public function getCoursesByCategory(Request $request)
-{
-    $categoryId = $request->query('category_id');
+    {
+        $categoryId = $request->query('category_id');
 
-    if ($categoryId) {
-        $category = Category::find($categoryId);
+        if ($categoryId) {
+            $category = Category::find($categoryId);
 
-        if (!$category) {
-            return $this->error('Category not found', 404);
-        }
+            if (!$category) {
+                return $this->error('Category not found', 404);
+            }
 
-        // Get only active courses for the given category
-        $courses = $category->courses()->where('is_active', 1)->get();
-    } else {
-        // Get all active courses
-        $courses = Course::where('is_active', 1)->get();
+            // Get only active courses for the given category
+            $courses = $category->courses()
+                            ->where('is_active', 1)
+                            ->where('is_enrollment_open', 1)
+                            ->get();        }
+        else {
+            // Get all active courses
+                    $courses = Course::where('is_active', 1)
+                    ->where('is_enrollment_open', 1)
+                    ->get();
+         }
+
+        return $this->success('', CoursesDetailsResource::collection($courses));
     }
-
-    return $this->success('', CoursesDetailsResource::collection($courses));
-}
 
 
    public function getCoursesById($id)
