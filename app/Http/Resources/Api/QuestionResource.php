@@ -19,6 +19,8 @@ class QuestionResource extends JsonResource
             'id' => $this->id,
             'quiz_id' => $this->quiz_id,
             'question_en' => $this->question,
+            'answers' => $this->answers,
+
             'expected_answer' => $this->expected_answer,  // might be NULL for multiple_choice/true_false
             'type' => $this->type,
             'points' => $this->points,
