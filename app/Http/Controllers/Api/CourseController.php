@@ -50,7 +50,7 @@ public function getCoursesByCategory(Request $request)
     }
 
     // Convert resource collection to structured pagination data
-    $resource = CoursesDetailsResource::collection($courses);
+    $resource = CoursesDetailsResource::collection($courses)->response()->getData(true);
 
     return $this->successWithPagination('Courses retrieved successfully.', $resource);
 }
