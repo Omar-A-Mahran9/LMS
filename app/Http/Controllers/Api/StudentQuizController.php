@@ -48,8 +48,13 @@ class StudentQuizController extends Controller
             'started_at' => now(),
         ]);
     }
-
-    return $this->success('',[ 'attempt' => $attempt,
+// Select only needed fields from $attempt
+$attemptData = [
+    'quiz_id' => $attempt->quiz_id,
+    'student_id' => $attempt->student_id,
+    'started_at' => $attempt->started_at->format('H:i:s'),
+];
+    return $this->success('',[ 'attempt' => $attemptData,
         'quiz' => new QuizResource($quiz)]);
 }
 
@@ -66,7 +71,6 @@ public function submitQuiz(Request $request, $quizAttemptId)
             ], 403);
         }
     }
-    dd('fdf');
 
     $data = $request->validate([
         'answers' => 'required|array',
