@@ -73,9 +73,9 @@ public function getCoursesByCategory(Request $request)
 
     }
 
-   public function getClassesByCoursesId($id)
-    {
-    $student = auth('api')->user(); // or just auth()->user() if using Sanctum properly
+public function getClassesByCoursesId(Request $request, $id)
+{
+    $student = auth('api')->user();
 
     if (!$student) {
         return response()->json([
@@ -92,17 +92,20 @@ public function getCoursesByCategory(Request $request)
         return $this->failure(__("You are not enrolled in this course."));
     }
 
-        $class = CourseClass::where('course_id', $id)
-                        ->where('is_active', 1)
-                        ->get();
+    $perPage = $request->query('per_page', 10);
 
-        if (!$class) {
-            return $this->failure('Class not found or unpublished');
-        }
+    $classes = CourseClass::where('course_id', $id)
+                ->where('is_active', 1)
+                ->paginate($perPage);
 
-
-        return $this->success('',         ClassesDetailsResource::collection($class));
+    if ($classes->isEmpty()) {
+        return $this->failure('Class not found or unpublished');
     }
+
+    $resource = ClassesDetailsResource::collection($classes)->response()->getData(true);
+
+    return $this->successWithPagination('', $resource);
+}
 
    public function getClassById($id)
     {
