@@ -95,14 +95,19 @@ public function store(StoreCourseRequest $request)
 
 public function update(UpdateCourseRequest $request, Course $course)
 {
-            $this->authorize('update_courses');
+    $this->authorize('update_courses');
 
-        $data = $request->validated();
+    $data = $request->validated();
+
+    // Remove subcategory_ids from $data to avoid mass assignment
     unset($data['subcategory_ids']);
+
+    // Handle image upload
     if ($request->hasFile('image')) {
         $data['image'] = uploadImageToDirectory($request->file('image'), 'courses');
     }
 
+    // Handle slide image upload
     if ($request->hasFile('slide_image')) {
         $data['slide_image'] = uploadImageToDirectory($request->file('slide_image'), 'courses/slides');
     }
@@ -112,12 +117,12 @@ public function update(UpdateCourseRequest $request, Course $course)
         $data['price'] = 0;
     }
 
-    // If course doesn't have a discount, remove discount field
+    // If no discount, set discount to null
     if (!$request->boolean('have_discount')) {
         $data['discount_percentage'] = null;
     }
 
-    // Handle boolean flags
+    // Normalize boolean flags
     $data['is_free'] = $request->boolean('is_free');
     $data['have_discount'] = $request->boolean('have_discount');
     $data['is_enrollment_open'] = $request->boolean('is_enrollment_open');
@@ -127,13 +132,13 @@ public function update(UpdateCourseRequest $request, Course $course)
 
     // Update course data
     $course->update($data);
-    $course->subCategories()->sync([2, 3, 4]);
 
-     // Sync subcategories if any
+    // Sync valid subcategories
     if ($request->filled('subcategory_ids')) {
-        $course->subCategories()->sync($request->input('subcategory_ids', []));
+        $subcategoryIds = $request->input('subcategory_ids', []);
+        $validSubcategoryIds = Category::whereIn('id', $subcategoryIds)->pluck('id')->toArray();
+        $course->subCategories()->sync($validSubcategoryIds);
     } else {
-        // If none sent, detach all
         $course->subCategories()->detach();
     }
 
@@ -143,6 +148,7 @@ public function update(UpdateCourseRequest $request, Course $course)
         'data' => $course,
     ]);
 }
+
 
 public function show(Course $course)
 {

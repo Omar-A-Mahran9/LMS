@@ -78,9 +78,7 @@ class CourseController extends Controller
         ->exists();
 
     if (!$isEnrolled) {
-        return response()->json([
-            'message' => 'You are not enrolled in this course.'
-        ], 403);
+        return $this->failure(__("You are not enrolled in this course."));
     }
 
         $class = CourseClass::where('course_id', $id)
