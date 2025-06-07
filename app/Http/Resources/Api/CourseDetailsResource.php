@@ -36,6 +36,10 @@ class CourseDetailsResource extends JsonResource
 
             'started_at' => $this->start_date,
             'count_video' => $this->videos->count(),
+            'count_quiz' => $this->videos->count(),
+            'count_homework' => $this->videos->count(),
+            'count_attachment' => $this->videos->count(),
+
 
             'price' => $this->is_free
                 ? 'Free' // or 0 if you prefer numeric value
