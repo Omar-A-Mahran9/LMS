@@ -249,15 +249,23 @@ public function results($studentQuizId)
         $fullScore += $question->points;
 
         $attemptAnswer = $attempt->answers->firstWhere('quiz_question_id', $question->id);
-        $correctAnswers = $question->answers->where('is_correct', 1)->pluck('answer_en', 'id')->toArray();
+
+        // Correct answers as array of objects with id and answer
+        $correctAnswers = $question->answers
+            ->where('is_correct', 1)
+            ->map(fn($answer) => [
+                'id' => $answer->id,
+                'answer' => $answer->answer_en,
+            ])->values()->all();
 
         $studentAnswer = null;
         $isCorrect = false;
 
         if (in_array($question->type, ['multiple_choice', 'true_false'])) {
+            // Get student's selected answer text
             $studentAnswer = optional($attemptAnswer->answer)->answer_en ?? null;
 
-            if ($attemptAnswer?->quiz_answer_id && array_key_exists($attemptAnswer->quiz_answer_id, $correctAnswers)) {
+            if ($attemptAnswer?->quiz_answer_id && collect($correctAnswers)->pluck('id')->contains($attemptAnswer->quiz_answer_id)) {
                 $isCorrect = true;
             }
         } elseif ($question->type === 'short_answer') {
