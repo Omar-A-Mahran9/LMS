@@ -25,10 +25,10 @@ use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
-    public function getCoursesByCategory(Request $request)
+  public function getCoursesByCategory(Request $request)
     {
         $categoryId = $request->query('category_id');
-        $perPage = $request->query('per_page', 10); // Default 10 items per page
+        $perPage = $request->query('per_page', 10);
 
         if ($categoryId) {
             $category = Category::find($categoryId);
@@ -37,20 +37,22 @@ class CourseController extends Controller
                 return $this->error('Category not found', 404);
             }
 
-            // Paginate active and open courses by category
             $courses = $category->courses()
                 ->where('is_active', 1)
                 ->where('is_enrollment_open', 1)
                 ->paginate($perPage);
         } else {
-            // Paginate all active and open courses
             $courses = Course::where('is_active', 1)
                 ->where('is_enrollment_open', 1)
                 ->paginate($perPage);
         }
 
-        return $this->successWithPagination('', CoursesDetailsResource::collection($courses));
+        // Use resource pagination for consistent structure
+        $resource = CoursesDetailsResource::collection($courses)->response()->getData(true);
+
+        return $this->successWithPagination('Courses retrieved successfully.', $resource);
     }
+
 
 
 
