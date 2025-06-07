@@ -760,7 +760,7 @@
     "Return policy in arabic": "سياسة الإسترجاع بالعربية",
     "Must be approved first": "يجب الموافقة اولا",
     "phone must start with 05 followed by 8 numbers": "يجب أن يبدأ الهاتف بـ 05 متبوعًا بـ 8 أرقام",
-    "has already been taken": " مُستكورس من قبل",
+    "has already been taken": " مُستخدم من قبل",
     "The": "قيمة",
     "sub": "قسم فرعي",
     "The parent ID is required when the category type is sub-category": "يكون القسم الرئيسي مطلوباّ عندما يكون نوع القسم قسم فرعي",

@@ -25,48 +25,50 @@ use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
+public function getCoursesByCategory(Request $request)
+{
+    $categoryId = $request->query('category_id');
+    $perPage = $request->query('per_page', 10); // Default 10 items per page
 
-   public function getCoursesByCategory(Request $request)
-    {
-        $categoryId = $request->query('category_id');
+    if ($categoryId) {
+        $category = Category::find($categoryId);
 
-        if ($categoryId) {
-            $category = Category::find($categoryId);
+        if (!$category) {
+            return $this->error('Category not found', 404);
+        }
 
-            if (!$category) {
-                return $this->error('Category not found', 404);
-            }
-
-            // Get only active courses for the given category
-            $courses = $category->courses()
-                            ->where('is_active', 1)
-                            ->where('is_enrollment_open', 1)
-                            ->get();        }
-        else {
-            // Get all active courses
-                    $courses = Course::where('is_active', 1)
-                    ->where('is_enrollment_open', 1)
-                    ->get();
-         }
-
-        return $this->success('', CoursesDetailsResource::collection($courses));
+        // Paginate active and open courses by category
+        $courses = $category->courses()
+            ->where('is_active', 1)
+            ->where('is_enrollment_open', 1)
+            ->paginate($perPage);
+    } else {
+        // Paginate all active and open courses
+        $courses = Course::where('is_active', 1)
+            ->where('is_enrollment_open', 1)
+            ->paginate($perPage);
     }
+
+    return $this->success('', CoursesDetailsResource::collection($courses));
+}
+
 
 
    public function getCoursesById($id)
-{
-    $course = Course::where('id', $id)
-                    ->where('is_active', 1)
-                    ->first();
+    {
+        $course = Course::where('id', $id)
+                        ->where('is_active', 1)
+                        ->where('is_enrollment_open', 1)
+                        ->first();
 
-    if (!$course) {
-        return $this->failure('Course not found or unpublished');
+        if (!$course) {
+            return $this->failure('Course not found or unpublished');
+        }
+
+
+        return $this->success('',         new CourseDetailsResource($course));
+
     }
-
-
-    return $this->success('',         new CourseDetailsResource($course));
-
-}
 
    public function getClassesByCoursesId($id)
     {
