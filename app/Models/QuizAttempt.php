@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuizAttempt extends Model
 {
-    use HasFactory;
+     use HasFactory;
     protected $guarded = [];
     protected $appends = [];
     protected $casts   = [
@@ -33,6 +33,7 @@ class QuizAttempt extends Model
     {
         return $this->hasMany(QuizAttemptAnswer::class);
     }
+    
     public function answer() {
         return $this->belongsTo(QuizAnswer::class, 'quiz_answer_id');
     }

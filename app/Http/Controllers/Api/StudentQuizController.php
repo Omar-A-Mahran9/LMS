@@ -63,42 +63,119 @@ public function submitQuiz(Request $request, $quizAttemptId)
 {
     $attempt = QuizAttempt::with('quiz.questions.answers')->findOrFail($quizAttemptId);
 
-    if ($attempt->quiz->duration_minutes && $attempt->started_at) {
-        $expiryTime = \Carbon\Carbon::parse($attempt->started_at)->addMinutes($attempt->quiz->duration);
-         if (now()->greaterThan($expiryTime)) {
-            return response()->json([
-                'message' => __('The quiz time has expired. You cannot submit your answers.'),
-            ], 403);
-        }
-    }
+// Check if quiz duration expired
+if ($attempt->quiz->duration_minutes && $attempt->started_at) {
+    $expiryTime = \Carbon\Carbon::parse($attempt->started_at)->addMinutes($attempt->quiz->duration_minutes);
+    if (now()->greaterThan($expiryTime)) {
 
+        $score = 0;
+        $totalPoints = $attempt->quiz->questions->sum('points');
+
+        $scoredQuestionIds = [];
+
+        foreach ($attempt->answers as $answer) {
+            $question = $attempt->quiz->questions->firstWhere('id', $answer->quiz_question_id);
+            if (!$question) continue;
+
+            // Avoid scoring the same question multiple times
+            if (in_array($question->id, $scoredQuestionIds)) {
+                continue;
+            }
+
+            if (in_array($question->type, ['multiple_choice', 'true_false'])) {
+                $correctAnswer = $question->answers->firstWhere('is_correct', 1);
+                if ($correctAnswer && $answer->quiz_answer_id == $correctAnswer->id) {
+                    $score += $question->points;
+                    $scoredQuestionIds[] = $question->id;
+                }
+            } elseif ($question->type === 'short_answer') {
+                if ($this->checkAnswer($question, $answer->answer_text)) {
+                    $score += $question->points;
+                    $scoredQuestionIds[] = $question->id;
+                }
+            }
+        }
+
+        $scoreText = "{$score}/{$totalPoints}";
+
+        return $this->success(
+            'The quiz time has expired. You cannot submit your answers.',
+            [
+                'score' => $score,
+                'total_points' => $totalPoints,
+                'score_text' => $scoreText,
+            ]
+        );
+    }
+}
+
+
+    // Validate answers input as array of objects with id and answer (answer can be nullable)
     $data = $request->validate([
         'answers' => 'required|array',
+        'answers.*.id' => 'required|integer|exists:quiz_questions,id',
+        'answers.*.answer' => 'nullable',
     ]);
 
-     // Validate that all questions are answered
+    // Map answers array to associative [question_id => answer]
+    $answersAssoc = collect($data['answers'])->mapWithKeys(fn($item) => [$item['id'] => $item['answer']])->toArray();
+
+    // Check all questions answered
     $expectedQuestionIds = $attempt->quiz->questions->pluck('id')->toArray();
-    $submittedQuestionIds = array_keys($data['answers']);
+    $submittedQuestionIds = array_keys($answersAssoc);
     $missingQuestionIds = array_diff($expectedQuestionIds, $submittedQuestionIds);
 
     if (!empty($missingQuestionIds)) {
+        $missingWithCorrectAnswers = [];
+
+        foreach ($missingQuestionIds as $missingId) {
+            $question = $attempt->quiz->questions->firstWhere('id', $missingId);
+
+            if ($question) {
+                if (in_array($question->type, ['multiple_choice', 'true_false'])) {
+                    $correctAnswer = $question->answers->firstWhere('is_correct', 1);
+                    $correctAnswerId = $correctAnswer ? $correctAnswer->id : null;
+                    $missingWithCorrectAnswers[] = [
+                        'id' => $missingId,
+                        'answer' => $correctAnswerId,
+                    ];
+                } elseif ($question->type === 'short_answer') {
+                    $correctAnswerText = $question->correct_answer ?? null;
+                    $missingWithCorrectAnswers[] = [
+                        'id' => $missingId,
+                        'answer' => $correctAnswerText,
+                    ];
+                } else {
+                    $missingWithCorrectAnswers[] = [
+                        'id' => $missingId,
+                        'answer' => null,
+                    ];
+                }
+            } else {
+                $missingWithCorrectAnswers[] = [
+                    'id' => $missingId,
+                    'answer' => null,
+                ];
+            }
+        }
+
         return response()->json([
-            'message' => 'You must answer all questions before submitting.',
-            'missing_questions' => $missingQuestionIds,
+            'message' => __('You must answer all questions before submitting.'),
+            'missing_questions' => $missingWithCorrectAnswers,
         ], 422);
     }
 
     $score = 0;
 
     foreach ($attempt->quiz->questions as $question) {
-        $studentAnswer = $data['answers'][$question->id] ?? null;
+        $studentAnswer = $answersAssoc[$question->id] ?? null;
 
-    // Validation: ensure answer exists in available options (for multiple choice and true/false)
+        // Validate multiple choice and true/false answers only if not null
         if (in_array($question->type, ['multiple_choice', 'true_false'])) {
             $validAnswerIds = $question->answers->pluck('id')->toArray();
-            if (!in_array($studentAnswer, $validAnswerIds)) {
-                return $this->failure(__("Invalid answer submitted for question ID {$question->id}."));
 
+            if ($studentAnswer !== null && !in_array($studentAnswer, $validAnswerIds)) {
+                return $this->failure(__("Invalid answer submitted for question ID {$question->id}."));
             }
         }
 
@@ -123,16 +200,22 @@ public function submitQuiz(Request $request, $quizAttemptId)
 
         $attempt->answers()->save($attemptAnswer);
     }
+$totalPoints = $attempt->quiz->questions->sum('points');
 
     $attempt->submitted_at = now();
     $attempt->score = $score;
     $attempt->save();
 
+        // Prepare score text like "earnedPoints/totalPoints"
+        $scoreText = "{$score}/{$totalPoints}";
 
-    return $this->success(__('Quiz submitted successfully'),[
-        'score' => $score,
-    ]);
+        return $this->success(__('Quiz submitted successfully'), [
+            'score' => $score,
+            'total_points' => $totalPoints,
+            'score_text' => $scoreText,
+        ]);
 }
+
 
 
 private function checkAnswer($question, $studentAnswer)
