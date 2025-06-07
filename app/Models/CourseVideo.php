@@ -16,9 +16,6 @@ class CourseVideo extends Model
         'updated_at' => 'date:Y-m-d',
     ];
 
-   
-
-
     public function getFullImagePathAttribute()
     {
         return asset(getImagePathFromDirectory($this->image, 'Courses_videos', 'default.svg'));
@@ -38,6 +35,11 @@ class CourseVideo extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+      public function class()
+    {
+        return $this->belongsTo(CourseClass::class);
     }
 
 

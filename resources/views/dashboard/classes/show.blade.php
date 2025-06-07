@@ -261,13 +261,14 @@
                         <!--end::Wrapper-->
 
                         <!--begin::Datatable-->
-                        <table id="kt_datatable" class="table align-middle text-center table-row-dashed fs-6 gy-5">
+                        <table id="video_datatable" class="table align-middle text-center table-row-dashed fs-6 gy-5">
                             <thead>
                                 <tr class=" text-gray-400 fw-bold fs-7 text-uppercase gs-0">
                                     <th class="w-10px pe-2">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                                             <input class="form-check-input" type="checkbox" data-kt-check="true"
-                                                data-kt-check-target="#kt_datatable .form-check-input" value="1" />
+                                                data-kt-check-target="#video_datatable .form-check-input"
+                                                value="1" />
                                         </div>
                                     </th>
                                     <th>{{ __('Title') }}</th>
@@ -543,7 +544,7 @@
                                 </div>
 
                                 <div class="modal-body">
-                                    <input type="hidden" name="class_id" value="">
+                                    <input type="hidden" name="class_id" value="{{ $class->id }}">
 
                                     <div class="row mb-4">
                                         <div class="col-12 d-flex flex-column justify-content-center">
@@ -611,16 +612,16 @@
                                     {{-- Descriptions --}}
                                     <div class="row mb-4">
                                         <div class="col-6">
-                                            <label for="description_ar_inp"
+                                            <label for="description_ar_vid_inp"
                                                 class="form-label">{{ __('Description (Arabic)') }}</label>
-                                            <textarea name="description_ar" id="description_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
+                                            <textarea name="description_ar" id="description_ar_vid_inp" data-kt-autosize="true" class="tinymce"></textarea>
                                             <div class="fv-plugins-message-container invalid-feedback"
                                                 id="description_ar"></div>
                                         </div>
                                         <div class="col-6">
-                                            <label for="description_en_inp"
+                                            <label for="description_en_vid_inp"
                                                 class="form-label">{{ __('Description (English)') }}</label>
-                                            <textarea name="description_en" id="description_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
+                                            <textarea name="description_en" id="description_en_vid_inp" data-kt-autosize="true" class="tinymce"></textarea>
                                             <div class="fv-plugins-message-container invalid-feedback"
                                                 id="description_en"></div>
                                         </div>
@@ -661,6 +662,14 @@
     <script>
         let classId = @json($class->id ?? null);
     </script>
+    <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/quizzes.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/videosClasses.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
+
+    <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
+
     <script>
         $(document).ready(() => {
 
@@ -668,13 +677,6 @@
 
         });
     </script>
-    <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/quizzes.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
-
-    <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
-
     <script>
         $(document).on('click', '.open-question-modal', function() {
             const quizId = $(this).data('quiz-id');

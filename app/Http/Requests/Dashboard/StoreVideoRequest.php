@@ -27,7 +27,8 @@ class StoreVideoRequest extends FormRequest
 return [
     // Required image
         'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
-        'course_id' => 'required|exists:courses,id',
+        'course_id' => 'nullable|exists:courses,id',
+        'class_id' => 'nullable|exists:classes,id',
 
         'course_section_id' => 'nullable|exists:course_sections,id',
         'title_ar' => 'required|string|max:255',

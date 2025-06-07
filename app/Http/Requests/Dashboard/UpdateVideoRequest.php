@@ -32,7 +32,9 @@ class UpdateVideoRequest extends FormRequest
     $courseVideo = (new CourseVideo())->resolveRouteBinding($courseVideoId);
   return [
         'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
-        'course_id' => 'required|exists:courses,id',
+        'course_id' => 'nullable|exists:courses,id',
+        'class_id' => 'nullable|exists:classes,id',
+
         'quiz_required' => 'sometimes|boolean',
         'quiz_id' => 'required_if:quiz_required,1|exists:quizzes,id',
 

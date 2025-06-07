@@ -6,7 +6,10 @@ var KTDatatablesServerSide = (function () {
     let dbTable = "videos";
     // Private functions
     var initDatatable = function () {
-        datatable = $("#kt_datatable").DataTable({
+        if ($.fn.DataTable.isDataTable("#video_datatable")) {
+            $("#video_datatable").DataTable().clear().destroy();
+        }
+        datatable = $("#video_datatable").DataTable({
             language: language,
             searchDelay: searchDelay,
             processing: processing,
@@ -238,10 +241,10 @@ var KTDatatablesServerSide = (function () {
                 $("#title_en_inp").val(data.title_en);
 
                 tinymce
-                    .get("description_ar_inp")
+                    .get("description_ar_vid_inp")
                     .setContent(data.description_ar);
                 tinymce
-                    .get("description_en_inp")
+                    .get("description_en_vid_inp")
                     .setContent(data.description_en);
 
                 // Video URL
