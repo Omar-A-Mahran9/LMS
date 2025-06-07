@@ -238,7 +238,7 @@ public function results($studentQuizId)
 {
     $attempt = QuizAttempt::with([
         'quiz.questions.answers',
-        'answers.answer'
+        'answers.answer' // assuming 'answer' relation on QuizAttemptAnswer links to QuizAnswer model
     ])->findOrFail($studentQuizId);
 
     $results = [];
@@ -250,26 +250,32 @@ public function results($studentQuizId)
 
         $attemptAnswer = $attempt->answers->firstWhere('quiz_question_id', $question->id);
 
-        // Correct answers as array of objects with id and answer
+        // Format correct_answers as array of objects with id and answer
         $correctAnswers = $question->answers
             ->where('is_correct', 1)
-            ->map(fn($answer) => [
-                'id' => $answer->id,
-                'answer' => $answer->answer_en,
-            ])->values()->all();
+            ->map(fn($ans) => [
+                'id' => $ans->id,
+                'answer' => $ans->answer_en,
+            ])
+            ->values()
+            ->toArray();
 
         $studentAnswer = null;
         $isCorrect = false;
 
         if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-            // Get student's selected answer text
-            $studentAnswer = optional($attemptAnswer->answer)->answer_en ?? null;
+            // Get student's selected answer text if any
+            $studentAnswer = optional($attemptAnswer?->answer)->answer_en ?? null;
 
-            if ($attemptAnswer?->quiz_answer_id && collect($correctAnswers)->pluck('id')->contains($attemptAnswer->quiz_answer_id)) {
-                $isCorrect = true;
+            // Check if student's selected answer is correct
+            if ($attemptAnswer?->quiz_answer_id) {
+                $isCorrect = $question->answers
+                    ->where('is_correct', 1)
+                    ->pluck('id')
+                    ->contains($attemptAnswer->quiz_answer_id);
             }
         } elseif ($question->type === 'short_answer') {
-            $studentAnswer = $attemptAnswer->answer_text;
+            $studentAnswer = $attemptAnswer?->answer_text ?? null;
 
             if ($studentAnswer && strtolower(trim($studentAnswer)) === strtolower(trim($question->expected_answer))) {
                 $isCorrect = true;
@@ -299,6 +305,7 @@ public function results($studentQuizId)
         'results'      => $results,
     ]);
 }
+
 
 
 }
