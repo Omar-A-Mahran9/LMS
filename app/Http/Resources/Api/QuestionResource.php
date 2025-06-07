@@ -19,7 +19,12 @@ class QuestionResource extends JsonResource
             'id' => $this->id,
             'quiz_id' => $this->quiz_id,
             'question_en' => $this->question,
-            'answers' => $this->answers,
+            'answers' => $this->answers->map(function ($answer) {
+                return [
+                    'id' => $answer->id,
+                    'answer' => $answer->answer, // or use localization: app()->getLocale() == 'ar' ? $answer->answer_ar : $answer->answer_en
+                ];
+            }),
 
             'expected_answer' => $this->expected_answer,  // might be NULL for multiple_choice/true_false
             'type' => $this->type,
