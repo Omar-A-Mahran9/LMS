@@ -56,6 +56,7 @@ class StudentQuizController extends Controller
 
 public function submitQuiz(Request $request, $quizAttemptId)
 {
+    dd('fdf');
     $attempt = QuizAttempt::with('quiz.questions.answers')->findOrFail($quizAttemptId);
 
 
