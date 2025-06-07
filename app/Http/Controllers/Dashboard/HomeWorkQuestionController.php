@@ -99,7 +99,7 @@ class HomeWorkQuestionController extends Controller
         $question->expected_answer = $request->short_answer;
         $question->save();
     }
- 
+
 }
 
 

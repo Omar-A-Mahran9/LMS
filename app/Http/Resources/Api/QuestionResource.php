@@ -18,7 +18,7 @@ class QuestionResource extends JsonResource
     return [
             'id' => $this->id,
             'quiz_id' => $this->quiz_id,
-            'question_en' => $this->question,
+            'question' => $this->question,
             'answers' => $this->answers->map(function ($answer) {
                 return [
                     'id' => $answer->id,
