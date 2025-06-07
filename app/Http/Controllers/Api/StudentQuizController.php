@@ -56,11 +56,7 @@ class StudentQuizController extends Controller
 
 public function submitQuiz(Request $request, $quizAttemptId)
 {
-    dd('fdf');
     $attempt = QuizAttempt::with('quiz.questions.answers')->findOrFail($quizAttemptId);
-
-
-
 
     if ($attempt->quiz->duration_minutes && $attempt->started_at) {
         $expiryTime = \Carbon\Carbon::parse($attempt->started_at)->addMinutes($attempt->quiz->duration);
@@ -70,6 +66,7 @@ public function submitQuiz(Request $request, $quizAttemptId)
             ], 403);
         }
     }
+    dd('fdf');
 
     $data = $request->validate([
         'answers' => 'required|array',
