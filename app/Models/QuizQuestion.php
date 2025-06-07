@@ -16,9 +16,9 @@ class QuizQuestion extends Model
     ];
 
        public function getQuestionAttribute()
-    {
-        return app()->getLocale() === 'ar' ? $this->question_ar : $this->question_en;
-    }
+        {
+            return app()->getLocale() === 'ar' ? $this->question_ar : $this->question_en;
+        }
 
     public function quiz()
     {

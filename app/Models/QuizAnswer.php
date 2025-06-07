@@ -22,7 +22,7 @@ class QuizAnswer extends Model
 
     public function getAnswerAttribute()
     {
-        return app()->getLocale() === 'ar' ? $this->title_ar : $this->title_en;
+        return app()->getLocale() === 'ar' ? $this->answer_ar : $this->answer_en;
     }
 
 }
