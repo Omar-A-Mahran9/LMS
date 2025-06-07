@@ -50,7 +50,7 @@ class StudentQuizController extends Controller
     }
 // Select only needed fields from $attempt
 $attemptData = [
-    'quiz_id' => $attempt->quiz_id,
+    'attempt_id' => $attempt->id,
     'student_id' => $attempt->student_id,
     'started_at' => $attempt->started_at->format('H:i:s'),
 ];
