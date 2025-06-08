@@ -92,6 +92,13 @@
                     </x-dashboard.aside-item>
                 @endcan
 
+
+                @can('view_books')
+                    <x-dashboard.aside-item :slug="'books'" :route="route('dashboard.books.index')" :title="__('Books')">
+                        <i class="ki-outline ki-book fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
+
                 @can('view_contact_us')
                     <x-dashboard.aside-item :slug="'contact-requests'" :route="route('dashboard.contact-requests.index')" :title="__('Contact us')">
                         <i class="ki-outline ki-phone fs-1"></i>
@@ -218,7 +225,8 @@
                         <!--end::Menu item-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-3 my-0">
-                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="dark">
+                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
+                                data-kt-value="dark">
                                 <span class="menu-icon" data-kt-element="icon">
                                     <i class="ki-outline ki-moon fs-2"></i>
                                 </span>
