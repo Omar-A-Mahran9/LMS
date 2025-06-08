@@ -10,8 +10,7 @@ use Illuminate\Support\Str;
 
 use App\Http\Resources\Api\RateResource;
  use App\Http\Resources\Api\SliderResource;
-
-
+use App\Models\Book;
 use App\Models\Category;
  use App\Models\CommonQuestion;
 use App\Models\Course;
@@ -55,6 +54,9 @@ class HomeController extends Controller
 
 
         ];
+        $books = Book::where('is_active', 1)
+             ->where('is_featured', 1)
+             ->get();
         $CommonQuestion = CommonQuestion::get();
         $contact_us_data=[
             'label'           => setting('label_about_us' . $suffix),
@@ -62,7 +64,7 @@ class HomeController extends Controller
             'phone_number'       => setting('sms_number'),
             'email'            => setting('email'),
             'address'          => $address,
-'google_map_url' =>  setting('google_map_url'),
+            'google_map_url' =>  setting('google_map_url'),
 
         ];
     // Combine and return
@@ -72,6 +74,15 @@ class HomeController extends Controller
         'rates' => RateResource::collection($rates),
         'ask_us' =>$ask_us,
         'HowUse' =>$HowUse,
+
+        'Books' =>$books->map(function ($book) {
+                 return [
+                     'title' => $book->title,
+                     'price' => $book->price,
+                     'image' => $book->image_url, // إذا كنت تستخدم accessor للصورة
+                 ];
+             }),
+
         'CommonQuestion' =>[
             'label'           => setting('label_common_question' . $suffix),
             'description'     => setting('description_common_question' . $suffix),

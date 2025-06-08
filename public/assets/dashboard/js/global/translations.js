@@ -98,6 +98,7 @@ let translations = {
         website: "الموقع",
         "experience years": "سنين الخبرة",
         "Edit Class": "تعديل الحصة",
+        "Edit Book": "تعديل الكتاب",
 
         "No results found": "لا يوجد نتائج",
         "Searching…": "جار البحث ...",

@@ -180,7 +180,7 @@ var KTDatatablesServerSide = (function () {
                 let data = datatable.row(currentBtnIndex).data();
 
                 // Set form title
-                $("#form_title").text(__("Edit Class"));
+                $("#form_title").text(__("Edit Book"));
 
                 $(".image-input-wrapper").css(
                     "background-image",
