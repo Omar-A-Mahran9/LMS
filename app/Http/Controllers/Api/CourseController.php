@@ -13,7 +13,8 @@ use App\Http\Resources\Api\VideoResource;
 
 
 use App\Models\Category;
- use App\Models\CommonQuestion;
+use App\Models\ClassStudentView;
+use App\Models\CommonQuestion;
 use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\CourseVideo;
