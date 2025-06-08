@@ -158,7 +158,23 @@ public function getVideosByCourse($id)
     return $this->success('',VideoResource::collection($videos) );
 }
 
+public function getVideosByClass($id)
+{
+    // Find the course by ID and make sure it's published
+    $class = CourseClass::where('id', $id)
+                    ->where('is_active', 1)
+                    ->first();
 
+    if (!$class) {
+        return $this->failure('Course not found or unpublished') ;
+    }
+
+    // Get videos related to this course (assuming relation `videos`)
+    $videos = $class->videos()->get();
+
+    // Return the videos collection as JSON, optionally use a resource collection if you have one
+    return $this->success('',VideoResource::collection($videos) );
+}
 
 
 
