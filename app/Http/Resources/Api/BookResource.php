@@ -21,7 +21,9 @@ class BookResource extends JsonResource
                "id" => $this->id,
             'image' => $this->full_image_path,
             'title' => $this->title,
-                       'description' => $this->description,
+            'description' => $this->description,
+            'note' => $this->note,
+            'phone' =>setting('sms_number'),
 
 
             'price' => $this->is_free

@@ -33,6 +33,7 @@ class CourseDetailsResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'note' => $this->note,
+            'phone' =>setting('sms_number'),
 
             'started_at' => $this->start_date,
             'count_video' => $this->videos->count(),

@@ -33,6 +33,7 @@ class CoursesDetailsResource extends JsonResource
             'count_video' => $this->videos->count(),
             'category' =>new CategoryResource ($this->category),
             'sub_category' => CategoryResource::collection($this->subCategories),
+            'phone' =>setting('sms_number'),
 
             'price' => $this->is_free
                 ? 'Free' // or 0 if you prefer numeric value
