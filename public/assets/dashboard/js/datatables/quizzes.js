@@ -179,6 +179,12 @@ var KTDatatablesServerSide = (function () {
                 restoreUrl: `/dashboard/${dbTable}/restore-selected`,
             });
             KTMenu.createInstances();
+            let rowCount = datatable.rows().count();
+            if (rowCount >= 1) {
+                $("#quiz_btn").hide(); // or .attr('hidden', true)
+            } else {
+                $("#quiz_btn").show(); // or .removeAttr('hidden')
+            }
         });
     };
 

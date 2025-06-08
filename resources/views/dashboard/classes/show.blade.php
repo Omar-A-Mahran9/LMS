@@ -110,7 +110,7 @@
                                 data-kt-docs-table-toolbar="base">
                                 <!--begin::Add customer-->
                                 @if (!$quizExists)
-                                    <button type="button" class="btn btn-primary  " data-bs-toggle="tooltip"
+                                    <button type="button" class="btn btn-primary" id="quiz_btn" data-bs-toggle="tooltip"
                                         data-bs-original-title="Coming Soon" data-kt-initialized="1">
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                         <span class="svg-icon svg-icon-2">

@@ -102,6 +102,7 @@ var deleteVideoRowWithURL = (url) => {
         });
     });
 };
+
 var ajaxDeleteRecord = function (url) {
     loadingAlert(__("Deleting..."));
     $.ajax({
