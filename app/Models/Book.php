@@ -9,9 +9,28 @@ class Book extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = [];
+    protected $appends = ['title','description','full_image_path','full_attachment_path'];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
     ];
+
+    public function getTitleAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->title_ar : $this->title_en;
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->description_ar : $this->description_en;
+    }
+        public function getFullImagePathAttribute()
+    {
+        return asset(getImagePathFromDirectory($this->image, 'Books', 'default.svg'));
+    }
+
+        public function getFullAttachmentPathAttribute()
+    {
+        return getAttachmentPathFromDirectory($this->attachment, 'books');
+    }
 }

@@ -36,7 +36,7 @@
                                     fill="currentColor"></rect>
                             </svg>
                         </span>
-                        <!--end::Svg Icon-->{{ __('Add new class') }}
+                        <!--end::Svg Icon-->{{ __('Add new book') }}
                     </button>
                     <!--end::Add customer-->
                 </div>
@@ -65,7 +65,7 @@
                     </span>
                     <!--end::Svg Icon-->
                     <input type="text" data-kt-docs-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Courses') }}">
+                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Books') }}">
                 </div>
                 <!--end::Search-->
 
@@ -93,11 +93,10 @@
                         </th>
                         <th>{{ __('Title') }}</th>
                         <th>{{ __('Image') }}</th>
-                        <th>{{ __('Course') }}</th>
+
                         <th>{{ __('Status') }}</th>
                         <th>{{ __('Created at') }}</th>
-                        <th>{{ __('Is Preview') }}</th>
-                        <th>{{ __('views') }}</th>
+
 
                         <th class=" min-w-100px">{{ __('Actions') }}</th>
                     </tr>
@@ -118,7 +117,7 @@
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="form_title">{{ __('Add new class') }}</h5>
+                        <h5 class="modal-title" id="form_title">{{ __('Add new book') }}</h5>
                         <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                             aria-label="Close">
                             <i class="ki-outline ki-cross fs-1"></i>
@@ -130,7 +129,7 @@
                             <div class="col-12 d-flex flex-column justify-content-center">
                                 <label for="image_inp"
                                     class="form-label  text-center fs-6 fw-bold mb-3">{{ __('Thumbnail Image') }}</label>
-                                <x-dashboard.upload-image-inp name="image" :image="null" :directory="'courses'"
+                                <x-dashboard.upload-image-inp name="image" :image="null" :directory="'books'"
                                     placeholder="default.svg" type="editable" />
                             </div>
                         </div>
@@ -312,7 +311,7 @@
                 $("#crud_form").attr('action', "{{ route('dashboard.books.store') }}");
 
                 // Reset modal title
-                $("#form_title").text("{{ __('Add new class') }}");
+                $("#form_title").text("{{ __('Add new book') }}");
 
                 // Optionally, reset date inputs
                 $("#start_date_inp, #end_date_inp").val('');

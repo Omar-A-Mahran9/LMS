@@ -44,12 +44,12 @@ class VideoResource extends JsonResource
             // 'is_completed'         => $progress ? (bool)$progress->is_completed : false,
             // 'views'                => $progress ? $progress->views : 0,
             'status'               => $statusText,
-            
+
 
             'thumbnail' => $this->full_image_path,
             'is_preview' => $this->is_preview,
             'is_active' => $this->is_active,
-            'video_url' => base64_encode($this->video_url),
+            'video_url' => base64_encode(convertToYoutubeEmbed($this->video_url)),
         ];
     }
 

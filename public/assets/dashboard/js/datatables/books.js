@@ -3,7 +3,7 @@
 var datatable;
 // Class definition
 var KTDatatablesServerSide = (function () {
-    let dbTable = "classes";
+    let dbTable = "books";
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
@@ -25,11 +25,8 @@ var KTDatatablesServerSide = (function () {
                 { data: "id" },
                 { data: "title" },
                 { data: "image" },
-                { data: "course" },
                 { data: "is_active" },
                 { data: "created_at" },
-                { data: "is_preview" },
-                { data: "views" },
                 { data: null },
             ],
             columnDefs: [
@@ -83,43 +80,9 @@ var KTDatatablesServerSide = (function () {
                 },
 
                 {
-                    targets: 3,
-                    render: function (data, type, row) {
-                        return `
-                            <div>
-                                <!--begin::Info-->
-                                <div class="d-flex flex-column justify-content-center">
-                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.course.title}</a>
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                        `;
-                    },
-                },
-                {
-                    targets: 4, // This is the "Status" column
+                    targets: 3, // This is the "Status" column
                     render: function (data, type, row) {
                         if (row.is_active) {
-                            return `
-                                     <span class="badge badge-success">${__(
-                                         "active"
-                                     )}</span>
-
-                            `;
-                        } else {
-                            return `
-                                     <span class="badge badge-danger">${__(
-                                         "inactive"
-                                     )}</span>
-                             `;
-                        }
-                    },
-                },
-
-                {
-                    targets: 6, // This is the "Status" column
-                    render: function (data, type, row) {
-                        if (row.is_preview) {
                             return `
                                      <span class="badge badge-success">${__(
                                          "active"
@@ -161,7 +124,7 @@ var KTDatatablesServerSide = (function () {
                                 <!--end::Menu item-->
 
                                 <div class="menu-item px-3">
-                                    <a href="/dashboard/classes/${
+                                    <a href="/dashboard/books/${
                                         data.id
                                     }" class="menu-link px-3 show_button" data-kt-docs-table-filter="show_row">
                                         ${__("Show")}
@@ -235,13 +198,34 @@ var KTDatatablesServerSide = (function () {
                     .get("description_en_inp")
                     .setContent(data.description_en);
 
-                // Video URL
-                $("#video_url_inp").val(data.video_url);
+                // Pricing controls
+                if (data.is_free) {
+                    $("#is_free_switch").prop("checked", true);
+                    $("#price_inp").val(0).prop("disabled", true);
+                } else {
+                    $("#is_free_switch").prop("checked", false);
+                    $("#price_inp").val(data.price).prop("disabled", false);
+                }
+
+                if (data.have_discount) {
+                    $("#have_discount_switch").prop("checked", true);
+                    $("#discount_percentage_inp")
+                        .val(data.discount_percentage)
+                        .prop("disabled", false);
+                } else {
+                    $("#have_discount_switch").prop("checked", false);
+                    $("#discount_percentage_inp")
+                        .val("")
+                        .prop("disabled", true);
+                }
+
                 // Attachment preview (link or filename)
                 if (data.full_attachment_path) {
                     $("#attachment_preview").html(
-                        `<a href="${data.full_attachment_path}" target="_blank" class="btn btn-sm btn-info">
-                        ${ __('Current Attachment') }
+                        `<a href="${
+                            data.full_attachment_path
+                        }" target="_blank" class="btn btn-sm btn-info">
+                        ${__("Current Attachment")}
                     </a>`
                     );
                 } else {
@@ -251,17 +235,12 @@ var KTDatatablesServerSide = (function () {
                 // Reset file input (clear any previously selected file)
                 $("#attachment_inp").val("");
                 // Relationships
-                $("#course_id_inp").val(data.course_id).trigger("change");
-
-                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#quiz_required_switch").prop("checked", data.quiz_required);
 
                 // Flags
                 $("#is_active_switch").prop("checked", data.is_active);
-                $("#is_preview_switch").prop("checked", data.is_preview);
 
                 // Reset form method & action
-                $("#crud_form").attr("action", `/dashboard/classes/${data.id}`);
+                $("#crud_form").attr("action", `/dashboard/books/${data.id}`);
 
                 // Remove previous _method input if any, then add PUT
                 $("#crud_form").find('input[name="_method"]').remove();

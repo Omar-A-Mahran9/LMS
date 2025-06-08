@@ -34,6 +34,7 @@ class Course extends Model
     {
         return app()->getLocale() === 'ar' ? $this->description_ar : $this->description_en;
     }
+    
     public function getNoteAttribute()
     {
         return app()->getLocale() === 'ar' ? $this->note_ar : $this->note_en;

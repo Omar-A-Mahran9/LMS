@@ -238,6 +238,7 @@ return [
         'end_date' => 'تاريخ النهاية',
         'slide_image' => 'الشريحة',
         'today' => 'اليوم',
+         "attachment"=> "الملف",
 
         'government_id' => 'المحافظة',
         'last_name' => 'اسم العائلة',
