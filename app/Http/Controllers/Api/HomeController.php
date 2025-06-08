@@ -75,13 +75,7 @@ class HomeController extends Controller
         'ask_us' =>$ask_us,
         'HowUse' =>$HowUse,
 
-        'Books' =>$books->map(function ($book) {
-                 return [
-                     'title' => $book->title,
-                     'price' => $book->price,
-                     'image' => $book->image_url, // إذا كنت تستخدم accessor للصورة
-                 ];
-             }),
+        'Books' =>BookResource::collection($books),
 
         'CommonQuestion' =>[
             'label'           => setting('label_common_question' . $suffix),
