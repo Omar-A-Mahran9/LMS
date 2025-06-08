@@ -32,6 +32,8 @@ return [
 
     'description_ar' => ['required', new NotNumbersOnly()],
     'description_en' => ['required', new NotNumbersOnly()],
+ 'note_ar' => ['required', new NotNumbersOnly()],
+    'note_en' => ['required', new NotNumbersOnly()],
 
     // Pricing
     'price' => ['required_unless:is_free,1', 'numeric', 'min:1'],
