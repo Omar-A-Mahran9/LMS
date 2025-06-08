@@ -236,6 +236,27 @@
                                 <div class="fv-plugins-message-container invalid-feedback" id="description_en"></div>
                             </div>
                         </div>
+                        {{-- Notes --}}
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <label for="note_ar_inp" class="form-label">{{ __('Note (Arabic)') }}</label>
+
+
+                                <textarea name="note_ar" id="note_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
+
+                                <div class="fv-plugins-message-container invalid-feedback" id="note_ar"></div>
+
+                            </div>
+                            <div class="col-6">
+                                <label for="note_en_inp" class="form-label">{{ __('Note (English)') }}</label>
+
+
+                                <textarea name="note_en" id="note_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
+
+                                <div class="fv-plugins-message-container invalid-feedback" id="note_en"></div>
+
+                            </div>
+                        </div>
 
 
 

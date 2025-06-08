@@ -19,6 +19,10 @@ return new class extends Migration
             $table->string('title_ar');
             $table->text('description_en')->nullable();
             $table->text('description_ar')->nullable();
+                       // Notes
+            $table->text('note_en')->nullable();
+            $table->text('note_ar')->nullable();
+
             $table->decimal('price', 8, 2)->default(0);
             $table->boolean('have_discount')->default(false);
             $table->integer('discount_percentage')->nullable();

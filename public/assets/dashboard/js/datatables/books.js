@@ -197,6 +197,8 @@ var KTDatatablesServerSide = (function () {
                 tinymce
                     .get("description_en_inp")
                     .setContent(data.description_en);
+                tinymce.get("note_ar_inp").setContent(data.note_ar);
+                tinymce.get("note_en_inp").setContent(data.note_en);
 
                 // Pricing controls
                 if (data.is_free) {
