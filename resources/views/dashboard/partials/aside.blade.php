@@ -93,11 +93,7 @@
                 @endcan
 
 
-                @can('view_books')
-                    <x-dashboard.aside-item :slug="'books'" :route="route('dashboard.books.index')" :title="__('Books')">
-                        <i class="ki-outline ki-book fs-2"></i>
-                    </x-dashboard.aside-item>
-                @endcan
+
 
                 @can('view_contact_us')
                     <x-dashboard.aside-item :slug="'contact-requests'" :route="route('dashboard.contact-requests.index')" :title="__('Contact us')">
@@ -105,7 +101,11 @@
                     </x-dashboard.aside-item>
                 @endcan
 
-
+                @can('view_books')
+                    <x-dashboard.aside-item :slug="'books'" :route="route('dashboard.books.index')" :title="__('Books')">
+                        <i class="ki-outline ki-book fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
                 @can('view_orders')
                     <x-dashboard.aside-item :slug="'orders'" :route="route('dashboard.orders.index')" :title="__('Orders')">
                         <i class="ki-outline ki-parcel fs-1"></i>
