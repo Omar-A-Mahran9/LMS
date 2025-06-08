@@ -17,7 +17,7 @@ class Authenticate extends Middleware
             return route('admin.login-form');
 
         }
-     
+
         // else
             return redirect()->guest('/login');
     }

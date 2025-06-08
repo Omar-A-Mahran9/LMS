@@ -24,6 +24,8 @@ class VideoResource extends JsonResource
       return [
             'id' => $this->id,
             'title' => $this->title,
+            'thumbnail' => $this->full_image_path,
+
             'is_preview' => $this->is_preview,
             'is_active' => $this->is_active,
             'video_url' => $showVideoUrl ? base64_encode($this->video_url) : null,

@@ -15,10 +15,10 @@ return new class extends Migration
            $table->id();
             $table->string('image')->nullable(); // Thumbnail
 
-            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade')->nullable();
-            $table->foreignId('class_id')->constrained('classes')->onDelete('cascade')->nullable();
+            $table->foreignId('course_id')->nullable()->constrained('courses')->onDelete('cascade');
+            $table->foreignId('class_id')->nullable()->constrained('classes')->onDelete('cascade');
 
-            $table->foreignId('course_section_id')->constrained()->onDelete('cascade')->nullable();
+            $table->foreignId('course_section_id')->nullable()->constrained()->onDelete('cascade');
 
             // Multilingual content
             $table->string('title_en');
