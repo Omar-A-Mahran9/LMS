@@ -672,9 +672,7 @@
 
     <script>
         $(document).ready(() => {
-
             initTinyMc();
-
         });
     </script>
     <script>
