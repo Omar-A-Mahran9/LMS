@@ -16,11 +16,14 @@ use App\Models\Category;
  use App\Models\CommonQuestion;
 use App\Models\Course;
 use App\Models\CourseClass;
+use App\Models\CourseVideo;
+use App\Models\CourseVideoStudent;
 use App\Models\Government;
 
 use App\Models\Quiz;
 
  use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
@@ -160,23 +163,73 @@ public function getVideosByCourse($id)
 
 public function getVideosByClass($id)
 {
-    // Find the course by ID and make sure it's published
     $class = CourseClass::where('id', $id)
-                    ->where('is_active', 1)
-                    ->first();
+        ->where('is_active', 1)
+        ->first();
 
     if (!$class) {
-        return $this->failure('Course not found or unpublished') ;
+        return $this->failure('Course not found or unpublished');
     }
 
-    // Get videos related to this course (assuming relation `videos`)
-    $videos = $class->videos()->get();
+    $studentId = Auth::id();
 
-    // Return the videos collection as JSON, optionally use a resource collection if you have one
-    return $this->success('',VideoResource::collection($videos) );
+    // Eager load student progress for each video, to avoid N+1 queries
+    $videos = $class->videos()
+        ->with(['studentProgress' => function ($query) use ($studentId) {
+            $query->where('student_id', $studentId);
+        }])
+        ->get();
+
+    // Pass student ID to resource collection so it can access progress
+    $resourceCollection = $videos->map(function ($video) use ($studentId) {
+        return new VideoResource($video, $studentId);
+    });
+
+    return $this->success('', $resourceCollection);
 }
 
 
+public function logWatch(Request $request, $id)
+{
+    $request->validate([
+        'watch_seconds' => 'required|integer|min:1',
+        'last_watched_second'    => 'nullable|integer|min:0',
+    ]);
+
+    $video = CourseVideo::findOrFail($id);
+    $student = auth()->user(); // assumes sanctum or jwt
+
+    // Fetch existing or create a new record
+    $progress = CourseVideoStudent::firstOrNew([
+        'course_video_id' => $video->id,
+        'student_id'      => $student->id,
+    ]);
+
+    // Handle watch_seconds safely, don't exceed total duration
+    $progress->watch_seconds = min(
+        ($progress->watch_seconds ?? 0) + $request->watch_seconds,
+        $video->duration_seconds
+    );
+
+    // Update last_watched_second if provided
+    if ($request->filled('last_watched_second')) {
+        $progress->last_watched_second = max($request->last_watched_second, $progress->last_watched_second ?? 0);
+    }
+
+    // Handle completion
+    if (!$progress->is_completed && $progress->watch_seconds >= $video->duration_seconds) {
+        $progress->is_completed = true;
+        $progress->completed_at = now();
+        $progress->views = ($progress->views ?? 0) + 1;
+
+        // Also update global video views count
+        $video->increment('views');
+    }
+
+    $progress->save();
+
+    return $this->success('',$progress);
+}
 
 
     public function getgovernments()

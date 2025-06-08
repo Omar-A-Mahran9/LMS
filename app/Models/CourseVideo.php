@@ -42,6 +42,24 @@ class CourseVideo extends Model
         return $this->belongsTo(CourseClass::class);
     }
 
+public function viewers()
+{
+    return $this->belongsToMany(Student::class, 'course_video_student')
+        ->withPivot(['is_completed', 'watch_seconds', 'last_watched_at', 'views'])
+        ->withTimestamps();
+}
+
+public function watchers()
+{
+    return $this->belongsToMany(Student::class, 'course_video_student')
+        ->withPivot('watch_seconds')
+        ->withTimestamps();
+}
+
+public function studentProgress()
+{
+    return $this->hasMany(CourseVideoStudent::class);
+}
 
 
 }
