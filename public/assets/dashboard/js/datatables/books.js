@@ -238,6 +238,7 @@ var KTDatatablesServerSide = (function () {
 
                 // Flags
                 $("#is_active_switch").prop("checked", data.is_active);
+                $("#is_featured_switch").prop("checked", data.is_featured);
 
                 // Reset form method & action
                 $("#crud_form").attr("action", `/dashboard/books/${data.id}`);

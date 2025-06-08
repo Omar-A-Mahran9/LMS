@@ -25,6 +25,8 @@ return new class extends Migration
 
             $table->boolean('is_free')->default(false);
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_featured')->default(true);
+
             $table->string('attachment')->nullable();
             $table->timestamps();
         });

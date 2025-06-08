@@ -5,7 +5,7 @@ namespace App\Http\Requests\Dashboard;
 use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBookRequest extends FormRequest
+class UpdateBookRequest extends FormRequest
 {
 
     public function authorize()
@@ -23,8 +23,8 @@ class StoreBookRequest extends FormRequest
 
 return [
     // Required image
-    'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
-    'attachment' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,txt|max:10240', // 10MB max
+    'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
+    'attachment' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,txt|max:10240', // 10MB max
 
     // Multilingual Titles and Descriptions
     'title_ar' => ['required', 'max:255', new NotNumbersOnly(),'unique:books,title_ar'],
@@ -48,6 +48,7 @@ return [
     ],
 
     'is_featured' => ['nullable', 'boolean'],
+
     'is_active' => ['nullable', 'boolean'],
 
 ];
