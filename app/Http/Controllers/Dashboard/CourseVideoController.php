@@ -34,7 +34,23 @@ class CourseVideoController extends Controller
             return view('dashboard.videos.index', compact( 'visited_site','courses','quizzes'));
         }
     }
+    public function getvideosbyclasses(Request $request,$classId)
+    {
+          $this->authorize('view_videos');
 
+        // Count total courses
+         $courses = Course::select('id', 'title_en', 'title_ar')->get();
+
+        $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
+
+        if ($request->ajax()) {
+            // Return JSON data for AJAX requests
+            return response()->json(getModelData(model: new CourseVideo(), andsFilters: [['class_id', '=', $classId]],relations: ['course' => ['id', 'title_ar','title_en' ],'class' => ['id', 'title_ar','title_en' ]]));
+        } else {
+            // Return the main view with data
+            return view('dashboard.videos.index', compact('courses','quizzes'));
+        }
+    }
 
 
   public function store(StoreVideoRequest $request)

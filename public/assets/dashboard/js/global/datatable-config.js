@@ -78,6 +78,30 @@ var deleteRowWithURL = (url) => {
     });
 };
 
+var deleteVideoRowWithURL = (url) => {
+    // Select all delete buttons
+    const deleteButtons = document.querySelectorAll(
+        '[data-kt-docs-table-filter="delete_vid_row"]'
+    );
+
+    deleteButtons.forEach((d) => {
+        // Delete button on click
+        d.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const parent = e.target.closest("tr");
+            const id = parent
+                .querySelectorAll("td")[0]
+                .querySelector("input").value;
+
+            deleteAlert().then(function (result) {
+                if (result.value) {
+                    ajaxDeleteRecord(url + id);
+                }
+            });
+        });
+    });
+};
 var ajaxDeleteRecord = function (url) {
     loadingAlert(__("Deleting..."));
     $.ajax({

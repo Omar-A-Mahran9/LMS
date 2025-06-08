@@ -58,8 +58,8 @@ class UpdateVideoRequest extends FormRequest
             Rule::unique('course_videos', 'title_en')->ignore($courseVideo->id)
         ],
 
-    'description_ar' => ['required', new NotNumbersOnly()],
-    'description_en' => ['required', new NotNumbersOnly()],
+    'description_ar' => ['nullable', new NotNumbersOnly()],
+    'description_en' => ['nullable', new NotNumbersOnly()],
 
 
     // Video

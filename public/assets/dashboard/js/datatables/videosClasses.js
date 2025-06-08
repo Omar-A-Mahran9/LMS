@@ -2,8 +2,9 @@
 
 var datatable;
 // Class definition
-var KTDatatablesServerSide = (function () {
-    let dbTable = "videos";
+var KTDatatablesServerSidevid = (function () {
+    var dbTable = `classes/${classId}/videos`;
+
     // Private functions
     var initDatatable = function () {
         if ($.fn.DataTable.isDataTable("#video_datatable")) {
@@ -183,7 +184,7 @@ var KTDatatablesServerSide = (function () {
 
                                 ${`<!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
+                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_vid_row">
                                         ${__("Delete")}
                                     </a>
                                 </div>
@@ -206,13 +207,12 @@ var KTDatatablesServerSide = (function () {
             initToggleToolbar();
             toggleToolbars();
             handleEditRows();
-            deleteRowWithURL(`/dashboard/${dbTable}/`);
+            deleteVideoRowWithURL(`/dashboard/videos/`);
             deleteSelectedRowsWithURL({
-                url: `/dashboard/${dbTable}/delete-selected`,
-                restoreUrl: `/dashboard/${dbTable}/restore-selected`,
+                url: `/dashboard/videos/delete-selected`,
+                restoreUrl: `/dashboard/videos/restore-selected`,
             });
             KTMenu.createInstances();
-            handlePreviewAttachments();
         });
     };
 
@@ -237,15 +237,15 @@ var KTDatatablesServerSide = (function () {
                 );
 
                 // Titles
-                $("#title_ar_inp").val(data.title_ar);
-                $("#title_en_inp").val(data.title_en);
+                $("#title_ar_vid_inp").val(data.title_ar);
+                $("#title_en_vid_inp").val(data.title_en);
 
                 tinymce
                     .get("description_ar_vid_inp")
-                    .setContent(data.description_ar);
+                    ?.setContent(data?.description_ar || "");
                 tinymce
                     .get("description_en_vid_inp")
-                    .setContent(data.description_en);
+                    ?.setContent(data?.description_en || "");
 
                 // Video URL
                 $("#video_url_inp").val(data.video_url);
@@ -262,49 +262,20 @@ var KTDatatablesServerSide = (function () {
                 // Reset checkboxes by title attribute if they have it (otherwise use IDs)
 
                 // Flags
-                $("#is_active_switch").prop("checked", data.is_active);
+                $("#is_active_vid_switch").prop("checked", data.is_active);
                 $("#is_preview_switch").prop("checked", data.is_preview);
 
                 // Reset form method & action
-                $("#crud_form").attr("action", `/dashboard/videos/${data.id}`);
+                $("#video_form").attr("action", `/dashboard/videos/${data.id}`);
 
                 // Remove previous _method input if any, then add PUT
-                $("#crud_form").find('input[name="_method"]').remove();
-                $("#crud_form").prepend(
+                $("#video_form").find('input[name="_method"]').remove();
+                $("#video_form").prepend(
                     `<input type="hidden" name="_method" value="PUT">`
                 );
 
-                // Show modal
-                $("#crud_modal").modal("show");
-            });
-        });
-    };
-
-    var handlePreviewAttachments = () => {
-        // Select all edit buttons
-        const previewButtons = $('[data-action="preview_attachments"]');
-
-        $.each(previewButtons, function (indexInArray, button) {
-            $(button).on("click", function (e) {
-                e.preventDefault();
-
-                let data = datatable.row(indexInArray).data();
-                $(".attachments").html("");
-
-                $(".attachments").append(`
-                    <!--begin::Overlay-->
-                    <a class="d-block overlay" data-fslightbox="lightbox-basic" href="${data.full_image_path}">
-                        <!--begin::Action-->
-                        <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                            <i class="bi bi-eye-fill text-white fs-3x"></i>
-                        </div>
-                        <!--end::Action-->
-
-                    </a>
-                    <!--end::Overlay-->
-                `);
-                refreshFsLightbox();
-                $("[data-fslightbox='lightbox-basic']:first").trigger("click");
+                // Show modals
+                $("#videoModal").modal("show");
             });
         });
     };
@@ -316,17 +287,16 @@ var KTDatatablesServerSide = (function () {
             handleSearchDatatable();
             initToggleToolbar();
             handleEditRows();
-            deleteRowWithURL(`/dashboard/${dbTable}/`);
+            deleteVideoRowWithURL(`/dashboard/videos/`);
             deleteSelectedRowsWithURL({
-                url: `/dashboard/${dbTable}/delete-selected`,
-                restoreUrl: `/dashboard/${dbTable}/restore-selected`,
+                url: `/dashboard/videos/delete-selected`,
+                restoreUrl: `/dashboard/videos/restore-selected`,
             });
-            handlePreviewAttachments();
         },
     };
 })();
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
-    KTDatatablesServerSide.init();
+    KTDatatablesServerSidevid.init();
 });

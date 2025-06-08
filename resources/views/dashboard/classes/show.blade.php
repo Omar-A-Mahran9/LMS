@@ -101,7 +101,7 @@
 
                     <div class="card-body">
 
-                        <div class="card-header d-flex justify-content-between align-items-center mb-5">
+                        <div class="  d-flex justify-content-between align-items-center mb-5">
                             <div class="card-title">
                                 <h2>{{ __('Quizzes') }}</h2>
                             </div>
@@ -584,9 +584,9 @@
                                         <div class="col-2 d-flex align-items-center mt-4">
                                             <label class="form-check form-switch form-check-custom form-check-solid">
                                                 <input class="form-check-input" name="is_active" type="checkbox"
-                                                    value="1" id="is_active_switch" checked>
+                                                    value="1" id="is_active_vid_switch" checked>
                                                 <span class="form-check-label text-dark"
-                                                    for="is_active_switch">{{ __('Active') }}</span>
+                                                    for="is_active_vid_switch">{{ __('Active') }}</span>
                                             </label>
                                         </div>
                                     </div>
@@ -594,17 +594,17 @@
                                     {{-- Titles --}}
                                     <div class="row mb-4">
                                         <div class="col-6">
-                                            <label for="title_ar_inp"
+                                            <label for="title_ar_vid_inp"
                                                 class="form-label">{{ __('Title (Arabic)') }}</label>
-                                            <input type="text" name="title_ar" id="title_ar_inp" class="form-control"
-                                                placeholder="{{ __('Enter Arabic title') }}">
+                                            <input type="text" name="title_ar" id="title_ar_vid_inp"
+                                                class="form-control" placeholder="{{ __('Enter Arabic title') }}">
                                             <div class="invalid-feedback" id="title_ar"></div>
                                         </div>
                                         <div class="col-6">
-                                            <label for="title_en_inp"
+                                            <label for="title_en_vid_inp"
                                                 class="form-label">{{ __('Title (English)') }}</label>
-                                            <input type="text" name="title_en" id="title_en_inp" class="form-control"
-                                                placeholder="{{ __('Enter English title') }}">
+                                            <input type="text" name="title_en" id="title_en_vid_inp"
+                                                class="form-control" placeholder="{{ __('Enter English title') }}">
                                             <div class="invalid-feedback" id="title_en"></div>
                                         </div>
                                     </div>

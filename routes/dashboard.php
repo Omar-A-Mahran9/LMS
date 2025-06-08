@@ -54,6 +54,8 @@ Route::delete("packages/delete-selected", "PackagesController@deleteSelected");
 
  Route::resource('courses', 'CourseController')->except(['create', 'edit']);
  Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
+ Route::get('classes/{classId}/videos', 'CourseVideoController@getvideosbyclasses');
+
  Route::resource('classes', 'ClassController')->except(['create', 'edit']);
 
  Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
