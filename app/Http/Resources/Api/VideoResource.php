@@ -40,7 +40,8 @@ class VideoResource extends JsonResource
             'duration' => $this->formatDuration($this->duration_seconds),
 
             // 'watch_seconds'        => $progress ? $this->formatDuration($progress->watch_seconds) : '0s',
-            // 'last_watched_second'  => $progress ? $progress->last_watched_second : 0,
+            'last_watched_second'  => $progress ? $this->formatDuration($progress->last_watched_second) : 0,
+
             // 'is_completed'         => $progress ? (bool)$progress->is_completed : false,
             // 'views'                => $progress ? $progress->views : 0,
             'status'               => $statusText,
