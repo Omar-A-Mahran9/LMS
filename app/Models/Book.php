@@ -9,7 +9,7 @@ class Book extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['title','description','full_image_path','full_attachment_path'];
+    protected $appends = ['title','description','note','full_image_path','full_attachment_path'];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
@@ -23,6 +23,10 @@ class Book extends Model
     public function getDescriptionAttribute()
     {
         return app()->getLocale() === 'ar' ? $this->description_ar : $this->description_en;
+    }
+     public function getNoteAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->note_ar : $this->note_en;
     }
         public function getFullImagePathAttribute()
     {
