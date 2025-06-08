@@ -38,13 +38,13 @@ class VideoResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'duration' => $this->formatDuration($this->duration_seconds),
-             'status' => [
-            'watch_seconds'        => $progress ? $this->formatDuration($progress->watch_seconds) : '0s',
-            'last_watched_second'  => $progress ? $progress->last_watched_second : 0,
-            'is_completed'         => $progress ? (bool)$progress->is_completed : false,
-            'views'                => $progress ? $progress->views : 0,
+
+            // 'watch_seconds'        => $progress ? $this->formatDuration($progress->watch_seconds) : '0s',
+            // 'last_watched_second'  => $progress ? $progress->last_watched_second : 0,
+            // 'is_completed'         => $progress ? (bool)$progress->is_completed : false,
+            // 'views'                => $progress ? $progress->views : 0,
             'status'               => $statusText,
-               ],
+            
 
             'thumbnail' => $this->full_image_path,
             'is_preview' => $this->is_preview,
