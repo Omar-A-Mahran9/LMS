@@ -110,16 +110,35 @@ public function getClassesByCoursesId(Request $request, $id)
     return $this->successWithPagination('', $resource);
 }
 
-   public function getClassById($id)
-    {
-        $class = CourseClass::where('is_active', 1)->find($id);
-         if (!$class) {
-            return $this->failure('Class not found or unpublished');
-        }
-
-        return $this->success('',         new ClassDetailsResource($class));
-
+public function getClassById($id)
+{
+    $class = CourseClass::where('is_active', 1)->find($id);
+    if (!$class) {
+        return $this->failure('Class not found or unpublished');
     }
+
+    $student = auth()->user(); // assumes sanctum or jwt auth
+
+    if ($student) {
+        // Check if student already viewed this class
+        $alreadyViewed = ClassStudentView::where('student_id', $student->id)
+            ->where('class_id', $class->id)
+            ->exists();
+
+        if (!$alreadyViewed) {
+            // Log view and increment class views
+            ClassStudentView::create([
+                'student_id' => $student->id,
+                'class_id' => $class->id,
+            ]);
+
+            $class->increment('views');
+        }
+    }
+
+    return $this->success('', new ClassDetailsResource($class));
+}
+
 
        public function getQuizClassById($id)
     {
