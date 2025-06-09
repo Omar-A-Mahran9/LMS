@@ -17,7 +17,7 @@ public function index(Request $request)
 
     $books = Book::where('is_active', 1)->paginate($perPage);
 
-    return $this->success('', BookResource::collection($books)->response()->getData(true));
+    return $this->success('', BookResource::collection($books)->response());
 }
 
 
