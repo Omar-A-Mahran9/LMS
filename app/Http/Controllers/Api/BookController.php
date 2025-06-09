@@ -15,8 +15,8 @@ public function index(Request $request)
 {
 $books = Book::where('is_active', 1)->get();
 
-    return $this->success('', [
-                    'Books' =>BookResource::collection($books)]);
+    return $this->success('',
+                    BookResource::collection($books));
 
 }
 
@@ -24,9 +24,8 @@ public function show($id)
 {
     $book = Book::where('is_active', 1)->findOrFail($id);
 
-    return $this->success('', [
-        'Book' => new BookResource($book)
-    ]);
+    return $this->success('', new BookResource($book)
+);
 }
 
 
