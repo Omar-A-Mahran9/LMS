@@ -57,9 +57,8 @@ var KTDatatablesServerSide = (function () {
                 {
                     targets: 3,
                     render: function (data) {
-                        return `<span class="badge badge-light-info">${data.replace(
-                            "_",
-                            " "
+                        return `<span class="badge badge-light-info">${__(
+                            data.replace("_", " ")
                         )}</span>`;
                     },
                 },
@@ -73,7 +72,9 @@ var KTDatatablesServerSide = (function () {
                                 rejected: "danger",
                             }[data] ?? "secondary";
 
-                        return `<span class="badge badge-light-${color}">${__(data)}</span>`;
+                        return `<span class="badge badge-light-${color}">${__(
+                            data
+                        )}</span>`;
                     },
                 },
                 {

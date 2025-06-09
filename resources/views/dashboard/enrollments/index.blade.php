@@ -16,36 +16,10 @@
             data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
             <!--begin::Card title-->
             <div class="card-title m-0">
-                <h3 class="fw-bold m-0">{{ __('Cities list') }}</h3>
+                <h3 class="fw-bold m-0">{{ __('Enrollments list') }}</h3>
             </div>
             <!--end::Card title-->
 
-            <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
-
-                <!--begin::Toolbar-->
-                <div class="d-flex justify-content-end w-100" id="add_btn" data-bs-toggle="modal"
-                    data-bs-target="#crud_modal" data-kt-docs-table-toolbar="base">
-                    <!--begin::Add customer-->
-                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
-                        data-bs-original-title="Coming Soon" data-kt-initialized="1">
-                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
-                        <span class="svg-icon svg-icon-2">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1"
-                                    transform="rotate(-90 11.364 20.364)" fill="currentColor">
-                                </rect>
-                                <rect x="4.36396" y="11.364" width="16" height="2" rx="1"
-                                    fill="currentColor"></rect>
-                            </svg>
-                        </span>
-                        <!--end::Svg Icon-->{{ __('Add city') }}
-                    </button>
-                    <!--end::Add customer-->
-                </div>
-                <!--end::Toolbar-->
-            </div>
-            <!--end::Info-->
 
         </div>
         <!--begin::Card header-->
@@ -68,10 +42,36 @@
                     </span>
                     <!--end::Svg Icon-->
                     <input type="text" data-kt-docs-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Search for cities') }}">
+                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Search for enrollments') }}">
                 </div>
                 <!--end::Search-->
 
+                <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
+
+                    <!--begin::Toolbar-->
+                    <div class="d-flex justify-content-end w-100" id="add_btn" data-bs-toggle="modal"
+                        data-bs-target="#crud_modal" data-kt-docs-table-toolbar="base">
+                        <!--begin::Add customer-->
+                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
+                            data-bs-original-title="Coming Soon" data-kt-initialized="1">
+                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
+                            <span class="svg-icon svg-icon-2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1"
+                                        transform="rotate(-90 11.364 20.364)" fill="currentColor">
+                                    </rect>
+                                    <rect x="4.36396" y="11.364" width="16" height="2" rx="1"
+                                        fill="currentColor"></rect>
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->{{ __('Add Enroll') }}
+                        </button>
+                        <!--end::Add customer-->
+                    </div>
+                    <!--end::Toolbar-->
+                </div>
+                <!--end::Info-->
                 <!--begin::Group actions-->
                 <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
                     <div class="fw-bold me-5">
@@ -118,7 +118,7 @@
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="form_title">{{ __('Add new city') }}</h5>
+                        <h5 class="modal-title" id="form_title">{{ __('Add new Enroll') }}</h5>
                         <!--begin::Close-->
                         <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                             aria-label="Close">
@@ -174,7 +174,7 @@
             $("#add_btn").click(function(e) {
                 e.preventDefault();
 
-                $("#form_title").text(__('Add new city'));
+                $("#form_title").text(__('Add new Enroll'));
                 $("[name='_method']").remove();
                 $("#crud_form").trigger('reset');
                 $("#crud_form").attr('action', `/dashboard/enrollments`);

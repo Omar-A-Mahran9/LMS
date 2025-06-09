@@ -13,12 +13,13 @@ class BookController extends Controller
 {
 public function index(Request $request)
 {
-$books = Book::where('is_active', 1)->get();
+    $perPage = $request->get('per_page', 10); // Default to 10 per page
 
-    return $this->success('',
-                    BookResource::collection($books));
+    $books = Book::where('is_active', 1)->paginate($perPage);
 
+    return $this->success('', BookResource::collection($books)->response()->getData(true));
 }
+
 
 public function show($id)
 {
