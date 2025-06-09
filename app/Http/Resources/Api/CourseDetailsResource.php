@@ -48,7 +48,7 @@ class CourseDetailsResource extends JsonResource
             'have_discount' => $this->have_discount,
             'is_enrolled' => $this->is_enrolled,
             'payment_type' => $this->payment_type,
-             'request_status' => __($this->request_status),
+            'request_status' => __($this->request_status),
 
         ];
     }
