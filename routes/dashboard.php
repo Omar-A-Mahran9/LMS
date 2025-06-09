@@ -14,87 +14,46 @@ Route::delete("categories/delete-selected", "CategoryController@deleteSelected")
 Route::get("categories/restore-selected", "CategoryController@restoreSelected");
 Route::delete("contact-requests/delete-selected", "ContactRequestController@deleteSelected");
 Route::delete("students/delete-selected", "StudentController@deleteSelected");
-Route::delete("tags/delete-selected", "TagController@deleteSelected");
-Route::get("tags/restore-selected", "TagController@restoreSelected");
 Route::delete("cities/delete-selected", "GovernmentsController@deleteSelected");
 Route::get("cities/restore-selected", "GovernmentsController@restoreSelected");
-Route::delete("skin-colors/delete-selected", "SkinColorController@deleteSelected");
-Route::get("skin-colors/restore-selected", "SkinColorController@restoreSelected");
-Route::delete("ads/delete-selected", "AdController@deleteSelected");
-Route::delete("offers/delete-selected", "OfferController@deleteSelected");
-Route::delete("products/delete-selected", "ProductController@deleteSelected");
-Route::get("products/restore-selected", "ProductController@restoreSelected");
 Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected");
-Route::delete("design-types/delete-selected", "DesignTypeController@deleteSelected");
-Route::get("design-types/restore-selected", "DesignTypeController@restoreSelected");
-Route::delete("brands/delete-selected", "BrandController@deleteSelected");
-Route::get("brands/restore-selected", "BrandController@restoreSelected");
-Route::delete("vendors/delete-selected", "VendorController@deleteSelected");
-Route::get("vendors/restore-selected", "VendorController@restoreSelected");
-Route::delete("fast-shipping-city/delete-selected", "FastShippingGovernmentsController@deleteSelected");
-Route::get("fast-shipping-city/restore-selected", "FastShippingGovernmentsController@restoreSelected");
-Route::get("fast-shipping-city/restore/{fastCity}", "FastShippingGovernmentsController@restore");
-Route::delete("packageCategories/delete-selected", "PackageCategoryController@deleteSelected");
-Route::delete("packages/delete-selected", "PackagesController@deleteSelected");
-
  Route::delete("Course/delete-selected", "CourseController@deleteSelected");
  Route::get("Course/restore-selected", "CourseController@restoreSelected");
-
  Route::delete("Course/delete-selected", "CourseController@deleteSelected");
  Route::get("Course/restore-selected", "CourseController@restoreSelected");
-
  Route::delete("whyus/delete-selected", "WhyusController@deleteSelected");
  Route::get("whyus/restore-selected", "WhyusController@restoreSelected");
-
  Route::delete("CommonQuestion/delete-selected", "CommonQuestionController@deleteSelected");
  Route::get("CommonQuestion/restore-selected", "CommonQuestionController@restoreSelected");
-
  Route::delete("howuse/delete-selected", "HowuseController@deleteSelected");
  Route::get("howuse/restore-selected", "HowuseController@restoreSelected");
-
  Route::resource('courses', 'CourseController')->except(['create', 'edit']);
  Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
  Route::get('classes/{classId}/videos', 'CourseVideoController@getvideosbyclasses');
-
  Route::resource('classes', 'ClassController')->except(['create', 'edit']);
  Route::resource('books', 'BookController')->except(['create', 'edit']);
-
  Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
  Route::resource('classes.quizzes', QuizByClassController::class);
-
  Route::resource('homeworks', 'HomeWorkController')->except(['create', 'edit']);
-  Route::resource('questions', 'QuestionController')->except(['create', 'edit']);
-
+ Route::resource('questions', 'QuestionController')->except(['create', 'edit']);
  Route::resource('homeworks-questions', 'HomeWorkQuestionController')->except(['create', 'edit']);
-
  Route::resource('whyus', 'WhyusController')->except(['create', 'edit']);
  Route::resource('howuse', 'HowuseController')->except(['create', 'edit']);
-
  Route::resource('CommonQuestion', 'CommonQuestionController')->except(['create', 'edit']);
-
 /** begin resources routes **/
-Route::resource('order-reasons', 'OrderReasonController')->except(['create', 'edit']);
-Route::resource('admins', 'AdminController')->except(['create', 'edit']);
+ Route::resource('admins', 'AdminController')->except(['create', 'edit']);
 Route::resource('booking', 'BookingController')->except(['create', 'edit']);
 Route::resource('brands', 'BrandController')->except(['create', 'edit']);
 Route::resource('award', 'BrandController')->except(['create', 'edit']);
 Route::resource('partner', 'PartenerController')->except(['create', 'edit']);
 Route::resource('gallary', 'GallaryController')->except(['create', 'edit']);
+Route::resource('enrollments', 'EnrollmentController')->except(['create', 'edit']);
 
-
-
-Route::resource('packageCategories', 'PackageCategoryController')->except(['create', 'edit']);
-Route::resource('packagesubCategories', 'PackagesubCategoryController')->except(['create', 'edit']);
-
-Route::resource('packages', 'PackagesController')->except(['create', 'edit']);
-Route::resource('car_prices', 'CarPriceController')->except(['create', 'edit']);
 
 Route::resource('governments', 'GovernmentsController')->except(['create', 'edit']);
 Route::resource('categories', 'CategoryController')->except(['create', 'edit']);
 Route::resource('maincategories', 'MainCategoryController')->except(['create', 'edit']);
 
-Route::resource('design-types', 'DesignTypeController')->except(['create', 'edit']);
-Route::get('/parent-categories', 'CategoryController@parentCategories');
 Route::resource('contact-requests', 'ContactRequestController')->except(['create', 'edit', 'store', 'update']);
 Route::resource('students', 'StudentController')->except(['create', 'edit']);
 Route::resource('students_rate', 'StudentsRatesController')->except(['create', 'edit']);
@@ -102,18 +61,6 @@ Route::resource('students_rate', 'StudentsRatesController')->except(['create', '
 Route::get('students/blocking/{student}', 'StudentController@blocked')->name('students.blocked');
 Route::get('students/blocked-selected', 'StudentController@blockedSelected');
 
-Route::get('vendor/{vendor}/shipping-details', 'VendorController@createShippingDetails')->name('vendor.shipping-details');
-Route::get('vendor/{vendor}/edit-shipping-details', 'VendorController@editShippingDetails')->name('vendor.edit-shipping-details');
-Route::post('vendor/{vendor}/shipping-details', 'VendorController@storeShippingDetails')->name('vendor.store.shipping-details');
-Route::post('vendor/{vendor}/edit-shipping-details', 'VendorController@updateShippingDetails')->name('vendor.update.shipping-details');
-Route::post('change/vendor/{vendor}', 'VendorController@changeStatus')->name('vendor.change.status');
-Route::resource('vendors', 'VendorController');
-Route::resource('fast-shipping-city', 'FastShippingGovernmentsController');
-Route::resource('tags', 'TagController')->except(['create', 'edit']);
-Route::resource('skin-colors', 'SkinColorController')->except(['create', 'edit']);
-Route::resource('ads', 'AdController')->except(['create', 'edit']);
-Route::resource('offers', 'OfferController')->except(['create', 'edit']);
-Route::resource('orders', 'OrderController');
 
 Route::resource('sliders', 'SliderController');
 
@@ -122,10 +69,6 @@ Route::get('profile-info', 'ProfileController@profileInfo')->name('profile-info'
 Route::put('update-profile-info', 'ProfileController@updateProfileInfo')->name('update-profile-info');
 Route::put('update-profile-email', 'ProfileController@updateProfileEmail')->name('update-profile-email');
 Route::put('update-profile-password', 'ProfileController@updateProfilePassword')->name('update-profile-password');
-/** ajax routes **/
-Route::post('dropzone/validate-image', 'DropzoneController@validateImage')->name('dropzone.validate-image');
-Route::post("select2-ajax/subcategories", "ProductController@getSubcategories")->name('select2-ajax.subcategories');
-Route::post("select2-ajax/vendor-cities", "ProductController@getgovernmentsBasedOnVendor")->name('select2-ajax.vendor-cities');
 
 /**  ====================SETTINGS======================  **/
 Route::prefix('settings')->name('settings.')->group(function () {

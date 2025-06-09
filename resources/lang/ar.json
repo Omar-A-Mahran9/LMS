@@ -382,8 +382,12 @@
     "Search for Courses": "البحث عن كورس",
     "students Rate": "تقييمات الطلاب",
     "Course Section": "قسم الكورس",
+    "Enrollments": "الاشتراكات",
 
     "Add Course": "اضافة كورس",
+    "approved": "مقبول",
+    "pending": "قيد الانتظار",
+    "rejected": "مرفوض",
 
     "Choose the color": "اختر اللون",
     "Choose the type": "اختر النوع",

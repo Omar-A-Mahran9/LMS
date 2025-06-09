@@ -14,16 +14,6 @@
                         <div class="d-flex gap-2">
 
 
-
-                            @can('view_videos')
-                                <a href="{{ route('dashboard.videos.index') }}"
-                                    class="btn btn-primary d-flex align-items-center">
-                                    <i class="ki-outline ki-plus fs-2 me-2"></i> {{ __('Add New video') }}
-                                </a>
-                            @endcan
-
-
-
                             @can('view_homework')
                                 <a href="{{ route('dashboard.homeworks.index') }}"
                                     class="btn btn-primary d-flex align-items-center">

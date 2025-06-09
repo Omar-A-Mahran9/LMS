@@ -13,6 +13,8 @@ class SortingScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $builder->orderByDesc('created_at');
+            $builder->orderBy($model->getTable() . '.created_at', 'desc');
+
+        // $builder->orderByDesc('created_at');
     }
 }

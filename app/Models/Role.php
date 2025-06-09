@@ -50,6 +50,8 @@ class Role extends Model
 
         'books',
 
+        'enrollments',
+
         'roles',
 
         'governments',

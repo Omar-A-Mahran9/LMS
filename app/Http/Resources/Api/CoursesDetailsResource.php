@@ -5,6 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CoursesDetailsResource extends JsonResource
@@ -16,15 +17,7 @@ class CoursesDetailsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-    $student = auth()->user();
-    $isEnrolled = false;
 
-    if ($student) {
-        $isEnrolled = DB::table('course_student')
-            ->where('course_id', $this->id)
-            ->where('student_id', $student->id)
-            ->exists();
-    }
         return [
                "id" => $this->id,
             'image' => $this->full_image_path,
@@ -47,7 +40,10 @@ class CoursesDetailsResource extends JsonResource
             'discount_percentage' => $this->have_discount ? $this->discount_percentage : null,
             'is_free' => $this->is_free,
             'have_discount' => $this->have_discount,
-            'is_enrolled' => $isEnrolled,
+            'is_enrolled' => $this->is_enrolled,
+            'payment_type' => $this->payment_type,
+ 
+            'request_status' => __($this->request_status),
 
         ];
     }

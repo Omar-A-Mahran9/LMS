@@ -10,33 +10,49 @@ use Illuminate\Support\Facades\DB;
 
 class EnrollmentController extends Controller
 {
-       public function enroll_course(Request $request)
+    public function enroll_course(Request $request)
     {
-
         $request->validate([
             'course_id' => 'required|exists:courses,id',
+            'payment_type' => 'required|in:wallet_transfer,pay_in_center,contact_with_support',
         ]);
 
-        $student = auth()->user(); // assuming the student is authenticated
+        $student = auth()->user();
         $course = Course::findOrFail($request->course_id);
-        // Attach student to course if not already enrolled
 
-
-        $exists_course = DB::table('course_student')
+        // Check if student already enrolled
+        $enrollment = DB::table('course_student')
             ->where('course_id', $course->id)
             ->where('student_id', $student->id)
-            ->exists();
+            ->first();
 
-
-        if (!$exists_course) {
-
-            $course->students()->attach($student->id);
+        if ($enrollment) {
+            return $this->success('Already enrolled.', [
+                'is_enrolled' => true,
+                'status' => $enrollment->status,
+                'payment_type' => $enrollment->payment_type,
+                'enrolled_at' => $enrollment->created_at,
+            ]);
         }
 
-        return $this->success('',[
-            'message' => 'Student enrolled successfully.',
+        // Attach with pivot data
+        $course->students()->attach($student->id, [
+            'payment_type' => $request->payment_type,
+            'status' => 'pending',
+            'is_active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return $this->success('Student enrolled successfully.', [
+            'is_enrolled' => true,
+            'status' => 'pending',
+            'payment_type' => $request->payment_type,
+            'enrolled_at' => now(),
         ]);
     }
+
+
     public function enroll_class(Request $request)
     {
 
@@ -45,7 +61,7 @@ class EnrollmentController extends Controller
         ]);
 
         $student = auth()->user(); // assuming the student is authenticated
-       
+
         // Optional: attach to class if provided
         if ($request->filled('class_id')) {
             $class = CourseClass::findOrFail($request->class_id);

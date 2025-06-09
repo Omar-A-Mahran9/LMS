@@ -17,7 +17,6 @@ class Student extends Authenticatable
     protected $guarded = ["password_confirmation"];
     protected $casts   = ['created_at' => 'date:Y-m-d', 'updated_at' => 'date:Y-m-d', 'otp' => 'string'];
 
-
     protected $hidden = [
         'password',
         'remember_token',
@@ -57,8 +56,11 @@ class Student extends Authenticatable
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id')->withTimestamps();
+        return $this->belongsToMany(Course::class, 'course_student')
+                    ->withPivot('payment_type', 'status', 'is_active')
+                    ->withTimestamps();
     }
+
 
      public function enrolledCourses()
     {

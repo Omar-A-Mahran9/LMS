@@ -10,7 +10,7 @@ class Course extends Model
 
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['title', 'full_image_path','full_slide_image_path','description', 'note'];
+    protected $appends = ['title', 'full_image_path','full_slide_image_path','description', 'note','is_enrolled','payment_type','request_status'];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
@@ -34,7 +34,7 @@ class Course extends Model
     {
         return app()->getLocale() === 'ar' ? $this->description_ar : $this->description_en;
     }
-    
+
     public function getNoteAttribute()
     {
         return app()->getLocale() === 'ar' ? $this->note_ar : $this->note_en;
@@ -65,11 +65,47 @@ class Course extends Model
     }
 
 
-    public function students()
-    {
-        return $this->belongsToMany(Student::class, 'course_student', 'course_id', 'student_id')->withTimestamps();
+public function getIsEnrolledAttribute()
+{
+    if (!auth('api')->check()) return false;
 
-    }
+    return $this->students()
+        ->where('student_id', auth('api')->id())
+        ->reorder() // remove orderBy to avoid ambiguous column inside exists()
+        ->exists();
+}
+
+public function getPaymentTypeAttribute()
+{
+    if (!auth('api')->check()) return null;
+
+    $studentId = auth('api')->id();
+
+    // Find the pivot row for this student on this course
+    $pivot = $this->students()->where('student_id', $studentId)->first()?->pivot;
+
+    return $pivot ? $pivot->payment_type : null;
+}
+public function getRequestStatusAttribute()
+{
+    if (!auth('api')->check()) return null;
+
+    $studentId = auth('api')->id();
+
+    $pivot = $this->students()->where('student_id', $studentId)->first()?->pivot;
+
+    return $pivot ? $pivot->status : null; // Or 'status' depending on your pivot column name
+}
+
+
+public function students()
+{
+    return $this->belongsToMany(Student::class, 'course_student')
+                ->withPivot('payment_type', 'status', 'is_active')
+                ->withTimestamps();
+}
+
+
 
 
 

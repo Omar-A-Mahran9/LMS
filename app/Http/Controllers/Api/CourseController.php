@@ -32,7 +32,16 @@ class CourseController extends Controller
 public function getCoursesByCategory(Request $request)
 {
     $categoryId = $request->query('category_id');
-    $perPage = $request->query('per_page', 10); // Default items per page
+    $perPage = $request->query('per_page', 10);
+    $filter = $request->query('filter'); // values: 'my', 'other', or null
+  if ($filter === 'my' && !Auth::guard('api')->check()) {
+        $empty = Course::whereRaw('0=1')->paginate($perPage); // empty pagination
+        $resource = CoursesDetailsResource::collection($empty)->response()->getData(true);
+        return $this->successWithPagination('No courses found.', $resource);
+    }
+    $query = Course::query()
+        ->where('is_active', 1)
+        ->where('is_enrollment_open', 1);
 
     if ($categoryId) {
         $category = Category::find($categoryId);
@@ -41,19 +50,30 @@ public function getCoursesByCategory(Request $request)
             return $this->error('Category not found', 404);
         }
 
-        // Paginate courses under category
-        $courses = $category->courses()
-            ->where('is_active', 1)
-            ->where('is_enrollment_open', 1)
-            ->paginate($perPage);
-    } else {
-        // Paginate all courses
-        $courses = Course::where('is_active', 1)
-            ->where('is_enrollment_open', 1)
-            ->paginate($perPage);
+        $query->where('category_id', $category->id);
     }
 
-    // Convert resource collection to structured pagination data
+  if (Auth::guard('api')->check()) {
+    $student = Auth::guard('api')->user();
+
+    if ($filter === 'my') {
+        $query->whereHas('students', function ($q) use ($student) {
+            $q->where('student_id', $student->id)
+            ->where('course_student.status', 'approved')   // use full pivot table column name
+            ->where('course_student.is_active', 1);
+        });
+    } elseif ($filter === 'other') {
+        $query->whereDoesntHave('students', function ($q) use ($student) {
+            $q->where('student_id', $student->id)
+            ->where('course_student.status', 'approved')
+            ->where('course_student.is_active', 1);
+        });
+    }
+
+}
+
+
+    $courses = $query->paginate($perPage);
     $resource = CoursesDetailsResource::collection($courses)->response()->getData(true);
 
     return $this->successWithPagination('Courses retrieved successfully.', $resource);

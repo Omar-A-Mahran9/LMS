@@ -14,7 +14,11 @@ return new class extends Migration
         Schema::create('course_student', function (Blueprint $table) {
             $table->id();
                 $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-                 $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
+                $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
+                $table->enum('payment_type', ['wallet_transfer', 'pay_in_center', 'contact_with_support']);
+                $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+                $table->boolean('is_active')->default(true);
+
             $table->timestamps();
         });
     }

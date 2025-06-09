@@ -17,15 +17,7 @@ class CourseDetailsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $student = Auth::guard('api')->user();
-        $isEnrolled = false;
 
-        if ($student) {
-            $isEnrolled = DB::table('course_student')
-                ->where('course_id', $this->id)
-                ->where('student_id', $student->id)
-                ->exists();
-        }
 
         return [
                "id" => $this->id,
@@ -54,7 +46,10 @@ class CourseDetailsResource extends JsonResource
             'discount_percentage' => $this->have_discount ? $this->discount_percentage : null,
             'is_free' => $this->is_free,
             'have_discount' => $this->have_discount,
-            'is_enrolled' => $isEnrolled,
+            'is_enrolled' => $this->is_enrolled,
+            'payment_type' => $this->payment_type,
+             'request_status' => __($this->request_status),
+
         ];
     }
 }
