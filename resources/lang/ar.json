@@ -42,6 +42,14 @@
     "Books list": "قائمة الكتب",
     "Add new book": "إضافة كتاب جديد",
     "Book": "الكتاب",
+    "Add new Enroll": "اضافة اشتراك",
+    "Payment Method": "وسيلة الدفع",
+    "Select student": "حدد الطالب",
+    "Select course": "حدد الكورس",
+    "Select payment": "حدد وسيلة الدفع",
+    "Wallet Transfer": "تحويل من المحفظة",
+    "Contact with Support": "التواصل مع الدعم",
+    "Pay in Center": "الدفع في السنتر",
 
     "Inactive": "غير نشط",
     "Uploaded on": "تم الرفع في",
@@ -812,10 +820,10 @@
     "Set New Password": "تعيين كلمة مرور جديدة",
     "Please click the link below to set your new password.": "الرجاء الضغط على الرابط أدناه لتعيين كلمة المرور الجديدة الخاصة بك.",
     "This link will expire in 24 hours.": "سينتهي هذا الرابط خلال 24 ساعة.",
-    "Stock": "المخزون",
-    "stock": "المخزون",
+
     "AM": "صباحاً",
     "PM": "مساءً",
+    "Search for enrollments": "البحث في الاشتراكات",
 
     "Recycle Bin": "سلة المحذوفات",
     "recycle bin": "سلة المحذوفات",

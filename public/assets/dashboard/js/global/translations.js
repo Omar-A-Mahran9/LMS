@@ -156,6 +156,8 @@ let translations = {
         "wallet transfer": "الدفع بالمحفظة",
         "Add new subcategory": "اضافة قسم فرعي جديد",
         "Add category": "اضافة فئة جديدة",
+        "Add new Enroll": "اضافة اشتراك",
+        "pay in_center": "الدفع في السنتر",
 
         "Edit subcategory": "تعديل القسم الفرعي",
         "Add new tag": "أضف كلمة مفتاحية جديدة",
@@ -202,7 +204,7 @@ let translations = {
         SAR: "ر.س",
         "Normal Shipping": "الشحن العادي",
         Today: "اليوم",
-          Descript: "الوصف",
+        Descript: "الوصف",
         DESCRIPTION: "الوصف",
         Canceled: "تم الإلغاء",
         Refund: "تم الإسترجاع",

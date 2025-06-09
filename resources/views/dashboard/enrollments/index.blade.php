@@ -42,7 +42,8 @@
                     </span>
                     <!--end::Svg Icon-->
                     <input type="text" data-kt-docs-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Search for enrollments') }}">
+                        class="form-control form-control-solid w-250px ps-15"
+                        placeholder="{{ __('Search for enrollments') }}">
                 </div>
                 <!--end::Search-->
 
@@ -109,8 +110,6 @@
         <!--end::Content-->
     </div>
     <!--end::Basic info-->
-
-    {{-- begin::Add Country Modal --}}
     <form id="crud_form" class="ajax-form" action="{{ route('dashboard.enrollments.store') }}" method="post"
         data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
@@ -119,28 +118,73 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="form_title">{{ __('Add new Enroll') }}</h5>
-                        <!--begin::Close-->
-                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                            aria-label="Close">
-                            <i class="ki-outline ki-cross fs-1"></i>
+                        <div class="d-flex">
+                            <div class="col-6 d-flex align-items-center me-5 ">
+                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input" name="is_active" type="checkbox" value="1"
+                                        id="is_active_switch" checked>
+                                    <span class="form-check-label text-dark"
+                                        for="is_active_switch">{{ __('Active') }}</span>
+                                </label>
+                            </div>
+                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                                aria-label="Close">
+                                <i class="ki-outline ki-cross fs-1"></i>
+                            </div>
+
                         </div>
-                        <!--end::Close-->
+
                     </div>
 
                     <div class="modal-body">
-                        <div class="fv-row mb-0 fv-plugins-icon-container">
-                            <label for="name_ar_inp"
-                                class="form-label required fs-6 fw-bold mb-3">{{ __('Name ar') }}</label>
-                            <input type="text" name="name_ar" class="form-control form-control-lg form-control-solid"
-                                id="name_ar_inp" placeholder="{{ __('Name ar') }}">
-                            <div class="fv-plugins-message-container invalid-feedback" id="name_ar"></div>
+                        <div class="fv-row mb-4">
+                            <label class="form-label " for="student_id_inp">{{ __('Student') }}</label>
+                            <select name="student_id" class="form-select form-select-solid"
+                                data-dir="{{ getDirection() }}" data-control="select2"
+                                data-placeholder="{{ __('Select student') }}" data-allow-clear="true"
+                                id="student_id_inp">
+                                <option value=""></option>
+                                @foreach ($students as $student)
+                                    <option value="{{ $student->id }}">
+                                        {{ $student->first_name . ' ' . $student->last_name }}</option>
+                                @endforeach
+                            </select>
+
+                            <div class="invalid-feedback" id="student_id"></div>
                         </div>
-                        <div class="fv-row mb-4 fv-plugins-icon-container">
-                            <label for="name_en_inp"
-                                class="form-label required fs-6 fw-bold mb-3">{{ __('Name en') }}</label>
-                            <input type="text" name="name_en" class="form-control form-control-lg form-control-solid"
-                                id="name_en_inp" placeholder="{{ __('Name en') }}">
-                            <div class="fv-plugins-message-container invalid-feedback" id="name_en"></div>
+
+                        <div class="fv-row mb-4">
+                            <label class="form-label" for="course_id_inp">{{ __('Course') }}</label>
+                            <select name="course_id" class="form-select form-select-solid"
+                                data-dir="{{ getDirection() }}" data-control="select2"
+                                data-placeholder="{{ __('Select course') }}" data-allow-clear="true" id="course_id_inp">
+                                <option value=""></option>
+
+                                @foreach ($courses as $course)
+                                    <option value="{{ $course->id }}">
+                                        {{ $course->title }}{{ '     ' }}
+                                        ({{ $course->is_active ? __('Active') : __('Inactive') }})
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            <div class="invalid-feedback" id="course_id"></div>
+                        </div>
+
+                        <div class="fv-row mb-4">
+                            <label for="payment_method_inp"
+                                class="form-label required">{{ __('Payment Method') }}</label>
+                            <select name="payment_method"class="form-select form-select-solid"
+                                data-dir="{{ getDirection() }}" data-control="select2"
+                                data-placeholder="{{ __('Select payment') }}" data-allow-clear="true"
+                                id="payment_method_inp">
+                                <option value=""></option>
+
+                                <option value="wallet_transfer">{{ __('Wallet Transfer') }}</option>
+                                <option value="pay_in_center">{{ __('Pay in Center') }}</option>
+                                <option value="contact_with_support">{{ __('Contact with Support') }}</option>
+                            </select>
+                            <div class="invalid-feedback" id="payment_method"></div>
                         </div>
                     </div>
 
@@ -148,12 +192,9 @@
                         <button type="button" class="btn btn-light"
                             data-bs-dismiss="modal">{{ __('Close') }}</button>
                         <button type="submit" class="btn btn-primary">
-                            <span class="indicator-label">
-                                {{ __('Save') }}
-                            </span>
-                            <span class="indicator-progress">
-                                {{ __('Please wait....') }} <span
-                                    class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            <span class="indicator-label">{{ __('Save') }}</span>
+                            <span class="indicator-progress">{{ __('Please wait...') }}
+                                <span class="spinner-border spinner-border-sm ms-2"></span>
                             </span>
                         </button>
                     </div>
@@ -161,26 +202,70 @@
             </div>
         </div>
     </form>
-    {{-- end::Add Country Modal --}}
 @endsection
 @push('scripts')
+    <script>
+        const langActive = "{{ __('Active') }}";
+        const langInactive = "{{ __('Inactive') }}";
+
+        $(document).ready(function() {
+            $('#student_id_inp').on('change', function() {
+                var studentId = $(this).val();
+                var $courseSelect = $('#course_id_inp');
+
+                $courseSelect.html('<option value=""></option>').trigger('change');
+
+                if (!studentId) {
+                    return;
+                }
+
+                $.ajax({
+                    url: '/dashboard/enrollments/courses-for-student/' + studentId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.success) {
+                            var options = '<option value=""></option>';
+                            $.each(data.data, function(index, course) {
+                                options += '<option value="' + course.id + '">' +
+                                    course.title + ' (' + (course.is_active ?
+                                        langActive : langInactive) + ')</option>';
+                            });
+
+                            $courseSelect.html(options).val(null).trigger('change');
+                        } else {
+                            console.error('Failed to fetch courses');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching courses:', error);
+                    }
+                });
+            });
+        });
+    </script>
+
+
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/enrollments.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
-
     <script>
+        const addNewEnrollText = "{{ __('Add new Enroll') }}";
+
         $(document).ready(function() {
             $("#add_btn").click(function(e) {
                 e.preventDefault();
+                $("#is_active_switch").prop('checked', false);
+                $("#course_id_inp").val("").trigger('change');
+                $("#student_id_inp").val("").trigger('change');
+                $("#payment_method_inp").val("").trigger('change');
 
-                $("#form_title").text(__('Add new Enroll'));
+                $("#form_title").text(addNewEnrollText);
                 $("[name='_method']").remove();
                 $("#crud_form").trigger('reset');
                 $("#crud_form").attr('action', `/dashboard/enrollments`);
             });
-
-
         });
     </script>
 @endpush
