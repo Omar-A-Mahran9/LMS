@@ -94,22 +94,10 @@
                                         <tr>
                                             <td class="text-muted">
                                                 <div class="d-flex align-items-center">
-                                                    <i
-                                                        class="fa-regular fa-calendar fs-4 me-2"></i>{{ __('Visiting Date') }}
+                                                    <i class="fa-regular fa-google fs-4 me-2"></i>{{ __('ُEmail') }}
                                                 </div>
                                             </td>
-                                            <td class="fw-bold text-end">{{ $order->date }}</td>
-                                        </tr>
-
-
-                                        <tr>
-                                            <td class="text-muted">
-                                                <div class="d-flex align-items-center">
-                                                    <i
-                                                        class="fa-regular fa-calendar fs-4 me-2"></i>{{ __('Visiting Time') }}
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold text-end">{{ $order->time }}</td>
+                                            <td class="fw-bold text-end">{{ $order->email }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -118,31 +106,74 @@
                     </div>
                 </div>
 
-                <!-- Google Map iframe -->
-                <div class="card card-flush py-4">
+                <div class="card card-flush">
                     <div class="card-header">
-                        <div class="card-title">
-                            <h2>{{ __('Location') }}</h2>
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <div class="card-title">
+                                <h2>{{ __('Book Details') }}</h2>
+                            </div>
+
+                            @if ($order->book->attachment)
+                                <a href="{{ $order->book->full_attachment_path }}" target="_blank"
+                                    class="btn btn-sm btn-primary">
+                                    <i class="fa-solid fa-file-download me-1"></i>
+                                    {{ __('Download Attachment') }}
+                                </a>
+                            @endif
                         </div>
                     </div>
-                    <div class="card-body pt-0">
-                        <!-- Google Maps Embed -->
-                        <div class="ratio ratio-16x9 mb-3">
-                            <iframe
-                                src="https://www.google.com/maps?q={{ $order->lat }},{{ $order->lng }}&output=embed"
-                                width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy">
-                            </iframe>
-                        </div>
 
-                        <!-- Open in Google Maps link -->
-                        <div class="text-center">
-                            <a href="https://www.google.com/maps/search/?api=1&query={{ $order->lat }},{{ $order->lng }}"
-                                target="_blank" class="btn btn-primary">
-                                {{ __('Open in Google Maps') }}
-                            </a>
+
+                    <div class="card-body">
+                        <!--begin::Row-->
+                        <div class="row">
+                            <!--begin::Image-->
+                            <div class="col-md-2 text-start">
+                                <img src="{{ $order->book->full_image_path }}" alt="Book Image"
+                                    class="img-fluid rounded w-150px h-150px object-fit-cover" />
+                            </div>
+                            <!--end::Image-->
+
+                            <!--begin::Details-->
+                            <div class="col-md-10">
+                                <div class="row gap-5 align-items-start justify-content-center">
+                                    <!-- Left Column -->
+                                    <div class="col-md-12">
+                                        <table class="table table-row-bordered align-middle">
+                                            <tbody class="fw-semibold text-gray-600">
+                                                <tr>
+                                                    <td class="text-muted">{{ __('Title') }}</td>
+                                                    <td class="text-end text-dark">{{ $order->book->title_en }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted">{{ __('Price') }}</td>
+                                                    <td class="text-end text-dark">{{ $order->book->price }}
+                                                        {{ __('SAR') }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted">{{ __('Created At') }}</td>
+                                                    <td class="text-end text-dark">
+                                                        {{ $order->book->created_at->format('Y-m-d') }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted">{{ __('Description') }}</td>
+                                                    <td class="text-end text-dark">{!! $order->book->description_en !!}</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <!--end::Details-->
                         </div>
+                        <!--end::Row-->
                     </div>
                 </div>
+
+
 
 
             </div>

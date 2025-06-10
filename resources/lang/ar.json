@@ -187,14 +187,12 @@
     "Our mission": "هدفنا",
     "Our vission": "رؤيـتنا",
 
-
     "Our mission in arabic": "هدفنا باللغة العربية",
     "Our mission in english": "هدفنا باللغة الانجليزية",
     "Our vission in arabic": "رؤيـتنا باللغة العربية",
     "Our vission in english": "رؤيـتنا باللغة الانجليزية",
     "Add": "إضافة",
     "Edit slider": "تعديل السلايدر",
-
 
     "Add new package category": "اضافة فئة باقة جديدة",
     "Search for package categories": "البحث عن فئة باقة",
@@ -461,8 +459,8 @@
     "Order History": "تاريخ الطلب",
     "Order Details": "تفاصيل الطلب",
     "Personal": "شخصي",
-    "Gift": "هدية",
-    "Customer Details": "تفاصيل الطالب",
+    "Book Details": "تفاصيل الكتاب",
+    "Customer Details": "تفاصيل العميل",
     "Building number": "مبني رقم",
     "Street name": "اسم الشارع",
     "District": "حي",
@@ -591,7 +589,6 @@
     "Add tag": "أضف كلمة مفتاحية",
     "Tag name in arabic": "الكلمة المفتاحية بالعربي",
     "Tag name in english": "الكلمة المفتاحية بالانجليزي",
- 
 
     "Add city": "أضف محافظة",
     "Fast shipping": "شحن سريع",
@@ -725,9 +722,7 @@
     "There is no express shipping to": "لا يوجد شحن سريع إلى",
     "No fast shipping": "لا يوجد شحن سريع",
     "successfully completed": "تم الانتهاء بنجاح",
-    "Prepaid Cards": "البطاقات المدفوعة مسبقًا",
     "Payment method": "طريقة الدفع",
-    "No shipping to city": "لا يوجد شحن لمحافظة",
     "VAT": "ضريبة القيمة المضافة",
     "Order Status": "حالة الطلب",
     "Date": "التاريخ",
@@ -789,8 +784,7 @@
     "Top Cities with Branches": "أفضل المحافظات التي بها فروع",
     "Orders transactions report": "تقرير معاملات الطلبات",
     "Loading date range...": "جاري تحميل نطاق التاريخ...",
-    "User With Order": "المستخدم مع الطلب",
-    "Branch": "الفرع",
+    "ُEmail": "الايميل",
     "Top Branches": "أفضل الفروع",
     "SAR": "ر.س",
     "Active users": "المستخدمون النشطون",
@@ -821,17 +815,11 @@
     "Enrollments list": "قائمة الاشتراكات",
     "Tax data": "بيانات الضريبية",
     "Add Enroll": "إضافة اشتراك",
-    "Brand Name In English": "اسم العلامة التجارية بالإنجليزية",
-    "Brand Name In Arabic": "اسم العلامة التجارية بالعربية",
 
-    "size applicable": "المقاس المطبق",
     "It must consist of letters and numbers": "يجب أن تتكون من أحرف وأرقام",
-    "Order Reasons": "أسباب الطلب",
-    "Order reasons list": "قائمة أسباب الطلب",
+
     "Refund": "الإسترجاع",
-    "Select reason type": "اختر نوع السبب",
-    "Refund and cancellation orders": "طلبات الإسترجاع والإلغاء",
-    "Refund and cancellation orders list": "قائمة طلبات الإسترجاع والإلغاء",
+
     "canceled": "الغيت ",
     "Reasons for cancellation": "أسباب الإلغاء",
     "Reasons for refund": "أسباب الإسترجاع",
@@ -842,9 +830,8 @@
     "Add new reason": "أضف سبب جديد",
     "Reason In Arabic": "السبب باللغة العربية",
     "Reason In English": "السبب باللغة الانجليزية",
-    "Iban": "الإيبان البنكي",
-    "Brand name not entered": "لم يتم ادخال اسم العلامة التجارية",
-    "IBAN image not entered": "لم يتم ادخال صورة الايبان",
+
+    "Customer": "العميل",
     "Enter your full name, which consists of your first and last name": "أدخل الاسم الكامل ويتكون من الاسم الأول واسم العائلة",
     "Description not entered": "لم يتم إدخال الوصف"
 }
