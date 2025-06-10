@@ -64,17 +64,41 @@ var KTDatatablesServerSide = (function () {
                 },
                 {
                     targets: 4,
-                    render: function (data) {
-                        let color =
+                    orderable: false,
+                    render: function (data, type, row) {
+                        const statuses = ["pending", "approved", "rejected"];
+                        const color =
                             {
                                 approved: "success",
                                 pending: "warning",
                                 rejected: "danger",
                             }[data] ?? "secondary";
 
-                        return `<span class="badge badge-light-${color}">${__(
-                            data
-                        )}</span>`;
+                        const dropdownItems = statuses
+                            .map((status) => {
+                                return `
+                    <div class="menu-item px-3">
+                        <a href="javascript:;" class="menu-link px-3 change-status-item "
+                            data-id="${row.id}"
+                            data-status="${status}">
+                            ${__(status)}
+                        </a>
+                    </div>`;
+                            })
+                            .join("");
+
+                        return `
+            <div >
+                <a href="#" class="badge badge-light-${color} fw-bold border rounded"
+                    data-kt-menu-trigger="click"
+                    data-kt-menu-placement="bottom-end">
+                    ${__(data)}
+                </a>
+                <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
+                    ${dropdownItems}
+                </div>
+            </div>
+        `;
                     },
                 },
                 {
@@ -130,33 +154,53 @@ var KTDatatablesServerSide = (function () {
     };
 
     var handleEditRows = () => {
-        // Select all edit buttons
         const editButtons = document.querySelectorAll(
             '[data-kt-docs-table-filter="edit_row"]'
         );
 
-        editButtons.forEach((d) => {
-            // edit button on click
-            d.addEventListener("click", function (e) {
+        editButtons.forEach((btn) => {
+            btn.addEventListener("click", function (e) {
                 e.preventDefault();
 
-                let currentBtnIndex = $(editButtons).index(d);
+                let currentBtnIndex = $(editButtons).index(btn);
                 let data = datatable.row(currentBtnIndex).data();
 
-                $("#form_title").text(__("Edit city"));
-                $(".image-input-wrapper").css(
-                    "background-image",
-                    `url('${data.full_image_path}')`
-                );
-                $("#name_ar_inp").val(data.name_ar);
-                $("#name_en_inp").val(data.name_en);
+                $("#form_title").text(__("Edit Enrollment"));
+                $("#crud_form").trigger("reset");
+
+                // Set values except course (wait for it later)
+                $("#student_id_inp").val(data.student_id).trigger("change");
+                $("#payment_method_inp")
+                    .val(data.payment_type)
+                    .trigger("change");
+                $("#is_active_switch").prop("checked", !!data.is_active);
+
+                // Delay setting course_id until courses are loaded via AJAX
+                const $courseSelect = $("#course_id_inp");
+
+                // Listen for AJAX completion once
+                const interval = setInterval(function () {
+                    const optionExists =
+                        $courseSelect.find(`option[value="${data.course_id}"]`)
+                            .length > 0;
+                    if (optionExists) {
+                        $courseSelect.val(data.course_id).trigger("change");
+                        clearInterval(interval);
+                    }
+                }, 100); // Check every 100ms
+
+                // Set the form action
                 $("#crud_form").attr(
                     "action",
-                    `/dashboard/${dbTable}/${data.id}`
+                    `/dashboard/enrollments/${data.id}`
                 );
-                $("#crud_form").prepend(
-                    `<input type="hidden" name="_method" value="PUT">`
-                );
+
+                if ($("#crud_form input[name='_method']").length === 0) {
+                    $("#crud_form").prepend(
+                        `<input type="hidden" name="_method" value="PUT">`
+                    );
+                }
+
                 $("#crud_modal").modal("show");
             });
         });
@@ -211,4 +255,31 @@ var KTDatatablesServerSide = (function () {
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
     KTDatatablesServerSide.init();
+});
+
+$(document).on("click", ".change-status-item", function (e) {
+    e.preventDefault();
+
+    const id = $(this).data("id");
+    const newStatus = $(this).data("status");
+
+    $.ajax({
+        url: `/dashboard/enrollments/${id}/status`,
+        type: "POST",
+        data: {
+            status: newStatus,
+            _token: $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            if (response.success) {
+                // Reload or redraw the DataTable to reflect the status change
+                datatable.ajax.reload(null, false); // false to stay on the current page
+            } else {
+                alert(response.message || "Failed to change status.");
+            }
+        },
+        error: function () {
+            alert("An error occurred while updating status.");
+        },
+    });
 });

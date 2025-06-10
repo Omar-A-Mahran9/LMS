@@ -158,6 +158,7 @@ let translations = {
         "Add category": "اضافة فئة جديدة",
         "Add new Enroll": "اضافة اشتراك",
         "pay in_center": "الدفع في السنتر",
+        "contact with_support": "التواصل مع الدعم الفني",
 
         "Edit subcategory": "تعديل القسم الفرعي",
         "Add new tag": "أضف كلمة مفتاحية جديدة",
@@ -210,7 +211,7 @@ let translations = {
         Refund: "تم الإسترجاع",
         "Add new reason": "أضف سبب جديد",
         "Edit reason": "تعديل السبب",
-        "": "",
+        "Edit Enrollment": "تعديل الاشتراك",
         "": "",
         "": "",
         "": "",

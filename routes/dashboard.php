@@ -28,6 +28,9 @@ Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected
  Route::get("CommonQuestion/restore-selected", "CommonQuestionController@restoreSelected");
  Route::delete("howuse/delete-selected", "HowuseController@deleteSelected");
  Route::get("howuse/restore-selected", "HowuseController@restoreSelected");
+ Route::delete("enrollments/delete-selected", "EnrollmentController@deleteSelected");
+ Route::get("enrollments/restore-selected", "EnrollmentController@restoreSelected");
+
  Route::resource('courses', 'CourseController')->except(['create', 'edit']);
  Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
  Route::get('classes/{classId}/videos', 'CourseVideoController@getvideosbyclasses');
@@ -52,6 +55,7 @@ Route::resource('enrollments', 'EnrollmentController')->except(['create', 'edit'
 // routes/web.php or routes/api.php
 
 Route::get('/enrollments/courses-for-student/{student}', [EnrollmentController::class, 'getCoursesForStudent']);
+Route::post('/enrollments/{id}/status', [EnrollmentController::class, 'changeStatus']);
 
 
 Route::resource('governments', 'GovernmentsController')->except(['create', 'edit']);

@@ -50,8 +50,23 @@ public function getCoursesForStudent($studentId)
     ]);
 }
 
+public function changeStatus(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'required|in:pending,approved,rejected'
+    ]);
 
-    
+    $enrollment = Enrollment::findOrFail($id);
+    $enrollment->status = $request->status;
+    $enrollment->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => __('Status updated successfully.'),
+    ]);
+}
+
+
 public function store(Request $request)
 {
     // Validate request
@@ -78,16 +93,46 @@ public function store(Request $request)
 
 
 
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+public function update(Request $request, string $id)
+{
+    // Find the enrollment
+    $enrollment = Enrollment::findOrFail($id);
+
+    // Validate request (note: use 'nullable' here if fields may be omitted or null)
+    $validated = $request->validate([
+        'student_id' => 'nullable|exists:students,id',
+        'course_id' => 'nullable|exists:courses,id',
+        'payment_method' => 'nullable|in:wallet_transfer,pay_in_center,contact_with_support',
+        'is_active' => 'nullable|boolean',
+    ]);
+
+    // Use old values if new values are null
+    $validated['student_id'] = $validated['student_id'] ?? $enrollment->student_id;
+    $validated['course_id'] = $validated['course_id'] ?? $enrollment->course_id;
+    $validated['payment_method'] = $validated['payment_method'] ?? $enrollment->payment_type;
+
+    // Update the enrollment
+    $enrollment->update([
+        'student_id' => $validated['student_id'],
+        'course_id' => $validated['course_id'],
+        'payment_type' => $validated['payment_method'],
+        'is_active' => $validated['is_active']??false,
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => __('Enrollment updated successfully.'),
+    ]);
+}
+
 
     /**
      * Remove the specified resource from storage.
      */
 public function destroy($id)
 {
+        $this->authorize('delete_enrollments'); // or a more specific ability like 'view_enrollments'
+
     try {
         $enrollment = Enrollment::findOrFail($id);
         $enrollment->delete();
@@ -110,4 +155,20 @@ public function destroy($id)
     }
 }
 
+
+    public function deleteSelected(Request $request)
+    {
+        $this->authorize('delete_enrollments'); // or a more specific ability like 'view_enrollments'
+
+        Enrollment::whereIn('id', $request->selected_items_ids)->delete();
+        return response(["selected Enrollment deleted successfully"]);
+    }
+
+    public function restoreSelected(Request $request)
+    {
+        $this->authorize('delete_enrollments'); // or a more specific ability like 'view_enrollments'
+        Enrollment::withTrashed()->whereIn('id', $request->selected_items_ids)->restore();
+
+        return response(["selected Enrollment restored successfully"]);
+    }
 }
