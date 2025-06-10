@@ -51,10 +51,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('login-otp/{customer:phone}', 'Auth\AuthController@loginOTP');
     Route::post('register', 'Auth\AuthController@register');
 
-    Route::post('send-otp/{phone}', 'Auth\ForgetPasswordController@sendOtp');
-    Route::post('check-otp/{customer:phone}', 'Auth\ForgetPasswordController@checkOTP');
-    Route::post('change-password/{customer:phone}', 'Auth\ForgetPasswordController@changePassword');
-    Route::get('resend-otp/{customer:phone}', 'Auth\ForgetPasswordController@reSendOtp');
+    Route::post('send-otp', 'Auth\ForgetPasswordController@sendOtp');
+    Route::post('verify-otp', 'Auth\ForgetPasswordController@checkOTP');
+    Route::post('change-password', 'Auth\ForgetPasswordController@changePassword');
+    Route::post('resend-otp', 'Auth\ForgetPasswordController@reSendOtp');
 
     Route::get('about_us', 'HomeController@getAboutUs');
     Route::get('privacy_policy', 'HomeController@getprivacypolicy');

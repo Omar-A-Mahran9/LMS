@@ -84,4 +84,13 @@ class Student extends Authenticatable
         return $this->hasMany(CourseVideoStudent::class);
     }
 
+
+    public function sendOTP(){
+        $this->otp = rand(1111, 9999);
+        $this->otp_expiration = now()->addMinutes(5); // Optional
+        // $this->sendSMS("$appName: $this->otp هو رمز الحماية,لا تشارك الرمز");
+        $this->save();
+        return $this->otp;
+    }
+
 }
