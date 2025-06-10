@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\BookOrderController;
 use App\Http\Controllers\Dashboard\EnrollmentController;
 use App\Http\Controllers\Dashboard\QuizByClassController;
 use Illuminate\Http\Request;
@@ -52,10 +53,11 @@ Route::resource('award', 'BrandController')->except(['create', 'edit']);
 Route::resource('partner', 'PartenerController')->except(['create', 'edit']);
 Route::resource('gallary', 'GallaryController')->except(['create', 'edit']);
 Route::resource('enrollments', 'EnrollmentController')->except(['create', 'edit']);
-// routes/web.php or routes/api.php
+Route::resource('orders', 'OrderController')->except(['create', 'edit']);
 
 Route::get('/enrollments/courses-for-student/{student}', [EnrollmentController::class, 'getCoursesForStudent']);
 Route::post('/enrollments/{id}/status', [EnrollmentController::class, 'changeStatus']);
+Route::post('/orders/{id}/status', [BookOrderController::class, 'changeStatus']);
 
 
 Route::resource('governments', 'GovernmentsController')->except(['create', 'edit']);

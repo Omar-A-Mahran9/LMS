@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\BookOrderController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\StudentQuizController;
 use Illuminate\Http\Request;
@@ -65,6 +66,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('courses_by_id/{id}', 'CourseController@getCoursesById');
      Route::get('books', 'BookController@index');
     Route::get('books/{id}', 'BookController@show');
+    Route::post('/books/order', [BookOrderController::class, 'store']);
 
     Route::post('news-letter', 'HomeController@newsLetter');
     Route::post('Ask_us', 'ContactUsController@store');

@@ -50,6 +50,7 @@
     "Wallet Transfer": "تحويل من المحفظة",
     "Contact with Support": "التواصل مع الدعم",
     "Pay in Center": "الدفع في السنتر",
+    "Books Count": "عدد الكتب",
 
     "Inactive": "غير نشط",
     "Uploaded on": "تم الرفع في",
@@ -186,13 +187,6 @@
     "Our mission": "هدفنا",
     "Our vission": "رؤيـتنا",
 
-    "Packages list": "قائمة الباقات",
-    "Add new package": "اضافة باقة جديدة",
-    "Search for packages": "البحث عن باقة",
-    "Add package": "اضافة باقة",
-    "packages count": "عدد الباقات",
-    "show in home": "الظهور في الرئيسية",
-    "How use list": "قائمة كيفية طلب صيانة",
 
     "Our mission in arabic": "هدفنا باللغة العربية",
     "Our mission in english": "هدفنا باللغة الانجليزية",
@@ -201,9 +195,6 @@
     "Add": "إضافة",
     "Edit slider": "تعديل السلايدر",
 
-    "Packages Categories": "فئات الباقات",
-    "Packages Categories list": "قائمة فئات الباقات",
-    "Packages sub Categories list": "قائمة فئات الفرعية الباقات",
 
     "Add new package category": "اضافة فئة باقة جديدة",
     "Search for package categories": "البحث عن فئة باقة",
@@ -285,8 +276,7 @@
     "Basic information": "المعلومات الأساسية",
     "type name in arabic": "النوع بالعربية",
     "type name in english": "النوع بالانجليزية",
-    "write product name": "أدخل اسم الامنتج",
-    "Product list": "قائمة المنتجات",
+
     "Sort by": "ترتيب بواسطة",
     "Select sort method": "اختر طريقة الترتيب",
     "Video URL": "رابط الفيديو",
@@ -580,9 +570,7 @@
     "Enter your address in English": "ادخل العنوان بالانجليزية",
     "Enter your address in Arabic": "ادخل العنوان بالعربية",
     "Common Question": "الأسئلة الشائعة ",
-    "Edit vendor": "تعديل التاجر",
-    "Awards list": "قائمة الانجازات",
-    "Search for awards": "البحث عن الانجازات",
+
     "Add award": "اضافة انجاز",
     "Name ar": "الاسم بالعربي",
     "Name en": "الاسم بالانجليزي",
@@ -603,10 +591,7 @@
     "Add tag": "أضف كلمة مفتاحية",
     "Tag name in arabic": "الكلمة المفتاحية بالعربي",
     "Tag name in english": "الكلمة المفتاحية بالانجليزي",
-    "Has Fast Shipping Option ?": "لديها خاصية الشحن السريع ؟",
-    "loyalty and rewards program": "برنامج الولاء و المكافات",
-    "loyalty and rewards program in arabic": "برنامج الولاء و المكافات بالعربية",
-    "loyalty and rewards program in english": "برنامج الولاء و المكافات بالانجليزية",
+ 
 
     "Add city": "أضف محافظة",
     "Fast shipping": "شحن سريع",

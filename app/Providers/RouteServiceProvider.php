@@ -50,11 +50,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('dashboard')
                 ->group(base_path('routes/dashboard.php'));
 
-            Route::middleware(['web', 'auth:vendor', 'set_locale'])
-                ->namespace("App\\Http\\Controllers\\Vendor")
-                ->name('vendor.')
-                ->prefix('vendor')
-                ->group(base_path('routes/vendor.php'));
+            
         });
     }
 }

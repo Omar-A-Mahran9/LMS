@@ -37,4 +37,10 @@ class Book extends Model
     {
         return getAttachmentPathFromDirectory($this->attachment, 'books');
     }
+
+    public function orders()
+{
+    return $this->hasMany(BookOrder::class);
+}
+
 }
