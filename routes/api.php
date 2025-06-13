@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\API\BookOrderController;
+use App\Http\Controllers\Api\BookOrderController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\StudentQuizController;
 use Illuminate\Http\Request;
