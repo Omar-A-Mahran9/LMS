@@ -138,7 +138,7 @@
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
                             </div>
-           
+
                         </div>
 
                         {{-- Titles --}}
@@ -346,7 +346,12 @@
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
+    <script>
+        $(document).ready(() => {
 
+            initTinyMc();
+        });
+    </script>
     <script>
         $(document).on('click', '.open-question-modal', function() {
             const homeworkId = $(this).data('homework-id');

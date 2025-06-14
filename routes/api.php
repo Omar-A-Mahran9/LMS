@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\BookOrderController;
 use App\Http\Controllers\Api\EnrollmentController;
+use App\Http\Controllers\Api\StudentHomeworkController;
 use App\Http\Controllers\Api\StudentQuizController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,8 +36,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
     Route::post('student-quizzes/{quizAttemptId}/submit', [StudentQuizController::class, 'submitQuiz']);
     Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
+
+    Route::get('homeworks/{homeworkId}/start', [StudentHomeworkController::class, 'startHomework']);
+    Route::post('student-homeworks/{homeworkAttemptId}/submit', [StudentHomeworkController::class, 'submitHomework']);
+    Route::get('student-homeworks/{studentHomeworkId}/results', [StudentHomeworkController::class, 'results']);
+
+
     Route::get('homework_by_course/{id}', 'CourseController@getVideosByCourse');
-    Route::post('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
+
 
     Route::post('enroll-course', [EnrollmentController::class, 'enroll_course']);
     Route::post('enroll-class', [EnrollmentController::class, 'enroll_class']);

@@ -13,7 +13,10 @@ class HomeWorkAttempt extends Model
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
+        'started_at' => 'datetime',
+         'submitted_at' => 'datetime',
     ];
+    protected $dates = ['started_at', 'submitted_at'];
 
 
      public function homework()
