@@ -3,10 +3,14 @@
 var datatable;
 // Class definition
 var KTDatatablesServerSide = (function () {
-    let dbTable = "homeworks";
+    if (typeof classId !== "undefined" && classId) {
+        var dbTable = `classes/${classId}/homeworks`;
+    } else {
+        var dbTable = "homeworks";
+    }
     // Private functions
     var initDatatable = function () {
-        datatable = $("#kt_datatable").DataTable({
+        datatable = $("#kt_workhome_datatable").DataTable({
             language: language,
             searchDelay: searchDelay,
             processing: processing,
@@ -21,6 +25,7 @@ var KTDatatablesServerSide = (function () {
             ajax: {
                 url: `/dashboard/${dbTable}`,
             },
+
             columns: [
                 { data: "id" },
                 { data: "title" },
@@ -63,7 +68,9 @@ var KTDatatablesServerSide = (function () {
                             <div>
                                 <!--begin::Info-->
                                 <div class="d-flex flex-column justify-content-center">
-                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.course.title}</a>
+                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${
+                                        row.course ? row.course.title : " --- "
+                                    }</a>
                                 </div>
                                 <!--end::Info-->
                             </div>
@@ -203,11 +210,14 @@ var KTDatatablesServerSide = (function () {
                 $("#is_active_switch").prop("checked", data.is_active);
 
                 // Reset form method & action
-                $("#crud_form").attr("action", `/dashboard/homeworkzes/${data.id}`);
+                $("#crud_form_homework").attr(
+                    "action",
+                    `/dashboard/homeworkzes/${data.id}`
+                );
 
                 // Remove previous _method input if any, then add PUT
-                $("#crud_form").find('input[name="_method"]').remove();
-                $("#crud_form").prepend(
+                $("#crud_form_homework").find('input[name="_method"]').remove();
+                $("#crud_form_homework").prepend(
                     `<input type="hidden" name="_method" value="PUT">`
                 );
 

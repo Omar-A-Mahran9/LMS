@@ -102,8 +102,9 @@ public function show($id)
         $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
 
     $quizExists = $class->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
+    $homeworskExists = $class->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
 
-    return view('dashboard.classes.show', compact('class', 'quizExists','courses','quizzes'));
+    return view('dashboard.classes.show', compact('class', 'quizExists','courses','quizzes','homeworskExists'));
 }
 
 

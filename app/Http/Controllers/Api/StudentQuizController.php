@@ -28,8 +28,10 @@ class StudentQuizController extends Controller
 
     $durationMinutes = $quiz->duration_minutes;
 
-    if ($attempt && $durationMinutes) {
+    if ($attempt) {
         // Check if attempt expired
+      if ($durationMinutes !== null) {
+
         $expired = $attempt->started_at->addMinutes($durationMinutes)->isPast();
 
         if ($expired) {
@@ -40,7 +42,7 @@ class StudentQuizController extends Controller
             $attempt = null;
         }
     }
-
+    }
     if (!$attempt) {
         $attempt = QuizAttempt::create([
             'quiz_id' => $quizId,

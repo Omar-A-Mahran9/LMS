@@ -25,6 +25,25 @@ class StudentHomeworkController extends Controller
             ->whereNull('submitted_at')
             ->first();
 
+        $durationMinutes = $homework->duration_minutes;
+
+        if ($attempt) {
+            // Only check for expiration if duration is set
+            if ($durationMinutes !== null) {
+                $expired = $attempt->started_at->addMinutes($durationMinutes)->isPast();
+
+                if ($expired) {
+                    // Reset attempt: delete old attempt and its answers
+                    $attempt->answers()->delete();
+                    $attempt->delete();
+                    $attempt = null;
+                }
+            }
+
+            // If duration is null, it's open — do nothing
+        }
+
+
         if (!$attempt) {
             $attempt = HomeworkAttempt::create([
                 'home_work_id' => $homeworkId,

@@ -29,7 +29,12 @@ class HomeWork extends Model
 
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class,'course_id');
+    }
+
+         public function class()
+    {
+        return $this->belongsTo(CourseClass::class);
     }
 
     public function section()

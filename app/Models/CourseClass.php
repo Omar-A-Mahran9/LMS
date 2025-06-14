@@ -46,7 +46,15 @@ class CourseClass extends Model
     {
         return $this->belongsTo(Course::class);
     }
+   public function class()
+    {
+        return $this->belongsTo(CourseClass::class);
+    }
 
+    public function section()
+    {
+        return $this->belongsTo(CourseSection::class, 'course_section_id');
+    }
      public function videos()
     {
         return $this->hasMany(CourseVideo::class,'class_id');
@@ -54,6 +62,11 @@ class CourseClass extends Model
 public function quizzes()
 {
     return $this->hasMany(Quiz::class, 'class_id');
+}
+
+public function homeworks()
+{
+    return $this->hasMany(HomeWork::class, 'class_id');
 }
 
 public function students()

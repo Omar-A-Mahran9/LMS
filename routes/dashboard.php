@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\BookOrderController;
 use App\Http\Controllers\Dashboard\EnrollmentController;
+use App\Http\Controllers\Dashboard\HomeworkByClassController;
 use App\Http\Controllers\Dashboard\QuizByClassController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,8 @@ Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected
  Route::resource('books', 'BookController')->except(['create', 'edit']);
  Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
  Route::resource('classes.quizzes', QuizByClassController::class);
+  Route::resource('classes.homeworks', HomeworkByClassController::class);
+
  Route::resource('homeworks', 'HomeWorkController')->except(['create', 'edit']);
  Route::resource('questions', 'QuestionController')->except(['create', 'edit']);
  Route::resource('homeworks-questions', 'HomeWorkQuestionController')->except(['create', 'edit']);
