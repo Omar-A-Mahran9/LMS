@@ -17,6 +17,7 @@ class QuizResource extends JsonResource
     {
         return [
             "id" => $this->id,
+            'have_duration'=> $this->duration_minutes?true:false,
             'duration_minutes' => $this->duration_minutes,
             'questions' => $this->whenLoaded('questions')
             ? QuestionResource::collection($this->questions)

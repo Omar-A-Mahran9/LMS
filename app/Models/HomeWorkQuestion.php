@@ -25,8 +25,6 @@ class HomeWorkQuestion extends Model
         return $this->belongsTo(HomeWork::class ,'home_work_id');
     }
 
-
-
     public function answers()
     {
         return $this->hasMany(HomeWorkAnswer::class, 'home_work_question_id');

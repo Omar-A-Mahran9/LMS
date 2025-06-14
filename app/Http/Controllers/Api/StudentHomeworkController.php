@@ -17,17 +17,17 @@ class StudentHomeworkController extends Controller
         $studentId = auth()->id();
 
         $homework = Homework::findOrFail($homeworkId);
- 
+
         $homework->increment('attempt');
 
         $attempt = HomeworkAttempt::where('student_id', $studentId)
-            ->where('homework_id', $homeworkId)
+            ->where('home_work_id', $homeworkId)
             ->whereNull('submitted_at')
             ->first();
 
         if (!$attempt) {
             $attempt = HomeworkAttempt::create([
-                'homework_id' => $homeworkId,
+                'home_work_id' => $homeworkId,
                 'student_id' => $studentId,
                 'started_at' => now(),
             ]);
@@ -49,7 +49,7 @@ class StudentHomeworkController extends Controller
 
         $data = $request->validate([
             'answers' => 'required|array',
-            'answers.*.id' => 'required|integer|exists:homework_questions,id',
+            'answers.*.id' => 'required|integer|exists:home_work_questions,id',
             'answers.*.answer' => 'nullable',
         ]);
 
@@ -70,11 +70,11 @@ class StudentHomeworkController extends Controller
             $studentAnswer = $answersAssoc[$question->id] ?? null;
 
             $answerRecord = new HomeworkAttemptAnswer([
-                'homework_question_id' => $question->id,
+                'home_work_question_id' => $question->id,
             ]);
 
             if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-                $answerRecord->homework_answer_id = $studentAnswer;
+                $answerRecord->home_work_answer_id = $studentAnswer;
                 $answerText = $question->answers->firstWhere('id', $studentAnswer)?->answer_en;
                 if ($this->checkAnswer($question, $answerText)) {
                     $score += $question->points;
@@ -113,11 +113,10 @@ class StudentHomeworkController extends Controller
         $results = [];
         $score = 0;
         $total = 0;
-
-        foreach ($attempt->homework->questions as $question) {
+         foreach ($attempt->homework->questions as $question) {
             $total += $question->points;
 
-            $attemptAnswer = $attempt->answers->firstWhere('homework_question_id', $question->id);
+            $attemptAnswer = $attempt->answers->firstWhere('home_work_question_id', $question->id);
             $studentAnswer = null;
             $isCorrect = false;
 
@@ -128,9 +127,9 @@ class StudentHomeworkController extends Controller
                 ->toArray();
 
             if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-                $selectedAnswer = $question->answers->firstWhere('id', $attemptAnswer?->homework_answer_id);
+                $selectedAnswer = $question->answers->firstWhere('id', $attemptAnswer?->home_work_answer_id);
                 $studentAnswer = $selectedAnswer ? ['id' => $selectedAnswer->id, 'answer' => $selectedAnswer->answer_en] : null;
-                $isCorrect = $correctAnswers && collect($correctAnswers)->pluck('id')->contains($attemptAnswer?->homework_answer_id);
+                $isCorrect = $correctAnswers && collect($correctAnswers)->pluck('id')->contains($attemptAnswer?->home_work_answer_id);
             } elseif ($question->type === 'short_answer') {
                 $studentAnswer = [
                     'id' => null,
@@ -171,7 +170,9 @@ class StudentHomeworkController extends Controller
                 $correctAnswers = $question->answers->where('is_correct', 1)->pluck('answer_en')->map(fn($a) => strtolower(trim($a)))->toArray();
                 return in_array(strtolower(trim($studentAnswer)), $correctAnswers);
             case 'short_answer':
-                return strtolower(trim($studentAnswer)) === strtolower(trim($question->expected_answer));
+            $expected = strtolower(trim($question->expected_answer));
+            $actual = strtolower(trim($studentAnswer));
+            return $expected && $actual && str_contains($actual, $expected);
             default:
                 return false;
         }

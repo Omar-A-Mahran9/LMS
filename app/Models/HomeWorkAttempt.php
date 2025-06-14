@@ -21,7 +21,7 @@ class HomeWorkAttempt extends Model
 
      public function homework()
     {
-        return $this->belongsTo(HomeWork::class);
+        return $this->belongsTo(HomeWork::class,'home_work_id');
     }
 
     public function student()
