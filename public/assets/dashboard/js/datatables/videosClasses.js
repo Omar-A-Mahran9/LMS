@@ -284,7 +284,7 @@ var KTDatatablesServerSidevid = (function () {
     return {
         init: function () {
             initDatatable();
-            handleSearchDatatable();
+            // handleSearchDatatable();
             initToggleToolbar();
             handleEditRows();
             deleteVideoRowWithURL(`/dashboard/videos/`);
