@@ -23,6 +23,8 @@ class BookResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'note' => $this->note,
+
+
             'phone' =>setting('sms_number'),
 
 
@@ -38,7 +40,14 @@ class BookResource extends JsonResource
             'discount_percentage' => $this->have_discount ? $this->discount_percentage : null,
             'is_free' => $this->is_free,
             'have_discount' => $this->have_discount,
+            'is_booked' => $this->is_booked,
+            
+            'payment_type' => $this->payment_type,
 
+            'request_status' => [
+                "key"=>$this->request_status,
+                "value"=>__($this->request_status),
+            ],
 
         ];
     }

@@ -60,7 +60,12 @@ class Student extends Authenticatable
                     ->withPivot('payment_type', 'status', 'is_active')
                     ->withTimestamps();
     }
-
+    public function books()
+    {
+        return $this->belongsToMany(Course::class, 'book_orders')
+                    ->withPivot('payment_type', 'status')
+                    ->withTimestamps();
+    }
 
      public function enrolledCourses()
     {

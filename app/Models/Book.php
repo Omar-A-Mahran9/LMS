@@ -9,7 +9,7 @@ class Book extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['title','description','note','full_image_path','full_attachment_path'];
+    protected $appends = ['title','description','note','full_image_path','full_attachment_path','is_booked','request_status','payment_type'];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
@@ -19,6 +19,7 @@ class Book extends Model
     {
         return app()->getLocale() === 'ar' ? $this->title_ar : $this->title_en;
     }
+
 
     public function getDescriptionAttribute()
     {
@@ -39,8 +40,53 @@ class Book extends Model
     }
 
     public function orders()
+    {
+        return $this->hasMany(BookOrder::class);
+    }
+public function getIsBookedAttribute()
 {
-    return $this->hasMany(BookOrder::class);
+    if (!auth('api')->check()) return false;
+
+    return $this->students()
+        ->where('student_id', auth('api')->id())
+        ->reorder() // remove orderBy to avoid ambiguous column inside exists()
+        ->exists();
 }
+
+public function students()
+{
+    return $this->belongsToMany(Student::class, 'book_orders')
+                ->withPivot('payment_type', 'status')
+                ->withTimestamps();
+}
+
+public function getPaymentTypeAttribute()
+{
+    if (!auth('api')->check()) return null;
+
+    $studentId = auth('api')->id();
+
+    $order = $this->orders()
+        ->where('student_id', $studentId)
+        ->latest('id')
+        ->first();
+
+    return $order?->payment_type;
+}
+
+public function getRequestStatusAttribute()
+{
+    if (!auth('api')->check()) return null;
+
+    $studentId = auth('api')->id();
+
+    $order = $this->orders()
+        ->where('student_id', $studentId)
+        ->latest('id')
+        ->first();
+
+    return $order?->status;
+}
+
 
 }
