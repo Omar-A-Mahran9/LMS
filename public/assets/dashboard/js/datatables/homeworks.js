@@ -2,7 +2,7 @@
 
 var datatable;
 // Class definition
-var KTDatatablesServerSide = (function () {
+var KTDatatablesHomeworkServerSide = (function () {
     if (typeof classId !== "undefined" && classId) {
         var dbTable = `classes/${classId}/homeworks`;
     } else {
@@ -245,5 +245,5 @@ var KTDatatablesServerSide = (function () {
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
-    KTDatatablesServerSide.init();
+    KTDatatablesHomeworkServerSide.init();
 });
