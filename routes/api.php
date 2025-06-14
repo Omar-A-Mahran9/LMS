@@ -49,6 +49,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('enroll-class', [EnrollmentController::class, 'enroll_class']);
 
     Route::get('enrollment-status/{course_id}', [EnrollmentController::class, 'enrollmentStatus']);
+    Route::get('books/{id}', 'BookController@show');
 
 });
 
