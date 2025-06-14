@@ -43,7 +43,7 @@ class StudentsRatesController extends Controller
             'status'      => 'required|in:pending,reject,approve',
             'category_id' => 'required|exists:categories,id',
             'text'        => 'required_without:audio|string|max:2000',
-             'audio'       => 'required_without:text|file|mimetypes:audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/ogg|max:5120',
+            'audio' => 'required_without:text|file|mimes:mp3,wav,ogg|max:5120',
 
         ]);
 
@@ -77,7 +77,7 @@ class StudentsRatesController extends Controller
             'status'    => 'required|in:pending,reject,approve',
             'category_id' => 'required|exists:categories,id',
             'text'        => 'required_without:audio|string|max:2000',
-            'audio'       => 'required_without:text|file|mimetypes:audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/ogg|max:5120',
+            'audio' => 'required_without:text|file|mimes:mp3,wav,ogg|max:5120',
 
         ]);
 
