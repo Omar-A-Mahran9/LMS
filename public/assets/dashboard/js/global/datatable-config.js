@@ -39,9 +39,11 @@ var handleSearchDatatable = function () {
     const filterSearch = document.querySelector(
         '[data-kt-docs-table-filter="search"]'
     );
-    filterSearch.addEventListener("keyup", function (e) {
-        datatable.search(e.target.value).draw();
-    });
+    if (filterSearch) {
+        filterSearch.addEventListener("keyup", function (e) {
+            datatable.search(e.target.value).draw();
+        });
+    }
 };
 
 let handleFilterRowsByColumnIndex = () => {
