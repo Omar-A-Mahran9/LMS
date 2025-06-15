@@ -706,10 +706,240 @@
                     </div>
                 </form>
                 <!-- Hidden div for YouTube Player -->
+                <form id="crud_form_homework" class="ajax-form w-75" action="{{ route('dashboard.homeworks.store') }}"
+                    method="post" enctype="multipart/form-data" data-success-callback="onAjaxSuccess"
+                    data-error-callback="onAjaxError">
+                    @csrf
+                    <div class="modal fade" tabindex="-1" id="crud_homework">
+                        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="form_title">{{ __('Add New homework') }}</h5>
+                                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                        <i class="ki-outline ki-cross fs-1"></i>
+                                    </div>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="row mb-4">
+                                        <input type="hidden" name="class_id" value="{{ $class->id }}">
+                                    </div>
 
 
+                                    {{-- Titles --}}
+                                    <div class="row mb-4">
+                                        <div class="col-6">
+                                            <label for="title_ar_inp"
+                                                class="form-label">{{ __('Title (Arabic)') }}</label>
+                                            <input type="text" name="title_ar" id="title_ar_inp" class="form-control"
+                                                placeholder="{{ __('Enter Arabic title') }}">
+                                            <div class="invalid-feedback" id="title_ar"></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="title_en_inp"
+                                                class="form-label">{{ __('Title (English)') }}</label>
+                                            <input type="text" name="title_en" id="title_en_inp" class="form-control"
+                                                placeholder="{{ __('Enter English title') }}">
+                                            <div class="invalid-feedback" id="title_en"></div>
+                                        </div>
+                                    </div>
+
+                                    {{-- Descriptions --}}
+                                    <div class="row mb-4">
+                                        <div class="col-6">
+                                            <label for="description_ar_inp"
+                                                class="form-label">{{ __('Description (Arabic)') }}</label>
+                                            <textarea name="description_ar" id="description_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
+                                            <div class="fv-plugins-message-container invalid-feedback"
+                                                id="description_ar"></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="description_en_inp"
+                                                class="form-label">{{ __('Description (English)') }}</label>
+                                            <textarea name="description_en" id="description_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
+                                            <div class="fv-plugins-message-container invalid-feedback"
+                                                id="description_en"></div>
+                                        </div>
+                                    </div>
+
+                                    {{-- homework Info --}}
+                                    <div class="row mb-4">
+                                        <div class="col-3">
+                                            <label for="duration_minutes_inp"
+                                                class="form-label">{{ __('Duration (Minutes)') }}</label>
+                                            <input type="number" name="duration_minutes" id="duration_minutes_inp"
+                                                class="form-control" min="0">
+                                            <div class="fv-plugins-message-container invalid-feedback"
+                                                id="duration_minutes">
+                                            </div>
+                                        </div>
+                                        <div class="col-2 d-flex align-items-center mt-4">
+                                            <label class="form-check form-switch form-check-custom form-check-solid">
+                                                <input class="form-check-input" name="is_active" type="checkbox"
+                                                    value="1" id="is_active_switch" checked>
+                                                <span class="form-check-label text-dark"
+                                                    for="is_active_switch">{{ __('Active') }}</span>
+                                            </label>
+                                        </div>
+
+                                    </div>
 
 
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light"
+                                        data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <span class="indicator-label">{{ __('Save') }}</span>
+                                        <span class="indicator-progress">
+                                            {{ __('Please wait...') }} <span
+                                                class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <form id="question_form_homework" class="ajax-form" method="post"
+                    action="{{ route('dashboard.homeworks-questions.store') }}" enctype="multipart/form-data"
+                    data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
+                    @csrf
+
+                    <div class="modal fade" id="questionHomeworkModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">{{ __('Add New Question') }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    {{-- Question Arabic --}}
+                                    <input type="hidden" name="home_work_id" value="">
+
+                                    <div class="mb-3">
+                                        <label for="question_ar_inp">{{ __('Question (Arabic)') }}</label>
+                                        <input type="text" name="question_ar" class="form-control"
+                                            id="question_ar_inp">
+                                        <div class="invalid-feedback" id="question_ar"></div>
+                                    </div>
+
+                                    {{-- Question English --}}
+                                    <div class="mb-3">
+                                        <label for="question_en_inp">{{ __('Question (English)') }}</label>
+                                        <input type="text" name="question_en" class="form-control"
+                                            id="question_en_inp">
+                                        <div class="invalid-feedback" id="question_en"></div>
+                                    </div>
+
+                                    {{-- Question Type --}}
+                                    <div class="mb-3">
+                                        <label for="type_home_work_inp">{{ __('Question Type') }}</label>
+                                        <select name="type"id="type_home_work_inp" class="form-select"
+                                            data-control="select2" data-placeholder="{{ __('Select Type') }}"
+                                            data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                            <option value="multiple_choice">{{ __('Multiple Choice') }}</option>
+                                            <option value="true_false">{{ __('True / False') }}</option>
+                                            <option value="short_answer">{{ __('Short Answer') }}</option>
+                                        </select>
+                                        <div class="invalid-feedback" id="type"></div>
+                                    </div>
+
+                                    {{-- Repeater Error --}}
+                                    <div class="text-danger mb-2" id="answers_home_work"></div>
+
+                                    {{-- Multiple Choice Answers --}}
+                                    <div class="mb-3 answer-type answer-multiple_choice">
+                                        <label>{{ __('Answers') }}</label>
+                                        <div id="form_repeater_homework">
+                                            <div data-repeater-list="answers">
+                                                <div data-repeater-item class="row mb-2">
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="text_ar"
+                                                            class="form-control answer-text-ar">
+                                                        <div class="invalid-feedback"></div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="text_en"
+                                                            class="form-control answer-text-en">
+                                                        <div class="invalid-feedback"></div>
+                                                    </div>
+                                                    <div class="col-md-2 d-flex align-items-center">
+                                                        <label class="form-check-label">
+
+                                                            <input type="checkbox" name="is_correct" value="1"
+                                                                class="form-check-input">
+                                                            <div class="invalid-feedback"></div>
+
+                                                            {{ __('Correct') }}
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <a href="javascript:;" data-repeater-delete
+                                                            class="btn btn-sm btn-danger">
+                                                            {{ __('Delete') }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <a href="javascript:;" data-repeater-create
+                                                    class="btn btn-sm btn-secondary mt-2">
+                                                    {{ __('Add Answer') }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{-- True/False Answers --}}
+                                    <div class="mb-3 answer-type answer-true_false d-none">
+                                        <label>{{ __('Correct Answer') }}</label>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="correct_tf"
+                                                value="true" id="true_tf_inp">
+                                            <label class="form-check-label"
+                                                for="true_tf_inp">{{ __('True') }}</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="correct_tf"
+                                                value="false" id="true_tf_inp">
+                                            <label class="form-check-label"
+                                                for="true_tf_inp">{{ __('False') }}</label>
+                                        </div>
+                                        <div class="invalid-feedback" id="correct_tf"></div>
+
+                                    </div>
+
+                                    {{-- Short Answer --}}
+                                    <div class="mb-3 answer-type answer-short_answer d-none">
+                                        <label for="short_answer_inp">{{ __('Expected Answer') }}</label>
+                                        <input type="text" name="short_answer" class="form-control"
+                                            id="short_answer_inp">
+                                        <div class="invalid-feedback" id="short_answer"></div>
+
+                                    </div>
+
+                                    {{-- Points --}}
+                                    <div class="mb-3">
+                                        <label for="points_inp">{{ __('Points') }}</label>
+                                        <input type="number" name="points" class="form-control" value="1"
+                                            min="1" id="points_inp">
+                                        <div class="invalid-feedback" id="points"></div>
+
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
                 <div id="player-container" style="display: none;">
                     <div id="yt-player"></div>
@@ -751,6 +981,13 @@
             const quizId = $(this).data('class-id');
             $('#video_form input[name="class_id"]').val(quizId);
         });
+
+
+        $(document).on('click', '.open-question-modal', function() {
+            const homeworkId = $(this).data('homework-id');
+
+            $('#question_form_homework input[name="home_work_id"]').val(homeworkId);
+        });
     </script>
     {{-- Plugins --}}
     <script src="{{ asset('assets/dashboard/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
@@ -763,6 +1000,15 @@
             let type = $(this).val();
             $('.answer-type').addClass('d-none');
             $("#answers").html('');
+
+            $('.answer-' + type).removeClass('d-none');
+        }).trigger('change'); // Trigger on load
+
+        // Dynamic question type switching
+        $('#type_home_work_inp').on('change', function() {
+            let type = $(this).val();
+            $('.answer-type').addClass('d-none');
+            $("#answers_home_work").html('');
 
             $('.answer-' + type).removeClass('d-none');
         }).trigger('change'); // Trigger on load

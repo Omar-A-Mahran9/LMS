@@ -8,13 +8,13 @@
                 <div class="card card-flush">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div class="card-title">
-                            <h2>{{ __('Course Details') }}</h2>
+                            <h2>{{ __('Quiz Details') }}</h2>
                         </div>
                         <div class="d-flex gap-2">
 
 
 
-                            @can('view_videos')
+                            @can('view_quizzes')
                                 <!--begin::Toolbar-->
                                 <div class="d-flex justify-content-end w-100" id="add_btn" data-bs-toggle="modal"
                                     data-bs-target="#crud_modal" data-kt-docs-table-toolbar="base">

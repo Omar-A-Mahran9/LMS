@@ -10,7 +10,7 @@
     <div class="card mb-5 mb-x-10">
         <!--begin::Card header-->
         <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-            data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+            data-bs-target="#kt_workhome_datatable" aria-expanded="true" aria-controls="kt_workhome_datatable">
             <!--begin::Card title-->
             <div class="card-title m-0">
                 <h3 class="fw-bold m-0">{{ __('homeworks list') }}</h3>
@@ -21,7 +21,7 @@
 
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end w-100" id="add_btn" data-bs-toggle="modal"
-                    data-bs-target="#crud_modal" data-kt-docs-table-toolbar="base">
+                    data-bs-target="#crud_homework" data-kt-docs-table-toolbar="base">
                     <!--begin::Add customer-->
                     <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
                         data-bs-original-title="Coming Soon" data-kt-initialized="1">
@@ -111,7 +111,7 @@
     <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.homeworks.store') }}" method="post"
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
-        <div class="modal fade" tabindex="-1" id="crud_modal">
+        <div class="modal fade" tabindex="-1" id="crud_homework">
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -409,7 +409,7 @@
                 $(" #duration_minutes_inp").val('');
 
                 // Open modal if you want to show it on "Add"
-                $("#crud_modal").modal('show');
+                $("#crud_homework").modal('show');
             });
         });
     </script>

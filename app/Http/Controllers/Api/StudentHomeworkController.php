@@ -163,6 +163,11 @@ class StudentHomeworkController extends Controller
             $results[] = [
                 'question_id' => $question->id,
                 'question' => $question->question,
+                'question_answers' => $question->answers->map(fn($ans) => [
+                                            'id' => $ans->id,
+                                            'answer' => $ans->answer_en,
+                                            'is_correct' => (bool) $ans->is_correct, // optional
+                                        ])->values()->toArray(),
                 'student_answer' => $studentAnswer,
                 'correct_answers' => $correctAnswers,
                 'is_correct' => $isCorrect,

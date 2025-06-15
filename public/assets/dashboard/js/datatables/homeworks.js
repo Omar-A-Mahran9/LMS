@@ -69,7 +69,7 @@ var KTDatatablesHomeworkServerSide = (function () {
                                 <!--begin::Info-->
                                 <div class="d-flex flex-column justify-content-center">
                                     <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${
-                                        row.course ? row.course.title : " --- "
+                                        row.course ? row.course.title : " ---"
                                     }</a>
                                 </div>
                                 <!--end::Info-->
@@ -127,7 +127,7 @@ var KTDatatablesHomeworkServerSide = (function () {
                                     <a href="javascript:;"
                                     class="menu-link px-3 open-question-modal"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#questionModal"
+                                    data-bs-target="#questionHomeworkModal"
                                     data-homework-id="${data.id}">
                                     ${__("Add Question")}
                                     </a>
@@ -222,7 +222,7 @@ var KTDatatablesHomeworkServerSide = (function () {
                 );
 
                 // Show modal
-                $("#crud_modal").modal("show");
+                $("#crud_homework").modal("show");
             });
         });
     };
