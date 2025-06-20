@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\HomeworkResource;
 use App\Models\HomeWork;
-use App\Models\HomeworkAttempt;
-use App\Models\HomeworkAttemptAnswer;
+use App\Models\HomeWorkAttempt;
+use App\Models\HomeWorkAttemptAnswer;
 use Illuminate\Http\Request;
 
 class StudentHomeworkController extends Controller
@@ -45,7 +45,7 @@ class StudentHomeworkController extends Controller
 
 
         if (!$attempt) {
-            $attempt = HomeworkAttempt::create([
+            $attempt = HomeWorkAttempt::create([
                 'home_work_id' => $homeworkId,
                 'student_id' => $studentId,
                 'started_at' => now(),
@@ -88,7 +88,7 @@ class StudentHomeworkController extends Controller
         foreach ($attempt->homework->questions as $question) {
             $studentAnswer = $answersAssoc[$question->id] ?? null;
 
-            $answerRecord = new HomeworkAttemptAnswer([
+            $answerRecord = new HomeWorkAttemptAnswer([
                 'home_work_question_id' => $question->id,
             ]);
 
