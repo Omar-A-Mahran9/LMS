@@ -156,7 +156,7 @@ class StudentHomeworkController extends Controller
                 ->toArray();
         }
             if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-                 $selectedId = $attemptAnswer?->quiz_answer_id;
+                 $selectedId = $attemptAnswer?->home_work_answer_id;
                 $selectedAnswer = $question->answers->firstWhere('id', $attemptAnswer?->home_work_answer_id);
                 $studentAnswer = $selectedAnswer ? ['id' => $selectedAnswer->id, 'answer' => $selectedAnswer->answer_en] : null;
                 $isCorrect = $correctAnswers && collect($correctAnswers)->pluck('id')->contains($attemptAnswer?->home_work_answer_id);
