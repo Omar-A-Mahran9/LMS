@@ -59,13 +59,13 @@ public function getCoursesByCategory(Request $request)
   if (Auth::guard('api')->check()) {
     $student = Auth::guard('api')->user();
 
-    if ($filter === 'my') {
-        $query->whereHas('students', function ($q) use ($student) {
-            $q->where('student_id', $student->id)
-            ->where('course_student.status', 'approved')   // use full pivot table column name
-            ->where('course_student.is_active', 1);
-        });
-    } elseif ($filter === 'other') {
+if ($filter === 'my') {
+    $query->whereHas('students', function ($q) use ($student) {
+        $q->where('student_id', $student->id)
+          ->whereIn('course_student.status', ['approved', 'pending'])
+          ->where('course_student.is_active', 1);
+    });
+} elseif ($filter === 'other') {
         $query->whereDoesntHave('students', function ($q) use ($student) {
             $q->where('student_id', $student->id)
             ->where('course_student.status', 'approved')
