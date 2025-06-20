@@ -328,6 +328,7 @@ public function results($studentQuizId)
     }
 
     return $this->success('', [
+        'class_id'=> $attempt->quiz->class_id,
         'attempt_id'   => $attempt->id,
         'quiz_title'   => $attempt->quiz->title_en,
         'score'        => $totalScore,
