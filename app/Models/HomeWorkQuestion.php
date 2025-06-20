@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class HomeWorkQuestion extends Model
 {
     use HasFactory;
+    protected $table="home_work_questions";
     protected $guarded = [];
     protected $appends = ['question'];
     protected $casts   = [

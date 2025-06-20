@@ -19,6 +19,8 @@ class HomeworkResource extends JsonResource
             "id" => $this->id,
             'have_duration'=> $this->duration_minutes?true:false,
             'duration_minutes' => $this->duration_minutes,
-            'questions' => $this->questions ];
+            'questions' => $this->whenLoaded('questions')
+            ? QuestionHomeworkResource::collection($this->questions)
+            : [],        ];
     }
 }

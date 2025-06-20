@@ -16,7 +16,7 @@ class StudentHomeworkController extends Controller
     {
         $studentId = auth()->id();
 
-        $homework = HomeWork::findOrFail($homeworkId);
+        $homework = HomeWork::with('questions')->findOrFail($homeworkId);
 
         $homework->increment('attempt');
 
