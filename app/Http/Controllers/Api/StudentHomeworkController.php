@@ -193,6 +193,8 @@ class StudentHomeworkController extends Controller
         return $this->success('', [
             'attempt_id' => $attempt->id,
             'homework_title' => $attempt->homework->title_en,
+                            'class_id' =>  $attempt->homework->class_id,
+
             'score' => $score,
             'full_score' => $total,
             'submitted_at' => $attempt->submitted_at,
