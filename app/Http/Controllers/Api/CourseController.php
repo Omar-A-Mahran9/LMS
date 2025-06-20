@@ -22,8 +22,8 @@ use App\Models\CourseVideoStudent;
 use App\Models\Government;
 
 use App\Models\Quiz;
-
- use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -40,8 +40,11 @@ public function getCoursesByCategory(Request $request)
         return $this->successWithPagination('No courses found.', $resource);
     }
     $query = Course::query()
-        ->where('is_active', 1)
-        ->where('is_enrollment_open', 1);
+        ->where('is_active', 0)
+        ->where('is_class', 0)
+        ->where('is_enrollment_open', 1)
+        ->whereDate('start_date', '<=', now())
+        ->whereDate('end_date', '>=', now());
 
     if ($categoryId) {
         $category = Category::find($categoryId);
@@ -70,7 +73,7 @@ public function getCoursesByCategory(Request $request)
         });
     }
 
-}
+    }
 
 
     $courses = $query->paginate($perPage);
@@ -340,6 +343,60 @@ public function getfooter()
     ];
 
     return $this->success('', $data);
+}
+
+
+public function getCourses(Request $request)
+{
+    $perPage = $request->query('per_page', 10);
+    $filter = $request->query('filter'); // values: 'my', 'other', or null
+
+    if ($filter === 'my' && !Auth::guard('api')->check()) {
+        $empty = Course::whereRaw('0=1')->paginate($perPage); // empty pagination
+        $resource = CoursesDetailsResource::collection($empty)->response()->getData(true);
+        return $this->successWithPagination('No courses found.', $resource);
+    }
+
+    $query = Course::query()
+        ->where('is_active', 1)
+        ->where('is_class', 0)
+        ->where('is_enrollment_open', 1)
+        ->whereDate('start_date', '<=', now())
+        ->whereDate('end_date', '>=', now());
+
+    if (Auth::guard('api')->check()) {
+        $student = Auth::guard('api')->user();
+
+        if ($filter === 'my') {
+            $query->whereHas('students', function ($q) use ($student) {
+                $q->where('student_id', $student->id)
+                  ->where('course_student.status', 'approved')
+                  ->where('course_student.is_active', 1);
+            });
+        } elseif ($filter === 'other') {
+            $query->whereDoesntHave('students', function ($q) use ($student) {
+                $q->where('student_id', $student->id)
+                  ->where('course_student.status', 'approved')
+                  ->where('course_student.is_active', 1);
+            });
+        }
+    }
+
+    // Fetch courses and filter by "not full"
+    $courses = $query->get()->filter(fn($course) => !$course->is_full)->values();
+     // Paginate manually if needed (simulate Laravel pagination on collections)
+    $page = $request->query('page', 1);
+    $paginated = collect($courses)->forPage($page, $perPage);
+    $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
+        $paginated,
+        $courses->count(),
+        $perPage,
+        $page,
+        ['path' => url()->current(), 'query' => $request->query()]
+    );
+
+    $resource = CoursesDetailsResource::collection($paginator)->response()->getData(true);
+    return $this->successWithPagination('Courses retrieved successfully.', $resource);
 }
 
 

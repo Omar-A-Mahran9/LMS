@@ -63,7 +63,9 @@ Schema::create('courses', function (Blueprint $table) {
 
             // Relationships
             $table->foreignId('instructor_id')->nullable()->constrained('admins')->nullOnDelete();
+            $table->boolean('is_class')->default(false);
              $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
+            $table->integer('duration_per_student')->default(0);
 
             $table->foreignId('admin_id')->nullable()->constrained('admins')->nullOnDelete();
 

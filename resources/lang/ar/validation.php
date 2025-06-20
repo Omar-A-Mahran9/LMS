@@ -259,7 +259,9 @@ return [
         'short_answer'=> "الاجابة المتوقعة",
         'quiz_required'=> "الاختبار مطلوب",
         'quiz_id'=> "الاختبار",
-
+        'is_class'=> "يوجد حصص",
+        "duration_per_student"=> "المدة لكل طالب",
+ 
         'website'=> "الموقع",
         "experience_years"=> "سنين الخبرة",
         'old_password' => 'كلمة المرور القديمة',
@@ -272,6 +274,7 @@ return [
         'name' => 'الأسم',
         'address' => 'العنوان',
         'text'=> "النص",
+        'instructor_id'=> "المحاضر",
 
         'city_id' => 'المنطقة',
         'roles' => 'الصلاحيات والادوار',

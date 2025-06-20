@@ -50,7 +50,10 @@ return [
 
    // Relationships
     'instructor_id' => ['required', 'exists:admins,id'],
-    'category_id' => ['required', 'exists:categories,id'],
+        'is_free' => ['is_class', 'boolean'],
+
+    'category_id' => ['required_with:is_class,1', 'exists:categories,id'],
+    'duration_per_student' => ['required', 'integer', 'min:1'],
 
 
     // Pricing

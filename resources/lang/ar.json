@@ -20,6 +20,8 @@
     "Student Details": "بيانات الطالب ",
     "Male": "ذكر",
     "Quiz Details": "بيانات الامتحان",
+    "Is Class": "هل يوجد حصص؟",
+    "Duration Per Student (days)": "مدة الكورس لكل طالب (بالأيام)",
 
     "Female": "أنثى",
     "Block Student": "حظر الطالب",

@@ -78,6 +78,7 @@ public function store(StoreCourseRequest $request)
     $data['show_in_home'] = $request->boolean('show_in_home');
     $data['featured'] = $request->boolean('featured');
     $data['certificate_available'] = $request->boolean('certificate_available');
+    $data['is_class'] = $request->boolean('is_class');
 
     // Create course
     $course =Course::create($data);

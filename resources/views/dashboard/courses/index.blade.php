@@ -236,7 +236,16 @@
 
                             </div>
                             <div class="col-4">
-                                <label for="category_id_inp" class="form-label">{{ __('Category') }}</label>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label for="category_id_inp" class="form-label">{{ __('Category') }}</label>
+
+                                    <label class="form-check form-switch form-check-custom form-check-solid mb-2">
+                                        <input class="form-check-input" name="is_class" type="checkbox" value="1"
+                                            id="is_class_switch">
+                                        <span class="form-check-label" for="is_class_switch">{{ __('Is Class') }}</span>
+                                    </label>
+                                </div>
+
                                 <select name="category_id" id="category_id_inp" class="form-select"
                                     data-control="select2" data-placeholder="{{ __('Select Category') }}"
                                     data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
@@ -245,8 +254,8 @@
                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
-                                <div class="fv-plugins-message-container invalid-feedback" id="category_id"></div>
 
+                                <div class="fv-plugins-message-container invalid-feedback" id="category_id"></div>
                             </div>
 
 
@@ -347,18 +356,27 @@
                         {{-- Duration and Dates --}}
                         <div class="row mb-4">
 
-                            <div class="col-6">
+                            <div class="col-4">
                                 <label for="start_date_inp" class="form-label">{{ __('Start Date') }}</label>
                                 <input type="date" name="start_date" id="start_date_inp" class="form-control">
                                 <div class="fv-plugins-message-container invalid-feedback" id="start_date"></div>
 
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
                                 <label for="end_date_inp" class="form-label">{{ __('End Date') }}</label>
                                 <input type="date" name="end_date" id="end_date_inp" class="form-control">
                                 <div class="fv-plugins-message-container invalid-feedback" id="end_date"></div>
 
                             </div>
+                            <div class="col-4">
+                                <label for="duration_per_student_inp"
+                                    class="form-label">{{ __('Duration Per Student (days)') }}</label>
+                                <input type="number" name="duration_per_student" id="duration_per_student_inp"
+                                    class="form-control" min="1" step="1">
+                                <div class="fv-plugins-message-container invalid-feedback" id="duration_per_student">
+                                </div>
+                            </div>
+
 
                         </div>
                         {{-- Flags --}}
@@ -439,6 +457,27 @@
                 originalInputValueFormat: valuesArr => valuesArr.map(item => item.value).join(',')
             });
 
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const isClassSwitch = document.getElementById('is_class_switch');
+            const categorySelect = document.getElementById('category_id_inp');
+
+            function toggleCategory() {
+                if (isClassSwitch.checked) {
+                    categorySelect.disabled = false;
+                } else {
+                    categorySelect.disabled = true;
+                    $(categorySelect).val('').trigger('change'); // if using select2
+                }
+            }
+
+            // Initial check on page load
+            toggleCategory();
+
+            // Listen for changes
+            isClassSwitch.addEventListener('change', toggleCategory);
         });
     </script>
 

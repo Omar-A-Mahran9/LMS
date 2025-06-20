@@ -51,6 +51,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('enrollment-status/{course_id}', [EnrollmentController::class, 'enrollmentStatus']);
     Route::get('books/{id}', 'BookController@show');
 
+    Route::get('certificates/{course}', [CertificateController::class, 'download'])
+        ->name('student.certificates.download');
 });
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {
@@ -71,6 +73,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('categories', 'HomeController@getCategory');
     Route::get('footer', 'HomeController@getfooter');
     Route::get('courses_by_category', 'CourseController@getCoursesByCategory');
+    Route::get('courses', 'CourseController@getCourses');
     Route::get('courses_by_id/{id}', 'CourseController@getCoursesById');
      Route::get('books', 'BookController@index');
     Route::get('books/{id}', 'BookController@show');

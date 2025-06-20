@@ -10,7 +10,7 @@ class Course extends Model
 
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['title', 'full_image_path','full_slide_image_path','description', 'note','is_enrolled','payment_type','request_status'];
+    protected $appends = ['title', 'full_image_path','full_slide_image_path','description', 'note','is_enrolled','payment_type','request_status','is_full'];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
@@ -105,6 +105,21 @@ public function students()
                 ->withTimestamps();
 }
 
+public function getIsFullAttribute()
+{
+    // If max_students is null, the course has no limit
+    if (is_null($this->max_students)) {
+        return false;
+    }
+
+    // Count only approved and active enrollments
+    $enrolledCount = $this->students()
+        ->where('status', 'approved')
+        ->where('is_active', 1)
+        ->count();
+
+    return $enrolledCount >= $this->max_students;
+}
 
 
 
