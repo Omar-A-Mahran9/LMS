@@ -18,7 +18,7 @@ class ClassDetailsResource extends JsonResource
         $hasAttemptedActiveQuiz = false;
 
         if ($student && $activeQuiz) {
-            $hasAttemptedActiveQuiz = $activeQuiz->studentAttempts()
+            $hasAttemptedActiveQuiz = $activeQuiz->attempts()
                 ->where('student_id', $student->id)
                 ->exists();
         }
