@@ -60,14 +60,20 @@ public function update(UpdateQuizRequest $request, $classId, Quiz $quiz)
     return response()->json(['message' => __('Quiz updated successfully.')]);
 }
 
-public function destroy($classId, Quiz $quiz)
+public function destroy($classId, $homeworkId)
 {
-    $this->authorize('delete_quizzes');
+    $homework = HomeWork::find($homeworkId);
+     if (!$homework) {
+        return response()->json(['message' => __('Homework not found.')], 404);
+    }
 
-    $quiz->delete();
+    $this->authorize('delete_homework');
 
-    return response()->json(['message' => __('Quiz deleted successfully.')]);
+    $homework->delete();
+
+    return response()->json(['message' => __('Homework deleted successfully.')]);
 }
+
 
 
 }

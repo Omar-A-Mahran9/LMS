@@ -276,7 +276,7 @@
                                 @if (!$homeworskExists)
                                     <div class="d-flex justify-content-end w-100" id="add_btn_homework"
                                         data-bs-toggle="modal" data-bs-target="#crud_form_homework"
-                                        data-kt-docs-table-toolbar="base">
+                                        data-kt-docs-table-toolbar="base" for="kt_workhome_datatable">
                                         <!--begin::Add customer-->
                                         <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
                                             data-bs-original-title="Coming Soon" data-kt-initialized="1">
@@ -710,7 +710,7 @@
                     method="post" enctype="multipart/form-data" data-success-callback="onAjaxSuccess"
                     data-error-callback="onAjaxError">
                     @csrf
-                    <div class="modal fade" tabindex="-1" id="crud_homework">
+                    <div class="modal fade" tabindex="-1" id='crud_homework'>
                         <div class="modal-dialog modal-xl modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -748,16 +748,19 @@
                                     {{-- Descriptions --}}
                                     <div class="row mb-4">
                                         <div class="col-6">
-                                            <label for="description_ar_inp"
+                                            <label for="description_homework_ar_inp"
                                                 class="form-label">{{ __('Description (Arabic)') }}</label>
-                                            <textarea name="description_ar" id="description_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
+
+                                            <textarea name="description_ar" id="description_homework_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
                                             <div class="fv-plugins-message-container invalid-feedback"
                                                 id="description_ar"></div>
                                         </div>
+
+
                                         <div class="col-6">
-                                            <label for="description_en_inp"
+                                            <label for="description_homework_en_inp"
                                                 class="form-label">{{ __('Description (English)') }}</label>
-                                            <textarea name="description_en" id="description_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
+                                            <textarea name="description_en" id="description_homework_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
                                             <div class="fv-plugins-message-container invalid-feedback"
                                                 id="description_en"></div>
                                         </div>
@@ -959,9 +962,10 @@
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/quizzes.js') }}"></script>
-    {{-- <script src="{{ asset('assets/dashboard/js/datatables/homeworks.js') }}"></script>
 
-    <script src="{{ asset('assets/dashboard/js/datatables/videosClasses.js') }}"></script> --}}
+    <script src="{{ asset('assets/dashboard/js/datatables/videosClasses.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/homeworks.js') }}"></script>
+
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
@@ -978,8 +982,8 @@
         });
 
         $(document).on('click', '.open-question-modal', function() {
-            const quizId = $(this).data('class-id');
-            $('#video_form input[name="class_id"]').val(quizId);
+            const classId = $(this).data('class-id');
+            $('#video_form input[name="class_id"]').val(classId);
         });
 
 

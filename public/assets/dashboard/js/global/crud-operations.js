@@ -3,9 +3,10 @@ window["onAjaxSuccess"] = () => {
     datatable.draw();
     $("#questionModal").modal("hide");
     $("#questionHomeworkModal").modal("hide");
-
     datatable.draw();
     $("#videoModal").modal("hide");
+    datatable.draw();
+    $("#crud_homework").modal("hide");
     datatable.draw();
 };
 
