@@ -5,16 +5,12 @@ namespace App\Http\Requests\Dashboard;
 use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreClassRequest extends FormRequest
+class StoreSectionRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+
     public function authorize()
     {
-        return abilities()->contains('create_classes');
+        return abilities()->contains('create_sections');
     }
 
     /**

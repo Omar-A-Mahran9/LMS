@@ -92,6 +92,12 @@
                     </x-dashboard.aside-item>
                 @endcan
 
+                 @can('view_sections')
+                    <x-dashboard.aside-item :slug="'sections'" :route="route('dashboard.sections.index')" :title="__('Sections')">
+                        <i class="ki-outline ki-book fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
+
                 @can('view_enrollments')
                     <x-dashboard.aside-item :slug="'enrollments'" :route="route('dashboard.enrollments.index')" :title="__('Enrollments')">
                         <i class="fas fa-receipt fs-2"></i>
@@ -110,7 +116,7 @@
                         <i class="ki-outline ki-book fs-2"></i>
                     </x-dashboard.aside-item>
                 @endcan
-                
+
                 @can('view_orders')
                     <x-dashboard.aside-item :slug="'orders'" :route="route('dashboard.orders.index')" :title="__('Orders')">
                         <i class="ki-outline ki-parcel fs-1"></i>

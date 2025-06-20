@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\BookOrderController;
+use App\Http\Controllers\API\CertificateController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\StudentHomeworkController;
 use App\Http\Controllers\Api\StudentQuizController;

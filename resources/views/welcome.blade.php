@@ -71,17 +71,7 @@
                             <h3 class="card-title">{{ __('Top Add-on Services') }}</h3>
                         </div>
                         <div class="card-body">
-                            <ul class="list-group">
-                                @forelse($topServices as $service)
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        {{ $service['name'] }}
-                                        <span
-                                            class="badge bg-primary rounded-pill text-white">{{ $service['total_usage'] }}</span>
-                                    </li>
-                                @empty
-                                    <li class="list-group-item text-muted">{{ __('No data available') }}</li>
-                                @endforelse
-                            </ul>
+                           
                         </div>
                     </div>
                 </div>

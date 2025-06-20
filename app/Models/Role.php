@@ -31,6 +31,7 @@ class Role extends Model
 
         'classes',
 
+        'sections',
 
         'videos',
 

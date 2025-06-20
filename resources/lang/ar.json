@@ -101,6 +101,8 @@
     "Invalid answer submitted for question ID {$question->id}.": "",
     "classes list": "قائمة الحصص",
     "Add new class": "إضافة حصة جديدة",
+    "Add new section": "إضافة قسم جديدة",
+    "sections list": "قائمة الاقسام",
     "Enrollment Open": "التسجيل مفتوح",
     "Enrolled Students": "عدد الطلاب المسجلين",
     "Course Details": "بيانات الكورس",

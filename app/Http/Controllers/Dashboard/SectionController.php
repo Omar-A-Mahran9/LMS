@@ -1,0 +1,126 @@
+<?php
+
+namespace App\Http\Controllers\Dashboard;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\StoreClassRequest;
+use App\Http\Requests\Dashboard\StoreSectionRequest;
+use App\Http\Requests\Dashboard\UpdateClassRequest;
+ use App\Models\Course;
+use App\Models\CourseClass;
+ use App\Models\CourseVideo;
+use App\Models\Quiz;
+use Illuminate\Http\Request;
+
+class SectionController extends Controller
+{
+    public function index(Request $request)
+    {
+          $this->authorize('view_sections');
+
+        // Count total courses
+        $count_addon = CourseVideo::count();
+        $courses = Course::select('id', 'title_en', 'title_ar')->get();
+        // Example static visited site count (you may want to make this dynamic)
+        $visited_site = 10000;
+
+        if ($request->ajax()) {
+            // Return JSON data for AJAX requests
+            return response()->json(getModelData(model: new CourseClass(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
+        } else {
+
+            // Return the main view with data
+            return view('dashboard.sections.index', compact( 'visited_site','courses'));
+        }
+    }
+
+
+
+  public function store(StoreSectionRequest $request)
+    {
+        $this->authorize('create_sections');
+
+        $validated = $request->validated();
+    // Handle image uploads
+        if ($request->hasFile('image')) {
+            $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_sections');
+        }
+        if ($request->hasFile('attachment')) {
+        $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'courses_sections');
+        }
+        // Set default values for checkboxes
+        $validated['is_preview'] = $request->boolean('is_preview');
+        $validated['is_active'] = $request->boolean('is_active');
+        $validated['quiz_required'] = $request->boolean('quiz_required');
+
+        $CourseClass = Section::create($validated);
+
+    }
+
+
+    public function update(UpdateClassRequest $request, $id)
+    {
+        $this->authorize('update_sections');
+        $courseClass=CourseClass::find($id);
+        $validated = $request->validated();
+
+        // Handle image update
+        if ($request->hasFile('image')) {
+            if ($courseClass->image) {
+                deleteImageFromDirectory($courseClass->image, 'courses_sections');
+            }
+
+            $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_sections');
+        }
+
+        // Handle attachment update
+        if ($request->hasFile('attachment')) {
+            if ($courseClass->attachment) {
+                deleteAttachmentFromDirectory($courseClass->attachment, 'courses_sections');
+            }
+
+            $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'courses_sections');
+        }
+
+
+        // Set boolean flags
+        $validated['is_preview'] = $request->boolean('is_preview');
+        $validated['is_active'] = $request->boolean('is_active');
+        $validated['quiz_required'] = $request->boolean('quiz_required');
+
+        $courseClass->update($validated);
+    }
+
+public function show($id)
+{
+    $class = CourseClass::with('course')->findOrFail($id); // Eager load course
+    $this->authorize('view_sections');
+        $courses = Course::select('id', 'title_en', 'title_ar')->get();
+
+        $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
+
+    $quizExists = $class->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
+    $homeworskExists = $class->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
+
+    return view('dashboard.sections.show', compact('class', 'quizExists','courses','quizzes','homeworskExists'));
+}
+
+
+public function destroy( $id)
+{
+    $this->authorize('delete_sections');
+    $courseVideo=CourseClass::find($id);
+    // Optionally delete the associated image file
+    if ($courseVideo->image) {
+        deleteImageFromDirectory($courseVideo->image, 'courses_sections'); // This should be your helper function to delete a file
+    }
+
+    $courseVideo->delete();
+
+    return response()->json([
+        'status' => true,
+        'message' => __('Course class deleted successfully.'),
+    ]);
+}
+
+}

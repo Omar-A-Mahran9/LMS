@@ -23,19 +23,7 @@ class DashboardController extends Controller
             'canceled' => Order::where('status', OrderStatus::rejected)->count(),
         ];
 
-        $topServices = DB::table('order_addon_service')
-            ->select('addon_service_id', DB::raw('SUM(count) as total_usage'))
-            ->groupBy('addon_service_id')
-            ->orderByDesc('total_usage')
-            ->limit(5)
-            ->get()
-            ->map(function ($item) {
-                $service = \App\Models\CourseController::find($item->addon_service_id);
-                return [
-                    'name' => $service?->name ?? 'N/A',
-                    'total_usage' => $item->total_usage,
-                ];
-            });
+
 
         $monthlyEarnings = Order::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, SUM(total_price) as total")
             ->groupBy('month')
@@ -48,7 +36,6 @@ class DashboardController extends Controller
             'earnings',
             'passengersCount',
             'orderStats',
-            'topServices',
             'monthlyEarnings'
         ));
     }
