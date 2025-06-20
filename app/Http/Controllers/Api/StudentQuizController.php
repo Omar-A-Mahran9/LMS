@@ -255,7 +255,6 @@ public function results($studentQuizId)
         if ($question->type === 'short_answer') {
             // For short‑answer, single “correct” text
             $correctAnswers = [
-                'id'     => null,
                 'answer' => $question->expected_answer,
             ];
         } else {
