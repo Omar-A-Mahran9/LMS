@@ -40,8 +40,8 @@ public function getCoursesByCategory(Request $request)
         return $this->successWithPagination('No courses found.', $resource);
     }
     $query = Course::query()
-        ->where('is_active', 0)
-        ->where('is_class', 0)
+        ->where('is_active', 1)
+        ->where('is_class', 1)
         ->where('is_enrollment_open', 1)
         ->whereDate('start_date', '<=', now())
         ->whereDate('end_date', '>=', now());
@@ -281,8 +281,6 @@ public function logWatch(Request $request, $id)
 
         return $this->success('', GovernmentsResource::collection($cities));
     }
-
-
 
 
 public function getAboutUs()
