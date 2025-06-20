@@ -10,7 +10,7 @@ class Course extends Model
 
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['title', 'full_image_path','full_slide_image_path','description', 'note','is_enrolled','payment_type','request_status','is_full'];
+    protected $appends = ['title', 'full_image_path','full_slide_image_path','description', 'note','is_enrolled','payment_type','request_status','is_full','count_video'];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
@@ -120,6 +120,22 @@ public function getIsFullAttribute()
 
     return $enrolledCount >= $this->max_students;
 }
+public function getCountQuizAttribute()
+{
+    return $this->sections->sum(fn($s) => $s->quizzes->count())
+        ?: $this->classes->sum(fn($c) => $c->quizzes->count())
+        ?: $this->quiz?->count() ?? 0;
+}
+
+public function getCountHomeworkAttribute()
+{
+    return $this->sections->sum(fn($s) => $s->homeworks->count())
+        ?: $this->classes->sum(fn($c) => $c->homeworks->count())
+        ?: $this->homework?->count() ?? 0;
+}
+
+
+ 
 
 
 

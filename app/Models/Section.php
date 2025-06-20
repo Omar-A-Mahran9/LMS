@@ -63,10 +63,10 @@ public function quizzes()
     return $this->hasMany(Quiz::class, 'section_id');
 }
 
-// public function homeworks()
-// {
-//     return $this->hasMany(HomeWork::class, 'section_id');
-// }
+public function homeworks()
+{
+    return $this->hasMany(HomeWork::class, 'section_id');
+}
 
 public function students()
 {

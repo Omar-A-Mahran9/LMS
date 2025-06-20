@@ -30,10 +30,11 @@ class CourseDetailsResource extends JsonResource
             'phone' =>setting('sms_number'),
 
             'started_at' => $this->start_date,
-            'count_video' => $this->videos->count(),
-            'count_quiz' => $this->videos->count(),
-            'count_homework' => $this->videos->count(),
-            'count_attachment' => $this->videos->count(),
+            'count_video' => $this->count_video,
+            'count_quiz' => $this->count_quiz,
+            'count_homework' => $this->count_homework,
+            'count_attachment' => $this->count_attachment, // only if you define this accessor
+
 
 
             'price' => $this->is_free
