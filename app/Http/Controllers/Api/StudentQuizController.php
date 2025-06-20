@@ -266,6 +266,8 @@ public function results($studentQuizId)
         $isCorrect = false;
 
         if (in_array($question->type, ['multiple_choice', 'true_false'])) {
+            $selectedId = $attemptAnswer?->quiz_answer_id;
+
             if ($attemptAnswer?->quiz_answer_id) {
                 // Find the selected answer object for student answer
                 $selectedAnswer = $question->answers->firstWhere('id', $attemptAnswer->quiz_answer_id);
@@ -306,6 +308,8 @@ public function results($studentQuizId)
                                             'id' => $ans->id,
                                             'answer' => $ans->answer_en,
                                             'is_correct' => (bool) $ans->is_correct, // optional
+                                            'is_selected'=> $ans->id === $selectedId,
+
                                         ])->values()->toArray(),
             'student_answer'   => $studentAnswer,
             'correct_answers'  => $correctAnswers,
