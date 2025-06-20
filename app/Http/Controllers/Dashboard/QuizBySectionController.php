@@ -19,7 +19,7 @@ public function index(Request $request, $sectionId)
                 return response()->json(getModelData(
                     model: new Quiz(),
                      andsFilters: [['section_id', '=', $sectionId]],
-                    relations: ['course' => ['id', 'title_en', 'title_ar'], 'class' => ['id', 'title_en', 'title_ar']]
+                    relations: ['course' => ['id', 'title_en', 'title_ar'], 'section' => ['id', 'title_en', 'title_ar']]
                 ));
             } else {
                 // Return Blade view with variables

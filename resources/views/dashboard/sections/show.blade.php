@@ -150,7 +150,7 @@
                                     </th>
                                     <th>{{ __('Title') }}</th>
                                     @if ($section)
-                                        <th>{{ __('Classes') }}</th>
+                                        <th>{{ __('sections') }}</th>
                                     @else
                                         <th>{{ __('Course') }}</th>
                                     @endif
@@ -963,8 +963,8 @@
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/quizzes_sections.js') }}"></script>
 
-    {{-- <script src="{{ asset('assets/dashboard/js/datatables/videosClasses.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/homeworks.js') }}"></script> --}}
+    <script src="{{ asset('assets/dashboard/js/datatables/videos_section.js') }}"></script>
+    {{-- <script src="{{ asset('assets/dashboard/js/datatables/homeworks.js') }}"></script> --}}
 
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
@@ -1078,7 +1078,7 @@
                 // Reset checkboxes by title attribute if they have it (otherwise use IDs)
                 $("#is_active_switch")
                     .prop('checked', false);
-                $("#crud_form_homework").attr('action', `/dashboard/classes/${sectionId}/homeworks`);
+                $("#crud_form_homework").attr('action', `/dashboard/sections/${sectionId}/homeworks`);
 
 
                 // Reset modal title

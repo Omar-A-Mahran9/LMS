@@ -36,10 +36,15 @@ class Quiz extends Model
         return $this->belongsTo(CourseClass::class);
     }
 
-    public function section()
-    {
-        return $this->belongsTo(CourseSection::class, 'course_section_id');
-    }
+        public function section()
+        {
+            return $this->belongsTo(Section::class);
+        }
+
+    // public function section()
+    // {
+    //     return $this->belongsTo(CourseSection::class, 'course_section_id');
+    // }
 
     public function questions()
     {
