@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\HomeworkResource;
-use App\Models\Homework;
+use App\Models\HomeWork;
 use App\Models\HomeworkAttempt;
 use App\Models\HomeworkAttemptAnswer;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ class StudentHomeworkController extends Controller
     {
         $studentId = auth()->id();
 
-        $homework = Homework::findOrFail($homeworkId);
+        $homework = HomeWork::findOrFail($homeworkId);
 
         $homework->increment('attempt');
 
