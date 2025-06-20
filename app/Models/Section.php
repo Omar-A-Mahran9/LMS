@@ -56,21 +56,21 @@ class Section extends Model
     }
      public function videos()
     {
-        return $this->hasMany(CourseVideo::class,'class_id');
+        return $this->hasMany(CourseVideo::class,'section_id');
     }
 public function quizzes()
 {
-    return $this->hasMany(Quiz::class, 'class_id');
+    return $this->hasMany(Quiz::class, 'section_id');
 }
 
-public function homeworks()
-{
-    return $this->hasMany(HomeWork::class, 'class_id');
-}
+// public function homeworks()
+// {
+//     return $this->hasMany(HomeWork::class, 'section_id');
+// }
 
 public function students()
 {
-    return $this->belongsToMany(Student::class, 'class_student', 'class_id', 'student_id')->withTimestamps();
+    return $this->belongsToMany(Student::class, 'class_student', 'section_id', 'student_id')->withTimestamps();
 }
 
 

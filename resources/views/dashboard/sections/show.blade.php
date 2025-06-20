@@ -90,6 +90,7 @@
                             <div class="card-title">
                                 <h2>{{ __('Quizzes') }}</h2>
                             </div>
+
                             @can('view_quizzes')
                                 <!--begin::Toolbar-->
                                 <div id="add_btn" data-bs-toggle="modal" data-bs-target="#crud_modal"

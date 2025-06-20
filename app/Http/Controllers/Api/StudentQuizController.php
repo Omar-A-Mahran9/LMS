@@ -257,7 +257,7 @@ public function results($studentQuizId)
             ->where('is_correct', 1)
             ->map(fn($ans) => [
                 'id' => $ans->id,
-                'answer' => $ans->answer_en,
+                'answer' => $ans->answer,
             ])
             ->values()
             ->toArray();
@@ -272,7 +272,7 @@ public function results($studentQuizId)
                 if ($selectedAnswer) {
                     $studentAnswer = [
                         'id' => $selectedAnswer->id,
-                        'answer' => $selectedAnswer->answer_en,
+                        'answer' => $selectedAnswer->answer,
                     ];
                 }
             }
@@ -299,8 +299,10 @@ public function results($studentQuizId)
 
         $results[] = [
             'question_id'      => $question->id,
+            'question_type'      => $question->type,
+
             'question'         => $question->question,
-             'question_answers' => $question->answers->map(fn($ans) => [
+            'question_answers' => $question->answers->map(fn($ans) => [
                                             'id' => $ans->id,
                                             'answer' => $ans->answer_en,
                                             'is_correct' => (bool) $ans->is_correct, // optional

@@ -37,6 +37,8 @@ Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected
  Route::resource('courses', 'CourseController')->except(['create', 'edit']);
  Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
  Route::get('classes/{classId}/videos', 'CourseVideoController@getvideosbyclasses');
+  Route::get('sections/{sectionId}/videos', 'SectionVideoController@getvideosbyclasses');
+
  Route::resource('classes', 'ClassController')->except(['create', 'edit']);
   Route::resource('sections', 'SectionController')->except(['create', 'edit']);
 
