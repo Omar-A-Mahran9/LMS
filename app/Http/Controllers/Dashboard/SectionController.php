@@ -10,6 +10,7 @@ use App\Http\Requests\Dashboard\UpdateClassRequest;
 use App\Models\CourseClass;
  use App\Models\CourseVideo;
 use App\Models\Quiz;
+use App\Models\Section;
 use Illuminate\Http\Request;
 
 class SectionController extends Controller
@@ -18,19 +19,18 @@ class SectionController extends Controller
     {
           $this->authorize('view_sections');
 
-        // Count total courses
-        $count_addon = CourseVideo::count();
+
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
         // Example static visited site count (you may want to make this dynamic)
         $visited_site = 10000;
 
         if ($request->ajax()) {
             // Return JSON data for AJAX requests
-            return response()->json(getModelData(model: new CourseClass(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
+            return response()->json(getModelData(model: new Section(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
         } else {
 
             // Return the main view with data
-            return view('dashboard.sections.index', compact( 'visited_site','courses'));
+            return view('dashboard.sections.index', compact( 'courses'));
         }
     }
 
@@ -43,10 +43,10 @@ class SectionController extends Controller
         $validated = $request->validated();
     // Handle image uploads
         if ($request->hasFile('image')) {
-            $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_sections');
+            $validated['image'] = uploadImageToDirectory($request->file('image'), 'sections');
         }
         if ($request->hasFile('attachment')) {
-        $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'courses_sections');
+        $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'sections');
         }
         // Set default values for checkboxes
         $validated['is_preview'] = $request->boolean('is_preview');
@@ -58,28 +58,27 @@ class SectionController extends Controller
     }
 
 
-    public function update(UpdateClassRequest $request, $id)
+    public function update(UpdateClassRequest $request, Section $section)
     {
         $this->authorize('update_sections');
-        $courseClass=CourseClass::find($id);
-        $validated = $request->validated();
+         $validated = $request->validated();
 
         // Handle image update
         if ($request->hasFile('image')) {
-            if ($courseClass->image) {
-                deleteImageFromDirectory($courseClass->image, 'courses_sections');
+            if ($section->image) {
+                deleteImageFromDirectory($section->image, 'sections');
             }
 
-            $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_sections');
+            $validated['image'] = uploadImageToDirectory($request->file('image'), 'sections');
         }
 
         // Handle attachment update
         if ($request->hasFile('attachment')) {
-            if ($courseClass->attachment) {
-                deleteAttachmentFromDirectory($courseClass->attachment, 'courses_sections');
+            if ($section->attachment) {
+                deleteAttachmentFromDirectory($section->attachment, 'sections');
             }
 
-            $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'courses_sections');
+            $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'sections');
         }
 
 
@@ -88,34 +87,33 @@ class SectionController extends Controller
         $validated['is_active'] = $request->boolean('is_active');
         $validated['quiz_required'] = $request->boolean('quiz_required');
 
-        $courseClass->update($validated);
+        $section->update($validated);
     }
 
 public function show($id)
 {
-    $class = CourseClass::with('course')->findOrFail($id); // Eager load course
+    $section = Section::with('course')->findOrFail($id); // Eager load course
     $this->authorize('view_sections');
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
 
         $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
 
-    $quizExists = $class->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
-    $homeworskExists = $class->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
+    $quizExists = $section->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
+    $homeworskExists = $section->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
 
-    return view('dashboard.sections.show', compact('class', 'quizExists','courses','quizzes','homeworskExists'));
+    return view('dashboard.sections.show', compact('section', 'quizExists','courses','quizzes','homeworskExists'));
 }
 
 
-public function destroy( $id)
+public function destroy(Section $section)
 {
     $this->authorize('delete_sections');
-    $courseVideo=CourseClass::find($id);
-    // Optionally delete the associated image file
-    if ($courseVideo->image) {
-        deleteImageFromDirectory($courseVideo->image, 'courses_sections'); // This should be your helper function to delete a file
+     // Optionally delete the associated image file
+    if ($section->image) {
+        deleteImageFromDirectory($section->image, 'sections'); // This should be your helper function to delete a file
     }
 
-    $courseVideo->delete();
+    $section->delete();
 
     return response()->json([
         'status' => true,

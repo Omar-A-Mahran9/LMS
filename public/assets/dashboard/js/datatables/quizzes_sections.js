@@ -1,9 +1,28 @@
 "use strict";
 
 var datatable;
-// Class definition
+
 var KTDatatablesServerSide = (function () {
-    let dbTable = "sections";
+    if (typeof sectionId !== "undefined" && sectionId) {
+        var dbTable = `sections/${sectionId}/quizzes`;
+    } else {
+        var dbTable = "quizzes";
+    }
+
+    let columns = [{ data: "id" }, { data: "title" }];
+
+    if (typeof sectionId == "undefined" && !sectionId) {
+        columns.push({ data: "course" });
+    } else {
+        columns.push({ data: "class" });
+    }
+
+    columns.push(
+        { data: "is_active" },
+        { data: "created_at" },
+        { data: "attempt" },
+        { data: null }
+    );
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
@@ -21,17 +40,8 @@ var KTDatatablesServerSide = (function () {
             ajax: {
                 url: `/dashboard/${dbTable}`,
             },
-            columns: [
-                { data: "id" },
-                { data: "title" },
-                { data: "image" },
-                { data: "course" },
-                { data: "is_active" },
-                { data: "created_at" },
-                { data: "is_preview" },
-                { data: "views" },
-                { data: null },
-            ],
+            columns: columns,
+
             columnDefs: [
                 {
                     targets: 0,
@@ -60,66 +70,23 @@ var KTDatatablesServerSide = (function () {
 
                 {
                     targets: 2,
-                    orderable: false,
-                    render: function (data, type, row) {
-                        return `
-                            <!--begin::Overlay-->
-                            <a class="d-block overlay" data-action="preview_attachments" href="#">
-                                <!--begin::Image-->
-                                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded h-100px"
-                                    style="background-image:url('${row.full_image_path}')">
-                                </div>
-                                <!--end::Image-->
-
-                                <!--begin::Action-->
-                                <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                    <i class="bi bi-eye-fill text-white fs-3x"></i>
-                                </div>
-                                <!--end::Action-->
-                            </a>
-                            <!--end::Overlay-->
-                        `;
-                    },
-                },
-
-                {
-                    targets: 3,
                     render: function (data, type, row) {
                         return `
                             <div>
                                 <!--begin::Info-->
                                 <div class="d-flex flex-column justify-content-center">
-                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.course.title}</a>
+                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.class?.title_ar}</a>
                                 </div>
                                 <!--end::Info-->
                             </div>
                         `;
                     },
                 },
+
                 {
-                    targets: 4, // This is the "Status" column
+                    targets: 3, // This is the "Status" column
                     render: function (data, type, row) {
                         if (row.is_active) {
-                            return `
-                                     <span class="badge badge-success">${__(
-                                         "active"
-                                     )}</span>
-
-                            `;
-                        } else {
-                            return `
-                                     <span class="badge badge-danger">${__(
-                                         "inactive"
-                                     )}</span>
-                             `;
-                        }
-                    },
-                },
-
-                {
-                    targets: 6, // This is the "Status" column
-                    render: function (data, type, row) {
-                        if (row.is_preview) {
                             return `
                                      <span class="badge badge-success">${__(
                                          "active"
@@ -160,15 +127,20 @@ var KTDatatablesServerSide = (function () {
                                 </div>
                                 <!--end::Menu item-->
 
-                                <div class="menu-item px-3">
-                                    <a href="/dashboard/sections/${
-                                        data.id
-                                    }" class="menu-link px-3 show_button" data-kt-docs-table-filter="show_row">
-                                        ${__("Show")}
-                                    </a>
-                                </div>
-
                                    <!--end::Menu item-->
+                                    <!--begin::Menu item-->
+                                <div class="menu-item px-3">
+                                    <a href="javascript:;"
+                                    class="menu-link px-3 open-question-modal"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#questionModal"
+                                    data-quiz-id="${data.id}">
+                                    ${__("Add Question")}
+                                    </a>
+
+                                </div>
+                                <!--end::Menu item-->
+
                                 ${`<!--begin::Menu item-->
                                 <div class="menu-item px-3">
                                     <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
@@ -188,7 +160,14 @@ var KTDatatablesServerSide = (function () {
                 // $(row).find('td:eq(4)').attr('data-filter', data.CreditCardType);
             },
         });
-
+        if (sectionId) {
+            const courseIndex = columns.findIndex(
+                (col) => col.data === "course"
+            );
+            if (courseIndex !== -1) {
+                columns.splice(courseIndex, 1);
+            }
+        }
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
         datatable.on("draw", function () {
             initToggleToolbar();
@@ -200,7 +179,12 @@ var KTDatatablesServerSide = (function () {
                 restoreUrl: `/dashboard/${dbTable}/restore-selected`,
             });
             KTMenu.createInstances();
-            handlePreviewAttachments();
+            let rowCount = datatable.rows().count();
+            if (rowCount >= 1) {
+                $("#quiz_btn").hide(); // or .attr('hidden', true)
+            } else {
+                $("#quiz_btn").show(); // or .removeAttr('hidden')
+            }
         });
     };
 
@@ -217,12 +201,7 @@ var KTDatatablesServerSide = (function () {
                 let data = datatable.row(currentBtnIndex).data();
 
                 // Set form title
-                $("#form_title").text(__("Edit Section"));
-
-                $(".image-input-wrapper").css(
-                    "background-image",
-                    `url('${data.full_image_path}')`
-                );
+                $("#form_title").text(__("Edit Quiz"));
 
                 // Titles
                 $("#title_ar_inp").val(data.title_ar);
@@ -235,33 +214,22 @@ var KTDatatablesServerSide = (function () {
                     .get("description_en_inp")
                     .setContent(data.description_en);
 
-                // Video URL
-                $("#video_url_inp").val(data.video_url);
-                // Attachment preview (link or filename)
-                if (data.full_attachment_path) {
-                    $("#attachment_preview").html(
-                        `<a href="${data.full_attachment_path}" target="_blank" class="btn btn-sm btn-info">
-                        ${ __('Current Attachment') }
-                    </a>`
-                    );
-                } else {
-                    $("#attachment_preview").html("");
-                }
+                // Relationships
+                $("#course_section_id_inp")
+                    .val(data.course_section_id)
+                    .trigger("change");
 
-                // Reset file input (clear any previously selected file)
-                $("#attachment_inp").val("");
                 // Relationships
                 $("#course_id_inp").val(data.course_id).trigger("change");
 
+                $("#duration_minutes_inp").val(data.duration_minutes);
                 // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#quiz_required_switch").prop("checked", data.quiz_required);
 
                 // Flags
                 $("#is_active_switch").prop("checked", data.is_active);
-                $("#is_preview_switch").prop("checked", data.is_preview);
 
                 // Reset form method & action
-                $("#crud_form").attr("action", `/dashboard/sections/${data.id}`);
+                $("#crud_form").attr("action", `/dashboard/quizzes/${data.id}`);
 
                 // Remove previous _method input if any, then add PUT
                 $("#crud_form").find('input[name="_method"]').remove();
@@ -275,40 +243,10 @@ var KTDatatablesServerSide = (function () {
         });
     };
 
-    var handlePreviewAttachments = () => {
-        // Select all edit buttons
-        const previewButtons = $('[data-action="preview_attachments"]');
-
-        $.each(previewButtons, function (indexInArray, button) {
-            $(button).on("click", function (e) {
-                e.preventDefault();
-
-                let data = datatable.row(indexInArray).data();
-                $(".attachments").html("");
-
-                $(".attachments").append(`
-                    <!--begin::Overlay-->
-                    <a class="d-block overlay" data-fslightbox="lightbox-basic" href="${data.full_image_path}">
-                        <!--begin::Action-->
-                        <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                            <i class="bi bi-eye-fill text-white fs-3x"></i>
-                        </div>
-                        <!--end::Action-->
-
-                    </a>
-                    <!--end::Overlay-->
-                `);
-                refreshFsLightbox();
-                $("[data-fslightbox='lightbox-basic']:first").trigger("click");
-            });
-        });
-    };
-
     // Public methods
     return {
         init: function () {
             initDatatable();
-            handleSearchDatatable();
             initToggleToolbar();
             handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
@@ -316,7 +254,6 @@ var KTDatatablesServerSide = (function () {
                 url: `/dashboard/${dbTable}/delete-selected`,
                 restoreUrl: `/dashboard/${dbTable}/restore-selected`,
             });
-            handlePreviewAttachments();
         },
     };
 })();

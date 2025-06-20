@@ -22,6 +22,8 @@ class CourseDetailsResource extends JsonResource
         return [
                "id" => $this->id,
             'image' => $this->full_image_path,
+            'video_url' => base64_encode(convertToYoutubeEmbed($this->video_url)),
+
             'title' => $this->title,
             'description' => $this->description,
             'note' => $this->note,

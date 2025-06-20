@@ -28,7 +28,8 @@ class StoreQuizRequest extends FormRequest
     {
 
    return [
-             'class_id' => 'nullable|exists:classes,id',
+        'class_id' => 'nullable|exists:classes,id',
+        'section_id' => 'nullable|exists:sections,id',
 
         'course_id' => 'nullable|exists:courses,id',
         'course_section_id' => 'nullable|exists:course_sections,id',

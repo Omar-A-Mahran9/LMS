@@ -39,6 +39,8 @@ let translations = {
         "something went wrong": "حدث خطأ ما",
         "Edit awards !": "تعديل انجاز !",
         "Show Video": "عرض الفيديو",
+        "Edit Section": "تعديل القسم",
+        "Edit Quiz": "تعديل الاختبار",
 
         "Error !": "خطـأ !",
         "Operation done successfully": "تمت العملية بنجاح",

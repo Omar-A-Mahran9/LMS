@@ -22,11 +22,11 @@ class Section extends Model
 
     public function getFullImagePathAttribute()
     {
-        return asset(getImagePathFromDirectory($this->image, 'courses_classes', 'default.svg'));
+        return asset(getImagePathFromDirectory($this->image, 'sections', 'default.svg'));
     }
     public function getFullAttachmentPathAttribute()
     {
-        return getAttachmentPathFromDirectory($this->attachment, 'courses_classes');
+        return getAttachmentPathFromDirectory($this->attachment, 'sections');
     }
 
 

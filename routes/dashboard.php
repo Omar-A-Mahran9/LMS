@@ -42,6 +42,8 @@ Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected
  Route::resource('books', 'BookController')->except(['create', 'edit']);
  Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
  Route::resource('classes.quizzes', QuizByClassController::class);
+  Route::resource('sections.quizzes', QuizBySectionController::class);
+
   Route::resource('classes.homeworks', HomeworkByClassController::class);
 
  Route::resource('homeworks', 'HomeWorkController')->except(['create', 'edit']);

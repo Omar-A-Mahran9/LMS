@@ -26,7 +26,7 @@
                         <div class="row">
                             <!--begin::Image-->
                             <div class="col-md-2 text-start">
-                                <img src="{{ $class->full_image_path }}" alt="Course Image"
+                                <img src="{{ $section->full_image_path }}" alt="Course Image"
                                     class="img-fluid rounded w-150px h-150px object-fit-cover" />
                             </div>
                             <!--end::Image-->
@@ -40,27 +40,27 @@
                                             <tbody class="fw-semibold text-gray-600">
                                                 <tr>
                                                     <td class="text-muted">{{ __('Title') }}</td>
-                                                    <td class="text-end text-dark">{{ $class->title }}</td>
+                                                    <td class="text-end text-dark">{{ $section->title }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="text-muted">{{ __('Active') }}</td>
                                                     <td class="text-end text-dark">
-                                                        {{ $class->is_active ? __('Yes') : __('No') }}
+                                                        {{ $section->is_active ? __('Yes') : __('No') }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="text-muted">{{ __('Free Preview?') }}</td>
                                                     <td class="text-end text-dark">
-                                                        {{ $class->is_preview ? __('Yes') : __('No') }}</td>
+                                                        {{ $section->is_preview ? __('Yes') : __('No') }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="text-muted">{{ __('Created At') }}</td>
                                                     <td class="text-end text-dark">
-                                                        {{ $class->created_at->format('Y-m-d') }}</td>
+                                                        {{ $section->created_at->format('Y-m-d') }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="text-muted">{{ __('Description') }}</td>
-                                                    <td class="text-end text-dark">{!! $class->description !!}</td>
+                                                    <td class="text-end text-dark">{!! $section->description !!}</td>
                                                 </tr>
 
 
@@ -149,7 +149,7 @@
                                         </div>
                                     </th>
                                     <th>{{ __('Title') }}</th>
-                                    @if ($class)
+                                    @if ($section)
                                         <th>{{ __('Classes') }}</th>
                                     @else
                                         <th>{{ __('Course') }}</th>
@@ -352,7 +352,7 @@
                     <!--end::Content-->
                 </div>
                 <form id="crud_form" class="ajax-form w-75"
-                    action="{{ route('dashboard.classes.quizzes.store', $class->id) }}" method="post"
+                    action="{{ route('dashboard.sections.quizzes.store', $section->id) }}" method="post"
                     enctype="multipart/form-data" data-success-callback="onAjaxSuccess"
                     data-error-callback="onAjaxError">
                     @csrf
@@ -371,7 +371,7 @@
 
                                     {{-- Course & Section --}}
                                     <div class="row mb-4">
-                                        <input type="hidden" name="class_id" value="{{ $class->id }}">
+                                        <input type="hidden" name="section_id" value="{{ $section->id }}">
                                     </div>
 
 
@@ -603,7 +603,7 @@
                                 </div>
 
                                 <div class="modal-body">
-                                    <input type="hidden" name="class_id" value="{{ $class->id }}">
+                                    <input type="hidden" name="section_id" value="{{ $section->id }}">
 
                                     <div class="row mb-4">
                                         <div class="col-12 d-flex flex-column justify-content-center">
@@ -723,7 +723,7 @@
 
                                 <div class="modal-body">
                                     <div class="row mb-4">
-                                        <input type="hidden" name="class_id" value="{{ $class->id }}">
+                                        <input type="hidden" name="section_id" value="{{ $section->id }}">
                                     </div>
 
 
@@ -957,14 +957,14 @@
 
 @push('scripts')
     <script>
-        let classId = @json($class->id ?? null);
+        let sectionId = @json($section->id ?? null);
     </script>
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/quizzes.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/quizzes_sections.js') }}"></script>
 
-    <script src="{{ asset('assets/dashboard/js/datatables/videosClasses.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/homeworks.js') }}"></script>
+    {{-- <script src="{{ asset('assets/dashboard/js/datatables/videosClasses.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/homeworks.js') }}"></script> --}}
 
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
@@ -982,8 +982,8 @@
         });
 
         $(document).on('click', '.open-question-modal', function() {
-            const classId = $(this).data('class-id');
-            $('#video_form input[name="class_id"]').val(classId);
+            const sectionId = $(this).data('class-id');
+            $('#video_form input[name="section_id"]').val(sectionId);
         });
 
 
@@ -1043,7 +1043,7 @@
                 // Reset checkboxes by title attribute if they have it (otherwise use IDs)
                 $("#is_active_switch")
                     .prop('checked', false);
-                $("#crud_form").attr('action', `/dashboard/classes/${classId}/quizzes`);
+                $("#crud_form").attr('action', `/dashboard/sections/${sectionId}/quizzes`);
 
 
                 // Reset modal title
@@ -1078,7 +1078,7 @@
                 // Reset checkboxes by title attribute if they have it (otherwise use IDs)
                 $("#is_active_switch")
                     .prop('checked', false);
-                $("#crud_form_homework").attr('action', `/dashboard/classes/${classId}/homeworks`);
+                $("#crud_form_homework").attr('action', `/dashboard/classes/${sectionId}/homeworks`);
 
 
                 // Reset modal title

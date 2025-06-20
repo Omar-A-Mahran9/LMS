@@ -27,10 +27,9 @@ class UpdateClassRequest extends FormRequest
      */
     public function rules()
     {
-  $classId = request()->route('class');
+  $sectionId = request()->route('section');
 
     // Manually resolve the CourseVideo model
-    $class = (new CourseClass())->resolveRouteBinding($classId);
   return [
         'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
         'attachment' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,txt|max:10240', // 10MB max
@@ -48,13 +47,13 @@ class UpdateClassRequest extends FormRequest
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('classes', 'title_ar')->ignore($class->id)
+            Rule::unique('classes', 'title_ar')->ignore($sectionId->id)
         ],
         'title_en' => [
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('classes', 'title_en')->ignore($class->id)
+            Rule::unique('classes', 'title_en')->ignore($sectionId->id)
         ],
 
     'description_ar' => ['required', new NotNumbersOnly()],
