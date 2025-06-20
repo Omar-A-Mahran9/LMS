@@ -254,10 +254,10 @@ public function results($studentQuizId)
 
         if ($question->type === 'short_answer') {
             // For short‑answer, single “correct” text
-            $correctAnswers = [[
+            $correctAnswers = [
                 'id'     => null,
                 'answer' => $question->expected_answer,
-            ]];
+            ];
         } else {
             // For MCQ / true_false, collect all correct options
             $correctAnswers = $question->answers
