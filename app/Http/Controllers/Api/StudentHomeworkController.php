@@ -139,12 +139,22 @@ class StudentHomeworkController extends Controller
             $studentAnswer = null;
             $isCorrect = false;
 
+               if ($question->type === 'short_answer') {
+            // For short‑answer, single “correct” text
+            $correctAnswers = [
+                'answer' => $question->expected_answer,
+            ];
+        } else {
+            // For MCQ / true_false, collect all correct options
             $correctAnswers = $question->answers
                 ->where('is_correct', 1)
-                ->map(fn($ans) => ['id' => $ans->id, 'answer' => $ans->answer_en])
+                ->map(fn($ans) => [
+                    'id'     => $ans->id,
+                    'answer' => $ans->answer,
+                ])
                 ->values()
                 ->toArray();
-
+        }
             if (in_array($question->type, ['multiple_choice', 'true_false'])) {
                  $selectedId = $attemptAnswer?->quiz_answer_id;
                 $selectedAnswer = $question->answers->firstWhere('id', $attemptAnswer?->home_work_answer_id);
