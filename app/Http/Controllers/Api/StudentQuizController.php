@@ -252,15 +252,24 @@ public function results($studentQuizId)
 
         $attemptAnswer = $attempt->answers->firstWhere('quiz_question_id', $question->id);
 
-        // Prepare correct answers as array of objects {id, answer}
-        $correctAnswers = $question->answers
-            ->where('is_correct', 1)
-            ->map(fn($ans) => [
-                'id' => $ans->id,
-                'answer' => $ans->answer,
-            ])
-            ->values()
-            ->toArray()??$question->expected_answer;
+        if ($question->type === 'short_answer') {
+            // For short‑answer, single “correct” text
+            $correctAnswers = [[
+                'id'     => null,
+                'answer' => $question->expected_answer,
+            ]];
+        } else {
+            // For MCQ / true_false, collect all correct options
+            $correctAnswers = $question->answers
+                ->where('is_correct', 1)
+                ->map(fn($ans) => [
+                    'id'     => $ans->id,
+                    'answer' => $ans->answer,
+                ])
+                ->values()
+                ->toArray();
+        }
+
 
         $studentAnswer = null;
         $isCorrect = false;
