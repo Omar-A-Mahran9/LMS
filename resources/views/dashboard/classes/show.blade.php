@@ -93,7 +93,7 @@
                             @can('view_quizzes')
                                 <!--begin::Toolbar-->
                                 <div id="add_btn" data-bs-toggle="modal" data-bs-target="#crud_modal"
-                                    data-kt-docs-table-toolbar="base">
+                                    data-kt-docs-table-toolbar="base" for="kt_datatable">
                                     <!--begin::Add customer-->
                                     @if (!$quizExists)
                                         <button type="button" class="btn btn-primary" id="quiz_btn" data-bs-toggle="tooltip"
@@ -959,9 +959,9 @@
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/quizzes.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/homeworks.js') }}"></script>
+    {{-- <script src="{{ asset('assets/dashboard/js/datatables/homeworks.js') }}"></script>
 
-    <script src="{{ asset('assets/dashboard/js/datatables/videosClasses.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/videosClasses.js') }}"></script> --}}
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>

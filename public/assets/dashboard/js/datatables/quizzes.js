@@ -247,7 +247,6 @@ var KTDatatablesServerSide = (function () {
     return {
         init: function () {
             initDatatable();
-            handleSearchDatatable();
             initToggleToolbar();
             handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);

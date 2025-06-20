@@ -49,7 +49,7 @@ class QuizController extends Controller
 public function show(Request $request, Quiz $quiz)
 {
     $this->authorize('view_quizzes');
-$questionTypeCounts = $quiz->questions
+    $questionTypeCounts = $quiz->questions
     ->groupBy('type')
     ->map(fn($group) => $group->count());
 
