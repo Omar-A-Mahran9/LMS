@@ -260,7 +260,7 @@ public function results($studentQuizId)
                 'answer' => $ans->answer,
             ])
             ->values()
-            ->toArray();
+            ->toArray()??$question->expected_answer;
 
         $studentAnswer = null;
         $isCorrect = false;
