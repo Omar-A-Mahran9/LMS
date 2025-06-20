@@ -81,12 +81,10 @@ public function update(UpdateCategoryRequest $request, $id)
 
 public function destroy(Request $request, $id)
 {
-    dd($request);
 
     $this->authorize('delete_categories');
 
     $category = Category::withTrashed()->find($id);
-dd($category);
     if (!$category) {
         return response()->json(['message' => 'Category not found'], 404);
     }
