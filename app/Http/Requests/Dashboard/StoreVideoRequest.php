@@ -29,6 +29,7 @@ return [
         'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
         'course_id' => 'nullable|exists:courses,id',
         'class_id' => 'nullable|exists:classes,id',
+        'section_id' => 'nullable|exists:sections,id',
 
         'course_section_id' => 'nullable|exists:course_sections,id',
         'title_ar' => 'required|string|max:255',

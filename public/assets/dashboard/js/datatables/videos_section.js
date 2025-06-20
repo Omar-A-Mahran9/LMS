@@ -3,7 +3,7 @@
 var datatable;
 // Class definition
 var KTDatatablesServerSidevid = (function () {
-    var dbTable = `sections/${classId}/videos`;
+    var dbTable = `sections/${sectionId}/videos`;
 
     // Private functions
     var initDatatable = function () {

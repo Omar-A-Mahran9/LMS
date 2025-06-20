@@ -54,28 +54,28 @@ class CourseVideoController extends Controller
 
 
   public function store(StoreVideoRequest $request)
-{
-    $this->authorize('create_videos');
+    {
+        $this->authorize('create_videos');
 
-     $validated = $request->validated();
-   // Handle image uploads
-    if ($request->hasFile('image')) {
-        $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_videos');
+        $validated = $request->validated();
+    // Handle image uploads
+        if ($request->hasFile('image')) {
+            $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_videos');
+        }
+
+        // Auto fetch YouTube duration if duration is not provided
+        if (empty($validated['duration_seconds'])) {
+            $validated['duration_seconds'] = 0;
+        }
+
+        // Set default values for checkboxes
+        $validated['is_preview'] = $request->boolean('is_preview');
+        $validated['is_active'] = $request->boolean('is_active');
+        $validated['quiz_required'] = $request->boolean('quiz_required');
+
+        $video = CourseVideo::create($validated);
+
     }
-
-    // Auto fetch YouTube duration if duration is not provided
-    if (empty($validated['duration_seconds'])) {
-        $validated['duration_seconds'] = 0;
-    }
-
-    // Set default values for checkboxes
-    $validated['is_preview'] = $request->boolean('is_preview');
-    $validated['is_active'] = $request->boolean('is_active');
-    $validated['quiz_required'] = $request->boolean('quiz_required');
-
-    $video = CourseVideo::create($validated);
-
-}
 
 
 public function update(UpdateVideoRequest $request, $id)

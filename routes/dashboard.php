@@ -4,6 +4,7 @@ use App\Http\Controllers\API\BookOrderController;
 use App\Http\Controllers\Dashboard\EnrollmentController;
 use App\Http\Controllers\Dashboard\HomeworkByClassController;
 use App\Http\Controllers\Dashboard\QuizByClassController;
+use App\Http\Controllers\Dashboard\QuizBySectionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

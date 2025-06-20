@@ -34,6 +34,7 @@ class UpdateVideoRequest extends FormRequest
         'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
         'course_id' => 'nullable|exists:courses,id',
         'class_id' => 'nullable|exists:classes,id',
+        // 'section_id' => 'nullable|exists:section,id',
 
         'quiz_required' => 'sometimes|boolean',
         'quiz_id' => 'required_if:quiz_required,1|exists:quizzes,id',
