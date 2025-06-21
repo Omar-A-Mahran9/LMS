@@ -2,15 +2,15 @@
 
 var datatable;
 // Class definition
-var KTDatatablesServerSidevid = (function () {
-    var dbTable = `sections/${sectionId}/videos`;
-
+var KTDatatablesHomeworkServerSide = (function () {
+    if (typeof classId !== "undefined" && classId) {
+        var dbTable = `sections/${classId}/homeworks`;
+    } else {
+        var dbTable = "homeworks";
+    }
     // Private functions
     var initDatatable = function () {
-        if ($.fn.DataTable.isDataTable("#video_datatable")) {
-            $("#video_datatable").DataTable().clear().destroy();
-        }
-        datatable = $("#video_datatable").DataTable({
+        datatable = $("#kt_workhome_datatable").DataTable({
             language: language,
             searchDelay: searchDelay,
             processing: processing,
@@ -25,15 +25,14 @@ var KTDatatablesServerSidevid = (function () {
             ajax: {
                 url: `/dashboard/${dbTable}`,
             },
+
             columns: [
                 { data: "id" },
                 { data: "title" },
-                { data: "image" },
                 { data: "course" },
                 { data: "is_active" },
                 { data: "created_at" },
-                { data: "is_preview" },
-                { data: "views" },
+                { data: "attempt" },
                 { data: null },
             ],
             columnDefs: [
@@ -64,73 +63,24 @@ var KTDatatablesServerSidevid = (function () {
 
                 {
                     targets: 2,
-                    orderable: false,
                     render: function (data, type, row) {
                         return `
-                            <!--begin::Overlay-->
-                            <a class="d-block overlay" data-action="preview_attachments" href="#">
-                                <!--begin::Image-->
-                                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded h-100px"
-                                    style="background-image:url('${row.full_image_path}')">
+                            <div>
+                                <!--begin::Info-->
+                                <div class="d-flex flex-column justify-content-center">
+                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${
+                                        row.course ? row.course.title : " ---"
+                                    }</a>
                                 </div>
-                                <!--end::Image-->
-
-                                <!--begin::Action-->
-                                <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                    <i class="bi bi-eye-fill text-white fs-3x"></i>
-                                </div>
-                                <!--end::Action-->
-                            </a>
-                            <!--end::Overlay-->
+                                <!--end::Info-->
+                            </div>
                         `;
                     },
                 },
-
                 {
-                    targets: 3,
-                    render: function (data, type, row) {
-                        return `
-                                    <div>
-                                        <!--begin::Info-->
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">
-                                                ${
-                                                    row.course?.title ??
-                                                    row.class?.title ??
-                                                    ""
-                                                }
-                                            </a>
-                                        </div>
-                                        <!--end::Info-->
-                                    </div>
-                                `;
-                    },
-                },
-
-                {
-                    targets: 4, // This is the "Status" column
+                    targets: 3, // This is the "Status" column
                     render: function (data, type, row) {
                         if (row.is_active) {
-                            return `
-                                     <span class="badge badge-success">${__(
-                                         "active"
-                                     )}</span>
-
-                            `;
-                        } else {
-                            return `
-                                     <span class="badge badge-danger">${__(
-                                         "inactive"
-                                     )}</span>
-                             `;
-                        }
-                    },
-                },
-
-                {
-                    targets: 6, // This is the "Status" column
-                    render: function (data, type, row) {
-                        if (row.is_preview) {
                             return `
                                      <span class="badge badge-success">${__(
                                          "active"
@@ -174,17 +124,20 @@ var KTDatatablesServerSidevid = (function () {
                                    <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="/dashboard/videos/${
-                                        data.id
-                                    }" class="menu-link px-3 show_button" data-kt-docs-table-filter="show_row">
-                                        ${__("Show Video")}
+                                    <a href="javascript:;"
+                                    class="menu-link px-3 open-question-modal"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#questionHomeworkModal"
+                                    data-homework-id="${data.id}">
+                                    ${__("Add Question")}
                                     </a>
+
                                 </div>
                                 <!--end::Menu item-->
 
                                 ${`<!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_vid_row">
+                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
                                         ${__("Delete")}
                                     </a>
                                 </div>
@@ -207,10 +160,10 @@ var KTDatatablesServerSidevid = (function () {
             initToggleToolbar();
             toggleToolbars();
             handleEditRows();
-            deleteVideoRowWithURL(`/dashboard/videos/`);
+            deleteRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({
-                url: `/dashboard/videos/delete-selected`,
-                restoreUrl: `/dashboard/videos/restore-selected`,
+                url: `/dashboard/${dbTable}/delete-selected`,
+                restoreUrl: `/dashboard/${dbTable}/restore-selected`,
             });
             KTMenu.createInstances();
         });
@@ -231,24 +184,16 @@ var KTDatatablesServerSidevid = (function () {
                 // Set form title
                 $("#form_title").text(__("Edit Course"));
 
-                $(".image-input-wrapper").css(
-                    "background-image",
-                    `url('${data.full_image_path}')`
-                );
-
                 // Titles
-                $("#title_ar_vid_inp").val(data.title_ar);
-                $("#title_en_vid_inp").val(data.title_en);
+                $("#title_ar_inp").val(data.title_ar);
+                $("#title_en_inp").val(data.title_en);
 
                 tinymce
-                    .get("description_ar_vid_inp")
-                    ?.setContent(data?.description_ar || "");
+                    .get("description_ar_inp")
+                    .setContent(data.description_ar);
                 tinymce
-                    .get("description_en_vid_inp")
-                    ?.setContent(data?.description_en || "");
-
-                // Video URL
-                $("#video_url_inp").val(data.video_url);
+                    .get("description_en_inp")
+                    .setContent(data.description_en);
 
                 // Relationships
                 $("#course_section_id_inp")
@@ -258,24 +203,26 @@ var KTDatatablesServerSidevid = (function () {
                 // Relationships
                 $("#course_id_inp").val(data.course_id).trigger("change");
 
-                $("#duration_seconds_inp").val(data.duration_seconds);
+                $("#duration_minutes_inp").val(data.duration_minutes);
                 // Reset checkboxes by title attribute if they have it (otherwise use IDs)
 
                 // Flags
-                $("#is_active_vid_switch").prop("checked", data.is_active);
-                $("#is_preview_switch").prop("checked", data.is_preview);
+                $("#is_active_switch").prop("checked", data.is_active);
 
                 // Reset form method & action
-                $("#video_form").attr("action", `/dashboard/videos/${data.id}`);
+                $("#crud_form_homework").attr(
+                    "action",
+                    `/dashboard/homeworkzes/${data.id}`
+                );
 
                 // Remove previous _method input if any, then add PUT
-                $("#video_form").find('input[name="_method"]').remove();
-                $("#video_form").prepend(
+                $("#crud_form_homework").find('input[name="_method"]').remove();
+                $("#crud_form_homework").prepend(
                     `<input type="hidden" name="_method" value="PUT">`
                 );
 
-                // Show modals
-                $("#videoModal").modal("show");
+                // Show modal
+                $("#crud_homework").modal("show");
             });
         });
     };
@@ -284,6 +231,7 @@ var KTDatatablesServerSidevid = (function () {
     return {
         init: function () {
             initDatatable();
+            handleSearchDatatable();
             initToggleToolbar();
             handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
@@ -297,5 +245,5 @@ var KTDatatablesServerSidevid = (function () {
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
-    KTDatatablesServerSidevid.init();
+    KTDatatablesHomeworkServerSide.init();
 });

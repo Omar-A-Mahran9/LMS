@@ -965,7 +965,7 @@
     <script src="{{ asset('assets/dashboard/js/datatables/quizzes_sections.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/js/datatables/videos_section.js') }}"></script>
-    {{-- <script src="{{ asset('assets/dashboard/js/datatables/homeworks.js') }}"></script> --}}
+    <script src="{{ asset('assets/dashboard/js/datatables/homeworks_section.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
