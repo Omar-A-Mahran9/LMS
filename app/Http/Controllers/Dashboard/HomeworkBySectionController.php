@@ -13,6 +13,7 @@ class HomeworkBySectionController extends Controller
 {
 public function index(Request $request, $sectionId)
     {
+        dd($sectionId);
              $this->authorize('view_homework');
             if ($request->ajax()) {
                 // Return JSON data (use getModelData helper if you have it set up)
