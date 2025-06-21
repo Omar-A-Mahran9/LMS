@@ -127,14 +127,12 @@ var ajaxDeleteRecord = function (url) {
 };
 
 // Init toggle toolbar
-var initToggleToolbar = function () {
-    const container = document.querySelector(
-        "#kt_datatable,#kt_datatable_orders,#kt_datatable_transactions"
-    );
-    const checkboxes = container.querySelectorAll('[type="checkbox"]');
+// var initToggleToolbar = function () {
+//     const container = document.querySelector("#kt_datatable");
+//     const checkboxes = container.querySelectorAll('[type="checkbox"]');
 
-    showDeleteSelectedBtnWhenClickOn(checkboxes);
-};
+//     showDeleteSelectedBtnWhenClickOn(checkboxes);
+// };
 
 var showDeleteSelectedBtnWhenClickOn = function (checkboxes) {
     checkboxes.forEach((c) => {
@@ -150,9 +148,7 @@ var showDeleteSelectedBtnWhenClickOn = function (checkboxes) {
 // Toggle toolbars
 var toggleToolbars = function () {
     // Define variables
-    const container = document.querySelector(
-        "#kt_datatable,#kt_datatable_orders,#kt_datatable_transactions"
-    );
+    const container = document.querySelector("#kt_datatable");
     const toolbarBase = document.querySelector(
         '[data-kt-docs-table-toolbar="base"]'
     );
@@ -163,7 +159,7 @@ var toggleToolbars = function () {
         '[data-kt-docs-table-select="selected_count"]'
     );
     const allCheckboxes = container.querySelectorAll(
-        '.form-check-input[type="checkbox"]:not(.switch):not([data-kt-check-target="#kt_datatable,#kt_datatable_orders,#kt_datatable_transactions .form-check-input"])'
+        '.form-check-input[type="checkbox"]:not(.switch):not([data-kt-check-target="#kt_datatable .form-check-input"])'
     );
     let count = countCheckboxes(allCheckboxes);
     let checkedState = count > 0;
@@ -195,11 +191,9 @@ var deleteSelectedRowsWithURL = function ({ url, restoreUrl }) {
     deleteSelected.addEventListener("click", function () {
         /** get selected Rows id **/
         let selectedItemsIDs = [];
-        let container = document.querySelector(
-            "#kt_datatable,#kt_datatable_orders,#kt_datatable_transactions"
-        );
+        let container = document.querySelector("#kt_datatable");
         let allCheckedInputs = container.querySelectorAll(
-            '.form-check-input[type="checkbox"]:not(.switch):not([data-kt-check-target="#kt_datatable,#kt_datatable_orders,#kt_datatable_transactions .form-check-input"]):checked'
+            '.form-check-input[type="checkbox"]:not(.switch):not([data-kt-check-target="#kt_datatable .form-check-input"]):checked'
         );
 
         $.each(allCheckedInputs, function (indexInArray, input) {

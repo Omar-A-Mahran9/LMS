@@ -94,7 +94,9 @@
     "count of attempt": "عدد الحضور",
     "Count of Question": "عدد الأسئلة",
     "sections": "الاقسام",
-
+    "Total Classes": "اجمالي عدد الحصص",
+    "Total Sections": "اجمالي عدد الأقسام",
+    "Course Views": "عدد المشاهدات",
     "Classes": "الحصص",
     "A quiz already exists for this class.": "يوجد بالفعل اختبار للحصة",
     "The quiz time has expired. You cannot submit your answers.": "",
@@ -102,6 +104,9 @@
     "Invalid answer submitted for question ID {$question->id}.": "",
     "classes list": "قائمة الحصص",
     "Add new class": "إضافة حصة جديدة",
+    "Add New class": "إضافة حصة جديدة",
+    "Add New section": "إضافة قسم جديد",
+
     "Add new section": "إضافة قسم جديدة",
     "sections list": "قائمة الاقسام",
     "Enrollment Open": "التسجيل مفتوح",

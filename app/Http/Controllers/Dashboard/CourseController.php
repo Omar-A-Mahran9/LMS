@@ -101,7 +101,7 @@ public function update(UpdateCourseRequest $request, Course $course)
     $data = $request->validated();
 
     // Remove subcategory_ids from $data to avoid mass assignment
-    unset($data['subcategory_ids']);
+    // unset($data['subcategory_ids']);
 
     // Handle image upload
     if ($request->hasFile('image')) {
@@ -153,11 +153,17 @@ public function update(UpdateCourseRequest $request, Course $course)
 
 public function show(Course $course)
 {
-    // Authorize if needed
     $this->authorize('view_courses');
 
-    // Load related data: category, subCategories, instructor
-    $course->load(['category', 'subCategories', 'instructor']);
+    $course->load([
+        'category',
+        'subCategories',
+        'instructor'
+    ])->loadCount([
+        'enrollments', // students enrolled in this course
+        'sections',    // if course has sections
+        'classes'      // if course has classes
+    ]);
 
     return view('dashboard.courses.show', compact('course'));
 }

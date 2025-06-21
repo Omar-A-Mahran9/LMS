@@ -14,30 +14,52 @@
                         <div class="d-flex gap-2">
 
 
+                            @if ($course->is_class == 1)
+                                @can('view_classes')
+                                    <a href="{{ route('dashboard.classes.index', ['course_id' => $course->id]) }}"
+                                        class="btn btn-primary d-flex align-items-center">
+                                        <i class="ki-outline ki-book fs-2"></i> {{ __('Classes') }}
+                                    </a>
+                                @endcan
+                            @else
+                                @can('view_sections')
+                                    <a href="{{ route('dashboard.sections.index', ['course_id' => $course->id]) }}"
+                                        class="btn btn-primary d-flex align-items-center">
+                                        <i class="ki-outline ki-note fs-2"></i> {{ __('sections') }}
+                                    </a>
+                                @endcan
+                            @endif
 
-                            @can('view_videos')
-                                <a href="{{ route('dashboard.videos.index') }}" class="btn btn-primary d-flex align-items-center">
-                                    <i class="ki-outline ki-plus fs-2 me-2"></i> {{ __('Add New video') }}
-                                </a>
-                            @endcan
-
-                            @can('view_quizzes')
-                                <a href="{{ route('dashboard.quizzes.index') }}"
-                                    class="btn btn-primary d-flex align-items-center">
-                                    <i class="ki-outline ki-plus fs-2 me-2"></i> {{ __('Add New quiz') }}
-                                </a>
-                            @endcan
-
-                             @can('view_homework')
-                                <a href="{{ route('dashboard.homeworks.index') }}"
-                                    class="btn btn-primary d-flex align-items-center">
-                                    <i class="ki-outline ki-plus fs-2 me-2"></i> {{ __('Add New homework') }}
-                                </a>
-                            @endcan
                         </div>
                     </div>
                 </div>
+                <div class="card card-flush">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <div class="text-gray-600 fw-semibold">{{ __('Enrolled Students') }}</div>
+                                <div class="fs-2 fw-bold text-dark">{{ $course->enrollments_count }}</div>
+                            </div>
 
+                            @if ($course->is_class)
+                                <div class="col-md-4">
+                                    <div class="text-gray-600 fw-semibold">{{ __('Total Classes') }}</div>
+                                    <div class="fs-2 fw-bold text-dark">{{ $course->classes_count }}</div>
+                                </div>
+                            @else
+                                <div class="col-md-4">
+                                    <div class="text-gray-600 fw-semibold">{{ __('Total Sections') }}</div>
+                                    <div class="fs-2 fw-bold text-dark">{{ $course->sections_count }}</div>
+                                </div>
+                            @endif
+
+                            <div class="col-md-4">
+                                <div class="text-gray-600 fw-semibold">{{ __('Course Views') }}</div>
+                                <div class="fs-2 fw-bold text-dark">{{ $course->views }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card card-flush">
 
                     <div class="card-body">
@@ -185,6 +207,8 @@
                     </div>
                 </div>
                 <!--end::Course Card-->
+
+
             </div>
         </div>
     </div>

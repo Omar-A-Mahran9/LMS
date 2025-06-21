@@ -19,6 +19,8 @@
                     </div>
                 </div>
 
+
+
                 <div class="card card-flush">
 
                     <div class="card-body">
@@ -82,7 +84,97 @@
 
 
                 </div>
-                <div class="card card-flush">
+
+                <div class="card mb-5 mb-x-10">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
+                        data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                        aria-controls="kt_account_profile_details">
+                        <!--begin::Card title-->
+                        <div class="card-title m-0">
+                            <h3 class="fw-bold m-0">{{ __('Videos list') }}</h3>
+                        </div>
+                        <!--end::Card title-->
+
+                        <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
+
+                            <!--begin::Toolbar-->
+                            <div class="d-flex justify-content-end w-100" id="add_btn" data-bs-toggle="modal"
+                                data-bs-target="#videoModal" data-kt-docs-table-toolbar="base">
+                                <!--begin::Add customer-->
+                                <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
+                                    data-bs-original-title="Coming Soon" data-kt-initialized="1">
+                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
+                                    <span class="svg-icon svg-icon-2">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2"
+                                                rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor">
+                                            </rect>
+                                            <rect x="4.36396" y="11.364" width="16" height="2" rx="1"
+                                                fill="currentColor"></rect>
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->{{ __('Add new video') }}
+                                </button>
+                                <!--end::Add customer-->
+                            </div>
+                            <!--end::Toolbar-->
+
+                        </div>
+                        <!--end::Info-->
+                    </div>
+                    <!--begin::Card header-->
+                    <!--begin::Content-->
+                    <div class="card-body">
+                        <!--begin::Wrapper-->
+                        <div class="d-flex flex-stack flex-wrap mb-5">
+
+
+                            <!--begin::Group actions-->
+                            <div class="d-flex justify-content-end align-items-center d-none"
+                                data-kt-docs-table-toolbar="selected">
+                                <div class="fw-bold me-5">
+                                    <span class="me-2"
+                                        data-kt-docs-table-select="selected_count"></span>{{ __('Selected item') }}
+                                </div>
+                                <button type="button" class="btn btn-danger"
+                                    data-kt-docs-table-select="delete_selected">{{ __('delete') }}</button>
+                            </div>
+                            <!--end::Group actions-->
+                        </div>
+                        <!--end::Wrapper-->
+
+                        <!--begin::Datatable-->
+                        <table id="video_datatable" class="table align-middle text-center table-row-dashed fs-6 gy-5">
+                            <thead>
+                                <tr class=" text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                                    <th class="w-10px pe-2">
+                                        <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                                            <input class="form-check-input" type="checkbox" data-kt-check="true"
+                                                data-kt-check-target="#video_datatable .form-check-input" value="1" />
+                                        </div>
+                                    </th>
+                                    <th>{{ __('Title') }}</th>
+                                    <th>{{ __('Image') }}</th>
+                                    <th>{{ __('Course') }}</th>
+                                    <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Created at') }}</th>
+                                    <th>{{ __('Is Preview') }}</th>
+                                    <th>{{ __('views') }}</th>
+
+                                    <th class=" min-w-100px">{{ __('Actions') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600 fw-semibold">
+                            </tbody>
+                        </table>
+                        <!--end::Datatable-->
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Course Card-->
+                {{-- <div class="card card-flush">
 
                     <div class="card-body">
 
@@ -97,8 +189,9 @@
                                     data-kt-docs-table-toolbar="base" for="kt_datatable">
                                     <!--begin::Add customer-->
                                     @if (!$quizExists)
-                                        <button type="button" class="btn btn-primary" id="quiz_btn" data-bs-toggle="tooltip"
-                                            data-bs-original-title="Coming Soon" data-kt-initialized="1">
+                                        <button type="button" class="btn btn-primary" id="quiz_btn"
+                                            data-bs-toggle="tooltip" data-bs-original-title="Coming Soon"
+                                            data-kt-initialized="1">
                                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                             <span class="svg-icon svg-icon-2">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -169,96 +262,7 @@
                     </div>
                     <!--end::Content-->
                 </div>
-                <div class="card mb-5 mb-x-10">
-                    <!--begin::Card header-->
-                    <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-                        data-bs-target="#kt_account_profile_details" aria-expanded="true"
-                        aria-controls="kt_account_profile_details">
-                        <!--begin::Card title-->
-                        <div class="card-title m-0">
-                            <h3 class="fw-bold m-0">{{ __('Videos list') }}</h3>
-                        </div>
-                        <!--end::Card title-->
 
-                        <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
-
-                            <!--begin::Toolbar-->
-                            <div class="d-flex justify-content-end w-100" id="add_btn" data-bs-toggle="modal"
-                                data-bs-target="#videoModal" data-kt-docs-table-toolbar="base">
-                                <!--begin::Add customer-->
-                                <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
-                                    data-bs-original-title="Coming Soon" data-kt-initialized="1">
-                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
-                                    <span class="svg-icon svg-icon-2">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2"
-                                                rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor">
-                                            </rect>
-                                            <rect x="4.36396" y="11.364" width="16" height="2" rx="1"
-                                                fill="currentColor"></rect>
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->{{ __('Add new video') }}
-                                </button>
-                                <!--end::Add customer-->
-                            </div>
-                            <!--end::Toolbar-->
-
-                        </div>
-                        <!--end::Info-->
-                    </div>
-                    <!--begin::Card header-->
-                    <!--begin::Content-->
-                    <div class="card-body">
-                        <!--begin::Wrapper-->
-                        <div class="d-flex flex-stack flex-wrap mb-5">
-
-
-                            <!--begin::Group actions-->
-                            <div class="d-flex justify-content-end align-items-center d-none"
-                                data-kt-docs-table-toolbar="selected">
-                                <div class="fw-bold me-5">
-                                    <span class="me-2"
-                                        data-kt-docs-table-select="selected_count"></span>{{ __('Selected item') }}
-                                </div>
-                                <button type="button" class="btn btn-danger"
-                                    data-kt-docs-table-select="delete_selected">{{ __('delete') }}</button>
-                            </div>
-                            <!--end::Group actions-->
-                        </div>
-                        <!--end::Wrapper-->
-
-                        <!--begin::Datatable-->
-                        <table id="video_datatable" class="table align-middle text-center table-row-dashed fs-6 gy-5">
-                            <thead>
-                                <tr class=" text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                                    <th class="w-10px pe-2">
-                                        <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                                            <input class="form-check-input" type="checkbox" data-kt-check="true"
-                                                data-kt-check-target="#video_datatable .form-check-input"
-                                                value="1" />
-                                        </div>
-                                    </th>
-                                    <th>{{ __('Title') }}</th>
-                                    <th>{{ __('Image') }}</th>
-                                    <th>{{ __('Course') }}</th>
-                                    <th>{{ __('Status') }}</th>
-                                    <th>{{ __('Created at') }}</th>
-                                    <th>{{ __('Is Preview') }}</th>
-                                    <th>{{ __('views') }}</th>
-
-                                    <th class=" min-w-100px">{{ __('Actions') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-gray-600 fw-semibold">
-                            </tbody>
-                        </table>
-                        <!--end::Datatable-->
-                    </div>
-                    <!--end::Content-->
-                </div>
-                <!--end::Course Card-->
 
                 <div class="card mb-5 mb-x-10">
                     <!--begin::Card header-->
@@ -351,7 +355,7 @@
                         <!--end::Datatable-->
                     </div>
                     <!--end::Content-->
-                </div>
+                </div> --}}
                 <form id="crud_form" class="ajax-form w-75"
                     action="{{ route('dashboard.sections.quizzes.store', $section->id) }}" method="post"
                     enctype="multipart/form-data" data-success-callback="onAjaxSuccess"

@@ -105,7 +105,7 @@ class UpdateCourseRequest extends FormRequest
     'show_in_home' => ['nullable', 'boolean'],
     'featured' => ['nullable', 'boolean'],
 
-     'subcategory_ids' => ['nullable', 'array'],
-    'subcategory_ids.*' => ['exists:categories,id'],
+    //  'subcategory_ids' => ['nullable', 'array'],
+    // 'subcategory_ids.*' => ['exists:categories,id'],
 ];  }
 }

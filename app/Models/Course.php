@@ -24,6 +24,17 @@ class Course extends Model
         return asset(getImagePathFromDirectory($this->slide_image, 'Courses/Slides', 'default.svg'));
     }
 
+public function enrollments()
+{
+    return $this->hasMany(Enrollment::class);
+}
+
+
+
+public function classes()
+{
+    return $this->hasMany(CourseClass::class); // or the actual model name
+}
 
     public function getTitleAttribute()
     {
@@ -57,7 +68,7 @@ class Course extends Model
 
     public function sections()
     {
-        return $this->hasMany(CourseSection::class);
+        return $this->hasMany(Section::class);
     }
     public function videos()
     {

@@ -381,7 +381,7 @@
                         </div>
                         {{-- Flags --}}
                         <div class="row mb-4 mt-5">
-                            <div class="col-3">
+                            {{-- <div class="col-3">
                                 <label for="subcategory_ids_inp" class="form-label">{{ __('Subcategories') }}</label>
                                 <select name="subcategory_ids[]" id="subcategory_ids_inp" class="form-select"
                                     data-control="select2" data-placeholder="{{ __('Select Subcategories') }}"
@@ -393,7 +393,7 @@
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback" id="subcategory_ids"></div>
 
-                            </div>
+                            </div> --}}
                             <div class="col-3 d-flex align-items-center mt-2">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
                                     <input class="form-check-input" name="show_in_home" type="checkbox" value="1"
