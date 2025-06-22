@@ -1,13 +1,14 @@
 window["onAjaxSuccess"] = () => {
     $("#crud_modal").modal("hide");
-    datatable.draw();
     $("#questionModal").modal("hide");
     $("#questionHomeworkModal").modal("hide");
-    datatable.draw();
     $("#videoModal").modal("hide");
-    datatable.draw();
     $("#crud_homework").modal("hide");
-    datatable.draw();
+    $("#crud_modal").modal("hide");
+    if (typeof datatable !== "undefined") datatable.draw();
+    if (typeof vid_datatable !== "undefined") vid_datatable.draw();
+    if (typeof qz_datatable !== "undefined") qz_datatable.draw();
+    if (typeof homeworkdatatable !== "undefined") homeworkdatatable.draw();
 };
 
 window["onAjaxError"] = (status, response) => {

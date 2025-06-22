@@ -19,8 +19,6 @@
                     </div>
                 </div>
 
-
-
                 <div class="card card-flush">
 
                     <div class="card-body">
@@ -84,7 +82,6 @@
 
 
                 </div>
-
                 <div class="card mb-5 mb-x-10">
                     <!--begin::Card header-->
                     <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
@@ -99,7 +96,7 @@
                         <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
 
                             <!--begin::Toolbar-->
-                            <div class="d-flex justify-content-end w-100" id="add_btn" data-bs-toggle="modal"
+                            <div class="d-flex justify-content-end w-100" data-bs-toggle="modal"
                                 data-bs-target="#videoModal" data-kt-docs-table-toolbar="base">
                                 <!--begin::Add customer-->
                                 <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
@@ -174,13 +171,13 @@
                     <!--end::Content-->
                 </div>
                 <!--end::Course Card-->
-                {{-- <div class="card card-flush">
+                <div class="card card-flush">
 
                     <div class="card-body">
 
                         <div class="  d-flex justify-content-between align-items-center mb-5">
                             <div class="card-title">
-                                <h2>{{ __('Quizzes') }}</h2>
+                                <h2>{{ __('quizzes list') }}</h2>
                             </div>
 
                             @can('view_quizzes')
@@ -189,9 +186,8 @@
                                     data-kt-docs-table-toolbar="base" for="kt_datatable">
                                     <!--begin::Add customer-->
                                     @if (!$quizExists)
-                                        <button type="button" class="btn btn-primary" id="quiz_btn"
-                                            data-bs-toggle="tooltip" data-bs-original-title="Coming Soon"
-                                            data-kt-initialized="1">
+                                        <button type="button" class="btn btn-primary" id="quiz_btn" data-bs-toggle="tooltip"
+                                            data-bs-original-title="Coming Soon" data-kt-initialized="1">
                                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                             <span class="svg-icon svg-icon-2">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -275,13 +271,14 @@
                         </div>
                         <!--end::Card title-->
 
-                        <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
+                        <div class="d-flex justify-content-center flex-wrap mb-5 mt-5" for="kt_workhome_datatable">
                             @can('view_homework')
-                                <!--begin::Toolbar-->
+                                <!--begin::Toolbar crud_homework-->
+
                                 @if (!$homeworskExists)
-                                    <div class="d-flex justify-content-end w-100" id="add_btn_homework"
-                                        data-bs-toggle="modal" data-bs-target="#crud_form_homework"
-                                        data-kt-docs-table-toolbar="base" for="kt_workhome_datatable">
+                                    <!--begin::Toolbar-->
+                                    <div class="d-flex justify-content-end w-100" data-bs-toggle="modal"
+                                        data-bs-target="#crud_homework" data-kt-docs-table-toolbar="base">
                                         <!--begin::Add customer-->
                                         <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
                                             data-bs-original-title="Coming Soon" data-kt-initialized="1">
@@ -297,11 +294,11 @@
                                                         fill="currentColor"></rect>
                                                 </svg>
                                             </span>
-                                            <!--end::Svg Icon-->{{ __('Add new homework') }}
+                                            <!--end::Svg Icon--> <!--end::Svg Icon-->{{ __('Add new homework') }}
+
                                         </button>
                                         <!--end::Add customer-->
                                     </div>
-                                    <!--end::Toolbar-->
                                 @endif
                             @endcan
                         </div>
@@ -355,7 +352,7 @@
                         <!--end::Datatable-->
                     </div>
                     <!--end::Content-->
-                </div> --}}
+                </div>
                 <form id="crud_form" class="ajax-form w-75"
                     action="{{ route('dashboard.sections.quizzes.store', $section->id) }}" method="post"
                     enctype="multipart/form-data" data-success-callback="onAjaxSuccess"
@@ -377,6 +374,8 @@
                                     {{-- Course & Section --}}
                                     <div class="row mb-4">
                                         <input type="hidden" name="section_id" value="{{ $section->id }}">
+                                        <input type="hidden" name="course_id" value="{{ $course->id }}">
+
                                     </div>
 
 
@@ -710,8 +709,8 @@
                         </div>
                     </div>
                 </form>
-                <!-- Hidden div for YouTube Player -->
-                <form id="crud_form_homework" class="ajax-form w-75" action="{{ route('dashboard.homeworks.store') }}"
+
+                <form class="ajax-form w-75" action="{{ route('dashboard.sections.homeworks.store', $section->id) }}"
                     method="post" enctype="multipart/form-data" data-success-callback="onAjaxSuccess"
                     data-error-callback="onAjaxError">
                     @csrf
@@ -729,6 +728,8 @@
                                 <div class="modal-body">
                                     <div class="row mb-4">
                                         <input type="hidden" name="section_id" value="{{ $section->id }}">
+                                        <input type="hidden" name="course_id" value="{{ $course->id }}">
+
                                     </div>
 
 
@@ -966,9 +967,10 @@
     </script>
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/quizzes_sections.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/js/datatables/videos_section.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/quizzes_sections.js') }}"></script>
+
     <script src="{{ asset('assets/dashboard/js/datatables/homeworks_section.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
@@ -987,7 +989,7 @@
         });
 
         $(document).on('click', '.open-question-modal', function() {
-            const sectionId = $(this).data('class-id');
+            const sectionId = $(this).data('section-id');
             $('#video_form input[name="section_id"]').val(sectionId);
         });
 
@@ -1068,12 +1070,12 @@
                 $("[title='_method']").remove();
 
                 // Reset the form fields
-                $("#crud_form_homework")[0].reset();
+                $("#crud_homework")[0].reset();
 
 
                 // Clear validation errors and invalid classes
-                $("#crud_form_homework").find('.invalid-feedback').text('');
-                $("#crud_form_homework").find('.is-invalid').removeClass('is-invalid');
+                $("#crud_homework").find('.invalid-feedback').text('');
+                $("#crud_homework").find('.is-invalid').removeClass('is-invalid');
 
                 // Reset TinyMCE editors content if present
                 if (typeof tinymce !== 'undefined') {
@@ -1083,7 +1085,7 @@
                 // Reset checkboxes by title attribute if they have it (otherwise use IDs)
                 $("#is_active_switch")
                     .prop('checked', false);
-                $("#crud_form_homework").attr('action', `/dashboard/sections/${sectionId}/homeworks`);
+                $("#crud_homework").attr('action', `/dashboard/sections/${sectionId}/homeworks`);
 
 
                 // Reset modal title

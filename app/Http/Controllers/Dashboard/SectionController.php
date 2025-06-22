@@ -103,12 +103,11 @@ public function show($id)
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
 
         $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
-
+    $course=$section->course;
     $quizExists = $section->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
-    // $homeworskExists = $section->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
-     $homeworskExists = []; // Assumes you have quizzes() relationship in CourseClass model
+    $homeworskExists = $section->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
 
-    return view('dashboard.sections.show', compact('section', 'quizExists','courses','quizzes','homeworskExists'));
+    return view('dashboard.sections.show', compact('section', 'quizExists','courses','quizzes','homeworskExists','course'));
 }
 
 

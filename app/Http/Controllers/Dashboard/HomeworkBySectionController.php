@@ -13,8 +13,7 @@ class HomeworkBySectionController extends Controller
 {
 public function index(Request $request, $sectionId)
     {
-        dd($sectionId);
-             $this->authorize('view_homework');
+              $this->authorize('view_homework');
             if ($request->ajax()) {
                 // Return JSON data (use getModelData helper if you have it set up)
                 return response()->json(getModelData(
@@ -30,7 +29,7 @@ public function index(Request $request, $sectionId)
 
 public function store(StoreQuizRequest $request, $sectionId)
 {
-    $this->authorize('create_homework');
+     $this->authorize('create_homework');
 
     // Check if a quiz already exists for this class
     $exists = HomeWork::where('section_id', $sectionId)->exists();

@@ -1,16 +1,16 @@
 "use strict";
 
-var datatable;
+var vid_datatable;
 // Class definition
 var KTDatatablesServerSidevid = (function () {
     var dbTable = `sections/${sectionId}/videos`;
 
     // Private functions
-    var initDatatable = function () {
+    var initvidDatatable = function () {
         if ($.fn.DataTable.isDataTable("#video_datatable")) {
             $("#video_datatable").DataTable().clear().destroy();
         }
-        datatable = $("#video_datatable").DataTable({
+        vid_datatable = $("#video_datatable").DataTable({
             language: language,
             searchDelay: searchDelay,
             processing: processing,
@@ -165,7 +165,7 @@ var KTDatatablesServerSidevid = (function () {
                             <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="javascript:;" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
+                                    <a href="javascript:;" class="menu-link px-3" data-kt-docs-table-filter="edit_vid_row">
                                         ${__("Edit")}
                                     </a>
                                 </div>
@@ -203,9 +203,7 @@ var KTDatatablesServerSidevid = (function () {
         });
 
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
-        datatable.on("draw", function () {
-            // initToggleToolbar();
-            // toggleToolbars();
+        vid_datatable.on("draw", function () {
             handleEditRows();
             deleteVideoRowWithURL(`/dashboard/videos/`);
             deleteSelectedRowsWithURL({
@@ -218,7 +216,7 @@ var KTDatatablesServerSidevid = (function () {
 
     var handleEditRows = () => {
         const editButtons = document.querySelectorAll(
-            '[data-kt-docs-table-filter="edit_row"]'
+            '[data-kt-docs-table-filter="edit_vid_row"]'
         );
 
         editButtons.forEach((btn) => {
@@ -226,7 +224,7 @@ var KTDatatablesServerSidevid = (function () {
                 e.preventDefault();
 
                 let currentBtnIndex = $(editButtons).index(btn);
-                let data = datatable.row(currentBtnIndex).data();
+                let data = vid_datatable.row(currentBtnIndex).data();
 
                 // Set form title
                 $("#form_title").text(__("Edit Course"));
@@ -283,8 +281,7 @@ var KTDatatablesServerSidevid = (function () {
     // Public methods
     return {
         init: function () {
-            initDatatable();
-            // initToggleToolbar();
+            initvidDatatable();
             handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({

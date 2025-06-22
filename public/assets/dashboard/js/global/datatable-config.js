@@ -82,11 +82,36 @@ var deleteRowWithURL = (url) => {
 
 var deleteVideoRowWithURL = (url) => {
     // Select all delete buttons
-    const deleteButtons = document.querySelectorAll(
+    const deletevidButtons = document.querySelectorAll(
         '[data-kt-docs-table-filter="delete_vid_row"]'
     );
 
-    deleteButtons.forEach((d) => {
+    deletevidButtons.forEach((d) => {
+        // Delete button on click
+        d.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const parent = e.target.closest("tr");
+            const id = parent
+                .querySelectorAll("td")[0]
+                .querySelector("input").value;
+
+            deleteAlert().then(function (result) {
+                if (result.value) {
+                    ajaxDeleteRecord(url + id);
+                }
+            });
+        });
+    });
+};
+
+var deleteHomeworkRowWithURL = (url) => {
+    // Select all delete buttons
+    const deleteHomeworkButtons = document.querySelectorAll(
+        '[data-kt-docs-table-filter="delete_homework_row"]'
+    );
+
+    deleteHomeworkButtons.forEach((d) => {
         // Delete button on click
         d.addEventListener("click", function (e) {
             e.preventDefault();
@@ -114,7 +139,12 @@ var ajaxDeleteRecord = function (url) {
         },
         url: url,
         success: () => {
-            datatable.draw();
+            if (typeof qz_datatable !== "undefined") qz_datatable.draw();
+            if (typeof vid_datatable !== "undefined") vid_datatable.draw();
+            if (typeof datatable !== "undefined") datatable.draw();
+            if (typeof homeworkdatatable !== "undefined")
+                homeworkdatatable.draw();
+
             successAlert(`${__("Deleted successfully")} `);
         },
         error: (err) => {
@@ -127,12 +157,12 @@ var ajaxDeleteRecord = function (url) {
 };
 
 // Init toggle toolbar
-// var initToggleToolbar = function () {
-//     const container = document.querySelector("#kt_datatable");
-//     const checkboxes = container.querySelectorAll('[type="checkbox"]');
+var initToggleToolbar = function () {
+    const container = document.querySelector("#kt_datatable ");
+    const checkboxes = container.querySelectorAll('[type="checkbox"]');
 
-//     showDeleteSelectedBtnWhenClickOn(checkboxes);
-// };
+    showDeleteSelectedBtnWhenClickOn(checkboxes);
+};
 
 var showDeleteSelectedBtnWhenClickOn = function (checkboxes) {
     checkboxes.forEach((c) => {
@@ -159,7 +189,7 @@ var toggleToolbars = function () {
         '[data-kt-docs-table-select="selected_count"]'
     );
     const allCheckboxes = container.querySelectorAll(
-        '.form-check-input[type="checkbox"]:not(.switch):not([data-kt-check-target="#kt_datatable .form-check-input"])'
+        '.form-check-input[type="checkbox"]:not(.switch):not([data-kt-check-target="#kt_datatable,#kt_datatable_orders,#kt_datatable_transactions .form-check-input"])'
     );
     let count = countCheckboxes(allCheckboxes);
     let checkedState = count > 0;
@@ -191,9 +221,11 @@ var deleteSelectedRowsWithURL = function ({ url, restoreUrl }) {
     deleteSelected.addEventListener("click", function () {
         /** get selected Rows id **/
         let selectedItemsIDs = [];
-        let container = document.querySelector("#kt_datatable");
+        let container = document.querySelector(
+            "#kt_datatable,#kt_datatable_orders,#kt_datatable_transactions"
+        );
         let allCheckedInputs = container.querySelectorAll(
-            '.form-check-input[type="checkbox"]:not(.switch):not([data-kt-check-target="#kt_datatable .form-check-input"]):checked'
+            '.form-check-input[type="checkbox"]:not(.switch):not([data-kt-check-target="#kt_datatable,#kt_datatable_orders,#kt_datatable_transactions .form-check-input"]):checked'
         );
 
         $.each(allCheckedInputs, function (indexInArray, input) {

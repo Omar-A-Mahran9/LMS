@@ -1,8 +1,7 @@
 "use strict";
 
-var datatable;
-
-var KTDatatablesServerSide = (function () {
+var qz_datatable;
+var KTDatatablesServerSidequiz = (function () {
     if (typeof sectionId !== "undefined" && sectionId) {
         var dbTable = `sections/${sectionId}/quizzes`;
     } else {
@@ -25,7 +24,7 @@ var KTDatatablesServerSide = (function () {
     );
     // Private functions
     var initDatatable = function () {
-        datatable = $("#kt_datatable").DataTable({
+        qz_datatable = $("#kt_datatable").DataTable({
             language: language,
             searchDelay: searchDelay,
             processing: processing,
@@ -169,9 +168,7 @@ var KTDatatablesServerSide = (function () {
             }
         }
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
-        datatable.on("draw", function () {
-            initToggleToolbar();
-            toggleToolbars();
+        qz_datatable.on("draw", function () {
             handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({
@@ -179,7 +176,7 @@ var KTDatatablesServerSide = (function () {
                 restoreUrl: `/dashboard/${dbTable}/restore-selected`,
             });
             KTMenu.createInstances();
-            let rowCount = datatable.rows().count();
+            let rowCount = qz_datatable.rows().count();
             if (rowCount >= 1) {
                 $("#quiz_btn").hide(); // or .attr('hidden', true)
             } else {
@@ -198,7 +195,7 @@ var KTDatatablesServerSide = (function () {
                 e.preventDefault();
 
                 let currentBtnIndex = $(editButtons).index(btn);
-                let data = datatable.row(currentBtnIndex).data();
+                let data = qz_datatable.row(currentBtnIndex).data();
 
                 // Set form title
                 $("#form_title").text(__("Edit Quiz"));
@@ -247,7 +244,6 @@ var KTDatatablesServerSide = (function () {
     return {
         init: function () {
             initDatatable();
-            initToggleToolbar();
             handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({
@@ -260,5 +256,5 @@ var KTDatatablesServerSide = (function () {
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
-    KTDatatablesServerSide.init();
+    KTDatatablesServerSidequiz.init();
 });
