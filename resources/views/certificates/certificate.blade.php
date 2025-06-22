@@ -29,7 +29,6 @@
                     #fdfdfd 20px,
                     #e6f9f9 20px,
                     #e6f9f9 40px);
-
             /* optional pattern */
             position: relative;
             text-align: center;
