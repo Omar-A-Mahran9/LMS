@@ -1,6 +1,6 @@
 "use strict";
 
-var datatable;
+var vid_datatable;
 // Class definition
 var KTDatatablesServerSidevid = (function () {
     var dbTable = `classes/${classId}/videos`;
@@ -10,10 +10,9 @@ var KTDatatablesServerSidevid = (function () {
         if ($.fn.DataTable.isDataTable("#video_datatable")) {
             $("#video_datatable").DataTable().clear().destroy();
         }
-        datatable = $("#video_datatable").DataTable({
+        vid_datatable = $("#video_datatable").DataTable({
             language: language,
-            searchDelay: searchDelay,
-            processing: processing,
+             processing: processing,
             serverSide: serverSide,
             order: [],
             stateSave: saveState,
@@ -203,7 +202,7 @@ var KTDatatablesServerSidevid = (function () {
         });
 
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
-        datatable.on("draw", function () {
+        vid_datatable.on("draw", function () {
             initToggleToolbar();
             toggleToolbars();
             handleEditRows();
@@ -226,7 +225,7 @@ var KTDatatablesServerSidevid = (function () {
                 e.preventDefault();
 
                 let currentBtnIndex = $(editButtons).index(btn);
-                let data = datatable.row(currentBtnIndex).data();
+                let data = vid_datatable.row(currentBtnIndex).data();
 
                 // Set form title
                 $("#form_title").text(__("Edit Course"));

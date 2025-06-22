@@ -9,11 +9,9 @@
                 <div class="card card-flush">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div class="card-title">
-                            <h2>{{ __('Course Details') }}</h2>
+                            <h2>{{ __('Section Details') }}</h2>
                         </div>
                         <div class="d-flex gap-2">
-
-
 
                         </div>
                     </div>
@@ -85,8 +83,8 @@
                 <div class="card mb-5 mb-x-10">
                     <!--begin::Card header-->
                     <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-                        data-bs-target="#kt_account_profile_details" aria-expanded="true"
-                        aria-controls="kt_account_profile_details">
+                        data-bs-target="#video_datatable" aria-expanded="true"
+                        aria-controls="video_datatable">
                         <!--begin::Card title-->
                         <div class="card-title m-0">
                             <h3 class="fw-bold m-0">{{ __('Videos list') }}</h3>
@@ -263,8 +261,8 @@
                 <div class="card mb-5 mb-x-10">
                     <!--begin::Card header-->
                     <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-                        data-bs-target="#kt_account_profile_details" aria-expanded="true"
-                        aria-controls="kt_account_profile_details">
+                        data-bs-target="#kt_workhome_datatable" aria-expanded="true"
+                        aria-controls="kt_workhome_datatable">
                         <!--begin::Card title-->
                         <div class="card-title m-0">
                             <h3 class="fw-bold m-0">{{ __('homeworks list') }}</h3>

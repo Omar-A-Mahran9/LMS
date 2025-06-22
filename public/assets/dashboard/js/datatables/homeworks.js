@@ -1,6 +1,6 @@
 "use strict";
 
-var datatable;
+var homeworkdatatable;
 // Class definition
 var KTDatatablesHomeworkServerSide = (function () {
     if (typeof classId !== "undefined" && classId) {
@@ -9,10 +9,9 @@ var KTDatatablesHomeworkServerSide = (function () {
         var dbTable = "homeworks";
     }
     // Private functions
-    var initDatatable = function () {
-        datatable = $("#kt_workhome_datatable").DataTable({
+    var initDatatableHomework = function () {
+        homeworkdatatable = $("#kt_workhome_datatable").DataTable({
             language: language,
-            searchDelay: searchDelay,
             processing: processing,
             serverSide: serverSide,
             order: [],
@@ -137,7 +136,7 @@ var KTDatatablesHomeworkServerSide = (function () {
 
                                 ${`<!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
+                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_homework_row">
                                         ${__("Delete")}
                                     </a>
                                 </div>
@@ -156,11 +155,11 @@ var KTDatatablesHomeworkServerSide = (function () {
         });
 
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
-        datatable.on("draw", function () {
+        homeworkdatatable.on("draw", function () {
             initToggleToolbar();
             toggleToolbars();
             handleEditRows();
-            deleteRowWithURL(`/dashboard/${dbTable}/`);
+            deleteHomeworkRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({
                 url: `/dashboard/${dbTable}/delete-selected`,
                 restoreUrl: `/dashboard/${dbTable}/restore-selected`,
@@ -179,7 +178,7 @@ var KTDatatablesHomeworkServerSide = (function () {
                 e.preventDefault();
 
                 let currentBtnIndex = $(editButtons).index(btn);
-                let data = datatable.row(currentBtnIndex).data();
+                let data = homeworkdatatable.row(currentBtnIndex).data();
 
                 // Set form title
                 $("#form_title").text(__("Edit Course"));
@@ -230,11 +229,9 @@ var KTDatatablesHomeworkServerSide = (function () {
     // Public methods
     return {
         init: function () {
-            initDatatable();
-            handleSearchDatatable();
-            initToggleToolbar();
+            initDatatableHomework();
             handleEditRows();
-            deleteRowWithURL(`/dashboard/${dbTable}/`);
+            deleteHomeworkRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({
                 url: `/dashboard/${dbTable}/delete-selected`,
                 restoreUrl: `/dashboard/${dbTable}/restore-selected`,

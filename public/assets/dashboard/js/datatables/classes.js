@@ -8,7 +8,6 @@ var KTDatatablesServerSide = (function () {
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
             language: language,
-            searchDelay: searchDelay,
             processing: processing,
             serverSide: serverSide,
             order: [],
@@ -308,8 +307,7 @@ var KTDatatablesServerSide = (function () {
     return {
         init: function () {
             initDatatable();
-            handleSearchDatatable();
-            initToggleToolbar();
+             initToggleToolbar();
             handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({

@@ -1,8 +1,8 @@
 "use strict";
 
-var datatable;
+var qz_datatable;
 
-var KTDatatablesServerSide = (function () {
+var KTDatatablesServerSidequiz = (function () {
     if (typeof classId !== "undefined" && classId) {
         var dbTable = `classes/${classId}/quizzes`;
     } else {
@@ -25,10 +25,9 @@ var KTDatatablesServerSide = (function () {
     );
     // Private functions
     var initDatatable = function () {
-        datatable = $("#kt_datatable").DataTable({
+        qz_datatable = $("#kt_datatable").DataTable({
             language: language,
-            searchDelay: searchDelay,
-            processing: processing,
+             processing: processing,
             serverSide: serverSide,
             order: [],
             stateSave: saveState,
@@ -169,7 +168,7 @@ var KTDatatablesServerSide = (function () {
             }
         }
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
-        datatable.on("draw", function () {
+        qz_datatable.on("draw", function () {
             initToggleToolbar();
             toggleToolbars();
             handleEditRows();
@@ -179,7 +178,7 @@ var KTDatatablesServerSide = (function () {
                 restoreUrl: `/dashboard/${dbTable}/restore-selected`,
             });
             KTMenu.createInstances();
-            let rowCount = datatable.rows().count();
+            let rowCount = qz_datatable.rows().count();
             if (rowCount >= 1) {
                 $("#quiz_btn").hide(); // or .attr('hidden', true)
             } else {
@@ -198,7 +197,7 @@ var KTDatatablesServerSide = (function () {
                 e.preventDefault();
 
                 let currentBtnIndex = $(editButtons).index(btn);
-                let data = datatable.row(currentBtnIndex).data();
+                let data = qz_datatable.row(currentBtnIndex).data();
 
                 // Set form title
                 $("#form_title").text(__("Edit Course"));
@@ -260,5 +259,5 @@ var KTDatatablesServerSide = (function () {
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
-    KTDatatablesServerSide.init();
+    KTDatatablesServerSidequiz.init();
 });
