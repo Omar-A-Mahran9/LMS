@@ -9,6 +9,7 @@ use App\Http\Resources\Api\GovernmentsResource;
  use App\Http\Resources\Api\CourseDetailsResource;
 use App\Http\Resources\Api\CoursesDetailsResource;
 use App\Http\Resources\Api\QuizResource;
+use App\Http\Resources\Api\SectionResource;
 use App\Http\Resources\Api\VideoResource;
 
 
@@ -22,6 +23,7 @@ use App\Models\CourseVideoStudent;
 use App\Models\Government;
 
 use App\Models\Quiz;
+use App\Models\Section;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,17 +61,17 @@ public function getCoursesByCategory(Request $request)
   if (Auth::guard('api')->check()) {
     $student = Auth::guard('api')->user();
 
-if ($filter === 'my') {
+    if ($filter === 'my') {
     $query->whereHas('students', function ($q) use ($student) {
         $q->where('student_id', $student->id)
           ->whereIn('course_student.status', ['approved', 'pending'])
           ->where('course_student.is_active', 1);
     });
-}  elseif ($filter === 'other') {
+    }  elseif ($filter === 'other') {
     $query->whereDoesntHave('students', function ($q) use ($student) {
         $q->where('student_id', $student->id); // just not booked
     });
-}
+    }
 
     }
 
@@ -86,7 +88,10 @@ if ($filter === 'my') {
     {
         $course = Course::where('id', $id)
                         ->where('is_active', 1)
+
                         ->where('is_enrollment_open', 1)
+                        ->whereDate('start_date', '<=', now())
+                        ->whereDate('end_date', '>=', now())
                         ->first();
 
         if (!$course) {
@@ -184,23 +189,6 @@ public function getClassById($id)
 
     }
 
-public function getVideosByCourse($id)
-{
-    // Find the course by ID and make sure it's published
-    $course = Course::where('id', $id)
-                    ->where('is_active', 1)
-                    ->first();
-
-    if (!$course) {
-        return $this->failure('Course not found or unpublished') ;
-    }
-
-    // Get videos related to this course (assuming relation `videos`)
-    $videos = $course->videos()->get();
-
-    // Return the videos collection as JSON, optionally use a resource collection if you have one
-    return $this->success('',VideoResource::collection($videos) );
-}
 
 public function getVideosByClass($id)
 {
@@ -228,7 +216,44 @@ public function getVideosByClass($id)
 
     return $this->success('', $resourceCollection);
 }
+public function getVideosBySections($id)
+{
+    $studentId = Auth::id();
 
+    // Ensure course has this student enrolled and is active
+    $courseExists = \App\Models\Course::where('id', $id)
+        ->where('is_active', 1)
+        ->whereHas('enrollments', function ($q) use ($studentId) {
+            $q->where('student_id', $studentId)
+              ->where('status', 'approved')
+              ->where('is_active', 1);
+        })
+        ->exists();
+
+    if (!$courseExists) {
+        return $this->failure('Course not found or unauthorized.');
+    }
+    $sections = Section::with([
+        // Videos and progress
+        'videos' => function ($query) use ($studentId) {
+            $query->with(['studentProgress' => function ($q) use ($studentId) {
+                $q->where('student_id', $studentId);
+            }]);
+        },
+        'quizzes.questions',
+        'homeworks.questions',
+    ])
+    ->where('course_id', $id)
+    ->where('is_active', 1)
+    ->get();
+
+    // Wrap each section with SectionResource (which includes videos + student progress)
+    $resource = $sections->map(function ($section) use ($studentId) {
+        return new SectionResource($section, $studentId);
+    });
+
+    return $this->success('Sections with videos', $resource);
+}
 
 public function logWatch(Request $request, $id)
 {

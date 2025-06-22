@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware(['auth:api'])->group(function () {
     Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');
 
-    Route::get('videos_by_course/{id}', 'CourseController@getVideosByCourse');
+    Route::get('videos_by_course/{id}', 'CourseController@getVideosBySections');
     Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
     Route::post('videos/{video}/watch', 'CourseController@logWatch');
 
@@ -43,7 +43,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('student-homeworks/{studentHomeworkId}/results', [StudentHomeworkController::class, 'results']);
 
 
-    Route::get('homework_by_course/{id}', 'CourseController@getVideosByCourse');
 
 
     Route::post('enroll-course', [EnrollmentController::class, 'enroll_course']);
