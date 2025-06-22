@@ -11,7 +11,7 @@
     "Search for Why us": "البحث في لماذا نحن",
     "Is this a video?": "هل هذا فيديو؟",
     "Add new partner": "اضافة شريك جديد",
-    "car prices": "أسعار السيارات",
+
     "Common Question list": "قائمة الأسئلة الشائعة",
     "Add new Common Question": "اضافة سؤال ",
     "Search for Common Question": "البحث عن الأسئلة الشائعة",
@@ -25,6 +25,17 @@
     "Section Details": "بيانات القسم",
     "Class Details": "بيانات الحصة",
 
+    "Total Courses": "إجمالي الكورسات",
+    "Total Students": "إجمالي الطلاب",
+    "Total Books": "إجمالي الكتب",
+    "Book Orders": "طلبات الكتب",
+    "Course Enrollments": "التحاق الطلاب بالكورسات",
+    "Course Earnings": "إجمالي أرباح الكورسات",
+    "Class Count": "عدد الحصص",
+    "Section Count": "عدد الأقسام",
+
+    "Monthly Course Earnings (Last 6 Months)": "الأرباح الشهرية للكورسات (آخر 6 أشهر)",
+    "Top Courses by Enrolled Students": "أعلى الكورسات من حيث عدد الطلاب",
     "Female": "أنثى",
     "Block Student": "حظر الطالب",
     "Has Discount?": "يوجد خصم",
