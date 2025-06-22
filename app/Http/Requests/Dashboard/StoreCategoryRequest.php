@@ -29,7 +29,7 @@ class StoreCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:512',
             "name_ar" => ["required", "string:255", new NotNumbersOnly(), "unique:categories,name_ar", new ExistButDeleted(new CategorySubCategory())],
             "name_en" => ["required", "string:255", new NotNumbersOnly(), "unique:categories,name_ar", new ExistButDeleted(new CategorySubCategory())],
             "description_ar" => ["required", "string:255", new NotNumbersOnly()],

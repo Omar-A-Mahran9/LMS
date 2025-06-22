@@ -38,7 +38,7 @@ class StudentsRatesController extends Controller
 
             $data = $request->validate([
             'full_name'   => 'required|string|max:255',
-            'image'       => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
+            'image'       => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:512',
             'rate'        => 'required|numeric|min:1|max:5',
             'status'      => 'required|in:pending,reject,approve',
             'category_id' => 'required|exists:categories,id',

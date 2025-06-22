@@ -32,7 +32,7 @@ class UpdateHomeSettingsRequest extends FormRequest
                 'label_en' => 'required|string',
                 'about_us_ar' => 'required|string',
                 'about_us_en' => 'required|string',
-                'about_us_image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
+                'about_us_image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:512',
 
             ],
             "banner" => [
@@ -58,9 +58,9 @@ class UpdateHomeSettingsRequest extends FormRequest
                 'description_common_question_en' => 'required|string',
 
 
-                'common_question_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
-                'how_to_use_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
-                'contact_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:512',
+                'common_question_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:512',
+                'how_to_use_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:512',
+                'contact_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:512',
                 'video_how_to_use_url' => 'required|url',
 
             ],

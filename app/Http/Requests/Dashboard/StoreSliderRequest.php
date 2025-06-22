@@ -34,7 +34,7 @@ class StoreSliderRequest extends FormRequest
             'btn_link' => ["required", "url", "string:255", new NotNumbersOnly()],
             'is_video' => ['nullable', 'boolean'],
             'video_url' => ['required_if:is_video,true' ],
-            'background' => ['nullable', 'required_unless:is_video,1', 'image', 'mimes:jpg,png,jpeg,gif,svg'],
+            'background' => ['nullable', 'required_unless:is_video,1', 'image', 'mimes:jpg,png,jpeg,gif,svg,webp'],
 
             'status' => ["nullable", "in:0,1"],
         ];
