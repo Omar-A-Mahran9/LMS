@@ -48,6 +48,7 @@ class CoursesDetailsResource extends JsonResource
                     ? round($this->price * (1 - $this->discount_percentage / 100), 2) // discounted price
                     : $this->price
                 ),
+            'have_certificate' => $this->certificate_available,
 
 
             'original_price' => $this->price,

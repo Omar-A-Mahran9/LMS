@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api;
 
+use App\Models\CourseVideoStudent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -17,6 +18,17 @@ class CourseDetailsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+    $studentId = auth('api')->id(); // or pass from $request
+
+    // Count how many videos the student has completed
+        $completedCount = CourseVideoStudent::whereIn(
+            'course_video_id',
+            $this->videos->pluck('id')
+        )->where('student_id', $studentId)
+        ->where('is_completed', true)
+        ->count();
+
+        $isCompleted = $this->videos->count() > 0 && $completedCount === $this->videos->count();
 
 
         return [
@@ -34,8 +46,11 @@ class CourseDetailsResource extends JsonResource
             'count_quiz' => $this->count_quiz,
             'count_homework' => $this->count_homework,
             'count_attachment' => $this->count_attachment, // only if you define this accessor
-
-
+            'have_certificate' => $this->certificate_available,
+           'is_completed' => $isCompleted,
+            'certificate_url' => $this->certificate_available
+                ? route('student.certificates.download', ['course' => $this->id])
+                : null,
 
             'price' => $this->is_free
                 ? 'Free' // or 0 if you prefer numeric value

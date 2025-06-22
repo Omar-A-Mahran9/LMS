@@ -50,6 +50,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('enrollment-status/{course_id}', [EnrollmentController::class, 'enrollmentStatus']);
     Route::get('books/{id}', 'BookController@show');
+Route::get('certificates/{course}/download', [CertificateController::class, 'download'])->name('certificate.download');
 
     Route::get('certificates/{course}', [CertificateController::class, 'download'])
         ->name('student.certificates.download');

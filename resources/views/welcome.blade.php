@@ -73,6 +73,28 @@
                                             </tbody>
                                         </table>
                                     @endif
+
+                                    @if ($item['label'] == __('Book Orders'))
+                                        <table class="table table-sm table-borderless ms-5 w-auto">
+
+                                            <tbody>
+                                                @foreach (['pending', 'approved', 'rejected'] as $status)
+                                                    <tr>
+                                                        <td>
+                                                            <span
+                                                                class="badge 
+                            {{ $status == 'pending' ? 'bg-warning' : ($status == 'approved' ? 'bg-success' : 'bg-danger') }}">
+                                                                {{ __(ucfirst($status)) }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-end text-gray-800">
+                                                            {{ $bookOrderStats[$status] ?? 0 }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @endif
+
                                 </div>
                             </div>
 
