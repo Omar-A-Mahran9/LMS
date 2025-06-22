@@ -27,9 +27,9 @@ class CertificateController extends Controller
             ->where('is_completed', true)
             ->count();
 
-        if ($videoIds->count() > 0 && $completedCount !== $videoIds->count()) {
-            return response()->json(['message' => __('You must complete all course videos to receive a certificate.')], 403);
-        }
+        // if ($videoIds->count() > 0 && $completedCount !== $videoIds->count()) {
+        //     return response()->json(['message' => __('You must complete all course videos to receive a certificate.')], 403);
+        // }
 
         // Generate QR code (link back to this certificate)
         $qr = base64_encode(QrCode::format('png')->size(120)->generate(url()->current()));

@@ -110,7 +110,7 @@ return [
     ],
     'string' => 'يجب أن يكون ( :attribute ) نصآ',
     'timezone' => 'يجب أن يكون ( :attribute ) نطاقًا زمنيًا صحيحًا',
-    'unique' => 'قيمة ( :attribute ) مُستكورس من قبل',
+    'unique' => 'قيمة ( :attribute ) مستخدمة من قبل',
     'uploaded' => 'فشل في تحميل الـ ( :attribute )',
     'url' => 'صيغة الرابط غير صحيحة',
     'uuid' => '( :attribute ) يجب أن يكون بصيغة UUID سليمة',
