@@ -24,6 +24,7 @@
     "Duration Per Student (days)": "مدة الكورس لكل طالب (بالأيام)",
     "Section Details": "بيانات القسم",
     "Class Details": "بيانات الحصة",
+    "Common Questions": "الأسئلة الشائعة",
 
     "Total Courses": "إجمالي الكورسات",
     "Total Students": "إجمالي الطلاب",
@@ -126,6 +127,9 @@
     "Enrolled Students": "عدد الطلاب المسجلين",
     "Course Details": "بيانات الكورس",
     "How to use data website": "ازاي تستخدم المنصة",
+    "How to use data website arabic": "إزاي تستخدم المنصة (بالعربي)",
+    "How to use data website english": "إزاي تستخدم المنصة (بالانجليزية)",
+
     "quizzes list": "قائمة الاختبارات",
     "homeworks list": "قائمة الواجبات",
     "Add new quiz": "إضافة اختبار جديد",

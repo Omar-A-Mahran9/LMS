@@ -21,7 +21,7 @@
                             <!--begin::Card header-->
                             <div class="card-header">
                                 <div class="card-title">
-                                    <h2>{{ __('About us') }}</h2>
+                                    <h2>{{ __('Common Questions') }}</h2>
                                 </div>
                             </div>
                             <!--end::Card header-->
@@ -260,11 +260,11 @@
                                 <div class="mb-10 row">
                                     <div class="col-lg-6">
                                         <!--begin::Label-->
-                                        <label class="form-label">{{ __('contact in arabic') }}</label>
+                                        <label class="form-label">{{ __('How to use data website arabic') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
                                         <textarea name="description_how_to_use_ar" id="description_how_to_use_ar_inp" data-kt-autosize="true"
-                                            placeholder="{{ __('contact in arabic') }}" class="tox-target">
+                                            placeholder="{{ __('How to use data website arabic') }}" class="tox-target">
                                             {{ setting('description_how_to_use_ar') }}
                                             </textarea>
                                         <!--end::Editor-->
@@ -275,11 +275,11 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <!--begin::Label-->
-                                        <label class="form-label">{{ __('contact in english') }}</label>
+                                        <label class="form-label">{{ __('How to use data website english') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
                                         <textarea name="description_how_to_use_en" id="description_how_to_use_en_inp" data-kt-autosize="true"
-                                            placeholder="{{ __('contact in english') }}" class="tox-target">
+                                            placeholder="{{ __('How to use data website english') }}" class="tox-target">
                                             {{ setting('description_how_to_use_en') }}
                                             </textarea>
                                         <!--end::Editor-->
@@ -302,7 +302,7 @@
                             <!--begin::Card header-->
                             <div class="card-header">
                                 <div class="card-title">
-                                    <h2>{{ __('Courses') }}</h2>
+                                    <h2>{{ __('Contact us data') }}</h2>
                                 </div>
                             </div>
                             <!--end::Card header-->
@@ -393,11 +393,11 @@
                                 <div class="mb-10 row">
                                     <div class="col-lg-6">
                                         <!--begin::Label-->
-                                        <label class="form-label">{{ __('Service in arabic') }}</label>
+                                        <label class="form-label">{{ __('contact in arabic') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
                                         <textarea name="description_contact_ar" id="description_contact_ar_inp" data-kt-autosize="true"
-                                            placeholder="{{ __('Service in arabic') }}" class="tox-target">
+                                            placeholder="{{ __('contact in arabic') }}" class="tox-target">
                                             {{ setting('description_contact_ar') }}
                                             </textarea>
                                         <!--end::Editor-->
@@ -408,11 +408,11 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <!--begin::Label-->
-                                        <label class="form-label">{{ __('Service in english') }}</label>
+                                        <label class="form-label">{{ __('contact in english') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
                                         <textarea name="description_contact_en" id="description_contact_en_inp" data-kt-autosize="true"
-                                            placeholder="{{ __('Service in english') }}" class="tox-target">
+                                            placeholder="{{ __('contact in english') }}" class="tox-target">
                                             {{ setting('description_contact_en') }}
                                             </textarea>
                                         <!--end::Editor-->
