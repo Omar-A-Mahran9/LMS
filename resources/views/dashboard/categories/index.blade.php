@@ -45,7 +45,7 @@
                 <!--end::Search-->
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end gap-1" data-kt-docs-table-toolbar="base">
-                    <!--begin::Add customer-->
+                    {{-- <!--begin::Add customer-->
                     <a
                         href="{{ request()->query('type') == 'parent' ? route('dashboard.categories.index', ['type' => 'sub']) : route('dashboard.categories.index', ['type' => 'parent']) }}">
                         <button type="button" class="btn btn-primary">
@@ -65,8 +65,8 @@
                             {{ request()->query('type') == 'parent' ? __('Subcategories') : __('Main categories') }}
                         </button>
                     </a>
-                    <!--end::Add customer-->
-                    @if (request()->query('type') == 'sub')
+                    <!--end::Add customer--> --}}
+                    {{-- @if (request()->query('type') == 'sub')
                         <div id="add_btn" data-bs-toggle="modal" data-bs-target="#crud_modal">
                             <!--begin::Add customer-->
                             <button type="button" class="btn btn-primary" data-bs-toggle="tooltip"
@@ -86,7 +86,7 @@
                             </button>
                             <!--end::Add customer-->
                         </div>
-                    @endif
+                    @endif --}}
 
                     @if (request()->query('type') == 'parent')
                         <div id="add_btn" data-bs-toggle="modal" data-bs-target="#crud_modal">

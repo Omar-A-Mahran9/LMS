@@ -161,6 +161,7 @@ let translations = {
         "Add new Enroll": "اضافة اشتراك",
         "pay in_center": "الدفع في السنتر",
         "contact with_support": "التواصل مع الدعم الفني",
+        "Edit category": "تعديل القسم",
 
         "Edit subcategory": "تعديل القسم الفرعي",
         "Add new tag": "أضف كلمة مفتاحية جديدة",

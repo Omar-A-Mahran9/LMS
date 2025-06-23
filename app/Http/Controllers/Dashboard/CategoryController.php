@@ -42,14 +42,14 @@ public function store(StoreCategoryRequest $request)
         $data['image'] = uploadImageToDirectory($request->file('image'), "Categories");
     }
 
-    if ($request->type === 'parent') {
-        // Create as a parent category
+    // if ($request->type === 'parent') {
+    //     // Create as a parent category
         Category::create($data);
-    } else {
-        // If subcategory, also set the parent_id from the request
-        $data['parent_id'] = $request->parent_id;
-        CategorySubCategory::create($data);
-    }
+    // } else {
+    //     // If subcategory, also set the parent_id from the request
+    //     $data['parent_id'] = $request->parent_id;
+    //     CategorySubCategory::create($data);
+    // }
 
     return response(["Category created successfully"]);
 }
@@ -66,14 +66,14 @@ public function update(UpdateCategoryRequest $request, $id)
         $data['image'] = uploadImageToDirectory($request->file('image'), "Categories");
     }
 
-    if ($type === 'category') {
+    // if ($type === 'category') {
         $category = Category::findOrFail($id);
         $category->update($data);
-    } else {
-        $subCategory = CategorySubCategory::findOrFail($id);
-        $subCategory->update($data);
-        $subCategory->categories()->sync($request['parent_id']);
-    }
+    // } else {
+    //     $subCategory = CategorySubCategory::findOrFail($id);
+    //     $subCategory->update($data);
+    //     $subCategory->categories()->sync($request['parent_id']);
+    // }
 
     return response(["Category updated successfully"]);
 }

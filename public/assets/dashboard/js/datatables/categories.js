@@ -243,7 +243,7 @@ var KTDatatablesServerSide = (function () {
                 let currentBtnIndex = $(editButtons).index(d);
                 let data = datatable.row(currentBtnIndex).data();
 
-                $("#form_title").text(__("Edit subcategory"));
+                $("#form_title").text(__("Edit category"));
                 $(".image-input-wrapper").css(
                     "background-image",
                     `url('${data.full_image_path}')`
