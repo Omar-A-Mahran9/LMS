@@ -111,7 +111,7 @@ class HomeController extends Controller
         ]);
     }
 
-        return $this->success('',[                'image' => asset('images/dummy3.jpg'),
+        return $this->success('',[ 'image' => 'images/dummy3.jpg',
 ,"topStudents"=>$topStudents]);
     }
 
