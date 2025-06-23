@@ -84,7 +84,32 @@ class HomeController extends Controller
             ->sortByDesc('average_score')
             ->take(10)
             ->values();
-
+// 🧪 If no data, return dummy values
+    if ($topStudents->isEmpty()) {
+        $topStudents = collect([
+            [
+                'name' => 'Dummy Student 1',
+                'image' => asset('images/dummy1.jpg'),
+                'category' => $category->name,
+                'average_score' => 95.5,
+                'full_score' => 100,
+            ],
+            [
+                'name' => 'Dummy Student 2',
+                'image' => asset('images/dummy2.jpg'),
+                'category' => $category->name,
+                'average_score' => 93.0,
+                'full_score' => 100,
+            ],
+            [
+                'name' => 'Dummy Student 3',
+                'image' => asset('images/dummy3.jpg'),
+                'category' => $category->name,
+                'average_score' => 91.2,
+                'full_score' => 100,
+            ],
+        ]);
+    }
 
         return $this->success('',$topStudents);
     }
