@@ -39,6 +39,20 @@ class SectionResource extends JsonResource
                 ->exists();
         }
     }
+
+
+        $activeQuiz = $this->quizzes()->where('is_active', true)->first();
+
+        // Check if the student attempted the *active* quiz at least once
+        $hasAttemptedActiveQuiz = false;
+
+        if ($student && $activeQuiz) {
+            $hasAttemptedActiveQuiz = $activeQuiz->attempts()
+                ->where('student_id', $student->id)
+                ->exists();
+        }
+
+
         return [
             'id'           => $this->id,
             'title'        => $this->title,
@@ -53,6 +67,7 @@ class SectionResource extends JsonResource
             // Optional section-level flags
             'has_quizzes'   => $this->quizzes()->exists(),
             'has_homeworks' => $this->homeworks()->exists(),
+            'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,
 
 
            // First quiz & homework info
