@@ -25,69 +25,187 @@ use App\Models\Slider;
 
 class HomeController extends Controller
 {
+    public function topHeroesByCategory(Request $request)
+    {
+        $categoryId = $request->get('category_id');
 
+        $category = Category::where('is_publish', 1)
+            ->whereNull('parent_id')
+            ->when($categoryId, fn($q) => $q->where('id', $categoryId))
+            ->with(['courses.classes.quizzes.attempts.student'])
+            ->first();
+
+        if (!$category) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Category not found',
+            ], 404);
+        }
+
+        $studentScores = [];
+
+        foreach ($category->courses as $course) {
+            foreach ($course->classes as $class) {
+                foreach ($class->quizzes as $quiz) {
+                    foreach ($quiz->attempts as $attempt) {
+                        if (!$attempt->student) continue;
+
+                        $studentId = $attempt->student_id;
+
+                        if (!isset($studentScores[$studentId])) {
+                            $studentScores[$studentId] = [
+                                'total_score' => 0,
+                                'attempts' => 0,
+                                'student' => $attempt->student,
+                            ];
+                        }
+
+                        $studentScores[$studentId]['total_score'] += $attempt->score;
+                        $studentScores[$studentId]['attempts'] += 1;
+                    }
+                }
+            }
+        }
+
+        $topStudents = collect($studentScores)
+            ->map(function ($data) {
+                $average = $data['attempts'] > 0
+                    ? $data['total_score'] / $data['attempts']
+                    : 0;
+                $full = $data['attempts'] * 100; // Adjust if quiz full mark is different
+                return [
+                    'name' => $data['student']->name,
+                    'image' => $data['student']->full_image_path ,
+                    'category' => $data['student']->category->name ?? 'N/A', // optional fallback
+                    'average_score' => round($average, 2),
+                    'full_score' => $full,
+                ];
+            })
+            ->sortByDesc('average_score')
+            ->take(10)
+            ->values();
+
+
+        return $this->success('',$topStudents);
+    }
 
     public function getHome()
-{
-    $locale = app()->getLocale();
-    $suffix = $locale === 'ar' ? '_ar' : '_en';
+    {
+        $locale = app()->getLocale();
+        $suffix = $locale === 'ar' ? '_ar' : '_en';
 
-    // Sliders
-    $sliders = Slider::where('status', '1')->get();
-   $categories = Category::where('is_publish', 1)
-        ->whereNull('parent_id') // Only main categories; remove this to get all
-        ->get();
-  $rates = Student_rate::all(); // Or you can use a query like ->where('status', 'approved') to filter rate
-    $address = $locale === 'ar' ? setting('address_ar') : setting('address_en');
+        // Sliders
+        $sliders = Slider::where('status', '1')->get();
+    $categories = Category::where('is_publish', 1)
+            ->whereNull('parent_id') // Only main categories; remove this to get all
+            ->get();
+    $rates = Student_rate::all(); // Or you can use a query like ->where('status', 'approved') to filter rate
+        $address = $locale === 'ar' ? setting('address_ar') : setting('address_en');
 
-    $ask_us = [
-            'image_url'=>getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
-            'label'           => setting('label' . $suffix),
-            'description'     => setting('about_us' . $suffix),
-            'experince_year'     => 20,
-            'lecture_count'     => 200,
+        $ask_us = [
+                'image_url'=>getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
+                'label'           => setting('label' . $suffix),
+                'description'     => setting('about_us' . $suffix),
+                'experince_year'     => 20,
+                'lecture_count'     => 200,
+            ];
+    $HowUse = [
+                'label'           => setting('label_how_to_use' . $suffix),
+                'description'     => setting('description_how_to_use' . $suffix),
+                'image_url' => getImagePathFromDirectory(setting('how_to_use_banner'), 'Settings') ,
+                'video_url' => convertToYoutubeEmbed(setting('video_how_to_use_url')),
+
+
+            ];
+            $books = Book::where('is_active', 1)
+                ->where('is_featured', 1)
+                ->get();
+            $CommonQuestion = CommonQuestion::get();
+            $contact_us_data=[
+                'label'           => setting('label_about_us' . $suffix),
+                'description'     => setting('description_about_us' . $suffix),
+                'phone_number'       => setting('sms_number'),
+                'email'            => setting('email'),
+                'address'          => $address,
+                'google_map_url' =>  setting('google_map_url'),
+
+            ];
+        // Combine and return
+  $heroesByCategory = Category::where('is_publish', 1)
+    ->whereNull('parent_id') // فقط التصنيفات الرئيسية
+    ->with(['courses.classes.quizzes.attempts.student']) // eager load all necessary levels
+    ->get()
+    ->map(function ($category) {
+        $studentScores = [];
+
+        foreach ($category->courses as $course) {
+            foreach ($course->classes as $class) {
+                foreach ($class->quizzes as $quiz) {
+                    foreach ($quiz->attempts as $attempt) {
+                        $studentId = $attempt->student_id;
+
+                        if (!isset($studentScores[$studentId])) {
+                            $studentScores[$studentId] = [
+                                'total_score' => 0,
+                                'attempts' => 0,
+                                'student' => $attempt->student
+                            ];
+                        }
+
+                        $studentScores[$studentId]['total_score'] += $attempt->score;
+                        $studentScores[$studentId]['attempts'] += 1;
+                    }
+                }
+            }
+        }
+
+        $students = collect($studentScores)
+            ->map(function ($data) {
+                $data['average'] = $data['attempts'] > 0
+                    ? $data['total_score'] / $data['attempts']
+                    : 0;
+                return $data;
+            })
+            ->sortByDesc('average')
+            ->take(10)
+            ->values();
+
+        return [
+            'category_id' => $category->id,
+            'category_name' => $category->name,
+            'heroes' => $students->map(function ($item) {
+                return [
+                    'student_id' => $item['student']->id,
+                    'name' => $item['student']->name,
+                    'average_score' => round($item['average'], 2),
+                    // يمكنك إضافة صورة الطالب أو بيانات إضافية هنا
+                ];
+            }),
         ];
-   $HowUse = [
-            'label'           => setting('label_how_to_use' . $suffix),
-            'description'     => setting('description_how_to_use' . $suffix),
-            'image_url' => getImagePathFromDirectory(setting('how_to_use_banner'), 'Settings') ,
-            'video_url' => convertToYoutubeEmbed(setting('video_how_to_use_url')),
+    });
 
 
-        ];
-        $books = Book::where('is_active', 1)
-             ->where('is_featured', 1)
-             ->get();
-        $CommonQuestion = CommonQuestion::get();
-        $contact_us_data=[
-            'label'           => setting('label_about_us' . $suffix),
-            'description'     => setting('description_about_us' . $suffix),
-            'phone_number'       => setting('sms_number'),
-            'email'            => setting('email'),
-            'address'          => $address,
-            'google_map_url' =>  setting('google_map_url'),
+        return $this->success('', [
+            'sliders' => SliderResource::collection($sliders),
+            'categories' => CategoryResource::collection($categories),
+            'rates' => RateResource::collection($rates),
+            'heroes_by_category' => $heroesByCategory,
 
-        ];
-    // Combine and return
-    return $this->success('', [
-        'sliders' => SliderResource::collection($sliders),
-        'categories' => CategoryResource::collection($categories),
-        'rates' => RateResource::collection($rates),
-        'ask_us' =>$ask_us,
-        'HowUse' =>$HowUse,
+            'ask_us' =>$ask_us,
+            'HowUse' =>$HowUse,
 
-        'Books' =>BookResource::collection($books),
+            'Books' =>BookResource::collection($books),
 
-        'CommonQuestion' =>[
-            'label'           => setting('label_common_question' . $suffix),
-            'description'     => setting('description_common_question' . $suffix),
-            'image_url' => getImagePathFromDirectory(setting('common_question_banner'), 'Settings') ,
-            'question_and_answer'=>CommonQuestionResource::collection($CommonQuestion),
-        ],
-        'contact_us_data'=>$contact_us_data
+            'CommonQuestion' =>[
+                'label'           => setting('label_common_question' . $suffix),
+                'description'     => setting('description_common_question' . $suffix),
+                'image_url' => getImagePathFromDirectory(setting('common_question_banner'), 'Settings') ,
+                'question_and_answer'=>CommonQuestionResource::collection($CommonQuestion),
+            ],
+            'contact_us_data'=>$contact_us_data
 
     ]);
-}
+    }
 
 protected function convertToIframe($url)
 {

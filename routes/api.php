@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\BookOrderController;
 use App\Http\Controllers\API\CertificateController;
 use App\Http\Controllers\Api\EnrollmentController;
+use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\StudentHomeworkController;
 use App\Http\Controllers\Api\StudentQuizController;
 use Illuminate\Http\Request;
@@ -50,7 +51,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('enrollment-status/{course_id}', [EnrollmentController::class, 'enrollmentStatus']);
     Route::get('books/{id}', 'BookController@show');
-Route::get('certificates/{course}/download', [CertificateController::class, 'download'])->name('certificate.download');
+    Route::get('certificates/{course}/download', [CertificateController::class, 'download'])->name('certificate.download');
 
     Route::get('certificates/{course}', [CertificateController::class, 'download'])
         ->name('student.certificates.download');
@@ -66,6 +67,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('verify-otp', 'Auth\ForgetPasswordController@checkOTP');
     Route::post('change-password', 'Auth\ForgetPasswordController@changePassword');
     Route::post('resend-otp', 'Auth\ForgetPasswordController@reSendOtp');
+    Route::get('/heroes/by-category', [HomeController::class, 'topHeroesByCategory']);
 
     Route::get('about_us', 'HomeController@getAboutUs');
     Route::get('privacy_policy', 'HomeController@getprivacypolicy');
