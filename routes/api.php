@@ -73,6 +73,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('privacy_policy', 'HomeController@getprivacypolicy');
     Route::get('governments', 'HomeController@getgovernments');
     Route::get('home', 'HomeController@getHome');
+    Route::get('general', 'HomeController@GeneralInvokableController');
+
     Route::get('categories', 'HomeController@getCategory');
     Route::get('footer', 'HomeController@getfooter');
     Route::get('courses_by_category', 'CourseController@getCoursesByCategory');

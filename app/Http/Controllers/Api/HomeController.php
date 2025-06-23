@@ -7,6 +7,9 @@ use App\Http\Resources\Api\BookResource;
 use App\Http\Resources\Api\CategoryResource;
 use App\Http\Resources\Api\GovernmentsResource;
 use App\Http\Resources\Api\CommonQuestionResource;
+use App\Http\Resources\Api\CourseDetailsResource;
+use App\Http\Resources\Api\CoursesDetailsResource;
+use App\Http\Resources\Api\CoursesFeaturedResource;
 use Illuminate\Support\Str;
 
 use App\Http\Resources\Api\RateResource;
@@ -20,8 +23,8 @@ use App\Models\Student_rate;
  use App\Models\NewsLetter;
 
 use App\Models\Slider;
-
- use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -84,37 +87,37 @@ class HomeController extends Controller
             ->sortByDesc('average_score')
             ->take(10)
             ->values();
-// 🧪 If no data, return dummy values
-    if ($topStudents->isEmpty()) {
-        $topStudents = collect([
-            [
-                'name' => 'Dummy Student 1',
-                'image' => asset('images/dummy1.jpg'),
-                'category' => $category->name,
-                'average_score' => 95.5,
-                'full_score' => 100,
-            ],
-            [
-                'name' => 'Dummy Student 2',
-                'image' => asset('images/dummy2.jpg'),
-                'category' => $category->name,
-                'average_score' => 93.0,
-                'full_score' => 100,
-            ],
-            [
-                'name' => 'Dummy Student 3',
-                'image' => asset('images/dummy3.jpg'),
-                'category' => $category->name,
-                'average_score' => 91.2,
-                'full_score' => 100,
-            ],
-        ]);
-    }
+        // 🧪 If no data, return dummy values
+        if ($topStudents->isEmpty()) {
+            $topStudents = collect([
+                [
+                    'name' => 'Dummy Student 1',
+                    'image' => asset('images/dummy1.jpg'),
+                    'category' => $category->name,
+                    'average_score' => 95.5,
+                    'full_score' => 100,
+                ],
+                [
+                    'name' => 'Dummy Student 2',
+                    'image' => asset('images/dummy2.jpg'),
+                    'category' => $category->name,
+                    'average_score' => 93.0,
+                    'full_score' => 100,
+                ],
+                [
+                    'name' => 'Dummy Student 3',
+                    'image' => asset('images/dummy3.jpg'),
+                    'category' => $category->name,
+                    'average_score' => 91.2,
+                    'full_score' => 100,
+                ],
+            ]);
+        }
 
-return $this->success('', [
-    'image' => asset('images/dummy3.jpg'),
-    'topStudents' => $topStudents,
-]);
+        return $this->success('', [
+            'image' => asset('images/dummy3.jpg'),
+            'topStudents' => $topStudents,
+        ]);
 
     }
 
@@ -160,7 +163,7 @@ return $this->success('', [
 
             ];
         // Combine and return
-  $heroesByCategory = Category::where('is_publish', 1)
+    $heroesByCategory = Category::where('is_publish', 1)
     ->whereNull('parent_id') // فقط التصنيفات الرئيسية
     ->with(['courses.classes.quizzes.attempts.student']) // eager load all necessary levels
     ->get()
@@ -213,6 +216,14 @@ return $this->success('', [
         ];
     });
 
+    $today = Carbon::today()->toDateString(); // أو ->now() لو فيه وقت
+
+    $featured_courses = Course::where('is_active', 1)
+        ->where('featured', 1)
+        ->whereDate('start_date', '<=', $today)
+        ->whereDate('end_date', '>=', $today)
+        ->get();
+
 
         return $this->success('', [
             'sliders' => SliderResource::collection($sliders),
@@ -222,6 +233,7 @@ return $this->success('', [
 
             'ask_us' =>$ask_us,
             'HowUse' =>$HowUse,
+            'featured_courses' => CoursesFeaturedResource::collection($featured_courses),
 
             'Books' =>BookResource::collection($books),
 
