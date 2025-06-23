@@ -25,7 +25,7 @@ class StoreWhyusRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:512',
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
             "title_ar" => ["required", "max:255", new NotNumbersOnly(), "unique:whyuses,title_ar"],
             "title_en" => ["required", "max:255", new NotNumbersOnly(), "unique:whyuses,title_en"],
             "description_ar" => ["required", new NotNumbersOnly()],

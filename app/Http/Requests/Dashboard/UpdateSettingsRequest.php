@@ -27,8 +27,8 @@ class UpdateSettingsRequest extends FormRequest
 
         $validations =  [
             "main" => [
-                'logo' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:512',
-                'fav_icon' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:512',
+                'logo' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:1024',
+                'fav_icon' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:1024',
                 'website_name' => 'required|string:255',
                 'description' => 'required|string:255',
                 'sound_status' => 'required|in:stop,active',

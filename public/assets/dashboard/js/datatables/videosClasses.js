@@ -6,7 +6,7 @@ var KTDatatablesServerSidevid = (function () {
     var dbTable = `classes/${classId}/videos`;
 
     // Private functions
-    var initDatatable = function () {
+    var initvidDatatable = function () {
         if ($.fn.DataTable.isDataTable("#video_datatable")) {
             $("#video_datatable").DataTable().clear().destroy();
         }
@@ -282,7 +282,7 @@ var KTDatatablesServerSidevid = (function () {
     // Public methods
     return {
         init: function () {
-            initDatatable();
+            initvidDatatable();
              initToggleToolbar();
             handleEditRows();
             deleteVideoRowWithURL(`/dashboard/videos/`);

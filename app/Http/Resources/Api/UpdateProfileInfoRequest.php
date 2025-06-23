@@ -31,7 +31,7 @@ class UpdateProfileInfoRequest extends FormRequest
             'full_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
             'phone' => ['required', 'string', new PhoneNumber(), new ExistPhone(new Admin(), $admin->id), 'max:20', Rule::unique('admins')->ignore($admin->id)],
             'email' => 'required|string|email|unique:students',
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:512',
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
 
         ];
     }

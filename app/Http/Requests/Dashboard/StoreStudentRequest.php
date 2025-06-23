@@ -20,7 +20,7 @@ class StoreStudentRequest extends FormRequest
     public function rules()
     {
        return [
-        'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:512',
+        'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
 
         'first_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
         'middle_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],

@@ -31,7 +31,7 @@ class UpdateVideoRequest extends FormRequest
     // Manually resolve the CourseVideo model
     $courseVideo = (new CourseVideo())->resolveRouteBinding($courseVideoId);
   return [
-        'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
+        'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:10240',
         'course_id' => 'nullable|exists:courses,id',
         'class_id' => 'nullable|exists:classes,id',
         // 'section_id' => 'nullable|exists:section,id',

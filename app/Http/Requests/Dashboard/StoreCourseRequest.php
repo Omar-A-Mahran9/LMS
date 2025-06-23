@@ -26,8 +26,8 @@ class StoreCourseRequest extends FormRequest
     {
 return [
     // Required image
-    'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
-    'slide_image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
+    'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:10240',
+    'slide_image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:10240',
 
     // Multilingual Titles and Descriptions
     'title_ar' => ['required', 'max:255', new NotNumbersOnly()],

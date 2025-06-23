@@ -23,7 +23,7 @@ class StoreBookRequest extends FormRequest
 
 return [
     // Required image
-    'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
+    'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:10240',
     'attachment' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,txt|max:10240', // 10MB max
 
     // Multilingual Titles and Descriptions

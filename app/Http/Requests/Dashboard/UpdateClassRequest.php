@@ -31,7 +31,7 @@ class UpdateClassRequest extends FormRequest
 
     // Manually resolve the CourseVideo model
   return [
-        'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
+        'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:10240',
         'attachment' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,txt|max:10240', // 10MB max
 
         'course_id' => 'required|exists:courses,id',
