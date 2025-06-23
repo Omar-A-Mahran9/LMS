@@ -224,6 +224,12 @@ class HomeController extends Controller
         ->whereDate('end_date', '>=', $today)
         ->get();
 
+    $courses = Course::where('is_active', 1)
+        ->where('is_class', 0)->where('category_id',null)
+        ->whereDate('start_date', '<=', $today)
+        ->whereDate('end_date', '>=', $today)
+        ->get();
+
 
         return $this->success('', [
             'sliders' => SliderResource::collection($sliders),
@@ -235,15 +241,16 @@ class HomeController extends Controller
             'HowUse' =>$HowUse,
             'featured_courses' => CoursesFeaturedResource::collection($featured_courses),
 
-            'Books' =>BookResource::collection($books),
-
             'CommonQuestion' =>[
                 'label'           => setting('label_common_question' . $suffix),
                 'description'     => setting('description_common_question' . $suffix),
                 'image_url' => getImagePathFromDirectory(setting('common_question_banner'), 'Settings') ,
                 'question_and_answer'=>CommonQuestionResource::collection($CommonQuestion),
             ],
-            'contact_us_data'=>$contact_us_data
+            'contact_us_data'=>$contact_us_data,
+            'courses' => CoursesFeaturedResource::collection($courses),
+
+            'Books' =>BookResource::collection($books),
 
     ]);
     }
