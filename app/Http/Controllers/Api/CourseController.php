@@ -263,44 +263,52 @@ public function logWatch(Request $request, $id)
     ]);
 
     $video = CourseVideo::findOrFail($id);
-    $student = auth()->user(); // assumes sanctum or jwt
+    $student = auth()->user();
 
-    // Fetch existing or create a new record
     $progress = CourseVideoStudent::firstOrNew([
         'course_video_id' => $video->id,
         'student_id'      => $student->id,
     ]);
 
-    // Handle watch_seconds safely, don't exceed total duration
+    // Initialize previous values if not set
+    $previousWatchSeconds = $progress->watch_seconds ?? 0;
+    $previousLastSecond = $progress->last_watched_second ?? 0;
+
+    // ✅ لا نسمح بحساب الرجوع للخلف
+    $newLastSecond = $request->input('last_watched_second', $previousLastSecond);
+    if ($newLastSecond > $previousLastSecond) {
+        $progress->last_watched_second = $newLastSecond;
+    }
+
+    // ✅ نضيف watch_seconds فقط إذا النقطة الحالية > السابقة
+    $watchSeconds = $request->watch_seconds;
+    if ($newLastSecond <= $previousLastSecond) {
+        $watchSeconds = 0; // لا تضيف أي شيء لو رجع المستخدم
+    }
+
     $progress->watch_seconds = min(
-        ($progress->watch_seconds ?? 0) + $request->watch_seconds,
+        $previousWatchSeconds + $watchSeconds,
         $video->duration_seconds
     );
 
-    // Update last_watched_second if provided
-    if ($request->filled('last_watched_second')) {
-        $progress->last_watched_second = max(
-            $request->last_watched_second,
-            $progress->last_watched_second ?? 0
-        );
-    }
-
-    // Always update last_watched_at
+    // تحديث وقت المشاهدة
     $progress->last_watched_at = now();
 
-    // Handle completion
-    if (!$progress->is_completed && $progress->watch_seconds >= $video->duration_seconds) {
+    // ✅ التحقق من الإكمال مرة واحدة فقط
+    if (
+        !$progress->is_completed &&
+        $progress->watch_seconds >= $video->duration_seconds
+    ) {
         $progress->is_completed = true;
         $progress->completed_at = now();
         $progress->views = ($progress->views ?? 0) + 1;
 
-        // Also update global video views count
         $video->increment('views');
     }
 
     $progress->save();
 
-    return $this->success('', $progress);
+    return $this->success('Progress updated', $progress);
 }
 
 
