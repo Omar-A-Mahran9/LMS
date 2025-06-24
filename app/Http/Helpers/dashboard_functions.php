@@ -70,24 +70,14 @@ if (!function_exists('uploadAudioToDirectory')) {
 }
 
 if(!function_exists('convertToYoutubeEmbed')){
-function getYoutubeId($url)
+    function convertToYoutubeEmbed($url)
 {
     preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $url, $matches);
-    return $matches[1] ?? null;
-}
-
-function convertToYoutubeEmbed($url, $withParams = true)
-{
-    $id = getYoutubeId($url);
-    if ($id) {
-        $embed = 'https://www.youtube.com/embed/' . $id;
-        return $withParams
-            ? $embed . '?modestbranding=1&rel=0&showinfo=0&controls=1'
-            : $embed;
+    if (isset($matches[1])) {
+        return 'https://www.youtube.com/embed/' . $matches[1].'?modestbranding=1&rel=0&showinfo=0&controls=1';
     }
-    return null;
+    return null; // or return $url as fallback
 }
-
 
 }
 
