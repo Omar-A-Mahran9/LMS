@@ -267,15 +267,6 @@ public function getVideosBySections($id)
                 Cache::put($cacheKey, true, now()->addHours(6)); // avoid re-counting for 6 hours
             }
 
-            // Handle video view counts
-            foreach ($section->videos as $video) {
-                $videoCacheKey = "video_viewed_{$video->id}_student_{$studentId}";
-
-                if (!Cache::has($videoCacheKey)) {
-                    $video->increment('views');
-                    Cache::put($videoCacheKey, true, now()->addHours(6));
-                }
-            }
         }
     $resource = $sections->map(function ($section) use ($studentId) {
         return new SectionResource($section, $studentId);
