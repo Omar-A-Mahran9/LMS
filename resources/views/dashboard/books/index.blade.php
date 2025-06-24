@@ -196,7 +196,7 @@
                             </div>
                             <div class="col-1 d-flex align-items-center mt-4">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="is_featured" type="checkbox" value="0"
+                                    <input class="form-check-input" name="is_featured" type="checkbox" value="1"
                                         id="is_featured_switch" checked>
                                     <span class="form-check-label text-dark"
                                         for="is_featured_switch">{{ __('Featured') }}</span>
