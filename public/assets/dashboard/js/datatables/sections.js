@@ -57,8 +57,6 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
 
-
-
                 {
                     targets: 2,
                     render: function (data, type, row) {
@@ -204,21 +202,25 @@ var KTDatatablesServerSide = (function () {
                 // Titles
                 $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
+                const arEditor = tinymce.get("description_ar_inp");
+                if (arEditor) {
+                    arEditor.setContent(data.description_ar);
+                }
 
-                tinymce
-                    .get("description_ar_inp")
-                    .setContent(data.description_ar);
-                tinymce
-                    .get("description_en_inp")
-                    .setContent(data.description_en);
+                const enEditor = tinymce.get("description_en_inp");
+                if (enEditor) {
+                    enEditor.setContent(data.description_en);
+                }
 
                 // Video URL
                 $("#video_url_inp").val(data.video_url);
                 // Attachment preview (link or filename)
                 if (data.full_attachment_path) {
                     $("#attachment_preview").html(
-                        `<a href="${data.full_attachment_path}" target="_blank" class="btn btn-sm btn-info">
-                        ${ __('Current Attachment') }
+                        `<a href="${
+                            data.full_attachment_path
+                        }" target="_blank" class="btn btn-sm btn-info">
+                        ${__("Current Attachment")}
                     </a>`
                     );
                 } else {
@@ -238,7 +240,10 @@ var KTDatatablesServerSide = (function () {
                 $("#is_preview_switch").prop("checked", data.is_preview);
 
                 // Reset form method & action
-                $("#crud_form").attr("action", `/dashboard/sections/${data.id}`);
+                $("#crud_form").attr(
+                    "action",
+                    `/dashboard/sections/${data.id}`
+                );
 
                 // Remove previous _method input if any, then add PUT
                 $("#crud_form").find('input[name="_method"]').remove();
