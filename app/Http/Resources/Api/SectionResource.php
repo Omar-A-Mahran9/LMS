@@ -57,10 +57,10 @@ class SectionResource extends JsonResource
             'id'           => $this->id,
             'title'        => $this->title,
             'description'  => $this->description,
-             'attachment'   => $this->full_attachment_path,
+            'attachment'   => $this->full_attachment_path,
 
             // List of videos in the section with student-specific progress
-            'videos' => $this->videos->map(function ($video) {
+            'videos' => $this->videos->where('is_active', true)->map(function ($video) {
                 return new VideoResource($video, $this->studentId);
             }),
 

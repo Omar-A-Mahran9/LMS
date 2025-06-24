@@ -93,7 +93,7 @@
                         <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
 
                             <!--begin::Toolbar-->
-                            <div id="add_btn_video" class="d-flex justify-content-end w-100" data-bs-toggle="modal"
+                            <div class="d-flex justify-content-end w-100" data-bs-toggle="modal"
                                 data-bs-target="#videoModal" data-kt-docs-table-toolbar="base">
                                 <!--begin::Add customer-->
                                 <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
@@ -179,13 +179,12 @@
 
                             @can('view_quizzes')
                                 <!--begin::Toolbar-->
-                                <div id="add_btn_quiz" data-bs-toggle="modal" data-bs-target="#crud_modal"
+                                <div id="add_btn" data-bs-toggle="modal" data-bs-target="#crud_modal"
                                     data-kt-docs-table-toolbar="base" for="kt_datatable">
                                     <!--begin::Add customer-->
                                     @if (!$quizExists)
-                                        <button type="button" class="btn btn-primary" id="quiz_btn"
-                                            data-bs-toggle="tooltip" data-bs-original-title="Coming Soon"
-                                            data-kt-initialized="1">
+                                        <button type="button" class="btn btn-primary" id="quiz_btn" data-bs-toggle="tooltip"
+                                            data-bs-original-title="Coming Soon" data-kt-initialized="1">
                                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                             <span class="svg-icon svg-icon-2">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -276,8 +275,7 @@
                                 @if (!$homeworskExists)
                                     <!--begin::Toolbar-->
                                     <div class="d-flex justify-content-end w-100" data-bs-toggle="modal"
-                                        data-bs-target="#crud_homework" data-kt-docs-table-toolbar="base"
-                                        id="add_btn_homework">
+                                        data-bs-target="#crud_homework" data-kt-docs-table-toolbar="base">
                                         <!--begin::Add customer-->
                                         <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
                                             data-bs-original-title="Coming Soon" data-kt-initialized="1">
@@ -1033,6 +1031,80 @@
         }).trigger('change'); // Trigger on load
     </script>
 
+
+    {{-- <script>
+        $(document).ready(function() {
+            $("#add_btn").click(function(e) {
+                e.preventDefault();
+
+                // Remove method override inputs (_method) used for PUT/PATCH on edit
+                $("[title='_method']").remove();
+
+                // Reset the form fields
+                $("#crud_form")[0].reset();
+
+
+                // Clear validation errors and invalid classes
+                $("#crud_form").find('.invalid-feedback').text('');
+                $("#crud_form").find('.is-invalid').removeClass('is-invalid');
+
+                // Reset TinyMCE editors content if present
+                if (typeof tinymce !== 'undefined') {
+                    tinymce.editors.forEach(editor => editor.setContent(''));
+                }
+
+                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
+                $("#is_active_switch")
+                    .prop('checked', false);
+                $("#crud_form").attr('action', `/dashboard/sections/${sectionId}/quizzes`);
+
+
+                // Reset modal title
+                $("#form_title").text("{{ __('Add new quiz') }}");
+
+                // Optionally, reset date inputs
+                $(" #duration_minutes_inp").val('');
+
+                // Open modal if you want to show it on "Add"
+                $("#crud_modal").modal('show');
+            });
+
+            $("#add_btn_homework").click(function(e) {
+                e.preventDefault();
+
+                // Remove method override inputs (_method) used for PUT/PATCH on edit
+                $("[title='_method']").remove();
+
+                // Reset the form fields
+                $("#crud_homework")[0].reset();
+
+
+                // Clear validation errors and invalid classes
+                $("#crud_homework").find('.invalid-feedback').text('');
+                $("#crud_homework").find('.is-invalid').removeClass('is-invalid');
+
+                // Reset TinyMCE editors content if present
+                if (typeof tinymce !== 'undefined') {
+                    tinymce.editors.forEach(editor => editor.setContent(''));
+                }
+
+                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
+                $("#is_active_switch")
+                    .prop('checked', false);
+                $("#crud_homework").attr('action', `/dashboard/sections/${sectionId}/homeworks`);
+
+
+                // Reset modal title
+                $("#form_title").text("{{ __('Add new quiz') }}");
+
+                // Optionally, reset date inputs
+                $(" #duration_minutes_inp").val('');
+
+                // Open modal if you want to show it on "Add"
+                $("#crud_homework").modal('show');
+            });
+        });
+    </script> --}}
 
     <script>
         $(document).ready(function() {
