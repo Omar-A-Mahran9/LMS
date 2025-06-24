@@ -301,9 +301,8 @@ function isFileExists(urlToFile) {
 
 let initTinyMc = function (editingInp = false, height = 400) {
     tinymce.init({
-        height: "480",
         selector: ".tinymce",
-
+        height: "480",
         menubar: false,
         toolbar: [
             "styleselect",
@@ -311,10 +310,9 @@ let initTinyMc = function (editingInp = false, height = 400) {
             "bullist numlist | outdent indent | ltr rtl | blockquote subscript superscript | advlist | autolink | lists charmap | print preview |  code",
         ],
         directionality: language, // Set the initial direction to RTL if needed
-        plugins:
-            "advlist autolink link image lists charmap print preview code directionality",
+        plugins: "advlist autolink link lists charmap print preview code save",
+        save_onsavecallback: function () {},
     });
-
     if (!editingInp) $(".tinymce").val(null);
 };
 
