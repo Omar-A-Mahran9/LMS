@@ -157,7 +157,7 @@
                                     <th>{{ __('Course') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Created at') }}</th>
-                                    <th>{{ __('Is Preview') }}</th>
+                                    <th>{{ __('Is Free Preview') }}</th>
                                     <th>{{ __('views') }}</th>
 
                                     <th class=" min-w-100px">{{ __('Actions') }}</th>
