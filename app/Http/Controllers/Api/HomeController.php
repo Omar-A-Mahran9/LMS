@@ -328,7 +328,7 @@ public function getAboutUs()
             'image_url'=>getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
             'label'           => setting('label' . $suffix),
             'description'     => setting('about_us' . $suffix),
-            'experince_year' => Admin::orderBy('experience_years')->value('experience_years') ?? 20,
+            'experince_year' => Admin::orderBy('experience_years','desc')->value('experience_years') ?? 20,
             'lecture_count' => CourseVideo::count(),
         ];
     $data = [
