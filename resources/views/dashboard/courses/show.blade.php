@@ -152,14 +152,7 @@
                                     <div class="col-md-5">
                                         <table class="table table-row-bordered align-middle">
                                             <tbody class="fw-semibold text-gray-600">
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Description') }}</td>
-                                                    <td class="text-end text-dark">{!! $course->description !!}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-muted">{{ __('Note') }}</td>
-                                                    <td class="text-end text-dark">{!! $course->note !!}</td>
-                                                </tr>
+                                     
                                                 <tr>
                                                     <td class="text-muted">{{ __('Price') }}</td>
                                                     <td class="text-end text-dark">{{ number_format($course->price, 2) }}
