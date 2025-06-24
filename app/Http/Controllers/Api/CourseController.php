@@ -329,7 +329,7 @@ public function getAboutUs()
             'label'           => setting('label' . $suffix),
             'description'     => setting('about_us' . $suffix),
             'experince_year'     => 20,
-            'lecture_count'     => 200,
+            'lecture_count' => CourseVideo::count(),
         ];
     $data = [
         'ask_us' =>$ask_us,

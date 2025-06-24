@@ -18,6 +18,7 @@ use App\Models\Book;
 use App\Models\Category;
  use App\Models\CommonQuestion;
 use App\Models\Course;
+use App\Models\CourseVideo;
 use App\Models\Government;
 use App\Models\Student_rate;
  use App\Models\NewsLetter;
@@ -139,7 +140,7 @@ class HomeController extends Controller
                 'label'           => setting('label' . $suffix),
                 'description'     => setting('about_us' . $suffix),
                 'experince_year'     => 20,
-                'lecture_count'     => 200,
+                    'lecture_count' => CourseVideo::count(),
             ];
     $HowUse = [
                 'label'           => setting('label_how_to_use' . $suffix),
@@ -326,7 +327,7 @@ public function getAboutUs()
             'label'           => setting('label' . $suffix),
             'description'     => setting('about_us' . $suffix),
             'experince_year'     => 20,
-            'lecture_count'     => 200,
+            'lecture_count' => CourseVideo::count(),
         ];
     $data = [
         'ask_us' =>$ask_us,
