@@ -31,7 +31,7 @@ class Book extends Model
     }
         public function getFullImagePathAttribute()
     {
-        return asset(getImagePathFromDirectory($this->image, 'Books', 'default.svg'));
+        return asset(getImagePathFromDirectory($this->image, 'books', 'default.svg'));
     }
 
         public function getFullAttachmentPathAttribute()

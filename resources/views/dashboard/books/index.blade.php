@@ -157,7 +157,7 @@
                                         <input class="form-check-input" name="is_free" type="checkbox" value="1"
                                             id="is_free_switch">
                                         <span class="form-check-label"
-                                            for="is_free_switch">{{ __('Is Free Course?') }}</span>
+                                            for="is_free_switch">{{ __('Is Free Book?') }}</span>
                                     </label>
                                 </div>
                                 <input type="number" name="price" id="price_inp" class="form-control" min="0"
@@ -169,7 +169,7 @@
                             <div class="col-3">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <label for="discount_percentage_inp"
-                                        class="form-label">{{ __('Discount Percentage') }}</label>
+                                        class="form-label">{{ __('Discount Percentage') }}%</label>
                                     <label class="form-check form-switch form-check-custom form-check-solid mb-2">
                                         <input class="form-check-input" name="have_discount" type="checkbox"
                                             value="1" id="have_discount_switch">

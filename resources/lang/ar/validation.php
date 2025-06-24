@@ -239,6 +239,7 @@ return [
         'slide_image' => 'الشريحة',
         'today' => 'اليوم',
          "attachment"=> "الملف",
+        'attempt_count' => 'عدد المحاولات',
 
         'government_id' => 'المحافظة',
         'last_name' => 'اسم العائلة',
@@ -261,7 +262,7 @@ return [
         'quiz_id'=> "الاختبار",
         'is_class'=> "يوجد حصص",
         "duration_per_student"=> "المدة لكل طالب",
- 
+
         'website'=> "الموقع",
         "experience_years"=> "سنين الخبرة",
         'old_password' => 'كلمة المرور القديمة',

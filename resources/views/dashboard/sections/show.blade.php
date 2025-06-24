@@ -83,8 +83,7 @@
                 <div class="card mb-5 mb-x-10">
                     <!--begin::Card header-->
                     <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-                        data-bs-target="#video_datatable" aria-expanded="true"
-                        aria-controls="video_datatable">
+                        data-bs-target="#video_datatable" aria-expanded="true" aria-controls="video_datatable">
                         <!--begin::Card title-->
                         <div class="card-title m-0">
                             <h3 class="fw-bold m-0">{{ __('Videos list') }}</h3>
@@ -422,6 +421,15 @@
                                                 class="form-control" min="0">
                                             <div class="fv-plugins-message-container invalid-feedback"
                                                 id="duration_minutes">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <label for="attempt_count_inp"
+                                                class="form-label">{{ __('attempt count') }}</label>
+                                            <input type="number" name="attempt_count" id="attempt_count_inp"
+                                                class="form-control" min="0">
+                                            <div class="fv-plugins-message-container invalid-feedback" id="attempt_count">
                                             </div>
                                         </div>
                                         <div class="col-2 d-flex align-items-center mt-4">
