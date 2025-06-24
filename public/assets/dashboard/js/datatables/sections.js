@@ -24,8 +24,7 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" },
                 { data: "title" },
-                { data: "image" },
-                { data: "course" },
+                 { data: "course" },
                 { data: "is_active" },
                 { data: "created_at" },
                 { data: "is_preview" },
@@ -57,33 +56,8 @@ var KTDatatablesServerSide = (function () {
                         `;
                     },
                 },
-
                 {
                     targets: 2,
-                    orderable: false,
-                    render: function (data, type, row) {
-                        return `
-                            <!--begin::Overlay-->
-                            <a class="d-block overlay" data-action="preview_attachments" href="#">
-                                <!--begin::Image-->
-                                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded h-100px"
-                                    style="background-image:url('${row.full_image_path}')">
-                                </div>
-                                <!--end::Image-->
-
-                                <!--begin::Action-->
-                                <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                    <i class="bi bi-eye-fill text-white fs-3x"></i>
-                                </div>
-                                <!--end::Action-->
-                            </a>
-                            <!--end::Overlay-->
-                        `;
-                    },
-                },
-
-                {
-                    targets: 3,
                     render: function (data, type, row) {
                         return `
                             <div>
@@ -97,7 +71,7 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
-                    targets: 4, // This is the "Status" column
+                    targets: 3, // This is the "Status" column
                     render: function (data, type, row) {
                         if (row.is_active) {
                             return `
@@ -117,7 +91,7 @@ var KTDatatablesServerSide = (function () {
                 },
 
                 {
-                    targets: 6, // This is the "Status" column
+                    targets: 5, // This is the "Status" column
                     render: function (data, type, row) {
                         if (row.is_preview) {
                             return `
