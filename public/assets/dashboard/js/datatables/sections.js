@@ -202,6 +202,7 @@ var KTDatatablesServerSide = (function () {
                 // Titles
                 $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
+
                 const arEditor = tinymce.get("description_ar_inp");
                 if (arEditor) {
                     arEditor.setContent(data.description_ar);
