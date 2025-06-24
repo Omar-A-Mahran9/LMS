@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('description_ar')->nullable();
 
             // Video info
-            $table->string('video_url'); // Or use a file upload path
+            $table->string('video_url')->nullable(); // Or use a file upload path
             $table->string('attachment')->nullable();
 
             // Additional fields
