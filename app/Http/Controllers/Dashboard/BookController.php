@@ -48,6 +48,7 @@ public function store(StoreBookRequest $request)
     // Handle boolean flags
     $data['is_free'] = $request->boolean('is_free');
     $data['have_discount'] = $request->boolean('have_discount');
+    $data['is_featured'] = $request->boolean('is_featured');
 
 
     // Create course
