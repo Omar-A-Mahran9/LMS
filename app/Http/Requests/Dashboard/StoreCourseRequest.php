@@ -50,7 +50,7 @@ return [
 
    // Relationships
     'instructor_id' => ['required', 'exists:admins,id'],
-        'is_free' => ['is_class', 'boolean'],
+        'is_class' => ['is_class', 'boolean'],
 
     'category_id' => ['required_with:is_class,1', 'exists:categories,id'],
     'duration_per_student' => ['required', 'integer', 'min:1'],

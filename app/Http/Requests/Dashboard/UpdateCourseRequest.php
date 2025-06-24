@@ -63,7 +63,9 @@ class UpdateCourseRequest extends FormRequest
 
    // Relationships
     'instructor_id' => ['required', 'exists:admins,id'],
-    'category_id' => ['required', 'exists:categories,id'],
+            'is_class' => ['is_class', 'boolean'],
+
+    'category_id' => ['required_with:is_class,1', 'exists:categories,id'],
 
 
     // Pricing
