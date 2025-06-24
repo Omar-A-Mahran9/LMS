@@ -96,19 +96,19 @@ class SectionController extends Controller
         $section->update($validated);
     }
 
-public function show($id)
-{
-    $section = Section::with('course')->findOrFail($id); // Eager load course
-    $this->authorize('view_sections');
-        $courses = Course::select('id', 'title_en', 'title_ar')->get();
+    public function show($id)
+    {
+        $section = Section::with('course')->findOrFail($id); // Eager load course
+        $this->authorize('view_sections');
+            $courses = Course::select('id', 'title_en', 'title_ar')->get();
 
-        $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
-    $course=$section->course;
-    $quizExists = $section->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
-    $homeworskExists = $section->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
+            $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
+        $course=$section->course;
+        $quizExists = $section->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
+        $homeworskExists = $section->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
 
-    return view('dashboard.sections.show', compact('section', 'quizExists','courses','quizzes','homeworskExists','course'));
-}
+        return view('dashboard.sections.show', compact('section', 'quizExists','courses','quizzes','homeworskExists','course'));
+    }
 
 
 public function destroy(Section $section)

@@ -33,7 +33,7 @@ return [
         'description_ar' => 'nullable|string',
         'description_en' => 'nullable|string',
         'video_url' => [
-            'required',
+            'nullable',
             'regex:/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/'
         ],
         'duration_seconds' => 'nullable|integer|min:0',
