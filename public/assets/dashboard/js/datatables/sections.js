@@ -24,7 +24,7 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" },
                 { data: "title" },
-                 { data: "course" },
+                { data: "course" },
                 { data: "is_active" },
                 { data: "created_at" },
                 { data: "is_preview" },
@@ -56,6 +56,9 @@ var KTDatatablesServerSide = (function () {
                         `;
                     },
                 },
+
+
+
                 {
                     targets: 2,
                     render: function (data, type, row) {
