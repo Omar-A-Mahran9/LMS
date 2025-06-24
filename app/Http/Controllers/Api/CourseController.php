@@ -27,6 +27,7 @@ use App\Models\Section;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
@@ -84,24 +85,34 @@ public function getCoursesByCategory(Request $request)
 
 
 
-   public function getCoursesById($id)
-    {
-        $course = Course::where('id', $id)
-                        ->where('is_active', 1)
+public function getCoursesById(Request $request, $id)
+{
+    $course = Course::where('id', $id)
+        ->where('is_active', 1)
+        ->where('is_enrollment_open', 1)
+        ->whereDate('start_date', '<=', now())
+        ->whereDate('end_date', '>=', now())
+        ->first();
 
-                        ->where('is_enrollment_open', 1)
-                        ->whereDate('start_date', '<=', now())
-                        ->whereDate('end_date', '>=', now())
-                        ->first();
-
-        if (!$course) {
-            return $this->failure('Course not found or unpublished');
-        }
-
-
-        return $this->success('',         new CourseDetailsResource($course));
-
+    if (!$course) {
+        return $this->failure('Course not found or unpublished');
     }
+
+    // Determine viewer ID (auth user or device token)
+    $viewerId = auth()->check()
+        ? 'user_' . auth()->id()
+        : 'device_' . $request->header('Device-Token', $request->ip());
+
+    // Use cache key to prevent multiple increments
+    $cacheKey = "course_viewed_{$course->id}_{$viewerId}";
+
+    if (!Cache::has($cacheKey)) {
+        $course->increment('views');
+        Cache::put($cacheKey, true, now()->addHours(6)); // Prevent re-count for 6 hours
+    }
+
+    return $this->success('', new CourseDetailsResource($course));
+}
 
 public function getClassesByCoursesId(Request $request, $id)
 {
@@ -167,7 +178,7 @@ public function getClassById($id)
 }
 
 
-       public function getQuizClassById($id)
+public function getQuizClassById($id)
     {
         $class = CourseClass::where('is_active', 1)->find($id);
          if (!$class) {
