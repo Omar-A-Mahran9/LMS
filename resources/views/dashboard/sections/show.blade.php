@@ -93,7 +93,7 @@
                         <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
 
                             <!--begin::Toolbar-->
-                            <div class="d-flex justify-content-end w-100" data-bs-toggle="modal"
+                            <div id="add_btn_video" class="d-flex justify-content-end w-100" data-bs-toggle="modal"
                                 data-bs-target="#videoModal" data-kt-docs-table-toolbar="base">
                                 <!--begin::Add customer-->
                                 <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
@@ -154,7 +154,7 @@
                                     <th>{{ __('Course') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Created at') }}</th>
-                                    <th>{{ __('Is Free Preview') }}</th>
+                                    <th>{{ __('Is Preview') }}</th>
                                     <th>{{ __('views') }}</th>
 
                                     <th class=" min-w-100px">{{ __('Actions') }}</th>
@@ -179,12 +179,13 @@
 
                             @can('view_quizzes')
                                 <!--begin::Toolbar-->
-                                <div id="add_btn" data-bs-toggle="modal" data-bs-target="#crud_modal"
+                                <div id="add_btn_quiz" data-bs-toggle="modal" data-bs-target="#crud_modal"
                                     data-kt-docs-table-toolbar="base" for="kt_datatable">
                                     <!--begin::Add customer-->
                                     @if (!$quizExists)
-                                        <button type="button" class="btn btn-primary" id="quiz_btn" data-bs-toggle="tooltip"
-                                            data-bs-original-title="Coming Soon" data-kt-initialized="1">
+                                        <button type="button" class="btn btn-primary" id="quiz_btn"
+                                            data-bs-toggle="tooltip" data-bs-original-title="Coming Soon"
+                                            data-kt-initialized="1">
                                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                             <span class="svg-icon svg-icon-2">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -275,7 +276,8 @@
                                 @if (!$homeworskExists)
                                     <!--begin::Toolbar-->
                                     <div class="d-flex justify-content-end w-100" data-bs-toggle="modal"
-                                        data-bs-target="#crud_homework" data-kt-docs-table-toolbar="base">
+                                        data-bs-target="#crud_homework" data-kt-docs-table-toolbar="base"
+                                        id="add_btn_homework">
                                         <!--begin::Add customer-->
                                         <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
                                             data-bs-original-title="Coming Soon" data-kt-initialized="1">
@@ -1034,75 +1036,82 @@
 
     <script>
         $(document).ready(function() {
-            $("#add_btn").click(function(e) {
-                e.preventDefault();
 
-                // Remove method override inputs (_method) used for PUT/PATCH on edit
-                $("[title='_method']").remove();
+            // دالة موحدة لتنظيف أي نموذج
+            function resetForm(formId, modalId) {
+                const $form = $(formId);
 
-                // Reset the form fields
-                $("#crud_form")[0].reset();
+                // إعادة ضبط الحقول
+                $form[0].reset();
 
+                // إزالة رسائل الخطأ والكلاسات
+                $form.find('.invalid-feedback').text('');
+                $form.find('.is-invalid').removeClass('is-invalid');
 
-                // Clear validation errors and invalid classes
-                $("#crud_form").find('.invalid-feedback').text('');
-                $("#crud_form").find('.is-invalid').removeClass('is-invalid');
-
-                // Reset TinyMCE editors content if present
+                // إفراغ محتوى المحررات TinyMCE
                 if (typeof tinymce !== 'undefined') {
-                    tinymce.editors.forEach(editor => editor.setContent(''));
+                    tinymce.editors.forEach(editor => {
+                        if ($form.find('#' + editor.id).length) {
+                            editor.setContent('');
+                        }
+                    });
                 }
 
-                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#is_active_switch")
-                    .prop('checked', false);
-                $("#crud_form").attr('action', `/dashboard/sections/${sectionId}/quizzes`);
+                // إعادة تعيين checkboxes
+                $form.find('input[type="checkbox"]').prop('checked', false);
 
+                // إعادة تعيين radio buttons
+                $form.find('input[type="radio"]').prop('checked', false);
 
-                // Reset modal title
-                $("#form_title").text("{{ __('Add new quiz') }}");
+                // إعادة تعيين select2
+                $form.find('select').each(function() {
+                    if ($(this).data('select2')) {
+                        $(this).val(null).trigger('change');
+                    } else {
+                        $(this).val('');
+                    }
+                });
 
-                // Optionally, reset date inputs
-                $(" #duration_minutes_inp").val('');
+                // حذف كل العناصر في الـ repeater وإعادة واحدة فقط
+                $form.find('[data-repeater-list]').each(function() {
+                    const $list = $(this);
+                    $list.find('[data-repeater-item]').slice(1).remove(); // احذف كل العناصر ماعدا أول عنصر
+                    $list.find('[data-repeater-item]').first().find('input').val(''); // أفرغ أول عنصر
+                    $list.find('[data-repeater-item]').first().find('input[type="checkbox"]').prop(
+                        'checked', false);
+                });
 
-                // Open modal if you want to show it on "Add"
-                $("#crud_modal").modal('show');
-            });
+                // إظهار المودال
+                $(modalId).modal('show');
+            }
 
-            $("#add_btn_homework").click(function(e) {
+            // أزرار الاستدعاء
+
+            $('#add_btn_quiz').click(e => {
                 e.preventDefault();
-
-                // Remove method override inputs (_method) used for PUT/PATCH on edit
-                $("[title='_method']").remove();
-
-                // Reset the form fields
-                $("#crud_homework")[0].reset();
-
-
-                // Clear validation errors and invalid classes
-                $("#crud_homework").find('.invalid-feedback').text('');
-                $("#crud_homework").find('.is-invalid').removeClass('is-invalid');
-
-                // Reset TinyMCE editors content if present
-                if (typeof tinymce !== 'undefined') {
-                    tinymce.editors.forEach(editor => editor.setContent(''));
-                }
-
-                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#is_active_switch")
-                    .prop('checked', false);
-                $("#crud_homework").attr('action', `/dashboard/sections/${sectionId}/homeworks`);
-
-
-                // Reset modal title
-                $("#form_title").text("{{ __('Add new quiz') }}");
-
-                // Optionally, reset date inputs
-                $(" #duration_minutes_inp").val('');
-
-                // Open modal if you want to show it on "Add"
-                $("#crud_homework").modal('show');
+                resetForm('#crud_form', '#crud_modal');
             });
+
+            $('#add_btn_question').click(e => {
+                e.preventDefault();
+                resetForm('#question_form', '#questionModal');
+            });
+
+            $('#add_btn_video').click(e => {
+                e.preventDefault();
+                resetForm('#video_form', '#videoModal');
+            });
+
+            $('#add_btn_homework').click(e => {
+                e.preventDefault();
+                resetForm('form#crud_homework', '#crud_homework');
+            });
+
+            $('#add_btn_question_homework').click(e => {
+                e.preventDefault();
+                resetForm('#question_form_homework', '#questionHomeworkModal');
+            });
+
         });
     </script>
 
