@@ -301,16 +301,18 @@ function isFileExists(urlToFile) {
 
 let initTinyMc = function (editingInp = false, height = 400) {
     tinymce.init({
-        height,
+        height: "480",
         selector: ".tinymce",
+
         menubar: false,
         toolbar: [
             "styleselect",
-            "undo redo | cut copy paste | bold italic | link image | alignleft aligncenter alignright alignjustify forecolor backcolor",
-            "bullist numlist | outdent indent | blockquote subscript superscript | advlist | autolink | lists charmap | print preview |  code",
+            "undo redo | cut copy paste | bold italic | link image | alignleft aligncenter alignright alignjustify",
+            "bullist numlist | outdent indent | ltr rtl | blockquote subscript superscript | advlist | autolink | lists charmap | print preview |  code",
         ],
-        plugins: "advlist autolink link lists charmap print preview code save",
-        save_onsavecallback: function () {},
+        directionality: language, // Set the initial direction to RTL if needed
+        plugins:
+            "advlist autolink link image lists charmap print preview code directionality",
     });
 
     if (!editingInp) $(".tinymce").val(null);
