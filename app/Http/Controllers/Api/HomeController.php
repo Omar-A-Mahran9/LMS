@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 
 use App\Http\Resources\Api\RateResource;
  use App\Http\Resources\Api\SliderResource;
+use App\Models\Admin;
 use App\Models\Book;
 use App\Models\Category;
  use App\Models\CommonQuestion;
@@ -24,6 +25,7 @@ use App\Models\Student_rate;
  use App\Models\NewsLetter;
 
 use App\Models\Slider;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -326,7 +328,7 @@ public function getAboutUs()
             'image_url'=>getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
             'label'           => setting('label' . $suffix),
             'description'     => setting('about_us' . $suffix),
-            'experince_year'     => 20,
+            'experince_year' => Admin::orderBy('experience_years')->value('experience_years') ?? 20,
             'lecture_count' => CourseVideo::count(),
         ];
     $data = [
