@@ -70,14 +70,24 @@ if (!function_exists('uploadAudioToDirectory')) {
 }
 
 if(!function_exists('convertToYoutubeEmbed')){
-function convertToYoutubeEmbed($url)
+function getYoutubeId($url)
 {
     preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $url, $matches);
-    if (isset($matches[1])) {
-        return 'https://www.youtube.com/embed/' . $matches[1] . '?modestbranding=1&rel=0&showinfo=0&controls=1';
+    return $matches[1] ?? null;
+}
+
+function convertToYoutubeEmbed($url, $withParams = true)
+{
+    $id = getYoutubeId($url);
+    if ($id) {
+        $embed = 'https://www.youtube.com/embed/' . $id;
+        return $withParams
+            ? $embed . '?modestbranding=1&rel=0&showinfo=0&controls=1'
+            : $embed;
     }
     return null;
 }
+
 
 }
 
