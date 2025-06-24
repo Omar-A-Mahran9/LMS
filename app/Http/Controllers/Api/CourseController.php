@@ -221,7 +221,7 @@ public function getVideosBySections($id)
     $studentId = Auth::id();
 
     // Ensure course has this student enrolled and is active
-    $courseExists = \App\Models\Course::where('id', $id)
+    $courseExists = Course::where('id', $id)
         ->where('is_active', 1)
         ->whereHas('enrollments', function ($q) use ($studentId) {
             $q->where('student_id', $studentId)
@@ -259,7 +259,7 @@ public function logWatch(Request $request, $id)
 {
     $request->validate([
         'watch_seconds' => 'required|integer|min:1',
-        'last_watched_second'    => 'nullable|integer|min:0',
+        'last_watched_second' => 'nullable|integer|min:0',
     ]);
 
     $video = CourseVideo::findOrFail($id);
@@ -279,8 +279,14 @@ public function logWatch(Request $request, $id)
 
     // Update last_watched_second if provided
     if ($request->filled('last_watched_second')) {
-        $progress->last_watched_second = max($request->last_watched_second, $progress->last_watched_second ?? 0);
+        $progress->last_watched_second = max(
+            $request->last_watched_second,
+            $progress->last_watched_second ?? 0
+        );
     }
+
+    // Always update last_watched_at
+    $progress->last_watched_at = now();
 
     // Handle completion
     if (!$progress->is_completed && $progress->watch_seconds >= $video->duration_seconds) {
@@ -294,7 +300,7 @@ public function logWatch(Request $request, $id)
 
     $progress->save();
 
-    return $this->success('',$progress);
+    return $this->success('', $progress);
 }
 
 
