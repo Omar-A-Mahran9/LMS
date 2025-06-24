@@ -5,6 +5,7 @@
 use Illuminate\Support\Facades\Cache;
  use Illuminate\Database\Eloquent\Model;
  use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 if (!function_exists('isArabic')) {
     function isArabic(): bool
