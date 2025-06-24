@@ -236,9 +236,10 @@ public function getVideosBySections($id)
     $sections = Section::with([
         // Videos and progress
         'videos' => function ($query) use ($studentId) {
-            $query->with(['studentProgress' => function ($q) use ($studentId) {
-                $q->where('student_id', $studentId);
-            }]);
+            $query->where('is_active', 1) // ⬅️ فقط الفيديوهات النشطة
+                ->with(['studentProgress' => function ($q) use ($studentId) {
+                    $q->where('student_id', $studentId);
+                }]);
         },
         'quizzes.questions',
         'homeworks.questions',
@@ -247,7 +248,6 @@ public function getVideosBySections($id)
     ->where('is_active', 1)
     ->get();
 
-    // Wrap each section with SectionResource (which includes videos + student progress)
     $resource = $sections->map(function ($section) use ($studentId) {
         return new SectionResource($section, $studentId);
     });
