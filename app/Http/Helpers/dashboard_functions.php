@@ -74,7 +74,7 @@ if(!function_exists('convertToYoutubeEmbed')){
 {
     preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $url, $matches);
     if (isset($matches[1])) {
-        return 'https://www.youtube.com/embed/' . $matches[1].'?modestbranding=1&rel=0&showinfo=0&controls=1';
+        return 'https://www.youtube.com/embed/' . $matches[1];
     }
     return null; // or return $url as fallback
 }
