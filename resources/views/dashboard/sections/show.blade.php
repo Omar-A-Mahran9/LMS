@@ -1189,28 +1189,53 @@
     </script>
     <script>
         const arabicNumbersMap = {
-            1: 'الأولى',
-            2: 'الثانية',
-            3: 'الثالثة',
-            4: 'الرابعة',
-            5: 'الخامسة',
-            6: 'السادسة',
-            7: 'السابعة',
-            8: 'الثامنة',
-            9: 'التاسعة',
-            10: 'العاشرة',
-            11: 'الحادية عشرة',
-            12: 'الثانية عشرة',
+            1: 'One',
+            2: 'Two',
+            3: 'Three',
+            4: 'Four',
+            5: 'Five',
+            6: 'Six',
+            7: 'Seven',
+            8: 'Eight',
+            9: 'Nine',
+            10: 'Ten',
+            11: 'Eleven',
+            12: 'Twelve',
+            // Add more as needed
+        };
+
+        const englishNumbersMap = {
+            1: 'One',
+            2: 'Two',
+            3: 'Three',
+            4: 'Four',
+            5: 'Five',
+            6: 'Six',
+            7: 'Seven',
+            8: 'Eight',
+            9: 'Nine',
+            10: 'Ten',
+            11: 'Eleven',
+            12: 'Twelve',
+            // Add more if needed
         };
 
         function generateVideoTitles(count) {
             const next = count + 1;
-            const titleEn = `Lecture ${next}`;
-            const titleAr = `المحاضرة ${arabicNumbersMap[next] || next}`;
-            $('#title_en_vid_inp').val(titleEn);
-            $('#title_ar_vid_inp').val(titleAr);
+            const titleEn = `Lecture ${englishNumbersMap[next] || next} (${next})`;
+            const titleAr = `المحاضرة ${arabicNumbersMap[next] || next} (${next})`;
+
+            // Only fill if fields are empty
+            if (!$('#title_en_vid_inp').val()) {
+                $('#title_en_vid_inp').val(titleEn);
+            }
+
+            if (!$('#title_ar_vid_inp').val()) {
+                $('#title_ar_vid_inp').val(titleAr);
+            }
         }
     </script>
+
 
     <script>
         $('#videoModal').on('show.bs.modal', function() {
