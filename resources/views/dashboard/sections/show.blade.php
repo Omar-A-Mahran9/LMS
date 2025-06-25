@@ -615,6 +615,7 @@
 
                                 <div class="modal-body">
                                     <input type="hidden" name="section_id" value="{{ $section->id }}">
+                                        <input type="hidden" name="course_id" value="{{ $course->id }}">
 
                                     <div class="row mb-4">
                                         <div class="col-12 d-flex flex-column justify-content-center">
@@ -788,6 +789,15 @@
                                                 class="form-control" min="0">
                                             <div class="fv-plugins-message-container invalid-feedback"
                                                 id="duration_minutes">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <label for="attempt_count_inp"
+                                                class="form-label">{{ __('attempt count') }}</label>
+                                            <input type="number" name="attempt_count" id="attempt_count_inp"
+                                                class="form-control" min="0">
+                                            <div class="fv-plugins-message-container invalid-feedback" id="attempt_count">
                                             </div>
                                         </div>
                                         <div class="col-2 d-flex align-items-center mt-4">

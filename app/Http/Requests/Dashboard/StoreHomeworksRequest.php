@@ -32,6 +32,7 @@ class StoreHomeworksRequest extends FormRequest
 
         'course_id' => 'nullable|exists:courses,id',
         'course_section_id' => 'nullable|exists:course_sections,id',
+        'attempt_count' => 'nullable|integer|min:0',
 
         'duration_minutes' => 'nullable|integer|min:0',
         'is_active' => 'sometimes|boolean',

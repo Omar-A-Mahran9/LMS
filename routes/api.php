@@ -60,6 +60,8 @@ Route::middleware(['auth:api'])->group(function () {
      Route::post('logout', [ProfileController::class, 'logout'])->name('logout');
     Route::post('logout-all', [ProfileController::class, 'logoutFromAllDevices'])->name('logout-all');;
     Route::put('update-profile-password', [ProfileController::class, 'updatePassword']);
+    Route::get('quizzes-results', [ProfileController::class, 'quizzesResults'])->name('quizzes.results');
+
 });
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {

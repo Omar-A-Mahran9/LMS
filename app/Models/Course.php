@@ -133,6 +133,14 @@ public function getIsFullAttribute()
 }
 
 
+public function isStudentEnrolled($studentId)
+{
+    return $this->students()
+        ->where('student_id', $studentId)
+        ->where('status', 'approved')
+        ->where('is_active', 1)
+        ->exists();
+}
 
 
 

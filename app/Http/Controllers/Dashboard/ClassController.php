@@ -16,25 +16,40 @@ use Illuminate\Http\Request;
 
 class ClassController extends Controller
 {
-    public function index(Request $request)
-    {
-         $this->authorize('view_classes');
+public function index(Request $request)
+{
+    $this->authorize('view_classes');
 
-        // Count total courses
-        $count_addon = CourseVideo::count();
-        $courses = Course::select('id', 'title_en', 'title_ar')->get();
-        // Example static visited site count (you may want to make this dynamic)
-        $visited_site = 10000;
+    $courseId = $request->input('course_id');
 
-        if ($request->ajax()) {
-            // Return JSON data for AJAX requests
-            return response()->json(getModelData(model: new CourseClass(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
+    // Fetch all courses for the dropdown
+    $courses = Course::select('id', 'title_en', 'title_ar')->get();
+
+    // AJAX request
+    if ($request->ajax()) {
+        if ($courseId) {
+            // Filter by course_id
+            return response()->json(
+                getModelData(
+                    model: new CourseClass(),
+                    andsFilters: [['course_id', '=', $courseId]],
+                    relations: ['course' => ['id', 'title_ar', 'title_en']]
+                )
+            );
         } else {
-
-            // Return the main view with data
-            return view('dashboard.classes.index', compact( 'visited_site','courses'));
+            // No filter
+            return response()->json(
+                getModelData(
+                    model: new CourseClass(),
+                    relations: ['course' => ['id', 'title_ar', 'title_en']]
+                )
+            );
         }
     }
+
+    // Regular page load
+    return view('dashboard.classes.index', compact('courses'));
+}
 
 
 
@@ -100,11 +115,12 @@ public function show($id)
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
 
         $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
+            $course=$class->course;
 
     $quizExists = $class->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
     $homeworskExists = $class->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
 
-    return view('dashboard.classes.show', compact('class', 'quizExists','courses','quizzes','homeworskExists'));
+    return view('dashboard.classes.show', compact('class', 'quizExists','courses','quizzes','homeworskExists','course'));
 }
 
 

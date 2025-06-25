@@ -12,54 +12,72 @@ use Illuminate\Http\Request;
 class StudentHomeworkController extends Controller
 {
     // Start or continue a homework attempt
-    public function startHomework(Request $request, $homeworkId)
-    {
-        $studentId = auth()->id();
+public function startHomework(Request $request, $homeworkId)
+{
+    $studentId = auth()->id();
 
-        $homework = HomeWork::findOrFail($homeworkId);
+    $homework = HomeWork::with('course')->findOrFail($homeworkId);
 
-        $homework->increment('attempt');
+    // ✅ Check enrollment
+    $isEnrolled = $homework->course
+        ->enrollments()
+        ->where('student_id', $studentId)
+        ->where('status', 'approved')
+        ->where('is_active', 1)
+        ->exists();
 
-        $attempt = HomeworkAttempt::where('student_id', $studentId)
-            ->where('home_work_id', $homeworkId)
-            ->whereNull('submitted_at')
-            ->first();
+    if (!$isEnrolled) {
+        return $this->failure('You are not enrolled in this course.');
+    }
 
-        $durationMinutes = $homework->duration_minutes;
+    if (!is_null($homework->attempt_count)) {
+        $usedAttempts = HomeworkAttempt::where('home_work_id', $homeworkId)
+            ->where('student_id', $studentId)
+            ->whereNotNull('submitted_at')
+            ->count();
 
-        if ($attempt) {
-            // Only check for expiration if duration is set
-            if ($durationMinutes !== null) {
-                $expired = $attempt->started_at->addMinutes($durationMinutes)->isPast();
-
-                if ($expired) {
-                    // Reset attempt: delete old attempt and its answers
-                    $attempt->answers()->delete();
-                    $attempt->delete();
-                    $attempt = null;
-                }
-            }
-
-            // If duration is null, it's open — do nothing
+        if ($usedAttempts >= $homework->attempt_count) {
+            return $this->failure('You have reached the maximum number of attempts for this homework.');
         }
+    }
 
+    $homework->increment('attempt');
 
-        if (!$attempt) {
-            $attempt = HomeWorkAttempt::create([
-                'home_work_id' => $homeworkId,
-                'student_id' => $studentId,
-                'started_at' => now(),
-            ]);
+    $attempt = HomeworkAttempt::where('student_id', $studentId)
+        ->where('home_work_id', $homeworkId)
+        ->whereNull('submitted_at')
+        ->first();
+
+    $durationMinutes = $homework->duration_minutes;
+
+    if ($attempt && $durationMinutes !== null) {
+        $expired = $attempt->started_at->addMinutes($durationMinutes)->isPast();
+
+        if ($expired) {
+            $attempt->answers()->delete();
+            $attempt->delete();
+            $attempt = null;
         }
+    }
 
-        return $this->success('', [
-            'attempt' => [
-                'attempt_id' => $attempt->id,
-                'started_at' => $attempt->started_at->toDateTimeString(),
-            ],
-            'homework' => new HomeworkResource($homework)
+    // ✅ Create new attempt if none exists
+    if (!$attempt) {
+        $attempt = HomeworkAttempt::create([
+            'home_work_id' => $homeworkId,
+            'student_id' => $studentId,
+            'started_at' => now(),
         ]);
     }
+
+    return $this->success('', [
+        'attempt' => [
+            'attempt_id' => $attempt->id,
+            'started_at' => $attempt->started_at->toDateTimeString(),
+        ],
+        'homework' => new HomeworkResource($homework)
+    ]);
+}
+
 
     // Submit homework
     public function submitHomework(Request $request, $attemptId)

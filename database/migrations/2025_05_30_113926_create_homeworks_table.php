@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('title_ar');
             $table->text('description_en')->nullable();
             $table->text('description_ar')->nullable();
+            $table->integer('attempt_count')->nullable(); // Time limit
 
             $table->integer('duration_minutes')->nullable(); // Time limit
             $table->boolean('is_active')->default(true);
