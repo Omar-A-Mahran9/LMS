@@ -93,7 +93,7 @@
                         <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
 
                             <!--begin::Toolbar-->
-                            <div class="d-flex justify-content-end w-100" data-bs-toggle="modal"
+                            <div id="add_btn_video" class="d-flex justify-content-end w-100" data-bs-toggle="modal"
                                 data-bs-target="#videoModal" data-kt-docs-table-toolbar="base">
                                 <!--begin::Add customer-->
                                 <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
@@ -1106,7 +1106,7 @@
         });
     </script> --}}
 
-    <script>
+        <script>
         $(document).ready(function() {
 
             // دالة موحدة لتنظيف أي نموذج
