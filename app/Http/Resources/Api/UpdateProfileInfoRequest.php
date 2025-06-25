@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Resources\Api;
 
 use App\Models\Admin;
 use App\Rules\ExistPhone;

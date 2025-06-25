@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\BookOrderController;
 use App\Http\Controllers\API\CertificateController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\StudentHomeworkController;
 use App\Http\Controllers\Api\StudentQuizController;
 use App\Http\Controllers\Dashboard\SectionVideoController;
@@ -44,9 +45,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('student-homeworks/{homeworkAttemptId}/submit', [StudentHomeworkController::class, 'submitHomework']);
     Route::get('student-homeworks/{studentHomeworkId}/results', [StudentHomeworkController::class, 'results']);
 
-
-
-
     Route::post('enroll-course', [EnrollmentController::class, 'enroll_course']);
     Route::post('enroll-class', [EnrollmentController::class, 'enroll_class']);
 
@@ -56,10 +54,16 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('certificates/{course}', [CertificateController::class, 'download'])
         ->name('student.certificates.download');
+
+    Route::get('profile-info', 'ProfileController@profileInfo')->name('profile-info');
+    Route::post('update-profile-info', 'ProfileController@updateProfileInfo')->name('update-profile-info');
+     Route::post('logout', [ProfileController::class, 'logout'])->name('logout');
+    Route::post('logout-all', [ProfileController::class, 'logoutFromAllDevices'])->name('logout-all');;
+    Route::put('update-profile-password', [ProfileController::class, 'updatePassword']);
 });
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {
-Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
+    Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
 
     Route::post('login', 'Auth\AuthController@login');
     Route::post('login-otp/{customer:phone}', 'Auth\AuthController@loginOTP');
