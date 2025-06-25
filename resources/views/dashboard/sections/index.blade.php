@@ -282,7 +282,7 @@
 
                 // Reset the form fields
                 $("#crud_form")[0].reset();
-                $("#course_id_inp").val("");
+                $("#course_id_inp").val("").trigger('change');
 
 
                 // Reset image previews to placeholder (assuming your image wrapper has this class)
