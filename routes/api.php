@@ -44,7 +44,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('student-homeworks/{homeworkAttemptId}/submit', [StudentHomeworkController::class, 'submitHomework']);
     Route::get('student-homeworks/{studentHomeworkId}/results', [StudentHomeworkController::class, 'results']);
 
-Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
 
 
 
@@ -60,6 +59,7 @@ Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'count
 });
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {
+Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
 
     Route::post('login', 'Auth\AuthController@login');
     Route::post('login-otp/{customer:phone}', 'Auth\AuthController@loginOTP');
