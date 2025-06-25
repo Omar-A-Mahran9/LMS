@@ -133,4 +133,11 @@ public function destroy( $id)
     ]);
 }
 
+
+public function countBySection($id)
+{
+    $count = CourseVideo::where('section_id', $id)->count();
+    return response()->json(['count' => $count]);
+}
+
 }

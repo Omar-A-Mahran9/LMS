@@ -183,8 +183,9 @@
                                     data-kt-docs-table-toolbar="base" for="kt_datatable">
                                     <!--begin::Add customer-->
                                     @if (!$quizExists)
-                                        <button type="button" class="btn btn-primary" id="quiz_btn" data-bs-toggle="tooltip"
-                                            data-bs-original-title="Coming Soon" data-kt-initialized="1">
+                                        <button type="button" class="btn btn-primary" id="quiz_btn"
+                                            data-bs-toggle="tooltip" data-bs-original-title="Coming Soon"
+                                            data-kt-initialized="1">
                                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                             <span class="svg-icon svg-icon-2">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -1106,7 +1107,7 @@
         });
     </script> --}}
 
-        <script>
+    <script>
         $(document).ready(function() {
 
             // دالة موحدة لتنظيف أي نموذج
@@ -1184,6 +1185,48 @@
                 resetForm('#question_form_homework', '#questionHomeworkModal');
             });
 
+        });
+    </script>
+    <script>
+        const arabicNumbersMap = {
+            1: 'الأولى',
+            2: 'الثانية',
+            3: 'الثالثة',
+            4: 'الرابعة',
+            5: 'الخامسة',
+            6: 'السادسة',
+            7: 'السابعة',
+            8: 'الثامنة',
+            9: 'التاسعة',
+            10: 'العاشرة',
+            11: 'الحادية عشرة',
+            12: 'الثانية عشرة',
+        };
+
+        function generateVideoTitles(count) {
+            const next = count + 1;
+            const titleEn = `Lecture ${next}`;
+            const titleAr = `المحاضرة ${arabicNumbersMap[next] || next}`;
+            $('#title_en_vid_inp').val(titleEn);
+            $('#title_ar_vid_inp').val(titleAr);
+        }
+    </script>
+
+    <script>
+        $('#videoModal').on('show.bs.modal', function() {
+            const sectionId = $('input[name="section_id"]').val();
+
+            $.ajax({
+                url: `/api/sections/${sectionId}/videos/count`,
+                method: 'GET',
+                success: function(response) {
+                    const count = response.count || 0;
+                    generateVideoTitles(count);
+                },
+                error: function() {
+                    console.error('Failed to fetch video count');
+                }
+            });
         });
     </script>
 
