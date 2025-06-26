@@ -44,12 +44,17 @@ class AuthController extends Controller
     }
 
     if (Hash::check($request->password, $student->password)) {
-        $token = $student->createToken('Personal access token to apis')->plainTextToken;
+        $tokenResult = $student->createToken('Personal access token to apis');
+
+        // Set token to expire after 24 hours
+        $tokenResult->accessToken->expires_at = now()->addSecond(10);
+        $tokenResult->accessToken->save();
 
         return $this->success("logged in successfully", [
-            'token' => $token,
+            'token' => $tokenResult->plainTextToken,
             'user' => new StudentResource($student),
         ]);
+
     }
 
     return $this->validationFailure([
@@ -76,9 +81,14 @@ class AuthController extends Controller
         ]);
 
         $student->update(['fcm_token' => $request->fcm_token]);
-        $token = $student->createToken('Personal access token to apis')->plainTextToken;
+        $tokenResult = $student->createToken('Personal access token to apis');
 
-        return $this->success("logged in successfully", ['token' => $token,  "student" => new StudentResource($student)]);
+        // Set token to expire after 24 hours
+        $tokenResult->accessToken->expires_at = now()->addHours(24);
+        $tokenResult->accessToken->save();
+
+
+        return $this->success("logged in successfully", ['token' => $tokenResult->plainTextToken,  "student" => new StudentResource($student)]);
     }
 
 
@@ -127,11 +137,11 @@ public function register(Request $request)
     // $student->sendOTP();
 
     // Create a personal access token
-    $token = $student->createToken('Personal Access Token')->plainTextToken;
+    // $token = $student->createToken('Personal Access Token')->plainTextToken;
 
     return response()->json([
         'message' => 'Registration successful',
-        'token' => $token,
+        // 'token' => $token,
         'student' => new StudentResource($student),
     ], 201);
 }
