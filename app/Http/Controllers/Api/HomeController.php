@@ -7,8 +7,7 @@ use App\Http\Resources\Api\BookResource;
 use App\Http\Resources\Api\CategoryResource;
 use App\Http\Resources\Api\GovernmentsResource;
 use App\Http\Resources\Api\CommonQuestionResource;
-use App\Http\Resources\Api\CourseDetailsResource;
-use App\Http\Resources\Api\CoursesDetailsResource;
+
 use App\Http\Resources\Api\CoursesFeaturedResource;
 use Illuminate\Support\Str;
 
@@ -221,13 +220,13 @@ class HomeController extends Controller
 
     $today = Carbon::today()->toDateString(); // أو ->now() لو فيه وقت
 
-    $featured_courses = Course::where('is_active', 1)
+    $featured_courses = Course::where('is_active', 1)->where('is_enrollment_open', 1)
         ->where('featured', 1)
         ->whereDate('start_date', '<=', $today)
         ->whereDate('end_date', '>=', $today)
         ->get();
 
-    $courses = Course::where('is_active', 1)
+    $courses = Course::where('is_active', 1)->where('is_enrollment_open', 1)
         ->where('is_class', 0)->where('category_id',null)
         ->whereDate('start_date', '<=', $today)
         ->whereDate('end_date', '>=', $today)

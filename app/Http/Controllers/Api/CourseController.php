@@ -208,7 +208,7 @@ public function getVideosByClass($id)
         ->first();
 
     if (!$class) {
-        return $this->failure('Course not found or unpublished');
+        return $this->failure('class not found or unpublished');
     }
 
     $studentId = Auth::id();
