@@ -279,21 +279,22 @@ public function studentStatistics()
     $chartScores = [];
     $maxScores = [];
 
-foreach ($attempts as $attempt) {
-    $quiz = $attempt->quiz;
-    if (!$quiz) continue;
+    foreach ($attempts as $attempt) {
+        $quiz = $attempt->quiz;
+        if (!$quiz) continue;
 
-    $quizTitle = $quiz->title ?? 'Unnamed Quiz';
-    $courseTitle = $quiz->course?->title ?? 'Unknown Course';
-    $label = "$quizTitle ($courseTitle)";
+        $quizTitle = $quiz->title ?? 'Unnamed Quiz';
+        $courseTitle = $quiz->course?->title ?? 'Unknown Course';
+        $label = "$quizTitle ($courseTitle)";
 
-    $chartLabels[] = $label;
-    $chartScores[] = $attempt->score ?? 0;
-    $maxScores[] = $quiz->questions->sum('points') ?: 100; // الحد الأعلى
-}
+        $chartLabels[] = $label;
+        $chartScores[] = $attempt->score ?? 0;
+        $maxScores[] = $quiz->questions->sum('points') ?: 100; // الحد الأعلى
+    }
 
 // أعلى درجة من جميع الكويزات لاستخدامها كمقياس Y
-$maxPossibleScore = max($maxScores) ?: 100;
+// أعلى درجة من جميع الكويزات لاستخدامها كمقياس Y
+$maxPossibleScore = count($maxScores) > 0 ? max($maxScores) : 100;
 $studentName = $student->first_name ?? 'Student';
 $yAxisSteps = [];
 $step = 15;
