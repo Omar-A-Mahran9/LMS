@@ -25,11 +25,10 @@ public function index(Request $request)
     $courses = Course::where('is_active', 1)->get();
     $sections = CourseSection::get();
     $quizzes = Quiz::get();
-dd($quizId);
     if ($request->ajax()) {
         return response()->json(getModelData(
             model: new QuizQuestion(),
-            andsFilters: $quizId ? [['quiz_id', '=', $quizId]] : [],
+            andsFilters:  [['quiz_id', '=', $quizId]] ,
             relations: [
                 'quiz' => ['id', 'title_en', 'title_ar'],
                 'answers' => ['id', 'quiz_question_id', 'answer_ar', 'answer_en', 'is_correct']
