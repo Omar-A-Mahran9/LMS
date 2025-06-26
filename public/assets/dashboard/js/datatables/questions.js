@@ -198,9 +198,12 @@ var KTDatatablesServerSide = (function () {
                     // Re-initialize repeater to make delete buttons work
                     $("#form_repeater").repeater({
                         initEmpty: false,
+                        isFirstItemUndeletable: true,
                         show: function () {
                             $(this).slideDown();
+                            $(this).find("input").prop("readonly", false);
                         },
+
                         hide: function (deleteElement) {
                             $(this).slideUp(deleteElement);
                         },
@@ -240,18 +243,7 @@ var KTDatatablesServerSide = (function () {
             });
         });
     };
-    $("#form_repeater").repeater({
-        initEmpty: false,
-        isFirstItemUndeletable: true,
-        show: function () {
-            $(this).slideDown();
-            $(this).find("input").prop("readonly", false);
-        },
 
-        hide: function (deleteElement) {
-            $(this).slideUp(deleteElement);
-        },
-    });
     // Public methods
     return {
         init: function () {
