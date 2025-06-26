@@ -18,6 +18,7 @@ class QuestionController extends Controller
 public function index(Request $request)
 {
     $this->authorize('view_quizzes');
+    $quizId = $request->query('quiz_id'); // or $request->get('quiz_id');
 
     $count_quizzes = QuizQuestion::count();
     $courses = Course::where('is_active', 1)->get();
@@ -27,7 +28,7 @@ public function index(Request $request)
     if ($request->ajax()) {
         return response()->json(getModelData(
             model: new QuizQuestion(),
-            andsFilters: $request->quiz_id ? [['quiz_id', '=', $request->quiz_id]] : [],
+            andsFilters: $quizId ? [['quiz_id', '=', $quizId]] : [],
             relations: [
                 'quiz' => ['id', 'title_en', 'title_ar'],
                 'answers' => ['id', 'quiz_question_id', 'answer_ar', 'answer_en', 'is_correct']
