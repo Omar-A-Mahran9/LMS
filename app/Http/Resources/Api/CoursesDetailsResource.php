@@ -38,6 +38,7 @@ class CoursesDetailsResource extends JsonResource
             'category' => new CategoryResource($this->category),
             'phone' => setting('sms_number'),
             'is_class'=> $this->is_class,
+            'has_certificate'=>$this->certificate_available,
             'price' => $this->is_free
                 ? 'Free'
                 : ($this->have_discount && $this->discount_percentage
