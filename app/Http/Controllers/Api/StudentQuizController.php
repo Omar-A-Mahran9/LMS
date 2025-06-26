@@ -73,52 +73,54 @@ public function startQuiz(Request $request, $quizId)
 public function submitQuiz(Request $request, $quizAttemptId)
 {
     $attempt = QuizAttempt::with('quiz.questions.answers')->findOrFail($quizAttemptId);
-
-// Check if quiz duration expired
-if ($attempt->quiz->duration_minutes && $attempt->started_at) {
-    $expiryTime = \Carbon\Carbon::parse($attempt->started_at)->addMinutes($attempt->quiz->duration_minutes);
-    if (now()->greaterThan($expiryTime)) {
-
-        $score = 0;
-        $totalPoints = $attempt->quiz->questions->sum('points');
-
-        $scoredQuestionIds = [];
-
-        foreach ($attempt->answers as $answer) {
-            $question = $attempt->quiz->questions->firstWhere('id', $answer->quiz_question_id);
-            if (!$question) continue;
-
-            // Avoid scoring the same question multiple times
-            if (in_array($question->id, $scoredQuestionIds)) {
-                continue;
-            }
-
-            if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-                $correctAnswer = $question->answers->firstWhere('is_correct', 1);
-                if ($correctAnswer && $answer->quiz_answer_id == $correctAnswer->id) {
-                    $score += $question->points;
-                    $scoredQuestionIds[] = $question->id;
-                }
-            } elseif ($question->type === 'short_answer') {
-                if ($this->checkAnswer($question, $answer->answer_text)) {
-                    $score += $question->points;
-                    $scoredQuestionIds[] = $question->id;
-                }
-            }
-        }
-
-        $scoreText = "{$score}/{$totalPoints}";
-
-        return $this->success(
-            'The quiz time has expired. You cannot submit your answers.',
-            [
-                'score' => $score,
-                'total_points' => $totalPoints,
-                'score_text' => $scoreText,
-            ]
-        );
+   if (!$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
+        return $this->failure('You are not enrolled in this course.');
     }
-}
+    // Check if quiz duration expired
+    if ($attempt->quiz->duration_minutes && $attempt->started_at) {
+        $expiryTime = \Carbon\Carbon::parse($attempt->started_at)->addMinutes($attempt->quiz->duration_minutes);
+        if (now()->greaterThan($expiryTime)) {
+
+            $score = 0;
+            $totalPoints = $attempt->quiz->questions->sum('points');
+
+            $scoredQuestionIds = [];
+
+            foreach ($attempt->answers as $answer) {
+                $question = $attempt->quiz->questions->firstWhere('id', $answer->quiz_question_id);
+                if (!$question) continue;
+
+                // Avoid scoring the same question multiple times
+                if (in_array($question->id, $scoredQuestionIds)) {
+                    continue;
+                }
+
+                if (in_array($question->type, ['multiple_choice', 'true_false'])) {
+                    $correctAnswer = $question->answers->firstWhere('is_correct', 1);
+                    if ($correctAnswer && $answer->quiz_answer_id == $correctAnswer->id) {
+                        $score += $question->points;
+                        $scoredQuestionIds[] = $question->id;
+                    }
+                } elseif ($question->type === 'short_answer') {
+                    if ($this->checkAnswer($question, $answer->answer_text)) {
+                        $score += $question->points;
+                        $scoredQuestionIds[] = $question->id;
+                    }
+                }
+            }
+
+            $scoreText = "{$score}/{$totalPoints}";
+
+            return $this->success(
+                'The quiz time has expired. You cannot submit your answers.',
+                [
+                    'score' => $score,
+                    'total_points' => $totalPoints,
+                    'score_text' => $scoreText,
+                ]
+            );
+        }
+    }
 
 
     // Validate answers input as array of objects with id and answer (answer can be nullable)
@@ -211,7 +213,7 @@ if ($attempt->quiz->duration_minutes && $attempt->started_at) {
 
         $attempt->answers()->save($attemptAnswer);
     }
-$totalPoints = $attempt->quiz->questions->sum('points');
+    $totalPoints = $attempt->quiz->questions->sum('points');
 
     $attempt->submitted_at = now();
     $attempt->score = $score;
@@ -251,7 +253,9 @@ public function results($studentQuizId)
         'quiz.questions.answers',
         'answers.answer' // assuming 'answer' relationship gives the selected QuizAnswer model
     ])->findOrFail($studentQuizId);
-
+ if (!$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
+        return $this->failure('You are not enrolled in this course.');
+    }
     $results = [];
     $totalScore = 0;
     $fullScore = 0;

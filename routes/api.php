@@ -52,8 +52,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('books/{id}', 'BookController@show');
     Route::get('certificates/{course}/download', [CertificateController::class, 'download'])->name('certificate.download');
 
-    Route::get('certificates/{course}', [CertificateController::class, 'download'])
-        ->name('student.certificates.download');
+    // Route::get('certificates/{course}', [CertificateController::class, 'download'])
+    //     ->name('student.certificates.download');
 
     Route::get('profile-info', 'ProfileController@profileInfo')->name('profile-info');
     Route::post('update-profile-info', 'ProfileController@updateProfileInfo')->name('update-profile-info');
@@ -70,6 +70,8 @@ Route::middleware(['auth:api'])->group(function () {
 Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
 
+    Route::get('certificates/{course}', [CertificateController::class, 'download'])
+        ->name('student.certificates.download');
     Route::post('login', 'Auth\AuthController@login');
     Route::post('login-otp/{customer:phone}', 'Auth\AuthController@loginOTP');
     Route::post('register', 'Auth\AuthController@register');

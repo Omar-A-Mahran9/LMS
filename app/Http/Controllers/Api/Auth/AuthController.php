@@ -47,7 +47,7 @@ class AuthController extends Controller
         $tokenResult = $student->createToken('Personal access token to apis');
 
         // Set token to expire after 24 hours
-        $tokenResult->accessToken->expires_at = now()->addSecond(10);
+        $tokenResult->accessToken->expires_at = now()->addHours(24);
         $tokenResult->accessToken->save();
 
         return $this->success("logged in successfully", [
