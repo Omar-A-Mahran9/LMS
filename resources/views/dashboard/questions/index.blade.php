@@ -20,7 +20,7 @@
             <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
 
                 <!--begin::Toolbar-->
-                <div class="d-flex justify-content-end w-100" id="add_btn" data-bs-toggle="modal"
+                <div class="d-flex justify-content-end w-100" id="add_question_btn" data-bs-toggle="modal"
                     data-bs-target="#crud_modal" data-kt-docs-table-toolbar="base">
                     <!--begin::Add customer-->
                     <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
@@ -292,7 +292,7 @@
         }).trigger('change'); // Trigger on load
     </script>
 
-    {{-- <script>
+    <script>
         $(document).ready(function() {
             $('#add_question_btn').on('click', function(e) {
                 e.preventDefault();
@@ -358,8 +358,8 @@
                 }, 300);
             });
         });
-    </script> --}}
-    <script>
+    </script>
+    {{-- <script>
         $(document).ready(function() {
             $('#add_btn').on('click', function(e) {
                 e.preventDefault();
@@ -426,5 +426,5 @@
                 }, 300);
             });
         });
-    </script>
+    </script> --}}
 @endpush
