@@ -156,7 +156,6 @@ var KTDatatablesServerSide = (function () {
                 $("[name='short_answer']").val("");
                 $("input[name='correct_tf']").prop("checked", false);
 
-                // Repeater logic
                 const repeaterList = $("#form_repeater [data-repeater-list]");
                 repeaterList.html("");
 
@@ -164,7 +163,7 @@ var KTDatatablesServerSide = (function () {
                     $(".answer-multiple_choice").removeClass("d-none");
 
                     data.answers.forEach((answer) => {
-                        const itemHtml = `
+                        const html = `
                         <div data-repeater-item class="row mb-2">
                             <div class="col-md-4">
                                 <input type="text" name="text_ar" class="form-control answer-text-ar" value="${
@@ -193,13 +192,22 @@ var KTDatatablesServerSide = (function () {
                                 </a>
                             </div>
                         </div>`;
-                        repeaterList.append(itemHtml);
+                        repeaterList.append(html);
                     });
-                }
 
-                // True/False handling
-                else if (data.type === "true_false") {
+                    // Re-initialize repeater to make delete buttons work
+                    $("#form_repeater").repeater({
+                        initEmpty: false,
+                        show: function () {
+                            $(this).slideDown();
+                        },
+                        hide: function (deleteElement) {
+                            $(this).slideUp(deleteElement);
+                        },
+                    });
+                } else if (data.type === "true_false") {
                     $(".answer-true_false").removeClass("d-none");
+
                     const correct = data.answers.find((ans) => ans.is_correct);
                     if (correct && correct.answer_en.toLowerCase() === "true") {
                         $("input[name='correct_tf'][value='true']").prop(
@@ -212,10 +220,7 @@ var KTDatatablesServerSide = (function () {
                             true
                         );
                     }
-                }
-
-                // Short Answer
-                else if (data.type === "short_answer") {
+                } else if (data.type === "short_answer") {
                     $(".answer-short_answer").removeClass("d-none");
                     $("#short_answer_inp").val(data.expected_answer || "");
                 }
@@ -235,7 +240,16 @@ var KTDatatablesServerSide = (function () {
             });
         });
     };
-
+    $("#form_repeater").repeater({
+        initEmpty: false,
+        defaultValues: {},
+        show: function () {
+            $(this).slideDown();
+        },
+        hide: function (deleteElement) {
+            $(this).slideUp(deleteElement);
+        },
+    });
     // Public methods
     return {
         init: function () {
