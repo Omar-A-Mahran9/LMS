@@ -25,6 +25,8 @@ var KTDatatablesServerSide = (function () {
                 { data: "id" },
                 { data: "question" },
                 { data: "quiz" },
+                { data: "points" },
+
                 { data: "created_at" },
                 { data: null },
             ],

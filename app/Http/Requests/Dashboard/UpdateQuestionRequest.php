@@ -45,7 +45,7 @@ class UpdateQuestionRequest extends FormRequest
         }
 
         if ($this->type === 'true_false') {
-            $rules['answers'] = ['nullable']; // could be more specific depending on your use
+            // $rules['answers'] = ['nullable']; // could be more specific depending on your use
             $rules['correct_tf'] = ['required', 'in:true,false'];
         }
 

@@ -25,19 +25,28 @@ class SectionResource extends JsonResource
     // Default attempt flags
     $hasAttemptedQuiz = false;
     $hasAttemptedHomework = false;
+    $quizAttemptLimitReached = false;
 
-    if ($student) {
-        if ($activeQuiz) {
-            $hasAttemptedQuiz = $activeQuiz->attempts()
-                ->where('student_id', $student->id)
-                ->exists();
-        }
+  if ($student && $activeQuiz) {
+        $hasAttemptedQuiz = $activeQuiz->attempts()
+            ->where('student_id', $student->id)
+            ->exists();
 
-        if ($activeHomework) {
-            $hasAttemptedHomework = $activeHomework->attempts()
+        if ($activeQuiz->attempt_count !== null) {
+            $usedAttempts = $activeQuiz->attempts()
                 ->where('student_id', $student->id)
-                ->exists();
+                ->count();
+
+            if ($usedAttempts >= $activeQuiz->attempt_count) {
+                $quizAttemptLimitReached = true;
+            }
         }
+    }
+
+    if ($student && $activeHomework) {
+        $hasAttemptedHomework = $activeHomework->attempts()
+            ->where('student_id', $student->id)
+            ->exists();
     }
 
 
@@ -66,14 +75,16 @@ class SectionResource extends JsonResource
             }),
 
             // Optional section-level flags
-            'has_quizzes'   => $this->quizzes()->exists(),
+        'has_quizzes' => (!$quizAttemptLimitReached && $this->quizzes()->exists()) ? true : false,
             'has_homeworks' => $this->homeworks()->exists(),
             'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,
 
 
            // First quiz & homework info
-        'quiz_id'         => $activeQuiz?->id ?? null,
-        'quiz_attempted'  => $hasAttemptedQuiz,
+        'quiz_id'     => (!$quizAttemptLimitReached) ? $activeQuiz?->id : null,
+        'quiz_required' => (!$quizAttemptLimitReached && !$hasAttemptedQuiz) ? $this->quiz_required : 0,
+
+        'quiz_attempted' => $hasAttemptedQuiz,
         'homework_id'     => $activeHomework?->id ?? null,
         'homework_attempted' => $hasAttemptedHomework,
         ];

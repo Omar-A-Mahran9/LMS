@@ -33,6 +33,7 @@ let translations = {
         "Add new awars": "اضافة انجاز جديد",
         "Add Question": "إضافة سؤال",
         "Current Attachment": "عرض المذكرة",
+        "Show Questions": "عرض الأسئلة",
 
         "Yes, Delete !": "نعــم, أحذف !",
         "No, Cancel": "لا , ألغي",

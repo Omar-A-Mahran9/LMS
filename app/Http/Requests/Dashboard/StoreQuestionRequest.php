@@ -30,7 +30,7 @@ $rules['answers.*.is_correct'] = ['nullable'];
     }
 
     if ($this->type === 'true_false') {
-                $rules['answers'] = ['required'];
+                // $rules['answers'] = ['required'];
 
         $rules['correct_tf'] = ['required', 'in:true,false'];
     }

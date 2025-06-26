@@ -27,7 +27,7 @@ var KTDatatablesServerSidequiz = (function () {
     var initDatatable = function () {
         qz_datatable = $("#kt_datatable").DataTable({
             language: language,
-             processing: processing,
+            processing: processing,
             serverSide: serverSide,
             order: [],
             stateSave: saveState,
@@ -139,7 +139,13 @@ var KTDatatablesServerSidequiz = (function () {
 
                                 </div>
                                 <!--end::Menu item-->
-
+                                 <div class="menu-item px-3">
+                                    <a href="/dashboard/questions?quiz_id=${
+                                        data.id
+                                    }" class="menu-link px-3">
+                                        ${__("Show Questions")}
+                                    </a>
+                                </div>
                                 ${`<!--begin::Menu item-->
                                 <div class="menu-item px-3">
                                     <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">

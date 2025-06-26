@@ -37,7 +37,7 @@ class CoursesDetailsResource extends JsonResource
             'count_video' => $totalVideos,
             'category' => new CategoryResource($this->category),
             'phone' => setting('sms_number'),
-
+            'is_class'=> $this->is_class,
             'price' => $this->is_free
                 ? 'Free'
                 : ($this->have_discount && $this->discount_percentage

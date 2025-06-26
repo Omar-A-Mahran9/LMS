@@ -15,40 +15,33 @@ use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
-   public function index(Request $request)
-    {
-        $this->authorize('view_quizzes');
-        // Total quizzes count
-        $count_quizzes = QuizQuestion::count();
+public function index(Request $request)
+{
+    $this->authorize('view_quizzes');
 
-        // Example static value (customize as needed)
-        $total_attempts = 1000;
+    $count_quizzes = QuizQuestion::count();
+    $courses = Course::where('is_active', 1)->get();
+    $sections = CourseSection::get();
+    $quizzes = Quiz::get();
 
-        // Get all published courses and sections
-        $courses = Course::where('is_active', 1)->get();
-        $sections = CourseSection::get();
-        $quizzes=Quiz::get();
-         if ($request->ajax()) {
-            // Return JSON data (use getModelData helper if you have it set up)
-            return response()->json(getModelData(
-                model: new QuizQuestion(),
-                relations: [
-                        'quiz' => ['id', 'title_en', 'title_ar'],
-                        'answers' => ['id', 'quiz_question_id', 'answer_ar', 'answer_en', 'is_correct']
-                    ]
-            ));
-        } else {
-            // Return Blade view with variables
-            return view('dashboard.questions.index', compact(
-                'count_quizzes',
-                'total_attempts',
-                'courses',
-                'sections',
-                'quizzes',
-            ));
-        }
+    if ($request->ajax()) {
+        return response()->json(getModelData(
+            model: new QuizQuestion(),
+            andsFilters: $request->quiz_id ? [['quiz_id', '=', $request->quiz_id]] : [],
+            relations: [
+                'quiz' => ['id', 'title_en', 'title_ar'],
+                'answers' => ['id', 'quiz_question_id', 'answer_ar', 'answer_en', 'is_correct']
+            ]
+        ));
     }
 
+    return view('dashboard.questions.index', compact(
+        'count_quizzes',
+        'courses',
+        'sections',
+        'quizzes',
+    ));
+}
 
 
 

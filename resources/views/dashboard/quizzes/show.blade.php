@@ -230,6 +230,25 @@
                     <!--end::Content-->
                 </div>
                 <!--end::Basic info-->
+
+                <div class="modal fade" id="showQuestionsModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ __('Quiz Questions') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div id="quiz_questions_list">
+                                    <p class="text-muted">{{ __('Loading questions...') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <form id="question_form" class="ajax-form" method="post"
                     action="{{ route('dashboard.questions.store') }}" enctype="multipart/form-data"
                     data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">

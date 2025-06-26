@@ -139,7 +139,12 @@ var KTDatatablesServerSidequiz = (function () {
 
                                 </div>
                                 <!--end::Menu item-->
-
+                                <div class="menu-item px-3">
+                                    <a href="/dashboard/questions?quiz_id=${data.id}" class="menu-link px-3">
+                                        ${__("Show Questions")}
+                                    </a>
+                                </div>
+                                <!--end::Menu item-->
                                 ${`<!--begin::Menu item-->
                                 <div class="menu-item px-3">
                                     <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">

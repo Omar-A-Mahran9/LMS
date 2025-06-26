@@ -615,7 +615,7 @@
 
                                 <div class="modal-body">
                                     <input type="hidden" name="section_id" value="{{ $section->id }}">
-                                        <input type="hidden" name="course_id" value="{{ $course->id }}">
+                                    <input type="hidden" name="course_id" value="{{ $course->id }}">
 
                                     <div class="row mb-4">
                                         <div class="col-12 d-flex flex-column justify-content-center">
@@ -1003,6 +1003,61 @@
         $(document).on('click', '.open-question-modal', function() {
             const quizId = $(this).data('quiz-id');
             $('#question_form input[name="quiz_id"]').val(quizId);
+
+            // Reset the form
+            const form = $('#question_form');
+            form[0].reset();
+
+            // Set the quiz_id
+            form.find('[name="quiz_id"]').val(quizId);
+
+            // Reset Select2
+            form.find('select').val('').trigger('change');
+
+            // Hide all answer-type blocks and reset errors
+            $('.answer-type').addClass('d-none');
+            $('#answers').text('');
+            $('#answers_home_work').text('');
+
+            // Remove all answer repeater items except the first
+            const repeaterList = $('#form_repeater [data-repeater-list]');
+            repeaterList.html('');
+            repeaterList.append(`
+            <div data-repeater-item class="row mb-2">
+                <div class="col-md-4">
+                    <input type="text" name="text_ar" class="form-control answer-text-ar">
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="text_en" class="form-control answer-text-en">
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="col-md-2 d-flex align-items-center">
+                    <label class="form-check-label">
+                        <input type="checkbox" name="is_correct" value="1" class="form-check-input">
+                        <div class="invalid-feedback"></div>
+                        {{ __('Correct') }}
+                    </label>
+                </div>
+                <div class="col-md-2">
+                    <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-danger">
+                        {{ __('Delete') }}
+                    </a>
+                </div>
+            </div>
+        `);
+
+            // Reset invalid feedbacks
+            form.find('.invalid-feedback').text('');
+            form.find('.is-invalid').removeClass('is-invalid');
+
+            // Reset TinyMCE editors if used
+            if (typeof tinymce !== 'undefined') {
+                tinymce.editors.forEach(editor => editor.setContent(''));
+            }
+
+            // Trigger change for select to show correct answer section
+            $('#type_inp').trigger('change');
         });
 
         $(document).on('click', '.open-question-modal', function() {

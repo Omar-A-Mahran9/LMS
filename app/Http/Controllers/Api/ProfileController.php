@@ -182,7 +182,7 @@ public function myCourses(Request $request)
     }])
         ->whereHas('students', function ($q) use ($studentId) {
             $q->where('student_id', $studentId)
-                ->where('course_student.status', 'approved')
+                // ->where('course_student.status', 'approved')
                 ->where('course_student.is_active', 1);
         })
         ->where('is_active', 1)

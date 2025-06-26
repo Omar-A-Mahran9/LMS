@@ -28,7 +28,7 @@ public function startQuiz(Request $request, $quizId)
     if ($quiz->attempt_count !== null) {
         $usedAttempts = QuizAttempt::where('quiz_id', $quizId)
             ->where('student_id', $studentId)
-            ->whereNotNull('submitted_at')
+            // ->whereNotNull('submitted_at')
             ->count();
 
         if ($usedAttempts >= $quiz->attempt_count) {
@@ -46,7 +46,7 @@ public function startQuiz(Request $request, $quizId)
     if ($attempt && $quiz->duration_minutes) {
         if ($attempt->started_at->addMinutes($quiz->duration_minutes)->isPast()) {
             $attempt->answers()->delete();
-            $attempt->delete();
+            // $attempt->delete();
             $attempt = null;
         }
     }

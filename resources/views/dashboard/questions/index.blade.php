@@ -93,6 +93,8 @@
                         </th>
                         <th>{{ __('Question') }}</th>
                         <th>{{ __('Quiz') }}</th>
+                       <th>{{ __('score') }}</th>
+
                         <th>{{ __('Created at') }}</th>
 
                         <th class=" min-w-100px">{{ __('Actions') }}</th>
