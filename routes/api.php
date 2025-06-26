@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\BookOrderController;
-use App\Http\Controllers\API\CertificateController;
+use App\Http\Controllers\Api\CertificateController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\ProfileController;
