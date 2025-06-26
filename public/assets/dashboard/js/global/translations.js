@@ -54,6 +54,7 @@ let translations = {
         "Add shipping data": "أضف بيانات الشحن",
         Approve: "موافقة",
         Reject: "رفض",
+        "Edit Course": "تعديل الكورس",
 
         Edit: "تعديل",
         per_hour: "رحلة بالساعة",
