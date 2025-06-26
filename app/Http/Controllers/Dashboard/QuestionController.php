@@ -25,7 +25,7 @@ public function index(Request $request)
     $courses = Course::where('is_active', 1)->get();
     $sections = CourseSection::get();
     $quizzes = Quiz::get();
-
+dd($quizId);
     if ($request->ajax()) {
         return response()->json(getModelData(
             model: new QuizQuestion(),
