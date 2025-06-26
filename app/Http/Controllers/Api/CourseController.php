@@ -87,12 +87,16 @@ public function getCoursesByCategory(Request $request)
 
 public function getCoursesById(Request $request, $id)
 {
-    $course = Course::where('id', $id)
-        ->where('is_active', 1)
-        ->where('is_enrollment_open', 1)
-        ->whereDate('start_date', '<=', now())
-        ->whereDate('end_date', '>=', now())
-        ->first();
+
+    $course = Course::where('id', $id)->where('is_active', 1)
+    ->where('is_enrollment_open', 1)
+    ->whereDate('start_date', '<=', now())
+    ->whereDate('end_date', '>=', now())
+    ->withCount(['enrollments' => function ($q) {
+        $q->where('status', 'approved'); // Count only approved enrollments
+    }])
+    ->havingRaw('enrollments_count < max_students') // Compare count with max_students
+    ->first();
 
     if (!$course) {
         return $this->failure('Course not found or unpublished');
@@ -113,7 +117,6 @@ public function getCoursesById(Request $request, $id)
 
     return $this->success('', new CourseDetailsResource($course));
 }
-
 public function getClassesByCoursesId(Request $request, $id)
 {
     $student = auth('api')->user();
@@ -208,7 +211,7 @@ public function getVideosByClass($id)
         ->first();
 
     if (!$class) {
-        return $this->failure('class not found or unpublished');
+        return $this->failure('Course not found or unpublished');
     }
 
     $studentId = Auth::id();

@@ -226,12 +226,18 @@ class HomeController extends Controller
         ->whereDate('end_date', '>=', $today)
         ->get();
 
-    $courses = Course::where('is_active', 1)->where('is_enrollment_open', 1)
-        ->where('is_class', 0)->where('category_id',null)
-        ->whereDate('start_date', '<=', $today)
-        ->whereDate('end_date', '>=', $today)
-        ->get();
 
+   $courses = Course::where('is_active', 1)
+    ->where('is_enrollment_open', 1)
+    ->where('is_class', 0)
+    ->whereNull('category_id')
+    ->whereDate('start_date', '<=',$today)
+    ->whereDate('end_date', '>=', $today)
+    ->withCount(['enrollments' => function ($q) {
+        $q->where('status', 'approved'); // Count only approved enrollments
+    }])
+    ->havingRaw('enrollments_count < max_students') // Compare count with max_students
+    ->get();
 
         return $this->success('', [
             'sliders' => SliderResource::collection($sliders),
