@@ -138,52 +138,45 @@ var KTDatatablesServerSide = (function () {
             btn.addEventListener("click", function (e) {
                 e.preventDefault();
 
-                let currentBtnIndex = $(editButtons).index(btn);
-                let data = datatable.row(currentBtnIndex).data();
+                const currentBtnIndex = $(editButtons).index(btn);
+                const data = datatable.row(currentBtnIndex).data();
 
                 // Set form title
                 $("#form_title").text(__("Edit Question"));
 
-                // Fill basic inputs
+                // Fill base inputs
                 $("#quiz_id_inp").val(data.quiz_id).trigger("change");
                 $("#question_ar_inp").val(data.question_ar);
                 $("#question_en_inp").val(data.question_en);
                 $("#type_inp").val(data.type).trigger("change");
                 $("#points_inp").val(data.points);
 
-                // Reset dynamic sections
+                // Reset dynamic answer sections
                 $(".answer-type").addClass("d-none");
-                $("[name='short_answer']").val("");
+                $("input[name='short_answer']").val("");
                 $("input[name='correct_tf']").prop("checked", false);
+                $("#answers").text("");
 
-                // Clear existing answers in repeater list
-                const repeaterList = $("#form_repeater [data-repeater-list]");
-                repeaterList.html("");
-
+                // Handle answer types
                 if (data.type === "multiple_choice") {
                     $(".answer-multiple_choice").removeClass("d-none");
 
-                    // Assuming you have a hidden template item somewhere with data-repeater-item
-                    const templateItem = $(
-                        "#form_repeater [data-repeater-item]"
-                    ).first();
+                    const repeater = $("#form_repeater");
 
-                    data.answers.forEach((answer) => {
-                        // Clone template
-                        let item = templateItem.clone();
+                    // Remove existing repeater items
+                    repeater.find("[data-repeater-item]").remove();
 
-                        // Clear inputs inside cloned item
-                        item.find("input").each(function () {
-                            $(this).val("");
-                            if (
-                                $(this).is(":checkbox") ||
-                                $(this).is(":radio")
-                            ) {
-                                $(this).prop("checked", false);
-                            }
-                        });
+                    // Add each answer via repeater
+                    data.answers.forEach((answer, index) => {
+                        // Trigger repeater-create to create new item
+                        repeater
+                            .find("[data-repeater-create]")
+                            .trigger("click");
 
-                        // Fill inputs with actual data
+                        const item = repeater
+                            .find("[data-repeater-item]")
+                            .eq(index);
+
                         item.find("input[name='text_ar']").val(
                             answer.answer_ar
                         );
@@ -194,37 +187,27 @@ var KTDatatablesServerSide = (function () {
                             "checked",
                             answer.is_correct == 1
                         );
-
-                        // Important: remove any 'd-none' or hidden class from cloned item
-                        item.removeClass("d-none");
-
-                        // Append to repeater list
-                        repeaterList.append(item);
                     });
-
-                    // If your original template was hidden in the DOM, keep it hidden but do NOT append it here
-                    // So no need to remove template from DOM
                 } else if (data.type === "true_false") {
                     $(".answer-true_false").removeClass("d-none");
 
-                    const correct = data.answers.find((ans) => ans.is_correct);
-                    if (correct && correct.answer_en.toLowerCase() === "true") {
-                        $("input[name='correct_tf'][value='true']").prop(
-                            "checked",
-                            true
-                        );
-                    } else {
-                        $("input[name='correct_tf'][value='false']").prop(
-                            "checked",
-                            true
-                        );
-                    }
+                    const correct = data.answers.find((a) => a.is_correct);
+                    const isTrue = correct?.answer_en?.toLowerCase() === "true";
+
+                    $("input[name='correct_tf'][value='true']").prop(
+                        "checked",
+                        isTrue
+                    );
+                    $("input[name='correct_tf'][value='false']").prop(
+                        "checked",
+                        !isTrue
+                    );
                 } else if (data.type === "short_answer") {
                     $(".answer-short_answer").removeClass("d-none");
                     $("#short_answer_inp").val(data.expected_answer || "");
                 }
 
-                // Reset form method & action
+                // Update form action and method
                 $("#crud_form").attr(
                     "action",
                     `/dashboard/questions/${data.id}`
