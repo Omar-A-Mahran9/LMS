@@ -97,10 +97,7 @@ public function getCoursesById(Request $request, $id)
         ->first();
 
     if (
-        !$course ||
-        (!$studentId || !$course->enrollments->count()) && // not enrolled
-        $course->max_students !== null &&
-        $course->enrollments_count >= $course->max_students
+        !$course
     ) {
         return $this->failure('Course not found or full');
     }
