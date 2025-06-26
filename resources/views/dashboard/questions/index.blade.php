@@ -293,7 +293,7 @@
 
     <script>
         $(document).ready(function() {
-            $('#add_question_btn').on('click', function(e) {
+            $('#add_btn').on('click', function(e) {
                 e.preventDefault();
 
                 const $form = $('#question_form');
