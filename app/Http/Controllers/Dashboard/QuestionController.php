@@ -29,8 +29,7 @@ public function index(Request $request)
     if ($request->ajax()) {
         return response()->json(getModelData(
             model: new QuizQuestion(),
-            // andsFilters: $quizId ? [['quiz_id', '=', $quizId]] : [],
-            andsFilters: [['quiz_id', '=', $quizId]],
+            andsFilters: $quizId ? [['quiz_id', '=', $quizId]] : [],
 
             relations: [
                 'quiz' => ['id', 'title_en', 'title_ar'],

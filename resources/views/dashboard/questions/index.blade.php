@@ -304,6 +304,7 @@
 
                 // Clear Select2 selection
                 $('#type_inp').val('').trigger('change');
+                $('#quiz_id_inp').val('').trigger('change');
 
                 // Reset hidden fields if needed
                 $form.find('input[type="hidden"]').val('');
@@ -332,7 +333,7 @@
                         {{ __('Correct') }}
                     </label>
                 </div>
-              
+
             </div>
         `);
 
