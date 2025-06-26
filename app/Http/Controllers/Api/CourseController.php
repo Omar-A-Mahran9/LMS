@@ -87,36 +87,46 @@ public function getCoursesByCategory(Request $request)
 
 public function getCoursesById(Request $request, $id)
 {
+    $studentId = auth()->check() ? auth()->id() : null;
 
-    $course = Course::where('id', $id)->where('is_active', 1)
-    ->where('is_enrollment_open', 1)
-    ->whereDate('start_date', '<=', now())
-    ->whereDate('end_date', '>=', now())
-    ->withCount(['enrollments' => function ($q) {
-        $q->where('status', 'approved'); // Count only approved enrollments
-    }])
-    ->havingRaw('enrollments_count < max_students') // Compare count with max_students
-    ->first();
+    $course = Course::where('id', $id)
+        ->where('is_active', 1)
+        ->where('is_enrollment_open', 1)
+        ->whereDate('start_date', '<=', now())
+        ->whereDate('end_date', '>=', now())
+        ->withCount(['enrollments' => function ($q) {
+            $q->where('status', 'approved');
+        }])
+        ->with(['enrollments' => function ($q) use ($studentId) {
+            if ($studentId) {
+                $q->where('student_id', $studentId);
+            }
+        }])
+        ->first();
 
-    if (!$course) {
-        return $this->failure('Course not found or unpublished');
+    if (
+        !$course ||
+        (!$studentId || !$course->enrollments->count()) && // not enrolled
+        $course->max_students !== null &&
+        $course->enrollments_count >= $course->max_students
+    ) {
+        return $this->failure('Course not found or full');
     }
 
-    // Determine viewer ID (auth user or device token)
-    $viewerId = auth()->check()
-        ? 'user_' . auth()->id()
+    // Track views
+    $viewerId = $studentId
+        ? 'user_' . $studentId
         : 'device_' . $request->header('Device-Token', $request->ip());
 
-    // Use cache key to prevent multiple increments
     $cacheKey = "course_viewed_{$course->id}_{$viewerId}";
-
     if (!Cache::has($cacheKey)) {
         $course->increment('views');
-        Cache::put($cacheKey, true, now()->addHours(6)); // Prevent re-count for 6 hours
+        Cache::put($cacheKey, true, now()->addHours(6));
     }
 
     return $this->success('', new CourseDetailsResource($course));
 }
+
 public function getClassesByCoursesId(Request $request, $id)
 {
     $student = auth('api')->user();
