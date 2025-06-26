@@ -264,10 +264,6 @@
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    {{-- Plugins --}}
-    <script src="{{ asset('assets/dashboard/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/components/form_repeater.js') }}"></script>
-
     <script src="{{ asset('assets/dashboard/js/datatables/questions.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
@@ -279,6 +275,9 @@
             $('#crud_form input[name="quiz_id"]').val(quizId);
         });
     </script>
+    {{-- Plugins --}}
+    <script src="{{ asset('assets/dashboard/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/components/form_repeater.js') }}"></script>
 
     {{-- Repeater Init --}}
     <script>
@@ -292,7 +291,7 @@
         }).trigger('change'); // Trigger on load
     </script>
 
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             $('#add_question_btn').on('click', function(e) {
                 e.preventDefault();
@@ -358,7 +357,7 @@
                 }, 300);
             });
         });
-    </script>
+    </script> --}}
     <script>
         $(document).ready(function() {
             $('#add_btn').on('click', function(e) {
@@ -371,7 +370,6 @@
 
                 // Clear Select2 selection
                 $('#type_inp').val('').trigger('change');
-                $('#quiz_id_inp').val('').trigger('change');
 
                 // Reset hidden fields if needed
                 $form.find('input[type="hidden"]').val('');
