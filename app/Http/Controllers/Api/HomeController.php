@@ -239,9 +239,9 @@ $courses = Course::where('is_active', 1)
     ->orderBy('max_students', 'asc')
     ->get()
     ->filter(function ($course) {
-        return $course->enrollments_count < $course->max_students;
+        return is_null($course->max_students) || $course->enrollments_count < $course->max_students;
     })
-    ->values(); // reset keys
+    ->values(); // reindex
         return $this->success('', [
             'sliders' => SliderResource::collection($sliders),
             'categories' => CategoryResource::collection($categories),
