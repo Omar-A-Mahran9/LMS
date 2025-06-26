@@ -54,6 +54,14 @@ class Student extends Authenticatable
         return $this->hasMany(QuizAttempt::class);
     }
 
+    public function quizzes()
+{
+    return $this->belongsToMany(Quiz::class, 'quiz_attempts')
+                ->withPivot(['score', 'submitted_at', 'started_at'])
+                ->withTimestamps();
+}
+
+
     public function courses()
     {
         return $this->belongsToMany(Course::class, 'course_student')

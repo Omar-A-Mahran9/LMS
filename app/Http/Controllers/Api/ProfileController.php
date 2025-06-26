@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
- use App\Http\Resources\Api\StudentResource;
+use App\Http\Resources\Api\CoursesDetailsResource;
+use App\Http\Resources\Api\StudentResource;
 use App\Http\Resources\Api\UpdateStudentProfileRequest;
+use App\Models\Course;
 use App\Models\HomeWork;
 use App\Models\Quiz;
+use App\Models\QuizAttempt;
+use App\Models\Student;
 use App\Rules\PasswordNumberAndLetter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
@@ -164,6 +169,171 @@ public function homeworksResults(Request $request)
         });
 
     return $this->success('', $homeworks);
+}
+
+public function myCourses(Request $request)
+{
+    $studentId = auth('api')->id();
+    $status = $request->query('status'); // completed | in_progress | null
+
+    // Get enrolled courses
+    $courses = Course::with(['category:id,name_en,name_ar', 'instructor:id,name', 'videos:id,course_id', 'videos.students' => function ($q) use ($studentId) {
+        $q->where('student_id', $studentId);
+    }])
+        ->whereHas('students', function ($q) use ($studentId) {
+            $q->where('student_id', $studentId)
+                ->where('course_student.status', 'approved')
+                ->where('course_student.is_active', 1);
+        })
+        ->where('is_active', 1)
+        ->get()
+        ->filter(function ($course) use ($studentId, $status) {
+            $totalVideos = $course->videos->count();
+
+            $completedVideos = $course->videos->filter(function ($video) use ($studentId) {
+                return $video->students->first()?->pivot?->is_completed ?? false;
+            })->count();
+
+            if ($status === 'completed') {
+                return $totalVideos > 0 && $completedVideos === $totalVideos;
+            } elseif ($status === 'in_progress') {
+                return $totalVideos === 0 || $completedVideos < $totalVideos;
+            }
+
+            return true; // No filter
+        })
+        ->values();
+
+    return $this->success('', CoursesDetailsResource::collection($courses));
+}
+
+public function studentStatistics()
+{
+    $user = auth('api')->user();
+    $student=Student::find($user->id);
+    // جميع المحاولات الخاصة بالطالب
+    $attempts = $student->quizAttempts()->with('quiz')->get();
+
+    $totalQuizzes = $attempts->groupBy('quiz_id')->count();
+    $successCount = $attempts->filter(function ($attempt) {
+        return $attempt->score >= 50; // حسب النجاح المطلوب
+    })->groupBy('quiz_id')->count();
+
+    $successRate = $totalQuizzes > 0
+        ? round(($successCount / $totalQuizzes) * 100, 2)
+        : 0;
+
+    // أعلى محاولة
+    $highestAttempt = $attempts->sortByDesc('score')->first();
+    $highestScore = $highestAttempt?->score;
+    $highestQuizTitle = $highestAttempt?->quiz?->title;
+
+    // أقل محاولة
+    $lowestAttempt = $attempts->sortBy('score')->first();
+    $lowestScore = $lowestAttempt?->score;
+    $lowestQuizTitle = $lowestAttempt?->quiz?->title;
+
+    // متوسط وقت الحل
+    $totalSolvingSeconds = $attempts->filter(function ($a) {
+        return $a->submitted_at && $a->started_at;
+    })->sum(function ($a) {
+        return $a->submitted_at->diffInSeconds($a->started_at);
+    });
+
+    $solvedCount = $attempts->filter(fn($a) => $a->submitted_at && $a->started_at)->count();
+    $totalSolvingTime = $student->quizAttempts()
+        ->whereNotNull('started_at')
+        ->whereNotNull('submitted_at')
+        ->get()
+        ->reduce(function ($carry, $attempt) {
+            return $carry + $attempt->submitted_at->diffInSeconds($attempt->started_at);
+        }, 0);
+
+    $attemptCountForTime = $student->quizAttempts()
+        ->whereNotNull('started_at')
+        ->whereNotNull('submitted_at')
+        ->count();
+
+    $averageSolvingTimeInSeconds = $attemptCountForTime > 0
+        ? (int) round($totalSolvingTime / $attemptCountForTime)
+        : 0;
+
+
+
+
+    // مقارنة الأداء مع باقي الطلاب في نفس الكورسات
+    $enrolledCourseIds = $student->courses()->pluck('courses.id');
+
+    $averageScoresInCourses = \App\Models\QuizAttempt::whereHas('quiz', function ($q) use ($enrolledCourseIds) {
+        $q->whereIn('course_id', $enrolledCourseIds);
+    })->whereNotNull('score')->avg('score');
+
+    $studentAverageScore = $attempts->avg('score') ?? 0;
+    $performancePercentage = $averageScoresInCourses > 0
+    ? round(($studentAverageScore / $averageScoresInCourses) * 100, 2)
+    : null;
+
+
+    // تحضير بيانات الرسم البياني
+    $chartLabels = [];
+    $chartScores = [];
+    $maxScores = [];
+
+foreach ($attempts as $attempt) {
+    $quiz = $attempt->quiz;
+    if (!$quiz) continue;
+
+    $quizTitle = $quiz->title ?? 'Unnamed Quiz';
+    $courseTitle = $quiz->course?->title ?? 'Unknown Course';
+    $label = "$quizTitle ($courseTitle)";
+
+    $chartLabels[] = $label;
+    $chartScores[] = $attempt->score ?? 0;
+    $maxScores[] = $quiz->questions->sum('points') ?: 100; // الحد الأعلى
+}
+
+// أعلى درجة من جميع الكويزات لاستخدامها كمقياس Y
+$maxPossibleScore = max($maxScores) ?: 100;
+$studentName = $student->first_name ?? 'Student';
+$yAxisSteps = [];
+$step = 15;
+for ($i = 0; $i <= $maxPossibleScore; $i += $step) {
+    $yAxisSteps[] = $i;
+}
+
+    return response()->json([
+        'success_rate' => [
+            'percentage' => $successRate,
+            'success_quizzes' => $successCount,
+            'total_quizzes' => $totalQuizzes,
+        ],
+        'highest_score' => [
+            'quiz_title' => $highestQuizTitle,
+            'score' => $highestScore,
+        ],
+        'lowest_score' => [
+            'quiz_title' => $lowestQuizTitle,
+            'score' => $lowestScore,
+        ],
+        'performance_comparison' => [
+        'student_average_score' => round($studentAverageScore, 2),
+        'overall_average_score_in_courses' => round($averageScoresInCourses, 2),
+        'performance_percentage' => $performancePercentage,
+    ],
+
+        'chart_data' => [
+            'x_axis_labels' => $chartLabels,
+            'datasets' => [
+                [
+                    'label' => $studentName,
+                    'data' => $chartScores,
+                    'backgroundColor' => 'rgba(75, 192, 192, 0.6)',
+                ],
+            ],
+        'y_axis_labels' => $yAxisSteps,
+        ],
+
+    ]);
 }
 
 

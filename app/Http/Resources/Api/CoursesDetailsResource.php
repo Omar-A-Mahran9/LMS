@@ -8,48 +8,41 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
 class CoursesDetailsResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
-    $studentId = auth('api')->id(); // or pass from $request
+        $studentId = auth('api')->id();
 
-    // Count how many videos the student has completed
-    $completedCount = CourseVideoStudent::whereIn(
-        'course_video_id',
-        $this->videos->pluck('id')
-    )->where('student_id', $studentId)
-     ->where('is_completed', true)
-     ->count();
+        // جميع فيديوهات الكورس
+        $totalVideos = $this->videos->count();
 
-    $isCompleted = $this->videos->count() > 0 && $completedCount === $this->videos->count();
+        // عدد الفيديوهات التي أكملها الطالب
+        $completedCount = CourseVideoStudent::whereIn('course_video_id', $this->videos->pluck('id'))
+            ->where('student_id', $studentId)
+            ->where('is_completed', true)
+            ->count();
+
+        $isCompleted = $totalVideos > 0 && $completedCount === $totalVideos;
+        $progressPercentage = $totalVideos > 0
+            ? round(($completedCount / $totalVideos) * 100)
+            : 0;
 
         return [
-               "id" => $this->id,
+            'id' => $this->id,
             'image' => $this->full_image_path,
             'video_url' => base64_encode(convertToYoutubeEmbed($this->video_url)),
-
             'title' => $this->title,
             'started_at' => $this->start_date,
-            'count_video' => $this->videos->count(),
-            'category' =>new CategoryResource ($this->category),
-            // 'sub_category' => CategoryResource::collection($this->subCategories),
-            'phone' =>setting('sms_number'),
+            'count_video' => $totalVideos,
+            'category' => new CategoryResource($this->category),
+            'phone' => setting('sms_number'),
 
             'price' => $this->is_free
-                ? 'Free' // or 0 if you prefer numeric value
+                ? 'Free'
                 : ($this->have_discount && $this->discount_percentage
-                    ? round($this->price * (1 - $this->discount_percentage / 100), 2) // discounted price
-                    : $this->price
-                ),
-            'have_certificate' => $this->certificate_available,
-
+                    ? round($this->price * (1 - $this->discount_percentage / 100), 2)
+                    : $this->price),
 
             'original_price' => $this->price,
             'discount_percentage' => $this->have_discount ? $this->discount_percentage : null,
@@ -58,14 +51,16 @@ class CoursesDetailsResource extends JsonResource
             'is_enrolled' => $this->is_enrolled,
             'payment_type' => $this->payment_type,
 
-        'request_status' => [
-                "key"=>$this->request_status,
-                "value"=>__($this->request_status),
+            'request_status' => [
+                'key' => $this->request_status,
+                'value' => __($this->request_status),
             ],
-        'is_completed' => $isCompleted,
-        'certificate_url' => $isCompleted && $this->certificate_available
-            ? route('student.certificates.download', ['course' => $this->id])
-            : null,
+
+            'is_completed' => $isCompleted,
+            'progress_percentage' => $progressPercentage,
+            'certificate_url' => $isCompleted && $this->certificate_available
+                ? route('student.certificates.download', ['course' => $this->id])
+                : null,
         ];
     }
 }
