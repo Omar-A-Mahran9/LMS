@@ -5,7 +5,11 @@
     <meta charset="UTF-8">
     <title>Certificate of Completion</title>
     <style>
-      
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
         html,
         body {
             margin: 0;
