@@ -93,7 +93,7 @@
                         </th>
                         <th>{{ __('Question') }}</th>
                         <th>{{ __('Quiz') }}</th>
-                       <th>{{ __('score') }}</th>
+                        <th>{{ __('score') }}</th>
 
                         <th>{{ __('Created at') }}</th>
 
@@ -291,6 +291,73 @@
         }).trigger('change'); // Trigger on load
     </script>
 
+    <script>
+        $(document).ready(function() {
+            $('#add_question_btn').on('click', function(e) {
+                e.preventDefault();
+
+                const $form = $('#question_form');
+
+                // Reset the form
+                $form[0].reset();
+
+                // Clear Select2 selection
+                $('#type_inp').val('').trigger('change');
+
+                // Reset hidden fields if needed
+                $form.find('input[type="hidden"]').val('');
+
+                // Clear validation messages and classes
+                $form.find('.invalid-feedback').text('');
+                $form.find('.is-invalid').removeClass('is-invalid');
+                $('#answers').text('');
+
+                // Reset repeater content with one empty row
+                const $repeaterList = $('#form_repeater [data-repeater-list]');
+                $repeaterList.html(`
+            <div data-repeater-item class="row mb-2">
+                <div class="col-md-4">
+                    <input type="text" name="text_ar" class="form-control answer-text-ar">
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="text_en" class="form-control answer-text-en">
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="col-md-2 d-flex align-items-center">
+                    <label class="form-check-label">
+                        <input type="checkbox" name="is_correct" value="1" class="form-check-input">
+                        <div class="invalid-feedback"></div>
+                        {{ __('Correct') }}
+                    </label>
+                </div>
+                <div class="col-md-2">
+                    <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-danger">
+                        {{ __('Delete') }}
+                    </a>
+                </div>
+            </div>
+        `);
+
+                // Hide all answer sections
+                $('.answer-type').addClass('d-none');
+
+                // Reset modal title
+                $('#questionModal .modal-title').text(`{{ __('Add New Question') }}`);
+
+                // Reset form action to store route (in case reused)
+                $form.attr('action', `{{ route('dashboard.questions.store') }}`);
+
+                // Show modal
+                $('#questionModal').modal('show');
+
+                // Focus on English question input after modal opens
+                setTimeout(() => {
+                    $('#question_en_inp').trigger('focus');
+                }, 300);
+            });
+        });
+    </script>
     <script>
         $(document).ready(function() {
             $('#add_btn').on('click', function(e) {
