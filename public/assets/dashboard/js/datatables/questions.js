@@ -160,39 +160,48 @@ var KTDatatablesServerSide = (function () {
                 const repeaterList = $("#form_repeater [data-repeater-list]");
                 repeaterList.html("");
 
-           if (data.type === "multiple_choice") {
-    $(".answer-multiple_choice").removeClass("d-none");
+                if (data.type === "multiple_choice") {
+                    $(".answer-multiple_choice").removeClass("d-none");
 
-    const repeaterList = $("#form_repeater [data-repeater-list]");
-    repeaterList.html(""); // Clear existing
+                    const repeaterList = $(
+                        "#form_repeater [data-repeater-list]"
+                    );
+                    repeaterList.html(""); // Clear existing
 
-    data.answers.forEach(answer => {
-        const html = `
+                    data.answers.forEach((answer) => {
+                        const html = `
         <div data-repeater-item class="row mb-2">
             <div class="col-md-4">
-                <input type="text" name="text_ar" class="form-control answer-text-ar" value="${answer.answer_ar || ''}">
+                <input type="text" name="text_ar" class="form-control answer-text-ar" value="${
+                    answer.answer_ar || ""
+                }">
                 <div class="invalid-feedback"></div>
             </div>
             <div class="col-md-4">
-                <input type="text" name="text_en" class="form-control answer-text-en" value="${answer.answer_en || ''}">
+                <input type="text" name="text_en" class="form-control answer-text-en" value="${
+                    answer.answer_en || ""
+                }">
                 <div class="invalid-feedback"></div>
             </div>
             <div class="col-md-2 d-flex align-items-center">
                 <label class="form-check-label">
-                    <input type="checkbox" name="is_correct" value="1" class="form-check-input" ${answer.is_correct ? 'checked' : ''}>
+                    <input type="checkbox" name="is_correct" value="1" class="form-check-input" ${
+                        answer.is_correct ? "checked" : ""
+                    }>
                     <div class="invalid-feedback"></div>
-                    ${__('Correct')}
+                    ${__("Correct")}
                 </label>
             </div>
             <div class="col-md-2">
                 <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-danger">
-                    ${__('Delete')}
+                    ${__("Delete")}
                 </a>
             </div>
         </div>`;
 
-        repeaterList.append(html);
-    })
+                        repeaterList.append(html);
+                    });
+                }
                 // True/False handling
                 else if (data.type === "true_false") {
                     $(".answer-true_false").removeClass("d-none");
