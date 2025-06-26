@@ -17,6 +17,7 @@ class QuestionController extends Controller
 {
 public function index(Request $request)
 {
+    dd($request);
     $this->authorize('view_quizzes');
     $quizId = $request->query('quiz_id'); // or $request->get('quiz_id');
 
