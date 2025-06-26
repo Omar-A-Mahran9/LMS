@@ -297,7 +297,7 @@
             $('#add_question_btn').on('click', function(e) {
                 e.preventDefault();
 
-                const $form = $('#question_form');
+                const $form = $('#crud_form');
 
                 // Reset the form
                 $form[0].reset();
