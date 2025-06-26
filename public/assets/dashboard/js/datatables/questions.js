@@ -240,16 +240,16 @@ var KTDatatablesServerSide = (function () {
             });
         });
     };
-    $("#form_repeater").repeater({
-        initEmpty: false,
-        defaultValues: {},
-        show: function () {
-            $(this).slideDown();
-        },
-        hide: function (deleteElement) {
-            $(this).slideUp(deleteElement);
-        },
-    });
+    // $("#form_repeater").repeater({
+    //     initEmpty: false,
+    //     defaultValues: {},
+    //     show: function () {
+    //         $(this).slideDown();
+    //     },
+    //     hide: function (deleteElement) {
+    //         $(this).slideUp(deleteElement);
+    //     },
+    // });
     // Public methods
     return {
         init: function () {
