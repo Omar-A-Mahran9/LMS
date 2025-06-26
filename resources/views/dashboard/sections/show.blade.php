@@ -1039,11 +1039,7 @@
                         {{ __('Correct') }}
                     </label>
                 </div>
-                <div class="col-md-2">
-                    <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-danger">
-                        {{ __('Delete') }}
-                    </a>
-                </div>
+                
             </div>
         `);
 
