@@ -156,58 +156,46 @@ var KTDatatablesServerSide = (function () {
                 $("[name='short_answer']").val("");
                 $("input[name='correct_tf']").prop("checked", false);
 
+                // Repeater logic
                 const repeaterList = $("#form_repeater [data-repeater-list]");
                 repeaterList.html("");
 
-                if (data.type === "multiple_choice") {
-                    $(".answer-multiple_choice").removeClass("d-none");
+           if (data.type === "multiple_choice") {
+    $(".answer-multiple_choice").removeClass("d-none");
 
-                    data.answers.forEach((answer) => {
-                        const html = `
-                        <div data-repeater-item class="row mb-2">
-                            <div class="col-md-4">
-                                <input type="text" name="text_ar" class="form-control answer-text-ar" value="${
-                                    answer.answer_ar || ""
-                                }">
-                                <div class="invalid-feedback"></div>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="text_en" class="form-control answer-text-en" value="${
-                                    answer.answer_en || ""
-                                }">
-                                <div class="invalid-feedback"></div>
-                            </div>
-                            <div class="col-md-2 d-flex align-items-center">
-                                <label class="form-check-label">
-                                    <input type="checkbox" name="is_correct" value="1" class="form-check-input" ${
-                                        answer.is_correct ? "checked" : ""
-                                    }>
-                                    <div class="invalid-feedback"></div>
-                                    ${__("Correct")}
-                                </label>
-                            </div>
-                            <div class="col-md-2">
-                                <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-danger">
-                                    ${__("Delete")}
-                                </a>
-                            </div>
-                        </div>`;
-                        repeaterList.append(html);
-                    });
+    const repeaterList = $("#form_repeater [data-repeater-list]");
+    repeaterList.html(""); // Clear existing
 
-                    // Re-initialize repeater to make delete buttons work
-                    $("#form_repeater").repeater({
-                        initEmpty: false,
-                        show: function () {
-                            $(this).slideDown();
-                        },
-                        hide: function (deleteElement) {
-                            $(this).slideUp(deleteElement);
-                        },
-                    });
-                } else if (data.type === "true_false") {
+    data.answers.forEach(answer => {
+        const html = `
+        <div data-repeater-item class="row mb-2">
+            <div class="col-md-4">
+                <input type="text" name="text_ar" class="form-control answer-text-ar" value="${answer.answer_ar || ''}">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-4">
+                <input type="text" name="text_en" class="form-control answer-text-en" value="${answer.answer_en || ''}">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-2 d-flex align-items-center">
+                <label class="form-check-label">
+                    <input type="checkbox" name="is_correct" value="1" class="form-check-input" ${answer.is_correct ? 'checked' : ''}>
+                    <div class="invalid-feedback"></div>
+                    ${__('Correct')}
+                </label>
+            </div>
+            <div class="col-md-2">
+                <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-danger">
+                    ${__('Delete')}
+                </a>
+            </div>
+        </div>`;
+
+        repeaterList.append(html);
+    });
+                // True/False handling
+                else if (data.type === "true_false") {
                     $(".answer-true_false").removeClass("d-none");
-
                     const correct = data.answers.find((ans) => ans.is_correct);
                     if (correct && correct.answer_en.toLowerCase() === "true") {
                         $("input[name='correct_tf'][value='true']").prop(
@@ -220,7 +208,10 @@ var KTDatatablesServerSide = (function () {
                             true
                         );
                     }
-                } else if (data.type === "short_answer") {
+                }
+
+                // Short Answer
+                else if (data.type === "short_answer") {
                     $(".answer-short_answer").removeClass("d-none");
                     $("#short_answer_inp").val(data.expected_answer || "");
                 }
@@ -240,16 +231,7 @@ var KTDatatablesServerSide = (function () {
             });
         });
     };
-    $("#form_repeater").repeater({
-        initEmpty: false,
-        defaultValues: {},
-        show: function () {
-            $(this).slideDown();
-        },
-        hide: function (deleteElement) {
-            $(this).slideUp(deleteElement);
-        },
-    });
+
     // Public methods
     return {
         init: function () {
