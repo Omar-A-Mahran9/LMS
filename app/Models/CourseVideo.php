@@ -63,6 +63,14 @@ class CourseVideo extends Model
     {
         return $this->hasMany(CourseVideoStudent::class);
     }
+// App\Models\CourseVideo.php
+
+public function students()
+{
+    return $this->belongsToMany(Student::class, 'course_video_student', 'course_video_id', 'student_id')
+        ->withPivot('is_completed')
+        ->withTimestamps();
+}
 
 
 }
