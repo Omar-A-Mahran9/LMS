@@ -129,100 +129,117 @@ var KTDatatablesServerSide = (function () {
         });
     };
 
-const handleEditRows = () => {
-    const editButtons = document.querySelectorAll(
-        '[data-kt-docs-table-filter="edit_row"]'
-    );
+    const handleEditRows = () => {
+        const editButtons = document.querySelectorAll(
+            '[data-kt-docs-table-filter="edit_row"]'
+        );
 
-    editButtons.forEach((btn) => {
-        btn.addEventListener("click", function (e) {
-            e.preventDefault();
+        editButtons.forEach((btn) => {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
 
-            const currentBtnIndex = $(editButtons).index(btn);
-            const data = datatable.row(currentBtnIndex).data();
+                const currentBtnIndex = $(editButtons).index(btn);
+                const data = datatable.row(currentBtnIndex).data();
 
-            // Set modal title
-            $("#form_title").text(__("Edit Question"));
+                // Set modal title
+                $("#form_title").text(__("Edit Question"));
 
-            // Fill basic fields
-            $("#quiz_id_inp").val(data.quiz_id).trigger("change");
-            $("#question_ar_inp").val(data.question_ar);
-            $("#question_en_inp").val(data.question_en);
-            $("#type_inp").val(data.type).trigger("change");
-            $("#points_inp").val(data.points);
+                // Fill basic fields
+                $("#quiz_id_inp").val(data.quiz_id).trigger("change");
+                $("#question_ar_inp").val(data.question_ar);
+                $("#question_en_inp").val(data.question_en);
+                $("#type_inp").val(data.type).trigger("change");
+                $("#points_inp").val(data.points);
 
-            // Reset hidden/conditional sections
-            $(".answer-type").addClass("d-none");
-            $("[name='short_answer']").val("");
-            $("input[name='correct_tf']").prop("checked", false);
+                // Reset hidden/conditional sections
+                $(".answer-type").addClass("d-none");
+                $("[name='short_answer']").val("");
+                $("input[name='correct_tf']").prop("checked", false);
 
-            const repeaterList = $("#form_repeater [data-repeater-list]");
-            repeaterList.html("");
+                // Repeater logic
+                const repeaterList = $("#form_repeater [data-repeater-list]");
+                repeaterList.html("");
 
-            if (data.type === "multiple_choice") {
-                $(".answer-multiple_choice").removeClass("d-none");
+                if (data.type === "multiple_choice") {
+                    $(".answer-multiple_choice").removeClass("d-none");
 
-                data.answers.forEach(answer => {
-                    const html = `
-                        <div data-repeater-item class="row mb-2">
-                            <div class="col-md-4">
-                                <input type="text" name="text_ar" class="form-control answer-text-ar" value="${answer.answer_ar || ''}">
-                                <div class="invalid-feedback"></div>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="text_en" class="form-control answer-text-en" value="${answer.answer_en || ''}">
-                                <div class="invalid-feedback"></div>
-                            </div>
-                            <div class="col-md-2 d-flex align-items-center">
-                                <label class="form-check-label">
-                                    <input type="checkbox" name="is_correct" value="1" class="form-check-input" ${answer.is_correct ? 'checked' : ''}>
-                                    <div class="invalid-feedback"></div>
-                                    ${__('Correct')}
-                                </label>
-                            </div>
-                            <div class="col-md-2">
-                                <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-danger">
-                                    ${__('Delete')}
-                                </a>
-                            </div>
-                        </div>`;
-                    repeaterList.append(html);
-                });
+                    const repeaterList = $(
+                        "#form_repeater [data-repeater-list]"
+                    );
+                    repeaterList.html(""); // Clear existing
 
-                // Re-initialize repeater to make delete buttons work
-                $("#form_repeater").repeater({
-                    initEmpty: false,
-                    show: function () {
-                        $(this).slideDown();
-                    },
-                    hide: function (deleteElement) {
-                        $(this).slideUp(deleteElement);
-                    }
-                });
-            } else if (data.type === "true_false") {
-                $(".answer-true_false").removeClass("d-none");
+                    data.answers.forEach((answer) => {
+                        const html = `
+        <div data-repeater-item class="row mb-2">
+            <div class="col-md-4">
+                <input type="text" name="text_ar" class="form-control answer-text-ar" value="${
+                    answer.answer_ar || ""
+                }">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-4">
+                <input type="text" name="text_en" class="form-control answer-text-en" value="${
+                    answer.answer_en || ""
+                }">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-2 d-flex align-items-center">
+                <label class="form-check-label">
+                    <input type="checkbox" name="is_correct" value="1" class="form-check-input" ${
+                        answer.is_correct ? "checked" : ""
+                    }>
+                    <div class="invalid-feedback"></div>
+                    ${__("Correct")}
+                </label>
+            </div>
+            <div class="col-md-2">
+                <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-danger">
+                    ${__("Delete")}
+                </a>
+            </div>
+        </div>`;
 
-                const correct = data.answers.find(ans => ans.is_correct);
-                if (correct && correct.answer_en.toLowerCase() === "true") {
-                    $("input[name='correct_tf'][value='true']").prop("checked", true);
-                } else {
-                    $("input[name='correct_tf'][value='false']").prop("checked", true);
+                        repeaterList.append(html);
+                    });
                 }
-            } else if (data.type === "short_answer") {
-                $(".answer-short_answer").removeClass("d-none");
-                $("#short_answer_inp").val(data.expected_answer || "");
-            }
+                // True/False handling
+                else if (data.type === "true_false") {
+                    $(".answer-true_false").removeClass("d-none");
+                    const correct = data.answers.find((ans) => ans.is_correct);
+                    if (correct && correct.answer_en.toLowerCase() === "true") {
+                        $("input[name='correct_tf'][value='true']").prop(
+                            "checked",
+                            true
+                        );
+                    } else {
+                        $("input[name='correct_tf'][value='false']").prop(
+                            "checked",
+                            true
+                        );
+                    }
+                }
 
-            // Set form to update mode
-            $("#crud_form").attr("action", `/dashboard/questions/${data.id}`);
-            $("#crud_form").find('input[name="_method"]').remove();
-            $("#crud_form").prepend(`<input type="hidden" name="_method" value="PUT">`);
+                // Short Answer
+                else if (data.type === "short_answer") {
+                    $(".answer-short_answer").removeClass("d-none");
+                    $("#short_answer_inp").val(data.expected_answer || "");
+                }
 
-            // Show modal
-            $("#crud_modal").modal("show");
+                // Set form to update mode
+                $("#crud_form").attr(
+                    "action",
+                    `/dashboard/questions/${data.id}`
+                );
+                $("#crud_form").find('input[name="_method"]').remove();
+                $("#crud_form").prepend(
+                    `<input type="hidden" name="_method" value="PUT">`
+                );
+
+                // Show modal
+                $("#crud_modal").modal("show");
+            });
         });
-    });
-};
+    };
 
     // Public methods
     return {
