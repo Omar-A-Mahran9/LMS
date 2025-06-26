@@ -8,6 +8,9 @@ let translations = {
     ar: {
         "Add new why us": "اضافة لماذا نحن",
         Add: "إضافة",
+        Correct: "صحيح",
+        correct: "صحيح",
+
         "Choose the type": "اختر النوع",
         Approved: "مقبول",
         Rejected: "مرفوض",
