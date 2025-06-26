@@ -264,6 +264,8 @@
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
+
     <script src="{{ asset('assets/dashboard/js/datatables/questions.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
@@ -276,7 +278,6 @@
         });
     </script>
     {{-- Plugins --}}
-    <script src="{{ asset('assets/dashboard/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/components/form_repeater.js') }}"></script>
 
     {{-- Repeater Init --}}
@@ -291,7 +292,7 @@
         }).trigger('change'); // Trigger on load
     </script>
 
-   <script>
+    <script>
         $(document).ready(function() {
             $('#add_question_btn').on('click', function(e) {
                 e.preventDefault();
