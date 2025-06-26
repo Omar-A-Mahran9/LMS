@@ -239,8 +239,21 @@ var KTDatatablesServerSide = (function () {
                 $("#crud_modal").modal("show");
             });
         });
+        $("#form_repeater").repeater({
+            initEmpty: false,
+            isFirstItemUndeletable: true,
+            show: function () {
+                $(this).slideDown();
+                $(this).find("input").prop("readonly", false);
+            },
+
+            hide: function (deleteElement) {
+                $(this).slideUp(deleteElement);
+            },
+        });
     };
-  
+
+    // Public methods
     return {
         init: function () {
             initDatatable();

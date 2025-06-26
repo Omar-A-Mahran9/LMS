@@ -23,3 +23,4 @@ $("#form_repeater_homework").repeater({
         $(this).slideUp(deleteElement);
     },
 });
+ 
