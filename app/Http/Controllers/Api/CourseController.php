@@ -94,14 +94,6 @@ public function getCoursesById(Request $request, $id)
         ->where('is_enrollment_open', 1)
         ->whereDate('start_date', '<=', now())
         ->whereDate('end_date', '>=', now())
-        ->withCount(['enrollments' => function ($q) {
-            $q->where('status', 'approved');
-        }])
-        ->with(['enrollments' => function ($q) use ($studentId) {
-            if ($studentId) {
-                $q->where('student_id', $studentId);
-            }
-        }])
         ->first();
 
     if (
