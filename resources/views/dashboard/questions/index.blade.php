@@ -359,7 +359,7 @@
             });
         });
     </script>
-    {{-- <script>
+  <script>
         $(document).ready(function() {
             $('#add_btn').on('click', function(e) {
                 e.preventDefault();
@@ -426,5 +426,5 @@
                 }, 300);
             });
         });
-    </script> --}}
+    </script> 
 @endpush
