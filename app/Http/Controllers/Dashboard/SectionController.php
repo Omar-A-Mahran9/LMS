@@ -20,15 +20,14 @@ class SectionController extends Controller
     {
           $this->authorize('view_sections');
         $courseId = $request->input('course_id');
-dd((int)$courseId);
-
+ 
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
         // Example static visited site count (you may want to make this dynamic)
         $visited_site = 10000;
 
         if ($request->ajax()) {
                 if($courseId){
-                    return response()->json(getModelData(model: new Section(), andsFilters: [['course_id', '=', $courseId]],relations: ['course' => ['id', 'title_ar','title_en' ]]));
+                    return response()->json(getModelData(model: new Section(), andsFilters: [['course_id', '=', (int)$courseId]],relations: ['course' => ['id', 'title_ar','title_en' ]]));
 
                 }else{
                     return response()->json(getModelData(model: new Section(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
