@@ -20,7 +20,7 @@ class SectionController extends Controller
     {
           $this->authorize('view_sections');
         $courseId = $request->input('course_id');
-dd($courseId);
+dd((int)$courseId);
 
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
         // Example static visited site count (you may want to make this dynamic)
