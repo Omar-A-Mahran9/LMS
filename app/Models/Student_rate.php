@@ -36,7 +36,7 @@ class Student_rate extends Model
     }
     public function getFullImagePathAttribute()
     {
-        return getImagePathFromDirectory($this->image, 'Customer', 'default.svg');
+        return getImagePathFromDirectory($this->image, 'Students', 'default.svg');
     }
     public function getAudioFullPathAttribute()
     {
