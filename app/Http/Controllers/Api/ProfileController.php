@@ -123,6 +123,8 @@ public function quizzesResults(Request $request)
                 'score'            => $bestScore . ' / ' . $totalPoints,
                 'score_percentage' => $percentage,
                 'last_attempt_at'  => optional($latestAttempt?->started_at)?->format('Y-m-d H:i:s'),
+                                'is_submitted'     => $latestAttempt?->submitted_at !== null,
+
             ];
         });
 
