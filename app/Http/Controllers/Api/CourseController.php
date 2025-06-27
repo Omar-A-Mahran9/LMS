@@ -499,7 +499,7 @@ public function storerate(Request $request)
 
     // ✅ تجهيز بيانات التقييم
     $data['student_id']   = $studentId;
-    $data['full_name']    = $student->first_name ?? $student->first_name.' '.$student->last_name ?? 'Student';
+    $data['full_name']    =  $student->first_name.' '.$student->last_name ?? 'Student';
     $data['image']        = $student->image;
     $data['category_id']  = $student->category_id;
 
