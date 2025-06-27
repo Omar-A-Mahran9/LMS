@@ -113,8 +113,7 @@ public function quizzesResults(Request $request)
 
             return [
                 'attempt_id'       => $bestAttempt?->id,
-                                'quiz_title'       => $quiz->id,
-
+                'quiz_id'       => $quiz->id,
                 'quiz_title'       => $quiz->title,
                 'course_title'     => $quiz->course?->title,
                 'is_class'=>$quiz->course?->is_class,
@@ -159,7 +158,7 @@ public function homeworksResults(Request $request)
 
             return [
                 'attempt_id'       => $bestAttempt?->id,
-                                'homework_id'   => $homework->id,
+                'homework_id'   => $homework->id,
 
                 'homework_title'   => $homework->title,
                 'course_title'     => $homework->course?->title,
