@@ -8,6 +8,7 @@ use App\Http\Resources\Api\ClassesDetailsResource;
 use App\Http\Resources\Api\GovernmentsResource;
  use App\Http\Resources\Api\CourseDetailsResource;
 use App\Http\Resources\Api\CoursesDetailsResource;
+use App\Http\Resources\Api\CourseStatusResource;
 use App\Http\Resources\Api\QuizResource;
 use App\Http\Resources\Api\SectionResource;
 use App\Http\Resources\Api\VideoResource;
@@ -512,7 +513,7 @@ public function getRatesForCourse($course_id)
     $course = Course::where('id', $course_id)
         ->first();
 
-    return $this->success(new CourseDetailsResource($course));
+    return $this->success(new CourseStatusResource($course));
 
 }
 
