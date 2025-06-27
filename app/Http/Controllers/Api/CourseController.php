@@ -488,7 +488,7 @@ public function storerate(Request $request)
 
     // ✅ التحقق من إكمال كل الفيديوهات (completion)
     $videoIds = $course->videos->pluck('id');
-    $completedCount = \App\Models\CourseVideoStudent::whereIn('course_video_id', $videoIds)
+    $completedCount = CourseVideoStudent::whereIn('course_video_id', $videoIds)
         ->where('student_id', $studentId)
         ->where('is_completed', true)
         ->count();

@@ -26,9 +26,9 @@ class Student_rate extends Model
         static::addGlobalScope(new SortingScope);
     }
 
-    public function customer()
+    public function Student()
     {
-        return $this->belongsTo(Student::class,'customer_id');
+        return $this->belongsTo(Student::class,'student_id');
     }
    public function category()
     {
