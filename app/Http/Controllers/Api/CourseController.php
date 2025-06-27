@@ -513,7 +513,7 @@ public function getRatesForCourse($course_id)
     $course = Course::where('id', $course_id)
         ->first();
 
-    return $this->success(new CourseStatusResource($course));
+    return $this->success('',new CourseStatusResource($course));
 
 }
 

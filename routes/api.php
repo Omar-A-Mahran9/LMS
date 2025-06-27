@@ -29,6 +29,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware(['auth:api'])->group(function () {
     Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');
+ Route::get('get_rates_for_course/{course_id}', 'CourseController@getRatesForCourse');
+    Route::post('student_rates_for_course', 'CourseController@storerate');
 
     Route::get('videos_by_course/{id}', 'CourseController@getVideosBySections');
     Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
@@ -70,8 +72,6 @@ Route::middleware(['auth:api'])->group(function () {
 Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
 
-    Route::get('get_rates_for_course/{course_id}', 'CourseController@getRatesForCourse');
-    Route::post('student_rates_for_course', 'CourseController@storerate');
 
     Route::get('certificates/{course}', [CertificateController::class, 'download'])
         ->name('student.certificates.download');
