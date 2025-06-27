@@ -218,7 +218,8 @@ public function startHomework(Request $request, $homeworkId)
         return $this->success('', [
             'attempt_id' => $attempt->id,
             'homework_title' => $attempt->homework->title_en,
-                            'class_id' =>  $attempt->homework->class_id,
+            'class_id' =>  $attempt->homework->class_id,
+            'section_id'=> $attempt->homework->section_id,
 
             'score' => $score,
             'full_score' => $total,
