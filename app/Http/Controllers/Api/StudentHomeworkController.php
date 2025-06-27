@@ -37,7 +37,7 @@ public function startHomework(Request $request, $homeworkId)
             ->count();
 
         if ($usedAttempts >= $homework->attempt_count) {
-            return $this->failure('You have reached the maximum number of attempts for this homework.');
+            return $this->failure(__('You have reached the maximum number of attempts for this homework. If you have any issues, please contact support directly.'));
         }
     }
 

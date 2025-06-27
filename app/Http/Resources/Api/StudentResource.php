@@ -23,7 +23,6 @@ class StudentResource extends JsonResource
             'government' => [
                 'id'=>$this->government->id,
                 'name'=>$this->government->name
-
             ],
              'category' => [
                 'id'=>$this->category->id,
