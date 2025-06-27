@@ -274,11 +274,14 @@ public function getVideosBySections($id)
         return new SectionResource($section, $studentId);
     });
 
-    return $this->success('Sections with videos', ['course_data'=>[
-        'course_id'=>$courseExists->id,
-        'course_title'=>$courseExists->title,
-        'has_certificate'=>$courseExists->certificate_available,
-        'certificate_url' => $courseExists->certificate_url,
+    return $this->success('Sections with videos', [
+         'course_data' => [
+        'course_id'           => $courseExists->id,
+        'course_title'        => $courseExists->title,
+        'has_certificate'     => $courseExists->certificate_available,
+        'certificate_url'     => $courseExists->certificate_url,
+        'is_completed'        => $courseExists->is_completed,
+        'progress_percentage' => $courseExists->progress_percentage,
     ],"sections_data"=>$resource]);
 }
 
