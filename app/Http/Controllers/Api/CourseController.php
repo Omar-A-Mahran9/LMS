@@ -241,7 +241,7 @@ public function getVideosBySections($id)
               ->where('status', 'approved')
               ->where('is_active', 1);
         })
-        ->exists();
+        ->first();
 
     if (!$courseExists) {
         return $this->failure('Course not found or unauthorized.');
@@ -274,7 +274,12 @@ public function getVideosBySections($id)
         return new SectionResource($section, $studentId);
     });
 
-    return $this->success('Sections with videos', $resource);
+    return $this->success('Sections with videos', ['course_data'=>[
+        'course_id'=>$courseExists->id,
+        'course_title'=>$courseExists->title,
+        'has_certificate'=>$courseExists->certificate_available,
+        'certificate_url' => $courseExists->certificate_url,
+    ],"sections_data"=>$resource]);
 }
 
 public function logWatch(Request $request, $id)

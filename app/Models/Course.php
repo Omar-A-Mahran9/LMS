@@ -10,7 +10,7 @@ class Course extends Model
 
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['title', 'full_image_path','full_slide_image_path','description', 'note','is_enrolled','payment_type','request_status','is_full'];
+    protected $appends = ['title', 'full_image_path','full_slide_image_path','description', 'note','is_enrolled','payment_type','request_status','is_full','certificate_url'];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
@@ -143,7 +143,28 @@ public function isStudentEnrolled($studentId)
 }
 
 
+public function getCertificateUrlAttribute()
+{
+    $studentId =auth('api')->id();
 
+    if (!$studentId || !$this->certificate_available) {
+        return null;
+    }
+
+    // Get all video IDs for this course
+    $videoIds = $this->videos()->pluck('id');
+
+    // Count total and completed videos
+    $totalVideos = $videoIds->count();
+    $completedCount = CourseVideoStudent::whereIn('course_video_id', $videoIds)
+        ->where('student_id', $studentId)
+        ->where('is_completed', true)
+        ->count();
+
+    $isCompleted = $totalVideos > 0 && $completedCount === $totalVideos;
+
+    return $isCompleted ? route('student.certificates.download', ['course' => $this->id]) : null;
+}
 
 
 }
