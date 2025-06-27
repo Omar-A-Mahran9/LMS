@@ -349,12 +349,12 @@ if (!$attempt) {
 
     return $this->success('', [
         'class_id'=> $attempt->quiz->class_id,
-        'quiz_id'   => $attempt->quiz->id,
-
+        
         'section_id'=> $attempt->quiz->section_id,
+
         'course_id'=> $attempt->quiz->section->course_id,
         'attempt_id'   => $attempt->id,
-        'quiz_title'   => $attempt->quiz->title,
+        'quiz_title'   => $attempt->quiz->title_en,
         'score'        => $totalScore,
         'full_score'   => $fullScore,
         'submitted_at' => $attempt->submitted_at,

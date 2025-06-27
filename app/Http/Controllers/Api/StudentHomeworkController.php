@@ -217,9 +217,7 @@ public function startHomework(Request $request, $homeworkId)
 
         return $this->success('', [
             'attempt_id' => $attempt->id,
-            'homework_id' => $attempt->homework->id,
-
-            'homework_title' => $attempt->homework->title,
+            'homework_title' => $attempt->homework->title_en,
             'class_id' =>  $attempt->homework->class_id,
             'section_id'=> $attempt->homework->section_id,
 
