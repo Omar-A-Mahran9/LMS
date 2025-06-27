@@ -316,10 +316,13 @@ for ($i = 0; $i <= $maxPossibleScore; $i += $step) {
         'highest_score' => [
             'quiz_title' => $highestQuizTitle,
             'score' => $highestScore,
+              'total_score' => $highestScore,
         ],
         'lowest_score' => [
             'quiz_title' => $lowestQuizTitle,
             'score' => $lowestScore,
+                          'total_score' => $highestScore,
+
         ],
         'performance_comparison' => [
         'student_average_score' => round($studentAverageScore, 2),
