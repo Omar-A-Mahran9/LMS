@@ -332,6 +332,18 @@ public function studentStatistics()
 
         'performance_percentage' => $performancePercentage,
     ],
+
+        // 'chart_data' => [
+        //     'x_axis_labels' => $chartLabels,
+        //     'datasets' => [
+        //         [
+        //             'label' => $studentName,
+        //             'data' => $chartScores,
+        //             'backgroundColor' => 'rgba(75, 192, 192, 0.6)',
+        //         ],
+        //     ],
+        // 'y_axis_labels' => $yAxisSteps,
+        // ],
 'chart_data' => [
     'labels' => $chartLabels,
     'datasets' => [
@@ -342,7 +354,6 @@ public function studentStatistics()
         ],
     ],
 ],
-
 
     ]);
 }
