@@ -313,17 +313,18 @@ public function studentStatistics()
             'success_quizzes' => $successCount,
             'total_quizzes' => $totalQuizzes,
         ],
-        'highest_score' => [
+            'highest_score' => [
             'quiz_title' => $highestQuizTitle,
             'score' => $highestScore,
-              'total_score' => $highestScore,
+            'total_score' => $highestAttempt?->quiz?->questions->sum('points') ?? 0,
         ],
-        'lowest_score' => [
-            'quiz_title' => $lowestQuizTitle,
-            'score' => $lowestScore,
-            'total_score' => $highestScore,
 
-        ],
+    'lowest_score' => [
+    'quiz_title' => $lowestQuizTitle,
+    'score' => $lowestScore,
+    'total_score' => $lowestAttempt?->quiz?->questions->sum('points') ?? 0,
+],
+
         'timing_comparison'=>[
      'student_average_score' => round($studentAverageScore, 2),
         'overall_average_score_in_courses' => round($averageScoresInCourses, 2),
