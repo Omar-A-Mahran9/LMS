@@ -279,7 +279,7 @@ public function getVideosBySections($id)
         'course_id'           => $courseExists->id,
         'course_title'        => $courseExists->title,
         'has_certificate'     => $courseExists->certificate_available,
-        // 'certificate_url'     => $courseExists->certificate_url,
+        'certificate_url'     => $courseExists->certificate_url!=null,
         'is_completed'        => $courseExists->is_completed,
         'progress_percentage' => $courseExists->progress_percentage,
     ],"sections_data"=>$resource]);
