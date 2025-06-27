@@ -297,15 +297,15 @@ public function studentStatistics()
         $maxScores[] = $quiz->questions->sum('points') ?: 100; // الحد الأعلى
     }
 
-// أعلى درجة من جميع الكويزات لاستخدامها كمقياس Y
-// أعلى درجة من جميع الكويزات لاستخدامها كمقياس Y
-$maxPossibleScore = count($maxScores) > 0 ? max($maxScores) : 100;
-$studentName = $student->first_name ?? 'Student';
-$yAxisSteps = [];
-$step = 15;
-for ($i = 0; $i <= $maxPossibleScore; $i += $step) {
-    $yAxisSteps[] = $i;
-}
+    // أعلى درجة من جميع الكويزات لاستخدامها كمقياس Y
+    // أعلى درجة من جميع الكويزات لاستخدامها كمقياس Y
+    $maxPossibleScore = count($maxScores) > 0 ? max($maxScores) : 100;
+    $studentName = $student->first_name ?? 'Student';
+    $yAxisSteps = [];
+    $step = 15;
+    for ($i = 0; $i <= $maxPossibleScore; $i += $step) {
+        $yAxisSteps[] = $i;
+    }
 
     return response()->json([
         'success_rate' => [
@@ -332,18 +332,17 @@ for ($i = 0; $i <= $maxPossibleScore; $i += $step) {
 
         'performance_percentage' => $performancePercentage,
     ],
-
-        'chart_data' => [
-            'x_axis_labels' => $chartLabels,
-            'datasets' => [
-                [
-                    'label' => $studentName,
-                    'data' => $chartScores,
-                    'backgroundColor' => 'rgba(75, 192, 192, 0.6)',
-                ],
-            ],
-        'y_axis_labels' => $yAxisSteps,
+'chart_data' => [
+    'labels' => $chartLabels,
+    'datasets' => [
+        [
+            'label' => $studentName,
+            'backgroundColor' => '#2C3E94', // or use dynamic if needed
+            'data' => $chartScores,
         ],
+    ],
+],
+
 
     ]);
 }
