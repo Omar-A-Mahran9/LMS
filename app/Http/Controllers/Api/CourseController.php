@@ -26,6 +26,7 @@ use App\Models\Government;
 use App\Models\Quiz;
 use App\Models\Rate;
 use App\Models\Section;
+use App\Models\Student_rate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -502,7 +503,7 @@ public function storerate(Request $request)
     $data['image']        = $student->image;
     $data['category_id']  = $student->category_id;
 
-    $rate = Rate::create($data);
+    $rate = Student_rate::create($data);
 
     return $this->success('شكراً لك على التقييم!');
 }
