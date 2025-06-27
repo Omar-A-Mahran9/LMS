@@ -70,6 +70,9 @@ Route::middleware(['auth:api'])->group(function () {
 Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
 
+    Route::get('get_rates_for_course/{course_id}', 'CourseController@getRatesForCourse');
+    Route::post('student_rates_for_course', 'CourseController@storerate');
+
     Route::get('certificates/{course}', [CertificateController::class, 'download'])
         ->name('student.certificates.download');
     Route::post('login', 'Auth\AuthController@login');

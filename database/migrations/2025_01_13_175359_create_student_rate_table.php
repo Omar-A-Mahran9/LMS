@@ -21,7 +21,8 @@ return new class extends Migration
             $table->text('text')->nullable(); // ✅ New text field for written feedback
 
             $table->unsignedBigInteger('category_id')->nullable();
-
+            $table->foreignId('student_id')->nullable()->constrained('students')->onDelete('cascade');
+            $table->foreignId('course_id')->nullable()->constrained('courses')->onDelete('cascade');
             // Foreign key constraint.
             $table->foreign('category_id')
                   ->references('id')

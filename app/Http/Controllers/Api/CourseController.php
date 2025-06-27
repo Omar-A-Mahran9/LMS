@@ -23,12 +23,14 @@ use App\Models\CourseVideoStudent;
 use App\Models\Government;
 
 use App\Models\Quiz;
+use App\Models\Rate;
 use App\Models\Section;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
@@ -464,6 +466,55 @@ public function getCourses(Request $request)
     return $this->successWithPagination('Courses retrieved successfully.', $resource);
 }
 
+public function storerate(Request $request)
+{
+    $student = auth()->user(); // جلب الطالب الحالي
+     $studentId = $student->id;
+
+    $validator = Validator::make($request->all(), [
+        'rate'        => 'required|integer|min:1|max:5',
+        'text'        => 'required|string',
+        'course_id'   => 'required|exists:courses,id',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    $data = $validator->validated();
+    $data['student_id']   = $studentId;
+    $data['full_name']    = $student->name ?? $student->full_name ?? 'Student';
+    $data['image']        = $student->image;
+    $data['category_id']  = $student->category_id;
+
+    // Handle image upload (optional override)
+    if ($request->hasFile('image')) {
+        $data['image'] = $request->file('image')->store('student_rates/images', 'public');
+    }
+
+    // Handle audio upload
+    if ($request->hasFile('audio')) {
+        $data['audio'] = $request->file('audio')->store('student_rates/audio', 'public');
+    }
+
+    $rate = Rate::create($data);
+
+    return response()->json([
+        'message' => 'Thank you for your feedback!',
+        'rate'    => $rate
+    ]);
+}
+
+public function getRatesForCourse($course_id)
+{
+    $studentId = auth()->check() ? auth()->id() : null;
+
+    $course = Course::where('id', $course_id)
+        ->first();
+
+    return $this->success(new CourseDetailsResource($course));
+
+}
 
 
 }
