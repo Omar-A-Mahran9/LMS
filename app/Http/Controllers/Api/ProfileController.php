@@ -321,12 +321,15 @@ for ($i = 0; $i <= $maxPossibleScore; $i += $step) {
         'lowest_score' => [
             'quiz_title' => $lowestQuizTitle,
             'score' => $lowestScore,
-                          'total_score' => $highestScore,
+            'total_score' => $highestScore,
 
         ],
-        'performance_comparison' => [
-        'student_average_score' => round($studentAverageScore, 2),
+        'timing_comparison'=>[
+     'student_average_score' => round($studentAverageScore, 2),
         'overall_average_score_in_courses' => round($averageScoresInCourses, 2),
+        ],
+        'performance_comparison' => [
+
         'performance_percentage' => $performancePercentage,
     ],
 
