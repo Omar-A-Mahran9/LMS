@@ -488,7 +488,7 @@ public function storerate(Request $request)
 
     // ✅ التحقق من إكمال كل الفيديوهات (completion)
     $videoIds = $course->videos->pluck('id');
-    $completedCount = CourseVideoStudent::whereIn('course_video_id', $videoIds)
+    $completedCount = \App\Models\CourseVideoStudent::whereIn('course_video_id', $videoIds)
         ->where('student_id', $studentId)
         ->where('is_completed', true)
         ->count();
@@ -497,13 +497,22 @@ public function storerate(Request $request)
         return $this->failure('يرجى إكمال مشاهدة جميع فيديوهات الكورس قبل تقديم التقييم.');
     }
 
+    // ✅ التحقق من وجود تقييم سابق لهذا الطالب والكورس
+    $existingRate = \App\Models\Student_rate::where('student_id', $studentId)
+        ->where('course_id', $data['course_id'])
+        ->exists();
+
+    if ($existingRate) {
+        return $this->failure('لقد قمت بتقديم تقييم مسبق لهذا الكورس.');
+    }
+
     // ✅ تجهيز بيانات التقييم
     $data['student_id']   = $studentId;
-    $data['full_name']    =  $student->first_name.' '.$student->last_name ?? 'Student';
+    $data['full_name']    = trim($student->first_name . ' ' . $student->last_name) ?: 'Student';
     $data['image']        = $student->image;
     $data['category_id']  = $student->category_id;
 
-    $rate = Student_rate::create($data);
+    $rate = \App\Models\Student_rate::create($data);
 
     return $this->success('شكراً لك على التقييم!');
 }
