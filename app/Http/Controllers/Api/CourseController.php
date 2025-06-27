@@ -286,6 +286,9 @@ public function getVideosBySections($id)
         'certificate_url'     => $courseExists->certificate_url!=null,
         'is_completed'        => $courseExists->is_completed,
         'progress_percentage' => $courseExists->progress_percentage,
+        'has_rated' => Student_rate::where('course_id', $courseExists->id)
+                        ->where('student_id', $studentId)
+                        ->exists(),
     ],"sections_data"=>$resource]);
 }
 
