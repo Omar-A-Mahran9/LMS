@@ -469,22 +469,44 @@ public function getCourses(Request $request)
 
 public function storerate(Request $request)
 {
-    $student = auth()->user(); // جلب الطالب الحالي
-     $studentId = $student->id;
+    $student = auth()->user();
+    $studentId = $student->id;
 
     $data = $request->validate([
         'rate'      => 'required|integer|min:1|max:5',
         'text'      => 'required|string',
         'course_id' => 'required|exists:courses,id',
     ]);
+
+    $course = Course::with('videos')->findOrFail($data['course_id']);
+
+    // ✅ التأكد من تسجيل الطالب في الكورس
+    if (!$course->students()->where('student_id', $studentId)->exists()) {
+        return $this->failure('أنت لست مسجلاً في هذا الكورس.');
+    }
+
+    // ✅ التحقق من إكمال كل الفيديوهات (completion)
+    $videoIds = $course->videos->pluck('id');
+    $completedCount = \App\Models\CourseVideoStudent::whereIn('course_video_id', $videoIds)
+        ->where('student_id', $studentId)
+        ->where('is_completed', true)
+        ->count();
+
+    if ($course->videos->count() === 0 || $completedCount < $course->videos->count()) {
+        return $this->failure('يرجى إكمال مشاهدة جميع فيديوهات الكورس قبل تقديم التقييم.');
+    }
+
+    // ✅ تجهيز بيانات التقييم
     $data['student_id']   = $studentId;
     $data['full_name']    = $student->name ?? $student->full_name ?? 'Student';
     $data['image']        = $student->image;
     $data['category_id']  = $student->category_id;
+
     $rate = Rate::create($data);
 
-    return $this->success('Thank you for your feedback!');
+    return $this->success('شكراً لك على التقييم!');
 }
+
 
 public function getRatesForCourse($course_id)
 {
