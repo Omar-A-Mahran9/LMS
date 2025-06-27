@@ -249,10 +249,17 @@ private function checkAnswer($question, $studentAnswer)
 
 public function results($studentQuizId)
 {
-    $attempt = QuizAttempt::with([
-        'quiz.questions.answers',
-        'answers.answer' // assuming 'answer' relationship gives the selected QuizAnswer model
-    ])->findOrFail($studentQuizId);
+ $attempt = QuizAttempt::with([
+    'quiz.questions.answers',
+    'answers.answer'
+])->where('id', $studentQuizId)
+  ->where('student_id', auth()->id())
+  ->first();
+
+if (!$attempt) {
+    return $this->failure('Quiz attempt not found or access denied.');
+}
+
  if (!$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
         return $this->failure('You are not enrolled in this course.');
     }

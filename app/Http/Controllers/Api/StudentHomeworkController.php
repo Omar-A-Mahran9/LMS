@@ -145,7 +145,14 @@ public function startHomework(Request $request, $homeworkId)
         $attempt = HomeworkAttempt::with([
             'homework.questions.answers',
             'answers.answer'
-        ])->findOrFail($attemptId);
+        ])
+        ->where('id', $attemptId)
+        ->where('student_id', auth()->id())
+        ->first();
+
+        if (!$attempt) {
+            return $this->failure('Homework attempt not found or access denied.');
+        }
 
         $results = [];
         $score = 0;
