@@ -21,13 +21,13 @@ class SectionResource extends JsonResource
         // Get first active quiz and homework
     $activeQuiz = $this->quizzes()->where('is_active', true)->first();
     $activeHomework = $this->homeworks()->where('is_active', true)->first();
-dd( $activeQuiz);
     // Default attempt flags
     $hasAttemptedQuiz = false;
     $hasAttemptedHomework = false;
     $quizAttemptLimitReached = false;
 
-  if ($student && $activeQuiz) {
+  if ($student && $activeQuiz!=null) {
+
         $hasAttemptedQuiz = $activeQuiz->attempts()
             ->where('student_id', $student->id)
             ->exists();
