@@ -224,8 +224,15 @@ class HomeController extends Controller
         ->where('featured', 1)
         ->whereDate('start_date', '<=', $today)
         ->whereDate('end_date', '>=', $today)
-        ->get();
-
+->withCount(['enrollments' => function ($q) {
+        $q->where('status', 'approved');
+    }])
+    ->orderBy('max_students', 'asc')
+    ->get()
+    ->filter(function ($course) {
+        return is_null($course->max_students) || $course->enrollments_count < $course->max_students;
+    })
+    ->values(); // reindex
 
 $courses = Course::where('is_active', 1)
     ->where('is_enrollment_open', 1)
