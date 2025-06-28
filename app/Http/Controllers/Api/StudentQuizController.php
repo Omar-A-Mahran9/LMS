@@ -19,7 +19,7 @@ public function startQuiz(Request $request, $quizId)
 $quiz = Quiz::with('course')->find($quizId);
 
 if (!$quiz) {
-    return $this->failure('Quiz is not found');
+    return $this->failure(__('Quiz is not found'));
 }
 
     if (!$quiz->course || !$quiz->course->is_active) {
