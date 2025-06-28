@@ -178,7 +178,7 @@
                         </div>
 
                         {{-- Descriptions --}}
-                        <div class="row mb-4">
+                        {{-- <div class="row mb-4">
                             <div class="col-6">
                                 <label for="description_ar_inp"
                                     class="form-label">{{ __('Description (Arabic)') }}</label>
@@ -191,7 +191,7 @@
                                 <textarea name="description_en" id="description_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
                                 <div class="fv-plugins-message-container invalid-feedback" id="description_en"></div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         {{-- class Info --}}
                         <div class="row mb-4">
