@@ -253,7 +253,7 @@ public function getVideosBySections($id)
     $sections = Section::with([
         // Videos and progress
         'videos' => function ($query) use ($studentId) {
-            $query->where('is_active', 1) 
+            $query->where('is_active', 1)
                 ->with(['studentProgress' => function ($q) use ($studentId) {
                     $q->where('student_id', $studentId);
                 }]);
@@ -290,6 +290,39 @@ public function getVideosBySections($id)
                         ->where('student_id', $studentId)
                         ->exists(),
     ],"sections_data"=>$resource]);
+}
+public function checkCourseAccess($id)
+{
+    $studentId = auth()->id();
+
+    // Get the course if active
+    $course = Course::where('id', $id)->where('is_active', 1)->first();
+
+    if (!$course) {
+        return $this->failure('Course not found.');
+    }
+
+    // Get enrollment if any
+    $enrollment = $course->enrollments()
+        ->where('student_id', $studentId)
+        ->first();
+
+    // Determine status
+    $status = 'not_enrolled';
+    if ($enrollment) {
+        $status = ($enrollment->status === 'approved' && $enrollment->is_active)
+            ? true
+            : false;
+    }
+
+    // Prepare response
+    return $this->success('Course access check.', [
+        'status'           => $status,
+        'is_enrolled'      => $enrollment,
+        'has_certificate'  => $course->certificate_available && $course->is_completed,
+        'course_id'        => $course->id,
+        'course_title'     => $course->title,
+    ]);
 }
 
 public function logWatch(Request $request, $id)

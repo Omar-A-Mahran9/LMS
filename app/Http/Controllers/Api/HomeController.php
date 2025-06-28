@@ -39,12 +39,8 @@ class HomeController extends Controller
             ->when($categoryId, fn($q) => $q->where('id', $categoryId))
             ->with(['courses.classes.quizzes.attempts.student'])
             ->first();
-dd( $category);
         if (!$category) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Category not found',
-            ], 404);
+            return $this->failure('Category not found');
         }
 
         $studentScores = [];
@@ -71,8 +67,7 @@ dd( $category);
                 }
             }
         }
-        dd( $studentScores);
-
+        
         $topStudents = collect($studentScores)
             ->map(function ($data) {
                 $average = $data['attempts'] > 0

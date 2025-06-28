@@ -29,27 +29,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware(['auth:api'])->group(function () {
     Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');
- Route::get('get_rates_for_course/{course_id}', 'CourseController@getRatesForCourse');
+    Route::get('get_rates_for_course/{course_id}', 'CourseController@getRatesForCourse');
     Route::post('student_rates_for_course', 'CourseController@storerate');
-
     Route::get('videos_by_course/{id}', 'CourseController@getVideosBySections');
+    Route::get('check_course/{id}', 'CourseController@checkCourseAccess');
+
     Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
     Route::post('videos/{video}/watch', 'CourseController@logWatch');
-
     Route::get('class/{id}', 'CourseController@getClassById');
     Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
     Route::get('quiz/{id}', 'CourseController@getQuizById');
     Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
     Route::post('student-quizzes/{quizAttemptId}/submit', [StudentQuizController::class, 'submitQuiz']);
     Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
-
     Route::get('homeworks/{homeworkId}/start', [StudentHomeworkController::class, 'startHomework']);
     Route::post('student-homeworks/{homeworkAttemptId}/submit', [StudentHomeworkController::class, 'submitHomework']);
     Route::get('student-homeworks/{studentHomeworkId}/results', [StudentHomeworkController::class, 'results']);
-
     Route::post('enroll-course', [EnrollmentController::class, 'enroll_course']);
     Route::post('enroll-class', [EnrollmentController::class, 'enroll_class']);
-
     Route::get('enrollment-status/{course_id}', [EnrollmentController::class, 'enrollmentStatus']);
     Route::get('books/{id}', 'BookController@show');
     Route::get('certificates/{course}/download', [CertificateController::class, 'download'])->name('certificate.download');
