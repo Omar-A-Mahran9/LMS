@@ -253,8 +253,7 @@ public function getVideosBySections($id)
     $sections = Section::with([
         // Videos and progress
         'videos' => function ($query) use ($studentId) {
-            $query->where('is_active', 1) // ⬅️ فقط الفيديوهات النشطة
-                ->with(['studentProgress' => function ($q) use ($studentId) {
+            $query->with(['studentProgress' => function ($q) use ($studentId) {
                     $q->where('student_id', $studentId);
                 }]);
         },
@@ -279,7 +278,7 @@ public function getVideosBySections($id)
     });
 
     return $this->success('Sections with videos', [
-         'course_data' => [
+        'course_data' => [
         'course_id'           => $courseExists->id,
         'course_title'        => $courseExists->title,
         'has_certificate'     => $courseExists->certificate_available,
