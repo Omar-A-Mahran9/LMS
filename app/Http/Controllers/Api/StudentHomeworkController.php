@@ -29,7 +29,10 @@ public function startHomework(Request $request, $homeworkId)
     if (!$isEnrolled) {
         return $this->failure('You are not enrolled in this course.');
     }
-
+   if ($homework->questions->isEmpty()) {
+        return $this->failure('homework does not contain any questions.');
+    }
+    
     if (!is_null($homework->attempt_count)) {
         $usedAttempts = HomeworkAttempt::where('home_work_id', $homeworkId)
             ->where('student_id', $studentId)

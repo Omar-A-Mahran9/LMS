@@ -24,7 +24,9 @@ public function startQuiz(Request $request, $quizId)
     if (!$quiz->course->isStudentEnrolled($studentId)) {
         return $this->failure('You are not enrolled in this course.');
     }
-
+   if ($quiz->questions->isEmpty()) {
+        return $this->failure('Quiz does not contain any questions.');
+    }
     if ($quiz->attempt_count !== null) {
         $usedAttempts = QuizAttempt::where('quiz_id', $quizId)
             ->where('student_id', $studentId)
@@ -349,7 +351,7 @@ if (!$attempt) {
 
     return $this->success('', [
         'class_id'=> $attempt->quiz->class_id,
-        
+
         'section_id'=> $attempt->quiz->section_id,
 
         'course_id'=> $attempt->quiz->section->course_id,
