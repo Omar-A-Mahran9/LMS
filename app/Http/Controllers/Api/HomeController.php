@@ -39,7 +39,7 @@ class HomeController extends Controller
             ->when($categoryId, fn($q) => $q->where('id', $categoryId))
             ->with(['courses.classes.quizzes.attempts.student'])
             ->first();
-
+dd( $category);
         if (!$category) {
             return response()->json([
                 'status' => false,
