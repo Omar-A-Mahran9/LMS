@@ -320,6 +320,8 @@ public function checkCourseAccess($id)
         'status'           => $status,
         'is_enrolled'      => $enrollment,
         'has_certificate'  => $course->certificate_available && $course->is_completed,
+        'is_completed'  => $course->is_completed,
+
         'course_id'        => $course->id,
         'course_title'     => $course->title,
     ]);
