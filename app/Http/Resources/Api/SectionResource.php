@@ -21,7 +21,7 @@ class SectionResource extends JsonResource
         // Get first active quiz and homework
     $activeQuiz = $this->quizzes()->where('is_active', true)->first();
     $activeHomework = $this->homeworks()->where('is_active', true)->first();
-
+dd( $activeQuiz);
     // Default attempt flags
     $hasAttemptedQuiz = false;
     $hasAttemptedHomework = false;
@@ -75,7 +75,7 @@ class SectionResource extends JsonResource
             }),
 
             // Optional section-level flags
-            'has_quizzes' => (!$quizAttemptLimitReached && $this->quizzes()->exists())  ? true : false,
+            'has_quizzes' => (!$quizAttemptLimitReached && $this->quizzes()->exists()) ? true : false,
             'has_homeworks' => $this->homeworks()->exists(),
             'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,
 
