@@ -27,6 +27,7 @@ class SectionResource extends JsonResource
     $quizAttemptLimitReached = false;
 
   if ($student && $activeQuiz!=null) {
+    dd( $activeQuiz);
 
         $hasAttemptedQuiz = $activeQuiz->attempts()
             ->where('student_id', $student->id)
