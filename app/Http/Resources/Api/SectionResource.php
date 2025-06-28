@@ -75,8 +75,9 @@ class SectionResource extends JsonResource
             }),
 
             // Flags
-            'has_quizzes'    => (!$quizAttemptLimitReached && $this->quizzes()->exists() && $activeQuiz) ? true : false,
-            'has_homeworks'  => (!$homeworkAttemptLimitReached && $this->homeworks()->exists() && $activeHomework) ? true : false,
+            'has_quizzes'    => (!$quizAttemptLimitReached && $this->quizzes()->exists() && $activeQuiz && $activeQuiz->questions()->exists()
+) ? true : false,
+            'has_homeworks'  => (!$homeworkAttemptLimitReached && $this->homeworks()->exists() && $activeHomework && $activeHomework->questions()->exists()) ? true : false,
             'quiz_required'  => (!$quizAttemptLimitReached && !$hasAttemptedQuiz) ? $this->quiz_required : 0,
 
             // IDs and attempts
