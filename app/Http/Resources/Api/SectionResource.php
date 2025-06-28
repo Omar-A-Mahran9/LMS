@@ -25,6 +25,7 @@ class SectionResource extends JsonResource
     $hasAttemptedQuiz = false;
     $hasAttemptedHomework = false;
     $quizAttemptLimitReached = false;
+    dd( $activeQuiz);
 
   if ($student && $activeQuiz!=null) {
     dd( $activeQuiz);
