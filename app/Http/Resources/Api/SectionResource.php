@@ -75,7 +75,7 @@ class SectionResource extends JsonResource
             }),
 
             // Optional section-level flags
-        'has_quizzes' => (!$quizAttemptLimitReached && $this->quizzes()->exists()) ? true : false,
+            'has_quizzes' => (!$quizAttemptLimitReached && $this->quizzes()->exists())  ? true : false,
             'has_homeworks' => $this->homeworks()->exists(),
             'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,
 
