@@ -123,8 +123,7 @@ public function quizzesResults(Request $request)
                 'score'            => $bestScore . ' / ' . $totalPoints,
                 'score_percentage' => $percentage,
                 'last_attempt_at'  => optional($latestAttempt?->started_at)?->format('Y-m-d H:i:s'),
-                                'is_submitted'     => $latestAttempt?->submitted_at !== null,
-
+                'is_submitted'     => $latestAttempt?->submitted_at !== null,
             ];
         });
 
@@ -189,7 +188,7 @@ public function myCourses(Request $request)
     }])
         ->whereHas('students', function ($q) use ($studentId) {
             $q->where('student_id', $studentId)
-                // ->where('course_student.status', 'approved')
+                ->where('course_student.status', 'approved')
                 ->where('course_student.is_active', 1);
         })
         ->where('is_active', 1)
