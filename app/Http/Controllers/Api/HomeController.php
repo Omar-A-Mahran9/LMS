@@ -230,7 +230,7 @@ class HomeController extends Controller
     ->orderBy('max_students', 'asc')
     ->get()
     ->filter(function ($course) {
-        return is_null($course->max_students) || $course->enrollments_count < $course->max_students;
+        return is_null($course->max_students) || $course->enrollments_count <= $course->max_students;
     })
     ->values(); // reindex
 
@@ -246,7 +246,7 @@ $courses = Course::where('is_active', 1)
     ->orderBy('max_students', 'asc')
     ->get()
     ->filter(function ($course) {
-        return is_null($course->max_students) || $course->enrollments_count < $course->max_students;
+        return is_null($course->max_students) || $course->enrollments_count <= $course->max_students;
     })
     ->values(); // reindex
         return $this->success('', [
