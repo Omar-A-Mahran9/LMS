@@ -71,6 +71,7 @@ class HomeController extends Controller
                 }
             }
         }
+        dd( $studentScores);
 
         $topStudents = collect($studentScores)
             ->map(function ($data) {
@@ -90,7 +91,6 @@ class HomeController extends Controller
             ->take(10)
             ->values();
         // 🧪 If no data, return dummy values
-        dd($topStudents->isEmpty());
         if ($topStudents->isEmpty()) {
             $topStudents = collect([
                 [
