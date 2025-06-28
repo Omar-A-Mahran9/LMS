@@ -253,7 +253,8 @@ public function getVideosBySections($id)
     $sections = Section::with([
         // Videos and progress
         'videos' => function ($query) use ($studentId) {
-            $query->with(['studentProgress' => function ($q) use ($studentId) {
+            $query->where('is_active', 1) 
+                ->with(['studentProgress' => function ($q) use ($studentId) {
                     $q->where('student_id', $studentId);
                 }]);
         },
