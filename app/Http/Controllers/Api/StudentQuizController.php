@@ -16,11 +16,12 @@ public function startQuiz(Request $request, $quizId)
 {
     $studentId = auth()->id();
 
-    $quiz = Quiz::with('course')->findOrFail($quizId);
-    if($quiz){
-             return $this->failure('Quiz is not found');
+$quiz = Quiz::with('course')->find($quizId);
 
-    }
+if (!$quiz) {
+    return $this->failure('Quiz is not found');
+}
+
     if (!$quiz->course || !$quiz->course->is_active) {
         return $this->failure('Quiz is not linked to an active course.');
     }
