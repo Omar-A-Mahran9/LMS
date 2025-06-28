@@ -25,7 +25,7 @@ public function startQuiz(Request $request, $quizId)
         return $this->failure('You are not enrolled in this course.');
     }
    if ($quiz->questions->isEmpty()) {
-        return $this->failure('Quiz does not contain any questions.');
+        return $this->failure(__('Quiz does not contain any questions.'));
     }
     if ($quiz->attempt_count !== null) {
         $usedAttempts = QuizAttempt::where('quiz_id', $quizId)
