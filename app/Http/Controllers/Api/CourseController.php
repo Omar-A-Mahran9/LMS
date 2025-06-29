@@ -295,37 +295,38 @@ public function checkCourseAccess($id)
 {
     $studentId = auth()->id();
 
-    // Get the course if active
-    $course = Course::where('id', $id)->where('is_active', 1)->first();
-
-    if (!$course) {
-        return $this->failure('Course not found.');
-    }
-
-    // Get enrollment if any
-    $enrollment = $course->enrollments()
-        ->where('student_id', $studentId)
+    // تحقق من وجود الكورس وكونه مفعلاً ومسجلاً فيه الطالب مع الموافقة
+    $course = Course::where('id', $id)
+        ->where('is_active', 1)
+        ->whereHas('enrollments', function ($q) use ($studentId) {
+            $q->where('student_id', $studentId)
+              ->where('status', 'approved')
+              ->where('is_active', 1);
+        })
         ->first();
 
-    // Determine status
-    $status = 'not_enrolled';
-    if ($enrollment) {
-        $status = ($enrollment->status === 'approved' && $enrollment->is_active)
-            ? true
-            : false;
+    if (!$course) {
+        return $this->failure('Course not found or unauthorized.');
     }
 
-    // Prepare response
-    return $this->success('Course access check.', [
-        'status'           => $status,
-        'is_enrolled'      => $enrollment,
-        'has_certificate'  => $course->certificate_available && $course->is_completed,
-        'is_completed'  => $course->is_completed,
+    // إعداد البيانات مثل getVideosBySections
+    $courseData = [
+        'course_id'           => $course->id,
+        'course_title'        => $course->title,
+        'has_certificate'     => $course->certificate_available,
+        'certificate_url'     => $course->certificate_url != null,
+        'is_completed'        => $course->is_completed,
+        'progress_percentage' => $course->progress_percentage,
+        'has_rated'           => Student_rate::where('course_id', $course->id)
+                                ->where('student_id', $studentId)
+                                ->exists(),
+    ];
 
-        'course_id'        => $course->id,
-        'course_title'     => $course->title,
+    return $this->success('Course access data.', [
+        'course_data' => $courseData
     ]);
 }
+
 
 public function logWatch(Request $request, $id)
 {
