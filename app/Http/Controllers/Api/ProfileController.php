@@ -195,14 +195,13 @@ public function myCourses(Request $request)
         ->get()
        ->filter(function ($course) use ($studentId, $status) {
             $totalVideos = $course->videos->count();
-dd(    $totalVideos);     // منطق الفلترة
-
             // عدّ الفيديوهات التي أكملها الطالب فقط
             $completedVideos = $course->videos->filter(function ($video) use ($studentId) {
                 return $video->students->contains(function ($student) use ($studentId) {
                     return $student->id == $studentId && $student->pivot->is_completed;
                 });
             })->count();
+dd(    $totalVideos);     // منطق الفلترة
 
             // منطق الفلترة
             if ($status === 'completed') {
