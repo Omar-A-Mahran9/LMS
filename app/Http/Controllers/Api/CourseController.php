@@ -322,9 +322,9 @@ public function checkCourseAccess($id)
                                 ->exists(),
     ];
 
-    return $this->success('Course access data.', [
-        'course_data' => $courseData
-    ]);
+    return $this->success('Course access data.',
+       $courseData
+    );
 }
 
 
