@@ -27,7 +27,7 @@ class SectionController extends Controller
 
         if ($request->ajax()) {
                 if($courseId){
-                    dd($courseId);
+             
                     return response()->json(getModelData(model: new Section(), andsFilters: [['course_id', (int)$courseId]],relations: ['course' => ['id', 'title_ar','title_en' ]]));
 
                 }else{

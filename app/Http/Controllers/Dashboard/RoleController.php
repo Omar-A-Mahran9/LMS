@@ -87,7 +87,7 @@ class RoleController extends Controller
         //     abort(404);
         // }
         abort_if($role->id == 1, 404, __("The authority of the executive director cannot be modified"));
-        // dd('hh');
+     
         $role->update($data);
         $role->abilities()->sync($request['abilities']);
     }

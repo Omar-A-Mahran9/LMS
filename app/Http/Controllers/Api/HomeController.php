@@ -67,7 +67,7 @@ class HomeController extends Controller
                 }
             }
         }
-        
+
         $topStudents = collect($studentScores)
             ->map(function ($data) {
                 $average = $data['attempts'] > 0
@@ -90,21 +90,21 @@ class HomeController extends Controller
             $topStudents = collect([
                 [
                     'name' => 'Dummy Student 1',
-                    'image' => asset('images/dummy1.jpg'),
+                    'image' => getImagePathFromDirectory('','Students'),
                     'category' => $category->name,
                     'average_score' => 95.5,
                     'full_score' => 100,
                 ],
                 [
                     'name' => 'Dummy Student 2',
-                    'image' => asset('images/dummy2.jpg'),
+                    'image' =>  getImagePathFromDirectory('','Students'),
                     'category' => $category->name,
                     'average_score' => 93.0,
                     'full_score' => 100,
                 ],
                 [
                     'name' => 'Dummy Student 3',
-                    'image' => asset('images/dummy3.jpg'),
+                    'image' => getImagePathFromDirectory('','Students'),
                     'category' => $category->name,
                     'average_score' => 91.2,
                     'full_score' => 100,
@@ -113,7 +113,7 @@ class HomeController extends Controller
         }
 
         return $this->success('', [
-            'image' => asset('images/dummy3.jpg'),
+            'image' =>  getImagePathFromDirectory('','Students'),
             'topStudents' => $topStudents,
         ]);
 
