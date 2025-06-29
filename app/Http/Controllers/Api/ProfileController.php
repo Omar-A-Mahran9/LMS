@@ -270,7 +270,7 @@ public function studentStatistics()
     // مقارنة الأداء مع باقي الطلاب في نفس الكورسات
     $enrolledCourseIds = $student->courses()->pluck('courses.id');
 
-    $averageScoresInCourses = \App\Models\QuizAttempt::whereHas('quiz', function ($q) use ($enrolledCourseIds) {
+    $averageScoresInCourses = QuizAttempt::whereHas('quiz', function ($q) use ($enrolledCourseIds) {
         $q->whereIn('course_id', $enrolledCourseIds);
     })->whereNotNull('score')->avg('score');
 
@@ -291,7 +291,7 @@ public function studentStatistics()
 
         $quizTitle = $quiz->title ?? 'Unnamed Quiz';
         $courseTitle = $quiz->course?->title ?? 'Unknown Course';
-        $label = "$quizTitle ($courseTitle)";
+        $label = "$quizTitle";
 
         $chartLabels[] = $label;
         $chartScores[] = $attempt->score ?? 0;
@@ -335,17 +335,7 @@ public function studentStatistics()
         'performance_percentage' => $performancePercentage,
     ],
 
-        // 'chart_data' => [
-        //     'x_axis_labels' => $chartLabels,
-        //     'datasets' => [
-        //         [
-        //             'label' => $studentName,
-        //             'data' => $chartScores,
-        //             'backgroundColor' => 'rgba(75, 192, 192, 0.6)',
-        //         ],
-        //     ],
-        // 'y_axis_labels' => $yAxisSteps,
-        // ],
+
 'chart_data' => [
     'labels' => $chartLabels,
     'datasets' => [
