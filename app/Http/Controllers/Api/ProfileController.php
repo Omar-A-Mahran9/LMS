@@ -182,31 +182,18 @@ public function myCourses(Request $request)
     $studentId = auth('api')->id();
     $status = $request->query('status'); // completed | in_progress | null
 
-    // جلب الكورسات التي الطالب مسجل بها ومقبول ومفعّلة
-    $courses = Course::with([
-            'category:id,name_en,name_ar',
-            'instructor:id,name',
-            'videos:id,course_id',
-            'videos.students' => fn($q) => $q->where('student_id', $studentId)
-        ])
-        ->select('id', 'title_en', 'title_ar', 'description_en', 'description_ar', 'instructor_id', 'category_id', 'is_active', 'certificate_available')
-        ->where('is_active', 1)
-        ->whereHas('students', fn($q) => $q
-            ->where('student_id', $studentId)
-            ->where('course_student.status', 'approved')
-            ->where('course_student.is_active', 1)
-        )
-        ->get()
-        ->filter(function ($course) use ($status) {
-            if ($status === 'completed') {
-                return $course->is_completed;
-            } elseif ($status === 'in_progress') {
-                return !$course->is_completed;
-            }
-
-            return true;
+    // Get enrolled courses
+    $courses = Course::with(['category:id,name_en,name_ar', 'instructor:id,name', 'videos:id,course_id', 'videos.students' => function ($q) use ($studentId) {
+        $q->where('student_id', $studentId);
+        }])
+        ->whereHas('students', function ($q) use ($studentId) {
+            $q->where('student_id', $studentId)
+                ->where('course_student.status', 'approved')
+                ->where('course_student.is_active', 1);
         })
-        ->values();
+        ->where('is_active', 1)
+        ->get()
+;
 
     return $this->success('', CoursesDetailsResource::collection($courses));
 }
