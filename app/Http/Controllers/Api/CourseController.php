@@ -317,7 +317,7 @@ public function checkCourseAccess($id)
         'course_title'        => $course->title,
         'has_certificate'     => $course->certificate_available,
        'certificate_url' => $course->certificate_available
-                ? route('student.certificates.download', ['course' => $this->id])
+                ? route('student.certificates.download', ['course' => $course->id])
                 : null,        'is_completed'        => $course->is_completed,
         'progress_percentage' => $course->progress_percentage,
         'has_rated'           => Student_rate::where('course_id', $course->id)
