@@ -202,8 +202,12 @@ public function myCourses(Request $request)
                     return $student->id == $studentId && $student->pivot->is_completed;
                 });
             })->count();
-dd($completedVideos === $totalVideos);
-            // منطق الفلترة
+    dump([
+        'course_id' => $course->id,
+        'total' => $totalVideos,
+        'completed' => $completedVideos,
+        'is_completed' => $completedVideos === $totalVideos,
+    ]);
             if ($status === 'completed') {
                 return $totalVideos > 0 && $completedVideos === $totalVideos;
             } elseif ($status === 'in_progress') {
