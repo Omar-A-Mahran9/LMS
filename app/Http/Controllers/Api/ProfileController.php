@@ -195,6 +195,7 @@ public function myCourses(Request $request)
         ->get()
        ->filter(function ($course) use ($studentId, $status) {
             $totalVideos = $course->videos->count();
+dd(    $totalVideos);     // منطق الفلترة
 
             // عدّ الفيديوهات التي أكملها الطالب فقط
             $completedVideos = $course->videos->filter(function ($video) use ($studentId) {
@@ -213,7 +214,6 @@ public function myCourses(Request $request)
             return true;
         })
         ->values();
-dd(    $completedVideos);     // منطق الفلترة
 
 
     return $this->success('', CoursesDetailsResource::collection($courses));
