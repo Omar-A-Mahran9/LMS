@@ -236,7 +236,7 @@ public function getVideosByClass($id)
 public function getVideosBySections($id)
 {
     $studentId = Auth::id();
-dd('test');
+dd($id);
     // Ensure course has this student enrolled and is active
     $courseExists = Course::where('id', $id)
         ->where('is_active', 1)
