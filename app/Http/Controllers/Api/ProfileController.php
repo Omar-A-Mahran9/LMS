@@ -193,7 +193,27 @@ public function myCourses(Request $request)
         })
         ->where('is_active', 1)
         ->get()
-;
+       ->filter(function ($course) use ($studentId, $status) {
+            $totalVideos = $course->videos->count();
+
+            // عدّ الفيديوهات التي أكملها الطالب فقط
+            $completedVideos = $course->videos->filter(function ($video) use ($studentId) {
+                return $video->students->contains(function ($student) use ($studentId) {
+                    return $student->id == $studentId && $student->pivot->is_completed;
+                });
+            })->count();
+
+            // منطق الفلترة
+            if ($status === 'completed') {
+                return $totalVideos > 0 && $completedVideos === $totalVideos;
+            } elseif ($status === 'in_progress') {
+                return $totalVideos === 0 || $completedVideos < $totalVideos;
+            }
+
+            return true;
+        })
+        ->values();
+
 
     return $this->success('', CoursesDetailsResource::collection($courses));
 }
