@@ -63,7 +63,6 @@ class CourseVideo extends Model
     {
         return $this->hasMany(CourseVideoStudent::class);
     }
-// App\Models\CourseVideo.php
 
 public function students()
 {

@@ -182,31 +182,29 @@ public function myCourses(Request $request)
     $studentId = auth('api')->id();
     $status = $request->query('status'); // completed | in_progress | null
 
-    // Get enrolled courses
-    $courses = Course::with(['category:id,name_en,name_ar', 'instructor:id,name', 'videos:id,course_id', 'videos.students' => function ($q) use ($studentId) {
-        $q->where('student_id', $studentId);
-    }])
-        ->whereHas('students', function ($q) use ($studentId) {
-            $q->where('student_id', $studentId)
-                ->where('course_student.status', 'approved')
-                ->where('course_student.is_active', 1);
-        })
+    // جلب الكورسات التي الطالب مسجل بها ومقبول ومفعّلة
+    $courses = Course::with([
+            'category:id,name_en,name_ar',
+            'instructor:id,name',
+            'videos:id,course_id',
+            'videos.students' => fn($q) => $q->where('student_id', $studentId)
+        ])
+        ->select('id', 'title_en', 'title_ar', 'description_en', 'description_ar', 'instructor_id', 'category_id', 'is_active', 'certificate_available')
         ->where('is_active', 1)
+        ->whereHas('students', fn($q) => $q
+            ->where('student_id', $studentId)
+            ->where('course_student.status', 'approved')
+            ->where('course_student.is_active', 1)
+        )
         ->get()
-        ->filter(function ($course) use ($studentId, $status) {
-            $totalVideos = $course->videos->count();
-
-            $completedVideos = $course->videos->filter(function ($video) use ($studentId) {
-                return $video->students->first()?->pivot?->is_completed ?? false;
-            })->count();
-
+        ->filter(function ($course) use ($status) {
             if ($status === 'completed') {
-                return $totalVideos > 0 && $completedVideos === $totalVideos;
+                return $course->is_completed;
             } elseif ($status === 'in_progress') {
-                return $totalVideos === 0 || $completedVideos < $totalVideos;
+                return !$course->is_completed;
             }
 
-            return true; // No filter
+            return true;
         })
         ->values();
 
@@ -324,7 +322,7 @@ public function studentStatistics()
     'quiz_title' => $lowestQuizTitle,
     'score' => $lowestScore,
     'total_score' => $lowestAttempt?->quiz?->questions->sum('points') ?? 0,
-],
+    ],
 
         'timing_comparison'=>[
      'student_average_score' => round($studentAverageScore, 2),
@@ -336,7 +334,7 @@ public function studentStatistics()
     ],
 
 
-'chart_data' => [
+    'chart_data' => [
     'labels' => $chartLabels,
     'datasets' => [
         [
@@ -345,7 +343,7 @@ public function studentStatistics()
             'data' => $chartScores,
         ],
     ],
-],
+    ],
 
     ]);
 }
