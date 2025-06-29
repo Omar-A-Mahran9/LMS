@@ -204,11 +204,12 @@ public function myCourses(Request $request)
 
             // منطق الفلترة
             if ($status === 'completed') {
+                dd(    $completedVideos);     // منطق الفلترة
+
                 return $totalVideos > 0 && $completedVideos === $totalVideos;
             } elseif ($status === 'in_progress') {
                 return $totalVideos === 0 || $completedVideos < $totalVideos;
             }
-dd(    $completedVideos);     // منطق الفلترة
 
             return true;
         })
