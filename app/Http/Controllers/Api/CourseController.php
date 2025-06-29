@@ -283,7 +283,9 @@ public function getVideosBySections($id)
         'course_id'           => $courseExists->id,
         'course_title'        => $courseExists->title,
         'has_certificate'     => $courseExists->certificate_available,
-        'certificate_url'     => $courseExists->certificate_url!=null,
+        'certificate_url' => $courseExists->certificate_available
+                ? route('student.certificates.download', ['course' => $this->id])
+                : null,
         'is_completed'        => $courseExists->is_completed,
         'progress_percentage' => $courseExists->progress_percentage,
         'has_rated' => Student_rate::where('course_id', $courseExists->id)
@@ -314,8 +316,9 @@ public function checkCourseAccess($id)
         'course_id'           => $course->id,
         'course_title'        => $course->title,
         'has_certificate'     => $course->certificate_available,
-        'certificate_url'     => $course->certificate_url != null,
-        'is_completed'        => $course->is_completed,
+       'certificate_url' => $course->certificate_available
+                ? route('student.certificates.download', ['course' => $this->id])
+                : null,        'is_completed'        => $course->is_completed,
         'progress_percentage' => $course->progress_percentage,
         'has_rated'           => Student_rate::where('course_id', $course->id)
                                 ->where('student_id', $studentId)
