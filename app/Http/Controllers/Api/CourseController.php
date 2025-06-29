@@ -236,7 +236,6 @@ public function getVideosByClass($id)
 public function getVideosBySections($id)
 {
     $studentId = Auth::id();
-dd($id);
     // Ensure course has this student enrolled and is active
     $courseExists = Course::where('id', $id)
         ->where('is_active', 1)
@@ -284,7 +283,7 @@ dd($id);
         'course_title'        => $courseExists->title,
         'has_certificate'     => $courseExists->certificate_available,
         'certificate_url' => $courseExists->certificate_available
-                ? route('student.certificates.download', ['course' => $this->id])
+                ? route('student.certificates.download', ['course' => $courseExists->id])
                 : null,
         'is_completed'        => $courseExists->is_completed,
         'progress_percentage' => $courseExists->progress_percentage,
