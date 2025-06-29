@@ -201,7 +201,7 @@ public function myCourses(Request $request)
                     return $student->id == $studentId && $student->pivot->is_completed;
                 });
             })->count();
-dd(    $totalVideos);     // منطق الفلترة
+dd(    $completedVideos);     // منطق الفلترة
 
             // منطق الفلترة
             if ($status === 'completed') {
