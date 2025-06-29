@@ -202,16 +202,18 @@ public function myCourses(Request $request)
                     return $student->id == $studentId && $student->pivot->is_completed;
                 });
             })->count();
-dd(    $completedVideos);     // منطق الفلترة
-            // if ($status === 'completed') {
-            //     return $totalVideos > 0 && $completedVideos === $totalVideos;
-            // } elseif ($status === 'in_progress') {
-            //     return $totalVideos === 0 || $completedVideos < $totalVideos;
-            // }
 
-            // return true;
-        // })
-        // ->values();
+            // منطق الفلترة
+            if ($status === 'completed') {
+                return $totalVideos > 0 && $completedVideos === $totalVideos;
+            } elseif ($status === 'in_progress') {
+                return $totalVideos === 0 || $completedVideos < $totalVideos;
+            }
+
+            return true;
+        })
+        ->values();
+dd(    $completedVideos);     // منطق الفلترة
 
 
     return $this->success('', CoursesDetailsResource::collection($courses));
