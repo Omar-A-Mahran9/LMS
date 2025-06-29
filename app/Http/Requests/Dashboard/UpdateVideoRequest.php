@@ -50,13 +50,13 @@ class UpdateVideoRequest extends FormRequest
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('course_videos', 'title_ar')->ignore($courseVideo->id)
+
         ],
         'title_en' => [
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('course_videos', 'title_en')->ignore($courseVideo->id)
+            
         ],
 
     'description_ar' => ['nullable', new NotNumbersOnly()],
