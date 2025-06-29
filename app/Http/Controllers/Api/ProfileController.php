@@ -185,7 +185,7 @@ public function myCourses(Request $request)
     // Get enrolled courses
     $courses = Course::with(['category:id,name_en,name_ar', 'instructor:id,name', 'videos:id,course_id', 'videos.students' => function ($q) use ($studentId) {
         $q->where('student_id', $studentId);
-        }])
+    }])
         ->whereHas('students', function ($q) use ($studentId) {
             $q->where('student_id', $studentId)
                 ->where('course_student.status', 'approved')
@@ -193,28 +193,22 @@ public function myCourses(Request $request)
         })
         ->where('is_active', 1)
         ->get()
-       ->filter(function ($course) use ($studentId, $status) {
+        ->filter(function ($course) use ($studentId, $status) {
             $totalVideos = $course->videos->count();
-            // عدّ الفيديوهات التي أكملها الطالب فقط
+
             $completedVideos = $course->videos->filter(function ($video) use ($studentId) {
-                return $video->students->contains(function ($student) use ($studentId) {
-                    return $student->id == $studentId && $student->pivot->is_completed;
-                });
+                return $video->students->first()?->pivot?->is_completed ?? false;
             })->count();
 
-            // منطق الفلترة
             if ($status === 'completed') {
-                dd(    $completedVideos);     // منطق الفلترة
-
                 return $totalVideos > 0 && $completedVideos === $totalVideos;
             } elseif ($status === 'in_progress') {
                 return $totalVideos === 0 || $completedVideos < $totalVideos;
             }
 
-            return true;
+            return true; // No filter
         })
         ->values();
-
 
     return $this->success('', CoursesDetailsResource::collection($courses));
 }
