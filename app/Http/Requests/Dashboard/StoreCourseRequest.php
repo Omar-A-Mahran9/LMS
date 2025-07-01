@@ -41,7 +41,7 @@ return [
     'note_en' => ['required', 'string'],
 
     // Video
-    'video_url' => ['required', 'url'],
+    'video_url' => ['nullable', 'url'],
 
     // SEO
     'slug' => ['nullable', 'alpha_dash', 'unique:courses,slug'],
