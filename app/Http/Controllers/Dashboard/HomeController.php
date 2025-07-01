@@ -58,7 +58,29 @@ class HomeController extends Controller
         return redirect()->back()->with('success', __('Banner settings updated successfully.'));
     }
 
+    public function general(UpdateHomeSettingsRequest $request)
+    {
+                // Check if it's a GET request — show the form
+        if ($request->isMethod('get')) {
+            $this->authorize('view_settings');
+            return view('dashboard.settings.home.general');
+        }
 
+        // Otherwise, handle POST submission
+        $data = $request->validated();
+
+        // If a new image is uploaded, handle the upload
+        if ($request->hasFile('logo_image')) {
+            deleteImageFromDirectory(setting('logo_image'), "Settings");
+            $data['logo_image'] = uploadImageToDirectory($request->file('logo_image'), "Settings");
+        }
+
+        // Save the updated settings
+        setting($data)->save();
+
+        // Redirect back with a success message (optional)
+        return redirect()->back()->with('success', 'general settings updated successfully.');
+           }
     public function aboutUs(UpdateHomeSettingsRequest $request)
     {
         // Check if it's a GET request — show the form

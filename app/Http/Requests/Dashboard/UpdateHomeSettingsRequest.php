@@ -35,6 +35,14 @@ class UpdateHomeSettingsRequest extends FormRequest
                 'about_us_image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
 
             ],
+               "general" => [
+                'label_ar' => 'required|string',
+                'label_en' => 'required|string',
+                'about_us_ar' => 'required|string',
+                'about_us_en' => 'required|string',
+                'logo_image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
+
+            ],
             "banner" => [
                 'label_common_question_ar' => 'required|string',
                 'label_common_question_en' => 'required|string',
