@@ -217,6 +217,7 @@ class HomeController extends Controller
     $today = Carbon::today()->toDateString(); // أو ->now() لو فيه وقت
 
     $featured_courses = Course::where('is_active', 1)->where('is_enrollment_open', 1)
+        ->where('show_in_home', 1)
         ->where('featured', 1)
         ->whereDate('start_date', '<=', $today)
         ->whereDate('end_date', '>=', $today)
@@ -231,6 +232,7 @@ class HomeController extends Controller
     ->values(); // reindex
 
 $courses = Course::where('is_active', 1)
+    ->where('show_in_home', 1)
     ->where('is_enrollment_open', 1)
     ->where('is_class', 0)
     ->whereNull('category_id')
