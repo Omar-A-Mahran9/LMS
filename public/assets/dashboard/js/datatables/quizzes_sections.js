@@ -140,7 +140,9 @@ var KTDatatablesServerSidequiz = (function () {
                                 </div>
                                 <!--end::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="/dashboard/questions?quiz_id=${data.id}" class="menu-link px-3">
+                                    <a href="/dashboard/questions?quiz_id=${
+                                        data.id
+                                    }" class="menu-link px-3">
                                         ${__("Show Questions")}
                                     </a>
                                 </div>
@@ -209,12 +211,17 @@ var KTDatatablesServerSidequiz = (function () {
                 $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
 
-                tinymce
-                    .get("description_ar_inp")
-                    .setContent(data.description_ar);
-                tinymce
-                    .get("description_en_inp")
-                    .setContent(data.description_en);
+                if (tinymce.get("description_ar_inp")) {
+                    tinymce
+                        .get("description_ar_inp")
+                        .setContent(data.description_ar);
+                }
+
+                if (tinymce.get("description_en_inp")) {
+                    tinymce
+                        .get("description_en_inp")
+                        .setContent(data.description_en);
+                }
 
                 // Relationships
                 $("#course_section_id_inp")
