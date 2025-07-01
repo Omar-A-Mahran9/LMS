@@ -117,7 +117,7 @@
                                         <label class="form-label">{{ __('title in arabic') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <textarea name="general_ar" id="general_ar_inp" data-kt-autosize="true" placeholder="{{ __(title in arabic') }}"
+                                        <textarea name="general_ar" id="general_ar_inp" data-kt-autosize="true" placeholder="{{ __('title in arabic') }}"
                                             class="tox-target">
                                             {{ setting('general_ar') }}
                                             </textarea>
