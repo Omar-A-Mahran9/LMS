@@ -362,9 +362,7 @@
         }
 
         // When modal opens for adding section
-        $('#crud_modal').on('show.bs.modal', function() {
-            const courseId = $('#course_id_inp').val();
-
+        function fetchAndGenerateSectionTitle(courseId) {
             if (!courseId) return;
 
             $.ajax({
@@ -378,6 +376,20 @@
                     console.error('Failed to fetch section count');
                 }
             });
+        }
+
+        $('#crud_modal').on('show.bs.modal', function() {
+            const courseId = $('#course_id_inp').val();
+            fetchAndGenerateSectionTitle(courseId);
+        });
+
+        $('#course_id_inp').on('change', function() {
+            // Clear existing titles when course changes
+            $('#title_en_inp').val('');
+            $('#title_ar_inp').val('');
+
+            const courseId = $(this).val();
+            fetchAndGenerateSectionTitle(courseId);
         });
     </script>
 @endpush
