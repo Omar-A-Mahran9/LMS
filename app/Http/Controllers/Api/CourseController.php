@@ -438,7 +438,7 @@ public function getfooter()
 
     $data = [
 
-            'logo' => getImagePathFromDirectory(setting('general_logo'), 'Settings') ,
+            'logo' => getImagePathFromDirectory(setting('logo_image'), 'Settings') ,
             'Site_name'           => setting('label_about_us' . $suffix),
             'Site_description'           => setting('label_about_us' . $suffix),
 
