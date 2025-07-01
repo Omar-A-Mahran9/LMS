@@ -63,52 +63,52 @@
                     </div>
 
 
-                    <!--begin::Favicon Upload-->
-                    <div class="mt-8">
-                        <label class="form-label fs-6 fw-bold text-dark">{{ __('Favicon Icon') }}</label>
-                        <div class="image-input image-input-empty image-input-outline image-input-placeholder mb-3"
-                            data-kt-image-input="true">
-                            <!--begin::Preview existing favicon-->
-                            <div class="image-input-wrapper w-50px h-50px"
-                                style="background-image: url({{ asset(getImagePathFromDirectory(setting('favicon_icon'), 'Settings')) }})">
-                            </div>
-                            <!--end::Preview existing favicon-->
 
-                            <!--begin::Label-->
-                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                data-kt-image-input-action="change" data-bs-toggle="tooltip"
-                                title="{{ __('تغير الصورة') }}">
-                                <i class="bi bi-pencil-fill fs-7"></i>
-                                <input type="file" name="favicon_icon" accept=".png, .jpg, .ico" />
-                                <input type="hidden" name="favicon_remove" />
-                            </label>
-                            <!--end::Label-->
-
-                            <!--begin::Cancel-->
-                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="{{ __('الغاء') }}">
-                                <i class="bi bi-x fs-2"></i>
-                            </span>
-                            <!--end::Cancel-->
-
-                            <!--begin::Remove-->
-                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="{{ __('حذف') }}">
-                                <i class="bi bi-x fs-2"></i>
-                            </span>
-                            <!--end::Remove-->
-                        </div>
-
-                        <div class="text-muted fs-7">
-                            {{ __('صيغة الصورة يجب ان تكون من نوع *.ico, *.png, *.jpg') }}
-                        </div>
-                        <div class="invalid-feedback" id="favicon_icon"></div>
-                    </div>
-                    <!--end::Favicon Upload-->
 
                 </div>
                 <!--end::Card body-->
 
+                <div class="card-body text-center pt-0">
+                    <!--begin::Favicon Upload-->
+                    <label class="form-label fs-6 fw-bold text-dark">{{ __('Favicon Icon') }}</label>
+                    <div class="image-input image-input-empty image-input-outline image-input-placeholder mb-3"
+                        data-kt-image-input="true">
+                        <!--begin::Preview existing favicon-->
+                        <div class="image-input-wrapper w-50px h-50px"
+                            style="background-image: url({{ asset(getImagePathFromDirectory(setting('favicon_icon'), 'Settings')) }})">
+                        </div>
+                        <!--end::Preview existing favicon-->
+
+                        <!--begin::Label-->
+                        <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                            data-kt-image-input-action="change" data-bs-toggle="tooltip" title="{{ __('تغير الصورة') }}">
+                            <i class="bi bi-pencil-fill fs-7"></i>
+                            <input type="file" name="favicon_icon" accept=".png, .jpg, .ico" />
+                            <input type="hidden" name="favicon_remove" />
+                        </label>
+                        <!--end::Label-->
+
+                        <!--begin::Cancel-->
+                        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                            data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="{{ __('الغاء') }}">
+                            <i class="bi bi-x fs-2"></i>
+                        </span>
+                        <!--end::Cancel-->
+
+                        <!--begin::Remove-->
+                        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                            data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="{{ __('حذف') }}">
+                            <i class="bi bi-x fs-2"></i>
+                        </span>
+                        <!--end::Remove-->
+                    </div>
+
+                    <div class="text-muted fs-7">
+                        {{ __('صيغة الصورة يجب ان تكون من نوع *.ico, *.png, *.jpg') }}
+                    </div>
+                    <div class="invalid-feedback" id="favicon_icon"></div>
+                    <!--end::Favicon Upload-->
+                </div>
 
             </div>
         </div>
