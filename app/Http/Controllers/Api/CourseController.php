@@ -475,23 +475,7 @@ public function getCourses(Request $request)
         ->whereDate('start_date', '<=', now())
         ->whereDate('end_date', '>=', now());
 
-    if (Auth::guard('api')->check()) {
-        $student = Auth::guard('api')->user();
 
-        if ($filter === 'my') {
-            $query->whereHas('students', function ($q) use ($student) {
-                $q->where('student_id', $student->id)
-                  ->where('course_student.status', 'approved')
-                  ->where('course_student.is_active', 1);
-            });
-        } elseif ($filter === 'other') {
-            $query->whereDoesntHave('students', function ($q) use ($student) {
-                $q->where('student_id', $student->id)
-                  ->where('course_student.status', 'approved')
-                  ->where('course_student.is_active', 1);
-            });
-        }
-    }
 
     // Fetch courses and filter by "not full"
     $courses = $query->get()->filter(fn($course) => !$course->is_full)->values();
