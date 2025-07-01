@@ -60,27 +60,37 @@ class HomeController extends Controller
 
     public function general(UpdateHomeSettingsRequest $request)
     {
-                // Check if it's a GET request — show the form
         if ($request->isMethod('get')) {
             $this->authorize('view_settings');
             return view('dashboard.settings.home.general');
         }
 
-        // Otherwise, handle POST submission
         $data = $request->validated();
 
-        // If a new image is uploaded, handle the upload
+        // ✅ Handle logo_image
         if ($request->hasFile('logo_image')) {
             deleteImageFromDirectory(setting('logo_image'), "Settings");
             $data['logo_image'] = uploadImageToDirectory($request->file('logo_image'), "Settings");
         }
 
-        // Save the updated settings
+        // ✅ Handle light_logo_image
+        if ($request->hasFile('light_logo_image')) {
+            deleteImageFromDirectory(setting('light_logo_image'), "Settings");
+            $data['light_logo_image'] = uploadImageToDirectory($request->file('light_logo_image'), "Settings");
+        }
+
+        // ✅ Handle favicon_icon (.ico or others)
+        if ($request->hasFile('favicon_icon')) {
+            deleteImageFromDirectory(setting('favicon_icon'), "Settings");
+            $data['favicon_icon'] = uploadImageToDirectory($request->file('favicon_icon'), "Settings");
+        }
+
+        // Save all settings
         setting($data)->save();
 
-        // Redirect back with a success message (optional)
-        return redirect()->back()->with('success', 'general settings updated successfully.');
-           }
+        return redirect()->back()->with('success', __('تم تحديث الإعدادات العامة بنجاح.'));
+    }
+
     public function aboutUs(UpdateHomeSettingsRequest $request)
     {
         // Check if it's a GET request — show the form

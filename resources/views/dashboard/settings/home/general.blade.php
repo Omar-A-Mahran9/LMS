@@ -51,6 +51,20 @@
                 </div>
 
                 <!--begin::Card body-->
+
+            </div>
+
+            <!--begin::Logo settings-->
+            <div class="card card-flush py-4">
+                <!--begin::Card header-->
+                <div class="card-header">
+                    <!--begin::Card title-->
+                    <div class="card-title">
+                        <h2>{{ __('logos') }}</h2>
+                    </div>
+                    <!--end::Card title-->
+                </div>
+                <!--end::Card header-->
                 <!-- Light Logo -->
                 <div class="mb-5 text-center">
                     <label class="form-label fw-bold">{{ __('الشعار الفاتح (Light Logo)') }}</label>
@@ -82,7 +96,19 @@
                     <div class="invalid-feedback" id="light_logo_image"></div>
                 </div>
 
-                <!--end::Card body-->
+            </div>
+
+            <div class="card card-flush py-4">
+                <!--begin::Card header-->
+                <div class="card-header">
+                    <!--begin::Card title-->
+                    <div class="card-title">
+                        <h2>{{ __('logos') }}</h2>
+                    </div>
+                    <!--end::Card title-->
+                </div>
+                <!--end::Card header-->
+                <!-- Light Logo -->
                 <!-- Favicon -->
                 <div class="mb-5 text-center">
                     <label class="form-label fw-bold">{{ __('أيقونة المتصفح (Favicon)') }}</label>
@@ -113,8 +139,12 @@
                     </div>
                     <div class="invalid-feedback" id="favicon_icon"></div>
                 </div>
-
             </div>
+
+
+            <!--end::Card body-->
+
+
         </div>
         <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
             @include('dashboard.partials.settings-home-nav')
