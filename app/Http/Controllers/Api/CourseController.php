@@ -431,30 +431,7 @@ public function getprivacypolicy()
 }
 
 
-public function getfooter()
-{
-    $locale = app()->getLocale(); // 'ar' or 'en'
-    $suffix = $locale === 'ar' ? '_ar' : '_en';
-
-    $data = [
-
-            'logo' => getImagePathFromDirectory(setting('logo_image'), 'Settings') ,
-            'Site_name'           => setting('label_about_us' . $suffix),
-            'Site_description'           => setting('label_about_us' . $suffix),
-
-            'description'     => setting('description_about_us' . $suffix),
-            'instagram_link'   => setting('instagram_link'),
-            'facebook_link'    => setting('facebook_link'),
-            'youtube_link'     => setting('youtube_link'),
-            'telegram_link'     => setting('youtube_link'),
-            'tiktok_link'     => setting('youtube_link'),
-            'whatsapp_number'  => setting('whatsapp_number'),
-            'sms_number'       => setting('sms_number'),
-
-    ];
-
-    return $this->success('', $data);
-}
+ 
 
 
 public function getCourses(Request $request)
