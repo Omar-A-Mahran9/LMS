@@ -229,7 +229,7 @@ class HomeController extends Controller
     ->filter(function ($course) {
         return is_null($course->max_students) || $course->enrollments_count <= $course->max_students;
     })
-    ->values(); // reindex
+    ->values()->take(6);
 
 $courses = Course::where('is_active', 1)
     ->where('show_in_home', 1)
@@ -246,7 +246,8 @@ $courses = Course::where('is_active', 1)
     ->filter(function ($course) {
         return is_null($course->max_students) || $course->enrollments_count <= $course->max_students;
     })
-    ->values(); // reindex
+    ->values()->take(6);  // get latest 6
+ // reindex
         return $this->success('', [
             'sliders' => SliderResource::collection($sliders),
             'categories' => CategoryResource::collection($categories),
