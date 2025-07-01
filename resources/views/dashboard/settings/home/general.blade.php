@@ -14,7 +14,7 @@
                 <div class="card-header">
                     <!--begin::Card title-->
                     <div class="card-title">
-                        <h2>{{ __('Image about us section') }}</h2>
+                        <h2>{{ __('Image general section') }}</h2>
                     </div>
                     <!--end::Card title-->
                 </div>
@@ -26,7 +26,7 @@
                         data-kt-image-input="true">
                         <!--begin::Preview existing avatar-->
                         <div class="image-input-wrapper w-150px h-150px"
-                            style="background-image: url({{ asset(getImagePathFromDirectory(setting('about_us_image'), 'Settings')) }})">
+                            style="background-image: url({{ asset(getImagePathFromDirectory(setting('logo_image'), 'Settings')) }})">
                         </div>
                         <!--end::Preview existing avatar-->
                         <!--begin::Label-->
@@ -34,7 +34,7 @@
                             data-kt-image-input-action="change" data-bs-toggle="tooltip" title="{{ __('تغير الصورة') }}">
                             <i class="bi bi-pencil-fill fs-7"></i>
                             <!--begin::Inputs-->
-                            <input type="file" name="about_us_image" accept=".png, .jpg, .jpeg" />
+                            <input type="file" name="logo_image" accept=".png, .jpg, .jpeg" />
                             <input type="hidden" name="avatar_remove" />
                             <!--end::Inputs-->
                         </label>
@@ -57,7 +57,7 @@
                     <div class="text-muted fs-7">{{ __('صيغة الصورة يجب ان تكون من نوع *.jpg, *.jpeg, *.gif, *.svg') }}
                     </div>
                     <!--end::Description-->
-                    <div class="invalid-feedback" id="about_us_image"></div>
+                    <div class="invalid-feedback" id="logo_image"></div>
                 </div>
                 <!--end::Card body-->
 
@@ -69,14 +69,14 @@
             <!--begin::Tab content-->
             <div class="tab-content">
                 <!--begin::Tab pane-->
-                <div class="tab-pane fade show active" id="settings_about_us" role="tab-panel">
+                <div class="tab-pane fade show active" id="settings_general" role="tab-panel">
                     <div class="d-flex flex-column gap-7 gap-lg-10">
                         <!--begin::Inventory-->
                         <div class="card card-flush py-4">
                             <!--begin::Card header-->
                             <div class="card-header">
                                 <div class="card-title">
-                                    <h2>{{ __('About us') }}</h2>
+                                    <h2>{{ __('General') }}</h2>
                                 </div>
                             </div>
                             <!--end::Card header-->
@@ -114,30 +114,30 @@
                                 <div class="mb-10 row">
                                     <div class="col-lg-6">
                                         <!--begin::Label-->
-                                        <label class="form-label">{{ __('About us in arabic') }}</label>
+                                        <label class="form-label">{{ __('title in arabic') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <textarea name="about_us_ar" id="about_us_ar_inp" data-kt-autosize="true" placeholder="{{ __('About us in arabic') }}"
+                                        <textarea name="general_ar" id="general_ar_inp" data-kt-autosize="true" placeholder="{{ __(title in arabic') }}"
                                             class="tox-target">
-                                            {{ setting('about_us_ar') }}
+                                            {{ setting('general_ar') }}
                                             </textarea>
                                         <!--end::Editor-->
                                         <!--begin::Description-->
-                                        <div class="fv-plugins-message-container invalid-feedback" id="about_us_ar"></div>
+                                        <div class="fv-plugins-message-container invalid-feedback" id="general_ar"></div>
                                         <!--end::Description-->
                                     </div>
                                     <div class="col-lg-6">
                                         <!--begin::Label-->
-                                        <label class="form-label">{{ __('About us in english') }}</label>
+                                        <label class="form-label">{{ __('title in english') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <textarea name="about_us_en" id="about_us_en_inp" data-kt-autosize="true" placeholder="{{ __('About us in english') }}"
+                                        <textarea name="general_en" id="general_en_inp" data-kt-autosize="true" placeholder="{{ __('titlein english') }}"
                                             class="tox-target">
-                                            {{ setting('about_us_en') }}
+                                            {{ setting('general_en') }}
                                             </textarea>
                                         <!--end::Editor-->
                                         <!--begin::Description-->
-                                        <div class="fv-plugins-message-container invalid-feedback" id="about_us_en"></div>
+                                        <div class="fv-plugins-message-container invalid-feedback" id="general_en"></div>
                                         <!--end::Description-->
                                     </div>
                                 </div>
@@ -177,7 +177,7 @@
     <script>
         let language = locale == 'en' ? 'ltr' : 'rtl';
         tinymce.init({
-            selector: "#about_us_ar_inp",
+            selector: "#general_ar_inp",
             height: "480",
             menubar: false,
             toolbar: ["styleselect",
@@ -188,7 +188,7 @@
             plugins: "advlist autolink link image lists charmap print preview code directionality"
         });
         tinymce.init({
-            selector: "#about_us_en_inp",
+            selector: "#general_en_inp",
             height: "480",
             menubar: false,
             toolbar: ["styleselect",
