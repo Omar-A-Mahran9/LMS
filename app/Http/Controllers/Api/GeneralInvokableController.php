@@ -23,6 +23,8 @@ class GeneralInvokableController extends Controller
             'email'            => setting('email'),
             'address'          => $address,
             'google_map_url'   => setting('google_map_url'),
+            'logo'           =>  getImagePathFromDirectory(setting('logo_image'), "Settings"),
+            'light_logo'           =>  getImagePathFromDirectory(setting('light_logo_image'), "Settings")
 
             // Dynamic SEO Meta Tags
             'meta' => [
@@ -37,7 +39,7 @@ class GeneralInvokableController extends Controller
                 'og:description'    => $locale === 'ar' ? 'كورسات لغة إنجليزية بإدارة مستر محمد النجار' : 'English language courses by Mr. Mohamed El Nagar',
                 'og:image'          => asset('images/contact.png'), // make sure this image exists
                 'og:url'            => url()->current(),
-                'favicon'           => asset('favicons/favicon-' . $locale . '.ico'), // example: favicon-ar.ico or favicon-en.ico
+                'favicon'           =>  getImagePathFromDirectory(setting('favicon_icon'), "Settings")
             ],
         ]);
     }
