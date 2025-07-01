@@ -461,6 +461,7 @@ public function getCourses(Request $request)
 {
     $perPage = $request->query('per_page', 10);
     $filter = $request->query('filter'); // values: 'my', 'other', or null
+    $today = Carbon::today()->toDateString(); // أو ->now() لو فيه وقت
 
     if ($filter === 'my' && !Auth::guard('api')->check()) {
         $empty = Course::whereRaw('0=1')->paginate($perPage); // empty pagination
@@ -472,8 +473,8 @@ public function getCourses(Request $request)
         ->where('is_active', 1)
         ->where('is_class', 0)
         ->where('is_enrollment_open', 1)
-        ->whereDate('start_date', '<=', now())
-        ->whereDate('end_date', '>=', now());
+        ->whereDate('start_date', '<=',  $today)
+        ->whereDate('end_date', '>=',  $today);
 
     if (Auth::guard('api')->check()) {
         $student = Auth::guard('api')->user();
