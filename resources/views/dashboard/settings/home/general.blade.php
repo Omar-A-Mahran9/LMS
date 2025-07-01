@@ -3,7 +3,7 @@
     @include('dashboard.partials.settings-nav')
 
     <!--begin::Form-->
-    <form class="form d-flex flex-column flex-lg-row ajax-form" action="{{ route('dashboard.settings.home.about-us') }}"
+    <form class="form d-flex flex-column flex-lg-row ajax-form" action="{{ route('dashboard.settings.home.general') }}"
         method="post" data-success-callback="onAjaxSuccess" data-hide-alert="true">
         @csrf
         <!--begin::Main column-->
@@ -14,7 +14,7 @@
                 <div class="card-header">
                     <!--begin::Card title-->
                     <div class="card-title">
-                        <h2>{{ __('Image general section') }}</h2>
+                        <h2>{{ __('logo') }}</h2>
                     </div>
                     <!--end::Card title-->
                 </div>
@@ -89,11 +89,11 @@
                                         <label class="form-label">{{ __('Label in arabic') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <input class="form-control" value="{{ setting('label_ar') }}" name="label_ar"
-                                            id="label_ar_inp" placeholder="{{ __('Label in arabic') }}" />
+                                        <input class="form-control" value="{{ setting('label_general_ar') }}" name="label_general_ar"
+                                            id="label_general_ar_inp" placeholder="{{ __('Label in arabic') }}" />
                                         <!--end::Editor-->
                                         <!--begin::Description-->
-                                        <div class="fv-plugins-message-container invalid-feedback" id="label_ar"></div>
+                                        <div class="fv-plugins-message-container invalid-feedback" id="label_general_ar"></div>
                                         <!--end::Description-->
                                     </div>
                                     <div class="col-lg-6">
@@ -101,11 +101,11 @@
                                         <label class="form-label">{{ __('Label in english') }}</label>
                                         <!--end::Label-->
                                         <!--begin::Editor-->
-                                        <input class="form-control" value="{{ setting('label_en') }}" name="label_en"
-                                            id="label_en_inp" placeholder="{{ __('Label in english') }}" />
+                                        <input class="form-control" value="{{ setting('label_general_en') }}" name="label_general_en"
+                                            id="label_general_en_inp" placeholder="{{ __('Label in english') }}" />
                                         <!--end::Editor-->
                                         <!--begin::Description-->
-                                        <div class="fv-plugins-message-container invalid-feedback" id="label_en"></div>
+                                        <div class="fv-plugins-message-container invalid-feedback" id="label_general_en"></div>
                                         <!--end::Description-->
                                     </div>
                                 </div>
