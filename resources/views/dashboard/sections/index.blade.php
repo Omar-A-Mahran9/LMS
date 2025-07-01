@@ -314,4 +314,70 @@
             });
         });
     </script>
+
+
+    <script>
+        const arabicNumbersMap = {
+            1: 'الأول',
+            2: 'الثاني',
+            3: 'الثالث',
+            4: 'الرابع',
+            5: 'الخامس',
+            6: 'السادس',
+            7: 'السابع',
+            8: 'الثامن',
+            9: 'التاسع',
+            10: 'العاشر',
+            11: 'الحادي عشر',
+            12: 'الثاني عشر',
+        };
+
+        const englishNumbersMap = {
+            1: 'One',
+            2: 'Two',
+            3: 'Three',
+            4: 'Four',
+            5: 'Five',
+            6: 'Six',
+            7: 'Seven',
+            8: 'Eight',
+            9: 'Nine',
+            10: 'Ten',
+            11: 'Eleven',
+            12: 'Twelve',
+        };
+
+        function generateSectionTitles(count) {
+            const next = count + 1;
+            const titleEn = `Section ${englishNumbersMap[next] || next}`;
+            const titleAr = `القسم ${arabicNumbersMap[next] || next}`;
+
+            if (!$('#title_en_inp').val()) {
+                $('#title_en_inp').val(titleEn);
+            }
+
+            if (!$('#title_ar_inp').val()) {
+                $('#title_ar_inp').val(titleAr);
+            }
+        }
+
+        // When modal opens for adding section
+        $('#crud_modal').on('show.bs.modal', function() {
+            const courseId = $('#course_id_inp').val();
+
+            if (!courseId) return;
+
+            $.ajax({
+                url: `/api/courses/${courseId}/sections/count`,
+                method: 'GET',
+                success: function(response) {
+                    const count = response.count || 0;
+                    generateSectionTitles(count);
+                },
+                error: function() {
+                    console.error('Failed to fetch section count');
+                }
+            });
+        });
+    </script>
 @endpush

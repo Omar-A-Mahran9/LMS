@@ -27,7 +27,7 @@ class SectionController extends Controller
 
         if ($request->ajax()) {
                 if($courseId){
-             
+
                     return response()->json(getModelData(model: new Section(), andsFilters: [['course_id', (int)$courseId]],relations: ['course' => ['id', 'title_ar','title_en' ]]));
 
                 }else{
@@ -127,6 +127,14 @@ class SectionController extends Controller
         'status' => true,
         'message' => __('Course class deleted successfully.'),
     ]);
+}
+
+
+
+public function countSectionByCourse($courseId)
+{
+    $count = Section::where('course_id', $courseId)->count();
+    return response()->json(['count' => $count]);
 }
 
 }
