@@ -1039,7 +1039,7 @@
                         {{ __('Correct') }}
                     </label>
                 </div>
-                
+
             </div>
         `);
 
@@ -1283,8 +1283,8 @@
 
         function generateVideoTitles(count) {
             const next = count + 1;
-            const titleEn = `Lecture ${englishNumbersMap[next] || next} (${next})`;
-            const titleAr = `Lecture ${arabicNumbersMap[next] || next} (${next})`;
+            const titleEn = `Part ${englishNumbersMap[next] || next} (${next})`;
+            const titleAr = `Part ${arabicNumbersMap[next] || next} (${next})`;
 
             // Only fill if fields are empty
             if (!$('#title_en_vid_inp').val()) {

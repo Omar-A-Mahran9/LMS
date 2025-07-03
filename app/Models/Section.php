@@ -11,11 +11,12 @@ class Section extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $appends = ['title', 'full_image_path','full_attachment_path','description'];
+    protected $appends = ['title','short_title', 'full_image_path','full_attachment_path','description'];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
     ];
+
 
 
 
@@ -38,6 +39,11 @@ class Section extends Model
     public function getDescriptionAttribute()
     {
         return app()->getLocale() === 'ar' ? $this->description_ar : $this->description_en;
+    }
+
+    public function getShortTitleAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->short_title_ar : $this->short_title_en;
     }
 
 

@@ -30,6 +30,8 @@ return [
         'course_section_id' => 'nullable|exists:course_sections,id',
         'title_ar' => 'required|string|max:255',
         'title_en' => 'required|string|max:255',
+        'short_title_ar' => 'required|string|max:255',
+        'short_title_en' => 'required|string|max:255',
         'description_ar' => 'nullable|string',
         'description_en' => 'nullable|string',
         'video_url' => [
