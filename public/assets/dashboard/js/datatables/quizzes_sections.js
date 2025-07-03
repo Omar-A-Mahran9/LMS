@@ -208,6 +208,8 @@ var KTDatatablesServerSidequiz = (function () {
                 $("#form_title").text(__("Edit Quiz"));
 
                 // Titles
+                $("#attempt_count_inp").val(data.attempt_count);
+
                 $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
 
