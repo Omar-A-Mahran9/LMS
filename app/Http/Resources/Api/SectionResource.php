@@ -66,6 +66,8 @@ class SectionResource extends JsonResource
         return [
             'id'           => $this->id,
             'title'        => $this->title,
+            'short_title'        => $this->short_title,
+
             'description'  => $this->description,
             'attachment'   => $this->full_attachment_path,
 
