@@ -39,7 +39,7 @@ if (!$quiz) {
             ->count();
 
         if ($usedAttempts >= $quiz->attempt_count) {
-            return $this->failure('You have reached the maximum number of attempts.');
+            return $this->failure(__('You have reached the maximum number of attempts.'));
         }
     }
 

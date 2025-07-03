@@ -114,7 +114,7 @@ var KTDatatablesHomeworkServerSide = (function () {
                             <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="javascript:;" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
+                                    <a href="javascript:;" class="menu-link px-3" data-kt-docs-table-filter="edit_row_homework">
                                         ${__("Edit")}
                                     </a>
                                 </div>
@@ -168,7 +168,7 @@ var KTDatatablesHomeworkServerSide = (function () {
 
     var handleEditRows = () => {
         const editButtons = document.querySelectorAll(
-            '[data-kt-docs-table-filter="edit_row"]'
+            '[data-kt-docs-table-filter="edit_row_homework"]'
         );
 
         editButtons.forEach((btn) => {
