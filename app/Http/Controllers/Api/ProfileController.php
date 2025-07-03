@@ -120,7 +120,7 @@ public function quizzesResults(Request $request)
                 'class_title'      => $quiz->class?->title,
                 'section_title'    => $quiz->section?->title,
                 'attempt_count'    => $attempts->count(),
-                'score'            =>   $bestScore? $bestScore . ' / ' . $totalPoints : __("Not found)") ,
+                'score'            =>   $bestScore? $bestScore . ' / ' . $totalPoints : __("Not found") ,
                 'score_percentage' =>$percentage? $percentage .'%':__("Not found"),
                 'last_attempt_at' => optional($latestAttempt?->started_at)?->format('Y-m-d h:i A'),
                 'is_submitted'     => $latestAttempt?->submitted_at !== null,
