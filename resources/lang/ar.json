@@ -115,6 +115,9 @@
     "Is Free Course?": "هل الدورة مجانية؟",
     "Is Active?": "هل الدورة مفعلة؟",
     "Level": "المستوى",
+    "Short Title (Arabic)": "عنوان صغير بالعربية",
+    "Short Title (English)": "عنوان صغير بالانجليزية",
+
     "required": "مطلوب",
     "Minutes": "دقائق",
     "count of attempt": "عدد الحضور",

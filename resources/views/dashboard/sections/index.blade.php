@@ -179,13 +179,13 @@
 
                         <div class="row mb-4">
                             <div class="col-6">
-                                <label for="short_title_ar_inp" class="form-label">{{ __('Title (Arabic)') }}</label>
+                                <label for="short_title_ar_inp" class="form-label">{{ __('Short Title (Arabic)') }}</label>
                                 <input type="text" name="short_title_ar" id="short_title_ar_inp" class="form-control"
                                     placeholder="{{ __('Enter Arabic title') }}">
                                 <div class="invalid-feedback" id="short_title_ar"></div>
                             </div>
                             <div class="col-6">
-                                <label for="short_title_en_inp" class="form-label">{{ __('Title (English)') }}</label>
+                                <label for="short_title_en_inp" class="form-label">{{ __('Short Title (English)') }}</label>
                                 <input type="text" name="short_title_en" id="title_en_inp" class="form-control"
                                     placeholder="{{ __('Enter English title') }}">
                                 <div class="invalid-feedback" id="short_title_en"></div>
