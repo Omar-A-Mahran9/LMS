@@ -122,7 +122,7 @@ public function quizzesResults(Request $request)
                 'attempt_count'    => $attempts->count(),
                 'score'            =>   $bestScore? $bestScore . ' / ' . $totalPoints : __("Not found score (may be refresh page during exam or not submit your exam)") ,
                 'score_percentage' =>$percentage? $percentage .'%':__("Not found"),
-                'last_attempt_at'  => optional($latestAttempt?->started_at)?->format('Y-m-d H:i:s'),
+                'last_attempt_at' => optional($latestAttempt?->started_at)?->format('Y-m-d h:i A'),
                 'is_submitted'     => $latestAttempt?->submitted_at !== null,
             ];
         });
