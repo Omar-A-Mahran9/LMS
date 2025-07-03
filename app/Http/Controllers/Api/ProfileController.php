@@ -120,7 +120,7 @@ public function quizzesResults(Request $request)
                 'class_title'      => $quiz->class?->title,
                 'section_title'    => $quiz->section?->title,
                 'attempt_count'    => $attempts->count(),
-                'score'            => $bestScore . ' / ' . $totalPoints,
+                'score'            =>   $bestScore? $bestScore . ' / ' . $totalPoints : __("لم تقم بحفظ اجابتك أو قمت بتحديث الصفحة أثناؤ الامتحان") ,
                 'score_percentage' => $percentage,
                 'last_attempt_at'  => optional($latestAttempt?->started_at)?->format('Y-m-d H:i:s'),
                 'is_submitted'     => $latestAttempt?->submitted_at !== null,
