@@ -211,17 +211,15 @@ var KTDatatablesServerSidequiz = (function () {
                 $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
 
-                if (tinymce.get("description_ar_inp")) {
-                    tinymce
-                        .get("description_ar_inp")
-                        .setContent(data.description_ar);
-                }
+                setTimeout(() => {
+                    const arEditor = tinymce.get("description_ar_inp");
+                    const enEditor = tinymce.get("description_en_inp");
 
-                if (tinymce.get("description_en_inp")) {
-                    tinymce
-                        .get("description_en_inp")
-                        .setContent(data.description_en);
-                }
+                    if (arEditor)
+                        arEditor.setContent(data.description_ar || "");
+                    if (enEditor)
+                        enEditor.setContent(data.description_en || "");
+                }, 300); // Adjust delay as needed
 
                 // Relationships
                 $("#course_section_id_inp")
