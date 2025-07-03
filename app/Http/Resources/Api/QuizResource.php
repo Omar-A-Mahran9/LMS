@@ -17,7 +17,7 @@ class QuizResource extends JsonResource
     {
 
          // Get current authenticated student (assuming you're using sanctum or similar)
-        $studentId = auth('student')->id(); // or however you auth students
+        $studentId = auth('api')->id(); // or however you auth students
 
         // Count the number of attempts made by this student
         $attemptsMade = $this->attempts()
