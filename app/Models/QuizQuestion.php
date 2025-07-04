@@ -31,5 +31,9 @@ class QuizQuestion extends Model
     {
         return $this->hasMany(QuizAnswer::class, 'quiz_question_id');
     }
+    public function readingPassage()
+    {
+        return $this->belongsTo(ReadingPassage::class);
+    }
 
 }

@@ -41,6 +41,7 @@ public function store(StoreQuizRequest $request, $sectionId)
     $validated = $request->validated();
     $validated['section_id'] = $sectionId;
     $validated['is_active'] = $request->boolean('is_active');
+    $validated['have_reading_passages'] = $request->boolean('have_reading_passages');
 
     Quiz::create($validated);
 

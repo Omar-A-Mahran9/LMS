@@ -202,7 +202,32 @@
                                         </button>
                                         <!--end::Add customer-->
                                     @endif
+
                                 </div>
+                                @if ($hasReadingPassages)
+                                    <div id="add_btn_reading_passage" data-bs-toggle="modal"
+                                        data-bs-target="#crud_reading_passage_modal" data-kt-docs-table-toolbar="base"
+                                        for="kt_datatable">
+
+                                        <button type="button" class="btn btn-primary" id="reading_passage"
+                                            data-bs-toggle="tooltip" data-kt-initialized="1">
+                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
+                                            <span class="svg-icon svg-icon-2">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2"
+                                                        rx="1" transform="rotate(-90 11.364 20.364)"
+                                                        fill="currentColor">
+                                                    </rect>
+                                                    <rect x="4.36396" y="11.364" width="16" height="2" rx="1"
+                                                        fill="currentColor"></rect>
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon-->{{ __('Add new reading passage') }}
+                                        </button>
+                                    </div>
+                                @endif
+
                                 <!--end::Toolbar-->
                             @endcan <!--begin::Datatable-->
 
@@ -442,8 +467,88 @@
                                             </label>
                                         </div>
 
+                                        <div class="col-3 d-flex align-items-center mt-4">
+                                            <label class="form-check form-switch form-check-custom form-check-solid">
+                                                <input class="form-check-input" name="have_reading_passages"
+                                                    type="checkbox" value="1" id="have_reading_passages_switch">
+                                                <span class="form-check-label text-dark"
+                                                    for="have_reading_passages_switch">
+                                                    {{ __('Has Reading Passage?') }}
+                                                </span>
+                                            </label>
+                                        </div>
+
+
                                     </div>
 
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light"
+                                        data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <span class="indicator-label">{{ __('Save') }}</span>
+                                        <span class="indicator-progress">
+                                            {{ __('Please wait...') }} <span
+                                                class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.reading_passage.store') }}"
+                    method="post" enctype="multipart/form-data" data-success-callback="onAjaxSuccess"
+                    data-error-callback="onAjaxError">
+                    @csrf
+                    <div class="modal fade" tabindex="-1" id="crud_reading_passage_modal">
+                        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="form_title">{{ __('Add new reading passage') }}</h5>
+                                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                        <i class="ki-outline ki-cross fs-1"></i>
+                                    </div>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="row mb-4">
+                                        <div class="col-6">
+                                            <label for="title_ar_read_inp"
+                                                class="form-label">{{ __('Title (Arabic)') }}</label>
+                                            <input type="text" name="title_ar" id="title_ar_read_inp"
+                                                class="form-control" placeholder="{{ __('Enter Arabic title') }}">
+                                            <div class="invalid-feedback" id="title_ar"></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="title_en_read_inp"
+                                                class="form-label">{{ __('Title (English)') }}</label>
+                                            <input type="text" name="title_en" id="title_en_read_inp"
+                                                class="form-control" placeholder="{{ __('Enter English title') }}">
+                                            <div class="invalid-feedback" id="title_en"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-4">
+                                        <div class="col-6">
+                                            <label for="description_ar_inp"
+                                                class="form-label">{{ __('Description (Arabic)') }}</label>
+                                            <textarea name="description_ar" id="description_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
+                                            <div class="fv-plugins-message-container invalid-feedback"
+                                                id="description_ar"></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="description_en_inp"
+                                                class="form-label">{{ __('Description (English)') }}</label>
+                                            <textarea name="description_en" id="description_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
+                                            <div class="fv-plugins-message-container invalid-feedback"
+                                                id="description_en"></div>
+                                        </div>
+                                    </div>
 
                                 </div>
 

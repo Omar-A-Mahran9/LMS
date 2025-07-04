@@ -37,6 +37,7 @@ class StoreQuizRequest extends FormRequest
 
         'duration_minutes' => 'nullable|integer|min:0',
         'is_active' => 'sometimes|boolean',
+        'have_reading_passages' => 'sometimes|boolean',
 
             // Multilingual Titles and Descriptions
         'title_ar' => [

@@ -107,8 +107,10 @@ class SectionController extends Controller
             $course=$section->course;
             $quizExists = $section->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
             $homeworskExists = $section->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
-
-            return view('dashboard.sections.show', compact('section', 'quizExists','courses','quizzes','homeworskExists','course'));
+            $hasReadingPassages = $section->quizzes()
+                ->where('have_reading_passages', true)
+                ->exists();
+            return view('dashboard.sections.show', compact('section', 'quizExists','courses','quizzes','homeworskExists','course','hasReadingPassages'));
         }
 
 
