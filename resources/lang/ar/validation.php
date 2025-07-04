@@ -240,6 +240,7 @@ return [
         'today' => 'اليوم',
          "attachment"=> "الملف",
         'attempt_count' => 'عدد المحاولات',
+        'reading_passage_id' => 'قطعة القراءة',
 
         'government_id' => 'المحافظة',
         'last_name' => 'اسم العائلة',

@@ -116,9 +116,11 @@
     "Is Free Course?": "هل الدورة مجانية؟",
     "Is Active?": "هل الدورة مفعلة؟",
     "Level": "المستوى",
+    "Select Type": "حدد النوع",
+    "Select a reading passage": "حدد فقرة قراءة",
     "Short Title (Arabic)": "عنوان صغير بالعربية",
     "Short Title (English)": "عنوان صغير بالانجليزية",
-
+    "Reading Passage": "قطعة القراءة",
     "required": "مطلوب",
     "Minutes": "دقائق",
     "count of attempt": "عدد الحضور",
@@ -137,7 +139,6 @@
     "Add New class": "إضافة حصة جديدة",
     "Add New section": "إضافة قسم جديد",
     "Is Free Book": "هل الكتاب مجاني؟",
-
     "Add new section": "إضافة قسم جديدة",
     "sections list": "قائمة الاقسام",
     "Enrollment Open": "التسجيل مفتوح",

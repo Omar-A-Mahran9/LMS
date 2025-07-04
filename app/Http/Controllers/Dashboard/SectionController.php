@@ -11,6 +11,7 @@ use App\Models\Course;
 use App\Models\CourseClass;
  use App\Models\CourseVideo;
 use App\Models\Quiz;
+use App\Models\ReadingPassage;
 use App\Models\Section;
 use Illuminate\Http\Request;
 
@@ -99,6 +100,8 @@ class SectionController extends Controller
 
         public function show($id)
         {
+            $readingPassages = ReadingPassage::latest()->get();
+
             $section = Section::with('course')->findOrFail($id); // Eager load course
             $this->authorize('view_sections');
                 $courses = Course::select('id', 'title_en', 'title_ar')->get();
@@ -110,7 +113,7 @@ class SectionController extends Controller
             $hasReadingPassages = $section->quizzes()
                 ->where('have_reading_passages', true)
                 ->exists();
-            return view('dashboard.sections.show', compact('section', 'quizExists','courses','quizzes','homeworskExists','course','hasReadingPassages'));
+            return view('dashboard.sections.show', compact('section', 'quizExists','courses','quizzes','homeworskExists','course','hasReadingPassages','readingPassages'));
         }
 
 

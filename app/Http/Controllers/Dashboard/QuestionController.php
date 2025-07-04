@@ -57,6 +57,7 @@ public function index(Request $request)
     // Create the question
     $question = QuizQuestion::create([
         'quiz_id'     => $request->quiz_id,
+        'reading_passage_id' =>$request->reading_passage_id,
         'question_ar' => $request->question_ar,
         'question_en' => $request->question_en,
         'type'        => $request->type,
@@ -106,6 +107,7 @@ public function update(UpdateQuestionRequest $request, QuizQuestion $question)
     // Update base fields
     $question->update([
         'quiz_id'     => $request->quiz_id,
+        'reading_passage_id' =>$request->reading_passage_id,
         'question_ar' => $request->question_ar,
         'question_en' => $request->question_en,
         'type'        => $request->type,

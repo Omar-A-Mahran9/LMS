@@ -535,16 +535,16 @@
 
                                     <div class="row mb-4">
                                         <div class="col-6">
-                                            <label for="description_ar_inp"
+                                            <label for="description_read_ar_inp"
                                                 class="form-label">{{ __('Description (Arabic)') }}</label>
-                                            <textarea name="description_ar" id="description_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
+                                            <textarea name="description_ar" id="description_read_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
                                             <div class="fv-plugins-message-container invalid-feedback"
                                                 id="description_ar"></div>
                                         </div>
                                         <div class="col-6">
-                                            <label for="description_en_inp"
+                                            <label for="description_read_en_inp"
                                                 class="form-label">{{ __('Description (English)') }}</label>
-                                            <textarea name="description_en" id="description_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
+                                            <textarea name="description_en" id="description_read_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
                                             <div class="fv-plugins-message-container invalid-feedback"
                                                 id="description_en"></div>
                                         </div>
@@ -611,7 +611,24 @@
                                         </select>
                                         <div class="invalid-feedback" id="type"></div>
                                     </div>
-
+                                    {{-- Reading Passage --}}
+                                    @if ($hasReadingPassages)
+                                        <div class="mb-3">
+                                            <label for="reading_passage_id">{{ __('Reading Passage') }}</label>
+                                            <select name="reading_passage_id" id="reading_passage_id" class="form-select"
+                                                data-control="select2"
+                                                data-placeholder="{{ __('Select a reading passage') }}"
+                                                data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                                <option value="">{{ __('None') }}</option>
+                                                @foreach ($readingPassages as $passage)
+                                                    <option value="{{ $passage->id }}">
+                                                        {{ $passage->title }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <div class="invalid-feedback" id="reading_passage_id"></div>
+                                        </div>
+                                    @endif
                                     {{-- Repeater Error --}}
                                     <div class="text-danger mb-2" id="answers"></div>
 
