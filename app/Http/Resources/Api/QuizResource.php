@@ -88,6 +88,7 @@ public function toArray(Request $request): array
 
     return [
         "id" => $this->id,
+        "course_id" => $this->course?$this->course->id:null,
         'have_duration' => (bool) $this->duration_minutes,
         'duration_minutes' => $this->duration_minutes,
         'attempt_count' => $this->attempt_count,
