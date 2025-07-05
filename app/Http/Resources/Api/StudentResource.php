@@ -21,7 +21,7 @@ class StudentResource extends JsonResource
             'parent_job' => $this->parent_job,
             'gender' => $this->gender,
             'government' => [
-                'id'=>$this->government->id,
+                'id'=>$this->government?$this->government->id:null,
                 'name'=>$this->government->name
             ],
              'category' => [
