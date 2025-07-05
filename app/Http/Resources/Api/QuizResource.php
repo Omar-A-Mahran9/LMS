@@ -88,8 +88,8 @@ public function toArray(Request $request): array
 
     return [
         "id" => $this->id,
-        "id" => $this->title,
-        "id" => $this->description,
+        "title" => $this->title,
+        "description" => $this->description,
 
         "course_id" => $this->course?$this->course->id:null,
         'have_duration' => (bool) $this->duration_minutes,
