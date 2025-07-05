@@ -303,17 +303,18 @@ let initTinyMc = function (editingInp = false, height = 400) {
         selector: ".tinymce",
         height: height,
         menubar: false,
-        directionality: language === "ar" ? "rtl" : "ltr", // تحديد الاتجاه بناءً على اللغة
-        language: language, // لو كنت محمّل ملفات اللغة مسبقًا (مثل ar.js أو en.js)
+        directionality: language === "ar" ? "rtl" : "ltr",
         plugins:
             "advlist autolink link image lists charmap print preview code save",
         toolbar: `
-            undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify |
-            bullist numlist outdent indent | ltr rtl | link image | blockquote subscript superscript |
-            charmap | print preview | code
+            styleselect | undo redo | cut copy paste | bold italic | link image |
+            alignleft aligncenter alignright alignjustify |
+            bullist numlist | outdent indent | ltr rtl |
+            blockquote subscript superscript |
+            advlist autolink lists charmap | print preview | code
         `,
         save_onsavecallback: function () {
-            console.log("Content saved.");
+            console.log("Saved");
         },
         setup: function (editor) {
             if (!editingInp) {
@@ -322,8 +323,8 @@ let initTinyMc = function (editingInp = false, height = 400) {
                 });
             }
         },
-        content_style:
-            "body { font-family: Arial, sans-serif; font-size:14px; }",
+        content_style: "body { font-family: Arial; font-size: 14px; }",
+        valid_elements: "*[*]", // ✅ optional: allows all HTML tags and attributes
     });
 };
 
