@@ -41,7 +41,7 @@ class QuizResource extends JsonResource
     //         : [],        ];
     // }
 
-    public function toArray(Request $request): array
+public function toArray(Request $request): array
 {
     $studentId = auth('api')->id();
 
@@ -49,33 +49,40 @@ class QuizResource extends JsonResource
         ->where('student_id', $studentId)
         ->count();
 
-    // Load questions with reading passage relationship
+    // Load questions with readingPassage
     $questions = $this->relationLoaded('questions')
         ? $this->questions
         : $this->questions()->with('readingPassage')->get();
 
-    // Group questions by reading_passage_id
-    $grouped = $questions->groupBy(function ($q) {
-        return $q->reading_passage_id ?: 'no_passage';
-    });
+    $questions = $questions->sortBy('id')->values(); // Keep original order
 
     $finalQuestions = [];
+    $handledPassages = [];
 
-    foreach ($grouped as $groupKey => $groupItems) {
-        if ($groupKey !== 'no_passage') {
-            $passage = $groupItems->first()->readingPassage;
+    foreach ($questions as $question) {
+        if ($question->reading_passage_id) {
+            // If this passage was already handled, skip
+            if (in_array($question->reading_passage_id, $handledPassages)) {
+                continue;
+            }
+
+            // Get all questions related to this passage
+            $relatedQuestions = $questions->where('reading_passage_id', $question->reading_passage_id);
 
             $finalQuestions[] = [
                 'type' => 'reading_passage',
-                'id' => $passage->id,
-                'description' => app()->getLocale() === 'ar' ? $passage->description_ar : $passage->description_en,
-                'questions' => QuestionResource::collection($groupItems),
+                'id' => $question->reading_passage_id,
+                'description' => app()->getLocale() === 'ar'
+                    ? $question->readingPassage?->description_ar
+                    : $question->readingPassage?->description_en,
+                'questions' => QuestionResource::collection($relatedQuestions)->values(),
             ];
+
+            // Mark this passage as handled
+            $handledPassages[] = $question->reading_passage_id;
         } else {
-            // Normal questions without reading passage
-            foreach ($groupItems as $question) {
-                $finalQuestions[] = (new QuestionResource($question))->toArray($request);
-            }
+            // Normal question
+            $finalQuestions[] = (new QuestionResource($question))->toArray($request);
         }
     }
 
@@ -89,7 +96,7 @@ class QuizResource extends JsonResource
             : null,
         'full_score' => $questions->sum('points'),
         'question_count' => $questions->count(),
-        'questions' => $finalQuestions, // same key, enhanced format
+        'questions' => $finalQuestions,
     ];
 }
 
