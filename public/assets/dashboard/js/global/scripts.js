@@ -298,22 +298,33 @@ function isFileExists(urlToFile) {
 }
 
 /** End :: System Alerts  **/
-
 let initTinyMc = function (editingInp = false, height = 400) {
     tinymce.init({
         selector: ".tinymce",
-        height: "480",
+        height: height,
         menubar: false,
-        toolbar: [
-            "styleselect",
-            "undo redo | cut copy paste | bold italic | link image | alignleft aligncenter alignright alignjustify",
-            "bullist numlist | outdent indent | ltr rtl | blockquote subscript superscript | advlist | autolink | lists charmap | print preview |  code",
-        ],
-        directionality: language, // Set the initial direction to RTL if needed
-        plugins: "advlist autolink link lists charmap print preview code save",
-        save_onsavecallback: function () {},
+        directionality: language === "ar" ? "rtl" : "ltr", // تحديد الاتجاه بناءً على اللغة
+        language: language, // لو كنت محمّل ملفات اللغة مسبقًا (مثل ar.js أو en.js)
+        plugins:
+            "advlist autolink link image lists charmap print preview code save",
+        toolbar: `
+            undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify |
+            bullist numlist outdent indent | ltr rtl | link image | blockquote subscript superscript |
+            charmap | print preview | code
+        `,
+        save_onsavecallback: function () {
+            console.log("Content saved.");
+        },
+        setup: function (editor) {
+            if (!editingInp) {
+                editor.on("init", function () {
+                    editor.setContent("");
+                });
+            }
+        },
+        content_style:
+            "body { font-family: Arial, sans-serif; font-size:14px; }",
     });
-    if (!editingInp) $(".tinymce").val(null);
 };
 
 let deleteElement = (deletedElementName, deletionUrl, callback) => {
