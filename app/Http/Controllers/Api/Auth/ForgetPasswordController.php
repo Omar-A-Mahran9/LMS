@@ -128,7 +128,6 @@ public function sendOtp(Request $request)
         $fieldType  = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
         $student = Student::where($fieldType, $loginInput)->first();
-dd($student);
         if (!$student) {
             return $this->failure(__('This user does not exist.'));
         }
