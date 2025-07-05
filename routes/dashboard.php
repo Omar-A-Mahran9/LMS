@@ -6,6 +6,7 @@ use App\Http\Controllers\Dashboard\HomeworkByClassController;
 use App\Http\Controllers\Dashboard\HomeworkBySectionController;
 use App\Http\Controllers\Dashboard\QuizByClassController;
 use App\Http\Controllers\Dashboard\QuizBySectionController;
+use App\Http\Controllers\Dashboard\QuizController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,8 @@ Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected
  Route::get('classes/{classId}/videos', 'CourseVideoController@getvideosbyclasses');
   Route::get('sections/{sectionId}/videos', 'SectionVideoController@getvideosbyclasses');
  Route::resource('reading_passage', 'ReadingPassageController')->except(['create', 'edit']);
+Route::get('quizzes/{quiz}/has-reading-passages', [QuizController::class, 'hasReadingPassages']);
+Route::get('quizzes/{quiz}/has-passages', [QuizController::class, 'hasPassages']);
 
  Route::resource('classes', 'ClassController')->except(['create', 'edit']);
   Route::resource('sections', 'SectionController')->except(['create', 'edit']);

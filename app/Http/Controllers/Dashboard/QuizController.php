@@ -115,4 +115,18 @@ public function show(Request $request, Quiz $quiz)
         return response()->json(['message' => __('Quiz deleted successfully.')]);
     }
 
+    public function hasReadingPassages(Quiz $quiz)
+    {
+        $hasReading = $quiz->questions()->whereNotNull('reading_passage_id')->exists();
+
+        return response()->json(['hasReading' => $hasReading]);
+    }
+    public function hasPassages(Quiz $quiz)
+    {
+         return response()->json([
+            'hasReading' => (bool) $quiz->have_reading_passages,
+        ]);
+    }
+
+
 }

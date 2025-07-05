@@ -17,7 +17,7 @@ class StoreQuestionRequest extends FormRequest
     {
     $rules = [
         'quiz_id'     => ['required', 'exists:quizzes,id'],
-        'reading_passage_id'     => ['required'],
+        'reading_passage_id'     => ['nullable'],
 
         'question_ar' => ['required', 'string', new NotNumbersOnly],
         'question_en' => ['required', 'string', new NotNumbersOnly],

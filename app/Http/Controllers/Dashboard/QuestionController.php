@@ -11,6 +11,7 @@ use App\Models\Course;
 use App\Models\CourseSection;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
+use App\Models\ReadingPassage;
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
@@ -21,6 +22,7 @@ public function index(Request $request)
     $this->authorize('view_quizzes');
     $quizId = $request->query('quiz_id'); // or $request->get('quiz_id');
 
+    $readingPassages = ReadingPassage::get();
 
     $count_quizzes = QuizQuestion::count();
     $courses = Course::where('is_active', 1)->get();
@@ -43,6 +45,7 @@ public function index(Request $request)
         'courses',
         'sections',
         'quizzes',
+        'readingPassages'
     ));
 }
 
