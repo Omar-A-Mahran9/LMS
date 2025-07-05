@@ -16,11 +16,11 @@ public function startQuiz(Request $request, $quizId)
 {
     $studentId = auth()->id();
 
-$quiz = Quiz::with('course')->find($quizId);
+    $quiz = Quiz::with('course')->find($quizId);
 
-if (!$quiz) {
-    return $this->failure(__('Quiz is not found'));
-}
+    if (!$quiz) {
+        return $this->failure(__('Quiz is not found'));
+    }
 
     if (!$quiz->course || !$quiz->course->is_active) {
         return $this->failure('Quiz is not linked to an active course.');
@@ -121,6 +121,7 @@ public function submitQuiz(Request $request, $quizAttemptId)
             return $this->success(
                 'The quiz time has expired. You cannot submit your answers.',
                 [
+                    'course_id'=>$attempt->quiz?$attempt->quiz?->course->id:null,
                     'score' => $score,
                     'total_points' => $totalPoints,
                     'score_text' => $scoreText,
