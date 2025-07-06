@@ -45,8 +45,8 @@ class CourseDetailsResource extends JsonResource
             'started_at' => $this->start_date,
             'count_video' => $this->videos->count(),
             'count_quiz' => $this->quizzes->count(),
-            'count_homework' => $this->sections->count(),
-            'count_attachment' => $this->count_attachment, // only if you define this accessor
+            'count_homework' => $this->homeworks->count(),
+            'count_attachment' => $this->sections->count(), // only if you define this accessor
             'have_certificate' => $this->certificate_available,
            'is_completed' => $isCompleted,
             'certificate_url' => $this->certificate_available
