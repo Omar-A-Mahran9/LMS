@@ -260,115 +260,115 @@ public function results($studentQuizId)
  $attempt = QuizAttempt::with([
     'quiz.questions.answers',
     'answers.answer'
-])->where('id', $studentQuizId)
-  ->where('student_id', auth()->id())
-  ->first();
+    ])->where('id', $studentQuizId)
+    ->where('student_id', auth()->id())
+    ->first();
 
-if (!$attempt) {
-    return $this->failure('Quiz attempt not found or access denied.');
-}
-
- if (!$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
-        return $this->failure('You are not enrolled in this course.');
+    if (!$attempt) {
+        return $this->failure('Quiz attempt not found or access denied.');
     }
-    $results = [];
-    $totalScore = 0;
-    $fullScore = 0;
 
-    foreach ($attempt->quiz->questions as $question) {
-        $fullScore += $question->points;
-
-        $attemptAnswer = $attempt->answers->firstWhere('quiz_question_id', $question->id);
-
-        if ($question->type === 'short_answer') {
-            // For short‑answer, single “correct” text
-            $correctAnswers = [
-                'answer' => $question->expected_answer,
-            ];
-        } else {
-            // For MCQ / true_false, collect all correct options
-            $correctAnswers = $question->answers
-                ->where('is_correct', 1)
-                ->map(fn($ans) => [
-                    'id'     => $ans->id,
-                    'answer' => $ans->answer,
-                ])
-                ->values()
-                ->toArray();
+    if (!$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
+            return $this->failure('You are not enrolled in this course.');
         }
+        $results = [];
+        $totalScore = 0;
+        $fullScore = 0;
+
+        foreach ($attempt->quiz->questions as $question) {
+            $fullScore += $question->points;
+
+            $attemptAnswer = $attempt->answers->firstWhere('quiz_question_id', $question->id);
+
+            if ($question->type === 'short_answer') {
+                // For short‑answer, single “correct” text
+                $correctAnswers = [
+                    'answer' => $question->expected_answer,
+                ];
+            } else {
+                // For MCQ / true_false, collect all correct options
+                $correctAnswers = $question->answers
+                    ->where('is_correct', 1)
+                    ->map(fn($ans) => [
+                        'id'     => $ans->id,
+                        'answer' => $ans->answer,
+                    ])
+                    ->values()
+                    ->toArray();
+            }
 
 
-        $studentAnswer = null;
-        $isCorrect = false;
+            $studentAnswer = null;
+            $isCorrect = false;
 
-        if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-            $selectedId = $attemptAnswer?->quiz_answer_id;
+            if (in_array($question->type, ['multiple_choice', 'true_false'])) {
+                $selectedId = $attemptAnswer?->quiz_answer_id;
 
-            if ($attemptAnswer?->quiz_answer_id) {
-                // Find the selected answer object for student answer
-                $selectedAnswer = $question->answers->firstWhere('id', $attemptAnswer->quiz_answer_id);
-                if ($selectedAnswer) {
-                    $studentAnswer = [
-                        'id' => $selectedAnswer->id,
-                        'answer' => $selectedAnswer->answer,
-                    ];
+                if ($attemptAnswer?->quiz_answer_id) {
+                    // Find the selected answer object for student answer
+                    $selectedAnswer = $question->answers->firstWhere('id', $attemptAnswer->quiz_answer_id);
+                    if ($selectedAnswer) {
+                        $studentAnswer = [
+                            'id' => $selectedAnswer->id,
+                            'answer' => $selectedAnswer->answer,
+                        ];
+                    }
+                }
+
+                // Check if student's selected answer id is in correct answers
+                $isCorrect = $correctAnswers && collect($correctAnswers)
+                    ->pluck('id')
+                    ->contains($attemptAnswer?->quiz_answer_id);
+            } elseif ($question->type === 'short_answer') {
+                // For short answer, student_answer is the text typed, with id null
+                $studentAnswerText = $attemptAnswer?->answer_text ?? null;
+                $studentAnswer = $studentAnswerText !== null ? [
+                    'id' => null,
+                    'answer' => $studentAnswerText,
+                ] : null;
+
+                if ($studentAnswerText && strtolower(trim($studentAnswerText)) === strtolower(trim($question->expected_answer))) {
+                    $isCorrect = true;
                 }
             }
 
-            // Check if student's selected answer id is in correct answers
-            $isCorrect = $correctAnswers && collect($correctAnswers)
-                ->pluck('id')
-                ->contains($attemptAnswer?->quiz_answer_id);
-        } elseif ($question->type === 'short_answer') {
-            // For short answer, student_answer is the text typed, with id null
-            $studentAnswerText = $attemptAnswer?->answer_text ?? null;
-            $studentAnswer = $studentAnswerText !== null ? [
-                'id' => null,
-                'answer' => $studentAnswerText,
-            ] : null;
+            $pointsAwarded = $isCorrect ? $question->points : 0;
+            $totalScore += $pointsAwarded;
 
-            if ($studentAnswerText && strtolower(trim($studentAnswerText)) === strtolower(trim($question->expected_answer))) {
-                $isCorrect = true;
-            }
+            $results[] = [
+                'question_id'      => $question->id,
+                'question_type'      => $question->type,
+
+                'question'         => $question->question,
+                'question_answers' => $question->answers->map(fn($ans) => [
+                                                'id' => $ans->id,
+                                                'answer' => $ans->answer_en,
+                                                'is_correct' => (bool) $ans->is_correct, // optional
+                                                'is_selected'=> $ans->id === $selectedId,
+
+                                            ])->values()->toArray(),
+                'student_answer'   => $studentAnswer,
+                'correct_answers'  => $correctAnswers,
+                'is_correct'       => $isCorrect,
+                'points_awarded'   => $pointsAwarded,
+                'points_possible'  => $question->points,
+            ];
         }
 
-        $pointsAwarded = $isCorrect ? $question->points : 0;
-        $totalScore += $pointsAwarded;
+        return $this->success('', [
+            'class_id'=> $attempt->quiz->class_id,
 
-        $results[] = [
-            'question_id'      => $question->id,
-            'question_type'      => $question->type,
+            'section_id'=> $attempt->quiz->section_id,
 
-            'question'         => $question->question,
-            'question_answers' => $question->answers->map(fn($ans) => [
-                                            'id' => $ans->id,
-                                            'answer' => $ans->answer_en,
-                                            'is_correct' => (bool) $ans->is_correct, // optional
-                                            'is_selected'=> $ans->id === $selectedId,
-
-                                        ])->values()->toArray(),
-            'student_answer'   => $studentAnswer,
-            'correct_answers'  => $correctAnswers,
-            'is_correct'       => $isCorrect,
-            'points_awarded'   => $pointsAwarded,
-            'points_possible'  => $question->points,
-        ];
+            'course_id'=> $attempt->quiz->section->course_id,
+            'attempt_id'   => $attempt->id,
+            'quiz_title'   => $attempt->quiz->title_en,
+            'score'        => $totalScore,
+            'full_score'   => $fullScore,
+            'submitted_at' => $attempt->submitted_at,
+            'results'      => $results,
+        ]);
     }
-
-    return $this->success('', [
-        'class_id'=> $attempt->quiz->class_id,
-
-        'section_id'=> $attempt->quiz->section_id,
-
-        'course_id'=> $attempt->quiz->section->course_id,
-        'attempt_id'   => $attempt->id,
-        'quiz_title'   => $attempt->quiz->title_en,
-        'score'        => $totalScore,
-        'full_score'   => $fullScore,
-        'submitted_at' => $attempt->submitted_at,
-        'results'      => $results,
-    ]);
-}
 
 
 
