@@ -29,7 +29,8 @@ class Course extends Model
         'is_full',
         'is_completed',
         'progress_percentage',
-        'certificate_url'
+        'certificate_url',
+        'count_attachment'
     ];
 
     /*
@@ -73,6 +74,10 @@ class Course extends Model
     public function videos()
     {
         return $this->hasMany(CourseVideo::class);
+    }
+    public function getCountAttachmentAttribute()
+    {
+        return $this->sections->whereNotNull('attachment')->count();
     }
 
      public function quizzes()
