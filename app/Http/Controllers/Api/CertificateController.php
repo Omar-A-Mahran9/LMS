@@ -16,6 +16,17 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CertificateController extends Controller
 {
+
+        public function verify($id)
+    {
+        $certificate = Certificate::where('certificate_id', $id)->firstOrFail();
+
+        return view('certificates.verify', [
+            'certificate' => $certificate
+        ]);
+    }
+
+
     public function download(Course $course)
     {
         $student = auth('api')->user();

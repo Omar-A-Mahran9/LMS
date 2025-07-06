@@ -68,7 +68,7 @@ Route::middleware(['auth:api'])->group(function () {
 Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
     Route::get('/courses/{id}/sections/count', [SectionController::class, 'countSectionByCourse']);
-    Route::get('certificate/verify/{id}', [CertificateVerifyController::class, 'verify'])
+    Route::get('certificate/verify/{id}', [CertificateController::class, 'verify'])
     ->name('certificates.verify');
     Route::get('certificates/{course}', [CertificateController::class, 'download'])
         ->name('student.certificates.download');
