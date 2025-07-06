@@ -25,7 +25,7 @@ class UpdateSliderRequest extends FormRequest
     public function rules()
     {
         return [
-             'background' => ['nullable', 'required_unless:is_video,1', 'image', 'mimes:jpg,png,jpeg,gif,svg,webp'],
+             'background' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif,svg,webp'],
 
             "title_ar" => ["required", "string:255", new NotNumbersOnly()],
             "title_en" => ["required", "string:255", new NotNumbersOnly()],
