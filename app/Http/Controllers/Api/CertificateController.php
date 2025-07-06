@@ -62,7 +62,7 @@ class CertificateController extends Controller
             'message' => __('You must score at least 50% in all quizzes. Retake: ') . implode(', ', $failedQuizzes)
         ], 403);
     }
-
+dd($failedQuizzes);
         // ✅ Generate Certificate ID & QR Code
         $certificateId = 'CERT-' . strtoupper(Str::random(10));
         $certificateUrl = route('certificates.verify', ['id' => $certificateId]);
