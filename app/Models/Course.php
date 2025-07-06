@@ -75,6 +75,10 @@ class Course extends Model
         return $this->hasMany(CourseVideo::class);
     }
 
+     public function quizzes()
+    {
+        return $this->hasMany(Quiz::class);
+    }
     public function classes()
     {
         return $this->hasMany(CourseClass::class);
