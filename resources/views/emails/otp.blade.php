@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <title>رمز التحقق</title>
@@ -18,7 +19,7 @@
             background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 0 8px rgba(0,0,0,0.06);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
             border-top: 6px solid #1D2963;
         }
 
@@ -31,7 +32,8 @@
             max-height: 70px;
         }
 
-        h2, p {
+        h2,
+        p {
             color: #1D2963;
         }
 
@@ -61,13 +63,15 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="email-container">
 
         {{-- الشعار --}}
         <div class="logo">
-            <img src="{{ getImagePathFromDirectory(setting('logo_image') ?? 'default-logo.png', 'Settings') }}" alt="شعار المنصة">
+            <img src="{{ getImagePathFromDirectory(setting('logo_image') ?? 'default-logo.png', 'Settings') }}"
+                alt="شعار المنصة">
         </div>
 
         {{-- نص الترحيب --}}
@@ -86,10 +90,18 @@
         {{-- التوقيع --}}
         <div class="footer">
             مع تحياتنا،<br>
-            فريق {{ config('app.name', 'LMS') }}
+            <br><br>
+
+            {{-- أرقام الدعم --}}
+            <div style="margin-top: 15px; font-size: 13px; color: #555;">
+                📞 الدعم الفني: <a href="tel:01005870754" style="color: #1D2963;">01005870754</a><br>
+                💬 واتساب: <a href="https://wa.me/201029734433" target="_blank" style="color: #2C3E94;">01029734433</a>
+            </div>
         </div>
+
 
     </div>
 
 </body>
+
 </html>
