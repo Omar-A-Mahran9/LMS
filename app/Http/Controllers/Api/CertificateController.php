@@ -18,7 +18,7 @@ class CertificateController extends Controller
 {
     public function download(Course $course)
     {
-        $student = Auth::guard('api')->user();
+        $student = auth('api')->user();
 
         if (!$student) {
             return $this->failure(__('Unauthorized'));
