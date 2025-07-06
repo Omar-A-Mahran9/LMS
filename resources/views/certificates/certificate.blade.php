@@ -20,40 +20,42 @@
         .certificate {
             width: 100%;
             height: 100%;
-            padding: 20mm 25mm;
+            padding: 30mm 40mm;
             box-sizing: border-box;
-            border: 8px solid #00B2A9;
+            border: 10px solid #00B2A9;
             position: relative;
             text-align: center;
         }
 
         .logo {
             position: absolute;
-            top: 25mm;
-            left: 25mm;
-            width: 90px;
+            top: 30mm;
+            left: 40mm;
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
         }
 
         .qr {
             position: absolute;
-            top: 25mm;
-            right: 25mm;
-            width: 90px;
+            top: 30mm;
+            right: 40mm;
+            width: 100px;
         }
 
         .signature {
             position: absolute;
-            bottom: 25mm;
-            right: 25mm;
-            font-size: 12px;
+            bottom: 30mm;
+            right: 40mm;
+            font-size: 16px;
             text-align: right;
         }
 
         .verify {
             position: absolute;
-            bottom: 25mm;
-            left: 25mm;
-            font-size: 11px;
+            bottom: 30mm;
+            left: 40mm;
+            font-size: 14px;
             color: #555;
             text-align: left;
         }
@@ -63,7 +65,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 120px;
+            font-size: 140px;
             color: #f0f0f0;
             font-weight: bold;
             z-index: 0;
@@ -73,40 +75,45 @@
         .content {
             position: relative;
             z-index: 1;
-        }
-
-        .title {
-            font-size: 28px;
-            font-weight: bold;
             margin-top: 100px;
         }
 
+        .title {
+            font-size: 40px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
         .sub-title {
-            font-size: 16px;
-            margin: 10px 0;
+            font-size: 22px;
+            margin: 15px 0;
+            color: #555;
         }
 
         .student-name {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: bold;
             color: #00B2A9;
-            margin: 10px 0;
-        }
-
-        .course-title {
-            font-size: 18px;
             margin: 15px 0;
         }
 
+        .course-title {
+            font-size: 26px;
+            margin: 25px 0;
+            font-style: italic;
+        }
+
         .details {
-            font-size: 13px;
-            margin-top: 20px;
+            font-size: 18px;
+            margin-top: 30px;
+            color: #444;
         }
 
         .issued {
-            font-size: 12px;
-            margin-top: 15px;
-            color: #666;
+            font-size: 16px;
+            margin-top: 20px;
+            color: #777;
         }
     </style>
 </head>
