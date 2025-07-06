@@ -381,25 +381,46 @@ if (!function_exists('generateCertificateForStudent')) {
         $certificateUrl = route('certificates.verify', ['id' => $certificateId]);
         $qrCode         = base64_encode(QrCode::format('png')->size(150)->generate($certificateUrl));
 
-        $pdf = Pdf::loadView('certificates.certificate', [
+        // اسم الملف داخل مجلد الشهادات المؤقت
+        $filename = "{$certificateId}.pdf";
+        $tempPath = public_path("certificates/{$filename}");
+
+        // إنشاء ملف PDF فعلي
+        Pdf::loadView('certificates.certificate', [
             'student'        => $student,
             'course'         => $course,
             'qrCode'         => $qrCode,
             'certificateId'  => $certificateId,
             'certificateUrl' => $certificateUrl,
-        ])->setPaper('a4', 'landscape');
+        ])->setPaper('a4', 'landscape')->save($tempPath);
 
+        // رفعه إلى مجلد attachments
+        $storedFileName = uploadCertificatePdfFromPath($tempPath, $filename, 'Certificate');
 
-        $filename= "{$certificateId}.pdf";
-         uploadAttachmentToDirectory($filename,'Certificate');
         // حفظ في قاعدة البيانات
         return Certificate::create([
             'student_id'     => $student->id,
             'course_id'      => $course->id,
             'certificate_id' => $certificateId,
-            'file_path'      => $filename,
+            'file_path'      => $storedFileName,
             'qr_code'        => $qrCode,
         ]);
+    }
+}
+
+if (!function_exists('uploadCertificatePdfFromPath')) {
+    function uploadCertificatePdfFromPath($filePath, $filename, $model)
+    {
+        $model    = Str::plural($model);
+        $model    = Str::ucfirst($model);
+        $path     = "attachments/$model";
+        $newName  = 'lms_' . time() . '_' . $filename;
+
+        // استخدام File object للرفع
+        $file = new \Illuminate\Http\File($filePath);
+        Storage::disk('public')->putFileAs($path, $file, $newName);
+
+        return $newName;
     }
 }
 
