@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Certificate of Completion</title>
@@ -10,8 +9,7 @@
             margin: 0;
         }
 
-        html,
-        body {
+        html, body {
             margin: 0;
             padding: 0;
             font-family: DejaVu Sans, sans-serif;
@@ -31,14 +29,14 @@
 
         .logo {
             position: absolute;
-            top: 30mm;
+            top: 25mm;
             left: 25mm;
             width: 90px;
         }
 
         .qr {
             position: absolute;
-            top: 30mm;
+            top: 25mm;
             right: 25mm;
             width: 90px;
         }
@@ -112,16 +110,18 @@
         }
     </style>
 </head>
-
 <body>
     <div class="certificate">
         <div class="bg-text">CERTIFICATE</div>
 
         <div class="content">
+            {{-- Logo --}}
             <img src="{{ public_path('images/logo.png') }}" class="logo" alt="Logo">
 
+            {{-- QR Code --}}
             <img src="data:image/png;base64,{{ $qrCode }}" class="qr" alt="QR Code">
 
+            {{-- Main Text --}}
             <div class="title">Certificate of Completion</div>
             <div class="sub-title">This certifies that</div>
 
@@ -141,16 +141,17 @@
             </div>
         </div>
 
+        {{-- Instructor --}}
         <div class="signature">
             <div class="name">Instructor Name</div>
             <div>Course Instructor</div>
         </div>
 
+        {{-- Verify link --}}
         <div class="verify">
             Verify at:<br>
             {{ $certificateUrl }}
         </div>
     </div>
 </body>
-
 </html>
