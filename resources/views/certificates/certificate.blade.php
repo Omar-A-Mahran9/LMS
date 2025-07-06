@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Certificate of Completion</title>
@@ -9,7 +10,8 @@
             margin: 0;
         }
 
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             font-family: DejaVu Sans, sans-serif;
@@ -21,14 +23,14 @@
             width: 100%;
             height: 100%;
             box-sizing: border-box;
-            border: 2px solid #00B2A9;
             position: relative;
             text-align: center;
             overflow: hidden;
         }
 
         .content {
-            padding: 40px 60px 80px; /* top, sides, bottom */
+            padding: 40px 60px 80px;
+            /* top, sides, bottom */
             position: relative;
             z-index: 1;
         }
@@ -121,6 +123,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="certificate">
         <div class="bg-text">CERTIFICATE</div>
@@ -165,5 +168,5 @@
         </div>
     </div>
 </body>
-</html>
 
+</html>
