@@ -393,8 +393,7 @@ if (!function_exists('generateCertificateForStudent')) {
             'certificateId'  => $certificateId,
             'certificateUrl' => $certificateUrl,
         ])
-        ->setOption('page-size', 'A3')
-        ->setOption('orientation', 'Landscape')
+
         ->save($tempPath);
                 // رفعه إلى مجلد attachments
         $storedFileName = uploadCertificatePdfFromPath($tempPath, $filename, 'Certificate');
