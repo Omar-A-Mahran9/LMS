@@ -64,6 +64,6 @@ class CertificateController extends Controller
     }
     $certificate = generateCertificateForStudent($student, $course);
 
-    return $certificate;
+    return response()->file(public_path($certificate->file_path));
     }
 }
