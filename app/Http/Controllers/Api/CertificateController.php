@@ -94,10 +94,8 @@ public function verify($id)
     $fileUrl = getAttachmentPathFromDirectory($certificate->file_path, 'Certificate');
 
         return $this->success('',[
-            'status'        => true,
-            'message'       => __('Certificate generated successfully.'),
-            'certificate_id'=> $certificate->certificate_id,
+            // 'certificate_id'=> $certificate->certificate_id,
             'file_url'      => $fileUrl,
-            'course_title'  => $course->title_en ?? $course->title,
+            // 'course_title'  => $course->title_en ?? $course->title,
         ]);    }
 }
