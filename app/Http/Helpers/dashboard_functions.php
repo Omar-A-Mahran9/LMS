@@ -389,10 +389,16 @@ if (!function_exists('generateCertificateForStudent')) {
             'certificateUrl' => $certificateUrl,
         ])->setPaper('a4', 'landscape');
 
+        // تحقق من وجود المجلد قبل الحفظ
+        $directory = public_path('certificates');
+        if (!file_exists($directory)) {
+            mkdir($directory, 0775, true); // أنشئ المجلد مع صلاحيات مناسبة
+        }
+
         $filePath = "certificates/{$certificateId}.pdf";
         $pdf->save(public_path($filePath));
 
-        // ✅ Save to DB
+        // حفظ في قاعدة البيانات
         return Certificate::create([
             'student_id'     => $student->id,
             'course_id'      => $course->id,
@@ -402,6 +408,7 @@ if (!function_exists('generateCertificateForStudent')) {
         ]);
     }
 }
+
 }
 
 
