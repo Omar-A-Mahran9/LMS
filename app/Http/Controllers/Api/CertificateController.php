@@ -40,22 +40,32 @@ class CertificateController extends Controller
             return $this->failure(__('You must complete all course videos to receive a certificate.'));
         }
 
-        // ✅ Check if all quizzes passed with score >= 50
         $quizIds = $course->quizzes->pluck('id');
+
         if ($quizIds->count() > 0) {
-            $failed = QuizAttempt::whereIn('quiz_id', $quizIds)
+            // اجلب أفضل Score لكل امتحان
+            $bestScores = QuizAttempt::whereIn('quiz_id', $quizIds)
                 ->where('student_id', $student->id)
                 ->select('quiz_id', DB::raw('MAX(score) as best_score'))
                 ->groupBy('quiz_id')
-                ->havingRaw('best_score < 50')
-                ->exists();
+                ->pluck('best_score', 'quiz_id'); // [quiz_id => best_score]
 
-            if ($failed) {
-                return $this->failure(__('You must score at least 50% in all quizzes to receive a certificate.'));
+            // حدد الامتحانات اللي الطالب لم ينجح فيها (score < 50)
+            $failedQuizzes = [];
+
+            foreach ($quizIds as $quizId) {
+                $best = $bestScores[$quizId] ?? 0;
+                if ($best < 50) {
+                    $quiz = $course->quizzes->where('id', $quizId)->first();
+                    $failedQuizzes[] = $quiz?->title ?? "Quiz ID: $quizId";
+                }
             }
-            dd($failed);
 
+            if (count($failedQuizzes) > 0) {
+                return $this->failure(__('لم تنجح في بعض الامتحانات. يرجى إعادة المحاولة في: ') . implode(', ', $failedQuizzes));
+            }
         }
+
         // ✅ Generate Certificate ID & QR Code
         $certificateId = 'CERT-' . strtoupper(Str::random(10));
         $certificateUrl = route('certificates.verify', ['id' => $certificateId]);
