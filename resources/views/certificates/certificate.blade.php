@@ -36,12 +36,11 @@
         }
 
         .logo {
-            position: absolute;
             top: 30px;
             left: 40px;
             width: 100px;
             height: 100px;
-         
+
         }
 
         .qr {
@@ -127,7 +126,9 @@
 
         <div class="content">
             {{-- Logo --}}
-            <div class="logo"></div>
+            <div class="logo">
+                <img src="{{ asset(getImagePathFromDirectory(setting('logo_image'), 'Settings')) }}" alt="">
+            </div>
 
             {{-- QR Code --}}
             <img src="data:image/png;base64,{{ $qrCode }}" class="qr" alt="QR Code">
