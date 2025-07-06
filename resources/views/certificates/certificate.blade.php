@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Certificate of Completion</title>
@@ -10,8 +9,7 @@
             margin: 0;
         }
 
-        html,
-        body {
+        html, body {
             margin: 0;
             padding: 0;
             font-family: DejaVu Sans, sans-serif;
@@ -112,22 +110,13 @@
         }
     </style>
 </head>
-
 <body>
     <div class="certificate">
         <div class="bg-text">CERTIFICATE</div>
 
         <div class="content">
             {{-- Logo --}}
-            {{-- Logo --}}
-            <div class="logo"
-                style="background-image: url('{{ asset(getImagePathFromDirectory(setting('logo_image'), 'Settings')) }}');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            width: 90px;
-            height: 90px;">
-            </div>
+            <img src="{{ asset(getImagePathFromDirectory(setting('logo_image'), 'Settings')) }}" class="logo" alt="Logo">
 
             {{-- QR Code --}}
             <img src="data:image/png;base64,{{ $qrCode }}" class="qr" alt="QR Code">
@@ -165,5 +154,4 @@
         </div>
     </div>
 </body>
-
 </html>
