@@ -26,7 +26,7 @@ class CertificateController extends Controller
 
         // ✅ Check enrollment
         if (!$course->isStudentEnrolled($student->id)) {
-            return response()->json(['message' => __('You are not enrolled in this course.')], 403);
+            return $this->failure( __('You are not enrolled in this course.') );
         }
 
         // ✅ Check if all course videos completed
@@ -37,7 +37,7 @@ class CertificateController extends Controller
             ->count();
 
         if ($videoIds->count() > 0 && $completedVideos < $videoIds->count()) {
-            return response()->json(['message' => __('You must complete all course videos to receive a certificate.')], 403);
+            return $this->failure(__('You must complete all course videos to receive a certificate.'));
         }
 
         // ✅ Check if all quizzes passed with score >= 50
@@ -51,7 +51,7 @@ class CertificateController extends Controller
                 ->exists();
 
             if ($failed) {
-                return response()->json(['message' => __('You must score at least 50% in all quizzes to receive a certificate.')], 403);
+                return $this->failure(__('You must score at least 50% in all quizzes to receive a certificate.'));
             }
         }
 dd('d');
