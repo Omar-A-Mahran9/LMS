@@ -62,33 +62,8 @@ class CertificateController extends Controller
             'message' => __('You must score at least 50% in all quizzes. Retake: ') . implode(', ', $failedQuizzes)
         ], 403);
     }
-dd($failedQuizzes);
-        // ✅ Generate Certificate ID & QR Code
-        $certificateId = 'CERT-' . strtoupper(Str::random(10));
-        $certificateUrl = route('certificates.verify', ['id' => $certificateId]);
-        $qrCode = base64_encode(QrCode::format('png')->size(150)->generate($certificateUrl));
+    $certificate = generateCertificateForStudent($student, $course);
 
-        // ✅ Generate PDF
-        $pdf = Pdf::loadView('certificates.certificate', [
-            'student' => $student,
-            'course' => $course,
-            'qrCode' => $qrCode,
-            'certificateId' => $certificateId,
-            'certificateUrl' => $certificateUrl,
-        ])->setPaper('a4', 'landscape');
-
-        $filePath = "certificates/{$certificateId}.pdf";
-        $pdf->save(public_path($filePath));
-
-        // ✅ Save certificate record in DB
-        Certificate::create([
-            'student_id' => $student->id,
-            'course_id' => $course->id,
-            'certificate_id' => $certificateId,
-            'file_path' => $filePath,
-        ]);
-
-        // ✅ Return PDF file (or use ->download to force download)
-        return response()->file(public_path($filePath));
+    return response()->file(public_path($certificate->file_path));
     }
 }
