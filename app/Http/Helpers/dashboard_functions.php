@@ -384,17 +384,19 @@ if (!function_exists('generateCertificateForStudent')) {
         // اسم الملف داخل مجلد الشهادات المؤقت
         $filename = "{$certificateId}.pdf";
         $tempPath = public_path("certificates/{$filename}");
- 
+
         // إنشاء ملف PDF فعلي
-        Pdf::loadView('certificates.certificate', [
+        PDF::loadView('certificates.certificate', [
             'student'        => $student,
             'course'         => $course,
             'qrCode'         => $qrCode,
             'certificateId'  => $certificateId,
             'certificateUrl' => $certificateUrl,
-        ])->setPaper('a4', 'landscape')->save($tempPath);
-
-        // رفعه إلى مجلد attachments
+        ])
+        ->setOption('page-size', 'A4')
+        ->setOption('orientation', 'Landscape')
+        ->save($tempPath);
+                // رفعه إلى مجلد attachments
         $storedFileName = uploadCertificatePdfFromPath($tempPath, $filename, 'Certificate');
 
         // حفظ في قاعدة البيانات
