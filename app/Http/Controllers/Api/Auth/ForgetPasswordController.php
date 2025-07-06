@@ -9,7 +9,9 @@ use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\Api\StudentResource;
+use App\Mail\SendOtpMail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class ForgetPasswordController extends Controller
 {
@@ -24,7 +26,6 @@ public function sendOtp(Request $request)
     $loginInput = $request->input('login');
     $loginType  = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
-    // Find student
     $student = Student::where($loginType, $loginInput)->first();
 
     if (!$student) {
@@ -42,9 +43,13 @@ public function sendOtp(Request $request)
     // Generate and save OTP
     $otp = $student->sendOTP();
 
-    // Optional: send SMS/email here using $loginType
-    $now        = now();
-    $expiresAt  = $student->otp_expiration;
+    // Send via email if applicable
+    if ($loginType === 'email') {
+        Mail::to($student->email)->send(new SendOtpMail($otp, $student));
+    }
+
+    $now       = now();
+    $expiresAt = $student->otp_expiration;
 
     if (!$expiresAt || $now->greaterThan($expiresAt)) {
         return $this->failure(__("OTP has expired."));
@@ -53,7 +58,7 @@ public function sendOtp(Request $request)
     $remainingSeconds = $now->diffInSeconds($expiresAt, false);
 
     return $this->success(__("OTP sent successfully."), [
-        'otp'               => $otp, // 🔐 remove in production
+        'otp'               => $otp, // remove in production
         'remaining_seconds' => $remainingSeconds,
         'via'               => $loginType,
     ]);
