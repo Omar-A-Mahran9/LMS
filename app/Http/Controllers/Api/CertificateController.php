@@ -79,9 +79,19 @@ public function verify($id)
                 'message' => __('You must score at least 50% in all quizzes. Retake: ') . implode(', ', $failedQuizzes)
             ], 403);
         }
-        $certificate = generateCertificateForStudent($student, $course);
 
-        $fileUrl = getAttachmentPathFromDirectory($certificate->file_path, 'Certificate');
+    // ✅ Check if certificate already exists
+    $certificate = Certificate::where('student_id', $student->id)
+        ->where('course_id', $course->id)
+        ->first();
+
+    if (!$certificate) {
+        // Not created yet, so generate it
+        $certificate = generateCertificateForStudent($student, $course);
+    }
+
+    // ✅ Return certificate info
+    $fileUrl = getAttachmentPathFromDirectory($certificate->file_path, 'Certificate');
 
         return $this->success('',[
             'status'        => true,
