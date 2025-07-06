@@ -384,7 +384,7 @@ if (!function_exists('generateCertificateForStudent')) {
         // اسم الملف داخل مجلد الشهادات المؤقت
         $filename = "{$certificateId}.pdf";
         $tempPath = public_path("certificates/{$filename}");
-
+ 
         // إنشاء ملف PDF فعلي
         Pdf::loadView('certificates.certificate', [
             'student'        => $student,

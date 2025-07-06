@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Certificate of Completion</title>
@@ -9,7 +10,8 @@
             margin: 0;
         }
 
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             font-family: DejaVu Sans, sans-serif;
@@ -20,17 +22,24 @@
         .certificate {
             width: 100%;
             height: 100%;
-            padding: 30mm 40mm;
+            padding: 0;
+            border: 8px solid #00B2A9;
             box-sizing: border-box;
-            border: 10px solid #00B2A9;
             position: relative;
             text-align: center;
+            overflow: hidden;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 40px 60px;
         }
 
         .logo {
             position: absolute;
-            top: 30mm;
-            left: 40mm;
+            top: 30px;
+            left: 30px;
             width: 100px;
             height: 100px;
             object-fit: contain;
@@ -38,26 +47,10 @@
 
         .qr {
             position: absolute;
-            top: 30mm;
-            right: 40mm;
+            top: 30px;
+            right: 30px;
             width: 100px;
-        }
-
-        .signature {
-            position: absolute;
-            bottom: 30mm;
-            right: 40mm;
-            font-size: 16px;
-            text-align: right;
-        }
-
-        .verify {
-            position: absolute;
-            bottom: 30mm;
-            left: 40mm;
-            font-size: 14px;
-            color: #555;
-            text-align: left;
+            height: 100px;
         }
 
         .bg-text {
@@ -72,58 +65,68 @@
             white-space: nowrap;
         }
 
-        .content {
-            position: relative;
-            z-index: 1;
-            margin-top: 100px;
-        }
-
         .title {
-            font-size: 40px;
+            font-size: 38px;
             font-weight: bold;
-            margin-bottom: 30px;
-            color: #333;
+            margin-top: 60px;
         }
 
         .sub-title {
-            font-size: 22px;
-            margin: 15px 0;
-            color: #555;
+            font-size: 20px;
+            margin: 12px 0;
         }
 
         .student-name {
-            font-size: 32px;
+            font-size: 30px;
             font-weight: bold;
             color: #00B2A9;
             margin: 15px 0;
         }
 
         .course-title {
-            font-size: 26px;
-            margin: 25px 0;
-            font-style: italic;
+            font-size: 24px;
+            margin: 20px 0;
         }
 
         .details {
-            font-size: 18px;
-            margin-top: 30px;
-            color: #444;
+            font-size: 14px;
+            margin-top: 20px;
         }
 
         .issued {
-            font-size: 16px;
+            font-size: 14px;
             margin-top: 20px;
-            color: #777;
+            color: #555;
+        }
+
+        .signature {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .verify {
+            position: absolute;
+            bottom: 30px;
+            left: 40px;
+            font-size: 12px;
+            color: #555;
+            text-align: left;
         }
     </style>
+
 </head>
+
 <body>
     <div class="certificate">
         <div class="bg-text">CERTIFICATE</div>
 
         <div class="content">
             {{-- Logo --}}
-            <img src="{{ asset(getImagePathFromDirectory(setting('logo_image'), 'Settings')) }}" class="logo" alt="Logo">
+            <img src="{{ asset(getImagePathFromDirectory(setting('logo_image'), 'Settings')) }}" class="logo"
+                alt="Logo">
 
             {{-- QR Code --}}
             <img src="data:image/png;base64,{{ $qrCode }}" class="qr" alt="QR Code">
@@ -161,4 +164,5 @@
         </div>
     </div>
 </body>
+
 </html>
