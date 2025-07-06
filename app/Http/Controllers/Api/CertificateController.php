@@ -64,7 +64,8 @@ class CertificateController extends Controller
             'qrCode' => $qr,
         ])->setPaper('a4', 'landscape');
     // return $pdf->stream("certificate_{$course->id}.pdf");
-        return view("certificates.certificate");
+        // return view("certificates.certificate");
+        return $pdf;
 
     }
 
