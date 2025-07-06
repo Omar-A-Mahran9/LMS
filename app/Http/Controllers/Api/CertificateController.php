@@ -90,22 +90,12 @@ public function verify($id)
         $certificate = generateCertificateForStudent($student, $course);
     }
 
+    // ✅ Return certificate info
+    $fileUrl = getAttachmentPathFromDirectory($certificate->file_path, 'Certificate');
 
-// Get file name only (stored in the DB)
-$fileName = $certificate->file_path; // e.g., lms_1751828014_CERT-8XGBZQKX3D.pdf
-
-// Build actual storage path
-$storagePath = storage_path('app/public/attachments/Certificates/' . $fileName);
-
-// Optional: check if file exists
-if (!file_exists($storagePath)) {
-    return response()->json(['message' => 'Certificate file not found.'], 404);
-}
-
-// Return file
-return response()->file($storagePath, [
-    'Content-Type' => 'application/pdf',
-]);
-
-  }
+        return $this->success('',[
+            // 'certificate_id'=> $certificate->certificate_id,
+            'file_url'      => $fileUrl,
+            // 'course_title'  => $course->title_en ?? $course->title,
+        ]);    }
 }
