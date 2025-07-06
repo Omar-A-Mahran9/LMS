@@ -1,31 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Certificate</title>
+    <title>Certificate of Completion</title>
     <style>
         @page {
             size: A4 landscape;
             margin: 0;
         }
 
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
-            width: 1122px;
-            height: 793px;
             font-family: DejaVu Sans, sans-serif;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            overflow: hidden;
         }
 
         .certificate {
             width: 100%;
             height: 100%;
             box-sizing: border-box;
+            border: 8px solid #00B2A9;
             position: relative;
             text-align: center;
-            padding: 40px 60px;
-            border: 8px solid #00B2A9;
-            overflow: hidden;
+            page-break-inside: avoid;
+        }
+
+        .content {
+            padding: 40px 60px 60px;
+            position: relative;
+            z-index: 1;
         }
 
         .logo {
@@ -35,8 +46,8 @@
             width: 100px;
             height: 100px;
             background-image: url('{{ asset(getImagePathFromDirectory(setting('logo_image'), 'Settings')) }}');
-            background-repeat: no-repeat;
             background-size: contain;
+            background-repeat: no-repeat;
             background-position: center;
         }
 
@@ -50,31 +61,27 @@
 
         .bg-text {
             position: absolute;
-            top: 50%;
+            top: 52%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 110px;
+            font-size: 120px;
             color: #f0f0f0;
             font-weight: bold;
             white-space: nowrap;
             z-index: 0;
         }
 
-        .content {
-            position: relative;
-            z-index: 1;
-            margin-top: 100px;
-        }
-
         .title {
             font-size: 32px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-top: 80px;
+            margin-bottom: 20px;
+            color: #222;
         }
 
         .sub-title {
-            font-size: 18px;
-            margin: 8px 0;
+            font-size: 20px;
+            margin: 10px 0;
             color: #555;
         }
 
@@ -86,9 +93,10 @@
         }
 
         .course-title {
-            font-size: 20px;
-            margin: 15px 0;
+            font-size: 22px;
+            margin: 20px 0;
             font-style: italic;
+            color: #333;
         }
 
         .details {
@@ -99,7 +107,7 @@
 
         .issued {
             font-size: 13px;
-            margin-top: 10px;
+            margin-top: 15px;
             color: #666;
         }
 
@@ -107,7 +115,7 @@
             position: absolute;
             bottom: 30px;
             right: 50px;
-            font-size: 13px;
+            font-size: 14px;
             text-align: right;
             color: #444;
         }
@@ -117,20 +125,24 @@
             bottom: 30px;
             left: 50px;
             font-size: 12px;
+            color: #555;
             text-align: left;
-            color: #666;
         }
     </style>
 </head>
+
 <body>
     <div class="certificate">
         <div class="bg-text">CERTIFICATE</div>
 
-        <div class="logo"></div>
-
-        <img class="qr" src="data:image/png;base64,{{ $qrCode }}" alt="QR">
-
         <div class="content">
+            {{-- Logo --}}
+            <div class="logo"></div>
+
+            {{-- QR Code --}}
+            <img src="data:image/png;base64,{{ $qrCode }}" class="qr" alt="QR Code">
+
+            {{-- Main Content --}}
             <div class="title">Certificate of Completion</div>
             <div class="sub-title">This certifies that</div>
 
@@ -150,15 +162,18 @@
             </div>
         </div>
 
+        {{-- Instructor --}}
         <div class="signature">
-            Instructor Name<br>
-            Course Instructor
+            <div class="name">Instructor Name</div>
+            <div>Course Instructor</div>
         </div>
 
+        {{-- Verify Link --}}
         <div class="verify">
             Verify at:<br>
             {{ $certificateUrl }}
         </div>
     </div>
 </body>
+
 </html>
