@@ -32,7 +32,7 @@ class CourseDetailsResource extends JsonResource
 
 
         return [
-               "id" => $this->id,
+            "id" => $this->id,
             'image' => $this->full_image_path,
             'video_url' => base64_encode(convertToYoutubeEmbed($this->video_url)),
 
@@ -45,7 +45,7 @@ class CourseDetailsResource extends JsonResource
             'started_at' => $this->start_date,
             'count_video' => $this->videos->count(),
             'count_quiz' => $this->quizzes->count(),
-            'count_homework' => $this->homeworks->count(),
+            'count_homework' => $this->sections->count(),
             'count_attachment' => $this->count_attachment, // only if you define this accessor
             'have_certificate' => $this->certificate_available,
            'is_completed' => $isCompleted,
