@@ -381,7 +381,7 @@ if (!function_exists('generateCertificateForStudent')) {
         $certificateUrl = route('certificates.verify', ['id' => $certificateId]);
         $qrCode         = base64_encode(QrCode::format('png')->size(150)->generate($certificateUrl));
 
-        $pdf = Pdf::loadView('certificate', [
+        $pdf = Pdf::loadView('certificates.certificate', [
             'student'        => $student,
             'course'         => $course,
             'qrCode'         => $qrCode,
