@@ -120,7 +120,10 @@
         <div class="content">
             {{-- Logo --}}
             <div class="logo">
-                <img src="{{ asset(getImagePathFromDirectory(setting('logo_image'), 'Settings')) }}" alt="">
+                <img src="{{ asset(getImagePathFromDirectory(setting('logo_image'), 'Settings')) }}" alt="Logo"
+                    width="100">
+
+                @dd(getImagePathFromDirectory(setting('logo_image'), 'Settings'))
             </div>
 
             {{-- QR Code --}}
