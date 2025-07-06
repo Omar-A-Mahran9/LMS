@@ -395,15 +395,14 @@ if (!function_exists('generateCertificateForStudent')) {
             mkdir($directory, 0775, true); // أنشئ المجلد مع صلاحيات مناسبة
         }
 
-        $filePath = "certificates/{$certificateId}.pdf";
-        $pdf->save(public_path($filePath));
-
+        $filename= "{$certificateId}.pdf";
+         uploadAttachmentToDirectory($filename,'Certificate');
         // حفظ في قاعدة البيانات
         return Certificate::create([
             'student_id'     => $student->id,
             'course_id'      => $course->id,
             'certificate_id' => $certificateId,
-            'file_path'      => $filePath,
+            'file_path'      => $filename,
             'qr_code'        => $qrCode,
         ]);
     }
