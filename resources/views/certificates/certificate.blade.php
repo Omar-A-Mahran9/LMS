@@ -41,10 +41,7 @@
             left: 40px;
             width: 100px;
             height: 100px;
-            background-image: url('{{ asset(getImagePathFromDirectory(setting('logo_image'), 'Settings')) }}');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+         
         }
 
         .qr {
