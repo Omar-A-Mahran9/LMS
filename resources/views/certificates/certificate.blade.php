@@ -150,11 +150,11 @@
         {{-- Instructor --}}
         <div class="signature">
             <div class="name">Instructor Name</div>
-            <div>Course Instructor</div>
+            <div>Mohamed El-Nagar</div>
         </div>
 
         {{-- Verify link --}}
-       
+
     </div>
 </body>
 
