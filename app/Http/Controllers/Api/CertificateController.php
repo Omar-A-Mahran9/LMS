@@ -17,14 +17,20 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class CertificateController extends Controller
 {
 
-        public function verify($id)
-    {
-        $certificate = Certificate::where('certificate_id', $id)->firstOrFail();
+public function verify($id)
+{
+    // Find certificate by certificate_id or throw 404
+    $certificate = Certificate::where('certificate_id', $id)->firstOrFail();
 
-        return view('certificates.verify', [
-            'certificate' => $certificate
-        ]);
-    }
+    // Load related student and course for convenience (optional)
+    $certificate->load(['student', 'course']);
+
+    // Return the Blade view with the certificate data
+    return view('certificates.verify', [
+        'certificate' => $certificate
+    ]);
+}
+
 
 
     public function download(Course $course)

@@ -18,7 +18,15 @@ class Certificate extends Model
         'updated_at' => 'date:Y-m-d',
     ];
 
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 
 
- 
 }
