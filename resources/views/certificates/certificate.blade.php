@@ -34,14 +34,7 @@
             position: relative;
             z-index: 1;
         }
-
-        .logo {
-            top: 30px;
-            left: 40px;
-            width: 100px;
-            height: 100px;
-
-        }
+ 
 
         .qr {
             position: absolute;
@@ -127,7 +120,7 @@
         <div class="content">
             {{-- Logo --}}
             <div class="logo">
-                <img src="{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}" alt="">
+                <img src="{{ getImagePathFromDirectory(setting('logo_image'), "Settings")}}" alt="">
             </div>
 
             {{-- QR Code --}}
