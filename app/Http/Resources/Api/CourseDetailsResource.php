@@ -43,7 +43,7 @@ class CourseDetailsResource extends JsonResource
             'is_class'=> $this->is_class,
 
             'started_at' => $this->start_date,
-            'count_video' => $this->count_video,
+            'count_video' => $this->videos->count(),
             'count_quiz' => $this->count_quiz,
             'count_homework' => $this->count_homework,
             'count_attachment' => $this->count_attachment, // only if you define this accessor
