@@ -393,7 +393,7 @@ if (!function_exists('generateCertificateForStudent')) {
             'certificateId'  => $certificateId,
             'certificateUrl' => $certificateUrl,
         ])
-
+        ->setOption('enable-local-file-access', true) // required even for remote URLs sometimes
         ->save($tempPath);
                 // رفعه إلى مجلد attachments
         $storedFileName = uploadCertificatePdfFromPath($tempPath, $filename, 'Certificate');
