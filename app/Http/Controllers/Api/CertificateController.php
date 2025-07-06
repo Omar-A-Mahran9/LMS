@@ -93,8 +93,9 @@ public function verify($id)
     // ✅ Return certificate info
     $fileUrl = getAttachmentPathFromDirectory($certificate->file_path, 'Certificate');
 
-return response()->file($fileUrl, [
-    'Content-Type' => 'application/pdf',
-]);
-  }
+        return $this->success('',[
+            // 'certificate_id'=> $certificate->certificate_id,
+            'file_url'      => $fileUrl,
+            // 'course_title'  => $course->title_en ?? $course->title,
+        ]);    }
 }
