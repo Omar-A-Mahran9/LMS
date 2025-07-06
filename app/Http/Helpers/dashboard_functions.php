@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Certificate;
-use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Cache;
  use Illuminate\Database\Eloquent\Model;
  use Illuminate\Support\Facades\Storage;
