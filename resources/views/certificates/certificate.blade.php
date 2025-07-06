@@ -119,19 +119,12 @@
 
         <div class="content">
             {{-- Logo --}}
-            <div class="logo"
-                style="
-    background-image: url('{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    width: 100px;
-    height: 100px;
-">
+            <div class="logo">
+                <img src="{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}" width="100"
+                    alt="Logo">
             </div>
 
-
-
+            @dd(getImagePathFromDirectory(setting('logo_image'), 'Settings'))
             {{-- QR Code --}}
             <img src="data:image/png;base64,{{ $qrCode }}" class="qr" alt="QR Code">
 
