@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Certificate of Completion</title>
@@ -10,17 +9,12 @@
             margin: 0;
         }
 
-        html,
-        body {
+        html, body {
             margin: 0;
             padding: 0;
             font-family: DejaVu Sans, sans-serif;
             width: 100%;
             height: 100%;
-        }
-
-        body {
-            overflow: hidden;
         }
 
         .certificate {
@@ -30,11 +24,11 @@
             border: 8px solid #00B2A9;
             position: relative;
             text-align: center;
-            page-break-inside: avoid;
+            overflow: hidden;
         }
 
         .content {
-            padding: 40px 60px 60px;
+            padding: 40px 60px 80px; /* top, sides, bottom */
             position: relative;
             z-index: 1;
         }
@@ -72,21 +66,20 @@
         }
 
         .title {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: bold;
             margin-top: 80px;
             margin-bottom: 20px;
-            color: #222;
         }
 
         .sub-title {
             font-size: 20px;
-            margin: 10px 0;
+            margin: 12px 0;
             color: #555;
         }
 
         .student-name {
-            font-size: 28px;
+            font-size: 30px;
             font-weight: bold;
             color: #00B2A9;
             margin: 10px 0;
@@ -96,12 +89,11 @@
             font-size: 22px;
             margin: 20px 0;
             font-style: italic;
-            color: #333;
         }
 
         .details {
             font-size: 14px;
-            margin-top: 20px;
+            margin-top: 30px;
             color: #444;
         }
 
@@ -117,7 +109,6 @@
             right: 50px;
             font-size: 14px;
             text-align: right;
-            color: #444;
         }
 
         .verify {
@@ -130,7 +121,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="certificate">
         <div class="bg-text">CERTIFICATE</div>
@@ -142,7 +132,7 @@
             {{-- QR Code --}}
             <img src="data:image/png;base64,{{ $qrCode }}" class="qr" alt="QR Code">
 
-            {{-- Main Content --}}
+            {{-- Main Text --}}
             <div class="title">Certificate of Completion</div>
             <div class="sub-title">This certifies that</div>
 
@@ -168,12 +158,12 @@
             <div>Course Instructor</div>
         </div>
 
-        {{-- Verify Link --}}
+        {{-- Verify link --}}
         <div class="verify">
             Verify at:<br>
             {{ $certificateUrl }}
         </div>
     </div>
 </body>
-
 </html>
+
