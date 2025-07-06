@@ -62,7 +62,7 @@ class CertificateController extends Controller
             'message' => __('You must score at least 50% in all quizzes. Retake: ') . implode(', ', $failedQuizzes)
         ], 403);
     }
-    $certificate = generateCertificateForStudent($student, $course);
+    $certificate = $this->generateCertificateForStudent($student, $course);
 
     return response()->file(public_path($certificate->file_path));
     }
