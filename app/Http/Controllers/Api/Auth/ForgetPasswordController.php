@@ -47,6 +47,10 @@ public function sendOtp(Request $request)
     if ($loginType === 'email') {
         Mail::to($student->email)->send(new SendOtpMail($otp, $student));
     }
+      if ($loginType === 'phone') {
+        $st= Student::where("phone", $loginInput)->first();
+        Mail::to($st->email)->send(new SendOtpMail($otp, $student));
+    }
 
     $now       = now();
     $expiresAt = $student->otp_expiration;
