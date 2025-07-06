@@ -43,11 +43,11 @@ public function sendOtp(Request $request)
     // Generate and save OTP
     $otp = $student->sendOTP();
 
-if (!empty($student->email) && filter_var($student->email, FILTER_VALIDATE_EMAIL)) {
-    Mail::to($student->email)->send(new SendOtpMail($otp, $student));
-} else {
-    return $this->failure(__('This user does not have a valid email address.'));
-}
+    if (!empty($student->email) && filter_var($student->email, FILTER_VALIDATE_EMAIL)) {
+        Mail::to($student->email)->send(new SendOtpMail($otp, $student));
+    } else {
+        return $this->failure(__('This user does not have a valid email address.'));
+    }
 
 
     $now       = now();
@@ -127,7 +127,11 @@ public function reSendOtp(Request $request)
 
     // Re-send OTP
     $otp = $student->sendOTP();
-
+    if (!empty($student->email) && filter_var($student->email, FILTER_VALIDATE_EMAIL)) {
+        Mail::to($student->email)->send(new SendOtpMail($otp, $student));
+    } else {
+        return $this->failure(__('This user does not have a valid email address.'));
+    }
     $expiresAt = $student->otp_expiration;
     $now       = now();
 
