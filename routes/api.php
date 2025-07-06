@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\StudentHomeworkController;
 use App\Http\Controllers\Api\StudentQuizController;
+use App\Http\Controllers\CertificateController as ControllersCertificateController;
 use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\SectionVideoController;
 use Illuminate\Http\Request;
@@ -71,7 +72,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
     Route::get('/courses/{id}/sections/count', [SectionController::class, 'countSectionByCourse']);
 
-    Route::get('certificates/{course}', [CertificateController::class, 'download'])
+    Route::get('certificates/{course}', [ControllersCertificateController::class, 'download'])
         ->name('student.certificates.download');
     Route::post('login', 'Auth\AuthController@login');
     Route::post('login-otp/{customer:phone}', 'Auth\AuthController@loginOTP');
