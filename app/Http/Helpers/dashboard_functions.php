@@ -381,7 +381,7 @@ if (!function_exists('generateCertificateForStudent')) {
         $certificateUrl = route('certificates.verify', ['id' => $certificateId]);
         $qrCode         = base64_encode(QrCode::format('png')->size(150)->generate($certificateUrl));
 
-        $pdf = Pdf::loadView('certificates.certificate', [
+        $pdf = Pdf::loadView('certificate', [
             'student'        => $student,
             'course'         => $course,
             'qrCode'         => $qrCode,
@@ -389,11 +389,6 @@ if (!function_exists('generateCertificateForStudent')) {
             'certificateUrl' => $certificateUrl,
         ])->setPaper('a4', 'landscape');
 
-        // تحقق من وجود المجلد قبل الحفظ
-        $directory = public_path('certificates');
-        if (!file_exists($directory)) {
-            mkdir($directory, 0775, true); // أنشئ المجلد مع صلاحيات مناسبة
-        }
 
         $filename= "{$certificateId}.pdf";
          uploadAttachmentToDirectory($filename,'Certificate');
