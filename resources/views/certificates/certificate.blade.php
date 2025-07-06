@@ -21,7 +21,7 @@
             width: 100%;
             height: 100%;
             box-sizing: border-box;
-            /* border: 8px solid #00B2A9; */
+            border: 2px solid #00B2A9;
             position: relative;
             text-align: center;
             overflow: hidden;
