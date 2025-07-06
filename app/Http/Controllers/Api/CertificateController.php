@@ -93,7 +93,7 @@ public function verify($id)
     // ✅ Return certificate info
     $fileUrl = getAttachmentPathFromDirectory($certificate->file_path, 'Certificate');
 
-    return response()->file(public_path($certificate->file_path), [
+    return response()->file($fileUrl, [
     'Content-Type' => 'application/pdf',
 ]);   }
 }
