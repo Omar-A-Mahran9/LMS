@@ -75,7 +75,6 @@ class CertificateController extends Controller
     }
     $certificate = generateCertificateForStudent($student, $course);
 
-    $certificate = generateCertificateForStudent($student, $course);
     $fileUrl = getAttachmentPathFromDirectory($certificate->file_path, 'Certificate');
 
     return $this->success('',[
