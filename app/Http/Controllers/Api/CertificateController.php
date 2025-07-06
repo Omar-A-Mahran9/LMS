@@ -52,36 +52,36 @@ class CertificateController extends Controller
         }
 
        // التحقق من النجاح في كل الامتحانات
-    $failedQuizzes = [];
-    $quizzes = $course->quizzes;
+        $failedQuizzes = [];
+        $quizzes = $course->quizzes;
 
-    foreach ($quizzes as $quiz) {
-        $totalScore = $quiz->questions()->sum('points');
-        $bestScore = QuizAttempt::where('quiz_id', $quiz->id)
-            ->where('student_id', $student->id)
-            ->max('score');
+        foreach ($quizzes as $quiz) {
+            $totalScore = $quiz->questions()->sum('points');
+            $bestScore = QuizAttempt::where('quiz_id', $quiz->id)
+                ->where('student_id', $student->id)
+                ->max('score');
 
-        $required = $totalScore * 0.5;
+            $required = $totalScore * 0.5;
 
-        if ($bestScore < $required) {
-            $failedQuizzes[] = $quiz->title ?? "Quiz ID: {$quiz->id}";
+            if ($bestScore < $required) {
+                $failedQuizzes[] = $quiz->title ?? "Quiz ID: {$quiz->id}";
+            }
         }
-    }
 
-    if (count($failedQuizzes)) {
-        return response()->json([
-            'message' => __('You must score at least 50% in all quizzes. Retake: ') . implode(', ', $failedQuizzes)
-        ], 403);
-    }
-    $certificate = generateCertificateForStudent($student, $course);
+        if (count($failedQuizzes)) {
+            return response()->json([
+                'message' => __('You must score at least 50% in all quizzes. Retake: ') . implode(', ', $failedQuizzes)
+            ], 403);
+        }
+        $certificate = generateCertificateForStudent($student, $course);
 
-    $fileUrl = getAttachmentPathFromDirectory($certificate->file_path, 'Certificate');
+        $fileUrl = getAttachmentPathFromDirectory($certificate->file_path, 'Certificate');
 
-    return $this->success('',[
-        'status'        => true,
-        'message'       => __('Certificate generated successfully.'),
-        'certificate_id'=> $certificate->certificate_id,
-        'file_url'      => $fileUrl,
-        'course_title'  => $course->title_en ?? $course->title,
-    ]);    }
+        return $this->success('',[
+            'status'        => true,
+            'message'       => __('Certificate generated successfully.'),
+            'certificate_id'=> $certificate->certificate_id,
+            'file_url'      => $fileUrl,
+            'course_title'  => $course->title_en ?? $course->title,
+        ]);    }
 }
