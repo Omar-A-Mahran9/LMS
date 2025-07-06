@@ -121,10 +121,10 @@
             {{-- Logo --}}
             <div class="logo">
                 <img src="{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}" width="100"
-                    alt="Logo">
+                    alt="Mr-Mohamed Elnagar">
             </div>
 
-             {{-- QR Code --}}
+            {{-- QR Code --}}
             <img src="data:image/png;base64,{{ $qrCode }}" class="qr" alt="QR Code">
 
             {{-- Main Text --}}
