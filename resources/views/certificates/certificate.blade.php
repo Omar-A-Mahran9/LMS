@@ -22,8 +22,6 @@
         .certificate {
             width: 100%;
             height: 100%;
-            max-width: 100%;
-            max-height: 100%;
             padding: 20mm 25mm;
             box-sizing: border-box;
             border: 8px solid #00B2A9;
@@ -59,6 +57,7 @@
             left: 25mm;
             font-size: 11px;
             color: #555;
+            text-align: left;
         }
 
         .bg-text {
@@ -77,39 +76,79 @@
             position: relative;
             z-index: 1;
         }
-    </style>
 
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 100px;
+        }
+
+        .sub-title {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .student-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00B2A9;
+            margin: 10px 0;
+        }
+
+        .course-title {
+            font-size: 18px;
+            margin: 15px 0;
+        }
+
+        .details {
+            font-size: 13px;
+            margin-top: 20px;
+        }
+
+        .issued {
+            font-size: 12px;
+            margin-top: 15px;
+            color: #666;
+        }
+    </style>
 </head>
 
 <body>
     <div class="certificate">
         <div class="bg-text">CERTIFICATE</div>
+
         <div class="content">
             <img src="{{ public_path('images/logo.png') }}" class="logo" alt="Logo">
-            <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate('https://example.com/certificate/1234')) !!}" class="qr" alt="QR Code">
+
+            <img src="data:image/png;base64,{{ $qrCode }}" class="qr" alt="QR Code">
 
             <div class="title">Certificate of Completion</div>
             <div class="sub-title">This certifies that</div>
-            <div class="student-name">John Doe</div>
+
+            <div class="student-name">{{ $student->name }}</div>
+
             <div class="sub-title">has successfully completed the course</div>
-            <div class="course-title">"Introduction to Web Development"</div>
+
+            <div class="course-title">"{{ $course->title_en ?? $course->title }}"</div>
 
             <div class="details">
-                Certificate ID: CERT-1234-5678<br>
-                Student Email: johndoe@example.com
+                Certificate ID: {{ $certificateId }}<br>
+                Student Email: {{ $student->email }}
             </div>
 
-            <div class="issued">Issued on: {{ now()->format('F d, Y') }}</div>
+            <div class="issued">
+                Issued on: {{ now()->format('F d, Y') }}
+            </div>
         </div>
 
         <div class="signature">
-            <div class="name">Thomas Thorsell-Arntsen</div>
+            <div class="name">Instructor Name</div>
             <div>Course Instructor</div>
         </div>
 
         <div class="verify">
             Verify at:<br>
-            https://example.com/certificate/1234
+            {{ $certificateUrl }}
         </div>
     </div>
 </body>
