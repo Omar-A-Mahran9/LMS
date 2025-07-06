@@ -154,10 +154,7 @@
         </div>
 
         {{-- Verify link --}}
-        <div class="verify">
-            Verify at:<br>
-            {{ $certificateUrl }}
-        </div>
+       
     </div>
 </body>
 
