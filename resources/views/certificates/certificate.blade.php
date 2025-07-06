@@ -124,8 +124,7 @@
                     alt="Logo">
             </div>
 
-            @dd(getImagePathFromDirectory(setting('logo_image'), 'Settings'))
-            {{-- QR Code --}}
+             {{-- QR Code --}}
             <img src="data:image/png;base64,{{ $qrCode }}" class="qr" alt="QR Code">
 
             {{-- Main Text --}}
