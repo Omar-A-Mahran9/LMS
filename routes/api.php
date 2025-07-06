@@ -72,7 +72,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
     Route::get('/courses/{id}/sections/count', [SectionController::class, 'countSectionByCourse']);
 
-    Route::get('certificates/{course}', [ControllersCertificateController::class, 'download'])
+    Route::get('certificates/{course}', [CertificateController::class, 'download'])
         ->name('student.certificates.download');
     Route::post('login', 'Auth\AuthController@login');
     Route::post('login-otp/{customer:phone}', 'Auth\AuthController@loginOTP');
