@@ -40,31 +40,28 @@ class CertificateController extends Controller
             return $this->failure(__('You must complete all course videos to receive a certificate.'));
         }
 
-        $quizIds = $course->quizzes->pluck('id');
+       // التحقق من النجاح في كل الامتحانات
+    $failedQuizzes = [];
+    $quizzes = $course->quizzes;
 
-        if ($quizIds->count() > 0) {
-            // اجلب أفضل Score لكل امتحان
-            $bestScores = QuizAttempt::whereIn('quiz_id', $quizIds)
-                ->where('student_id', $student->id)
-                ->select('quiz_id', DB::raw('MAX(score) as best_score'))
-                ->groupBy('quiz_id')
-                ->pluck('best_score', 'quiz_id'); // [quiz_id => best_score]
-dd($bestScores);
-            // حدد الامتحانات اللي الطالب لم ينجح فيها (score < 50)
-            $failedQuizzes = [];
+    foreach ($quizzes as $quiz) {
+        $totalScore = $quiz->questions()->sum('points');
+        $bestScore = QuizAttempt::where('quiz_id', $quiz->id)
+            ->where('student_id', $student->id)
+            ->max('score');
 
-            foreach ($quizIds as $quizId) {
-                $best = $bestScores[$quizId] ?? 0;
-                if ($best < 50) {
-                    $quiz = $course->quizzes->where('id', $quizId)->first();
-                    $failedQuizzes[] = $quiz?->title ?? "Quiz ID: $quizId";
-                }
-            }
+        $required = $totalScore * 0.5;
 
-            if (count($failedQuizzes) > 0) {
-                return $this->failure(__('لم تنجح في بعض الامتحانات. يرجى إعادة المحاولة في: ') . implode(', ', $failedQuizzes));
-            }
+        if ($bestScore < $required) {
+            $failedQuizzes[] = $quiz->title ?? "Quiz ID: {$quiz->id}";
         }
+    }
+
+    if (count($failedQuizzes)) {
+        return response()->json([
+            'message' => __('You must score at least 50% in all quizzes. Retake: ') . implode(', ', $failedQuizzes)
+        ], 403);
+    }
 
         // ✅ Generate Certificate ID & QR Code
         $certificateId = 'CERT-' . strtoupper(Str::random(10));
