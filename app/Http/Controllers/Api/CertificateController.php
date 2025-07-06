@@ -53,8 +53,9 @@ class CertificateController extends Controller
             if ($failed) {
                 return $this->failure(__('You must score at least 50% in all quizzes to receive a certificate.'));
             }
+            dd($failed);
+
         }
-dd($quizIds);
         // ✅ Generate Certificate ID & QR Code
         $certificateId = 'CERT-' . strtoupper(Str::random(10));
         $certificateUrl = route('certificates.verify', ['id' => $certificateId]);
