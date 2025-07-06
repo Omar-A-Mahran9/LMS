@@ -49,7 +49,7 @@ class CertificateController extends Controller
                 ->select('quiz_id', DB::raw('MAX(score) as best_score'))
                 ->groupBy('quiz_id')
                 ->pluck('best_score', 'quiz_id'); // [quiz_id => best_score]
-
+dd($bestScores);
             // حدد الامتحانات اللي الطالب لم ينجح فيها (score < 50)
             $failedQuizzes = [];
 
