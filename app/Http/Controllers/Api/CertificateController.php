@@ -89,7 +89,7 @@ class CertificateController extends Controller
 
 public function publicDownload($id)
 {
-    dd('dd');
+    dd($id);
     $certificate = Certificate::where('certificate_id', $id)->firstOrFail();
 
     $pdf = Pdf::loadView('certificates.certificate', [
