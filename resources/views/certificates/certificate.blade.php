@@ -155,7 +155,7 @@
             <div class="sub-title">This is proudly presented to</div>
 
             {{-- STUDENT NAME --}}
-            <div class="student-name">{{ $student->name }}</div>
+            <div class="student-name">{{ $student->first_name . ' '. $student->last_name }}</div>
 
             <div class="sub-title">for successfully completing the course</div>
 
