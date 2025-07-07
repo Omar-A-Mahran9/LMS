@@ -19,6 +19,7 @@ class CourseDetailsResource extends JsonResource
     public function toArray(Request $request): array
     {
     $studentId = auth('api')->id(); // or pass from $request
+    $student = auth('api')->user(); // or pass from $request
 
     // Count how many videos the student has completed
         $completedCount = CourseVideoStudent::whereIn(
@@ -49,9 +50,12 @@ class CourseDetailsResource extends JsonResource
             'count_attachment' => $this->count_attachment, // only if you define this accessor
             'have_certificate' => $this->certificate_available,
            'is_completed' => $isCompleted,
-            'certificate_url' => $this->certificate_available
-                ? route('student.certificates.download', ['course' => $this->id])
-                : null,
+
+
+                 'certificate_url' =>  $isCompleted &&  $this->certificate_available
+                    ? getOrGeneratePublicCertificateUrl($student, $this)
+                    : null,
+
 
             'price' => $this->is_free
                 ? 'Free' // or 0 if you prefer numeric value

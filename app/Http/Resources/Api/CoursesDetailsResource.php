@@ -13,6 +13,7 @@ class CoursesDetailsResource extends JsonResource
     public function toArray(Request $request): array
     {
         $studentId = auth('api')->id();
+        $student= auth('api')->user();
 
         // جميع فيديوهات الكورس
         $totalVideos = $this->videos->count();
@@ -59,9 +60,12 @@ class CoursesDetailsResource extends JsonResource
 
             'is_completed' => $isCompleted,
             'progress_percentage' => $progressPercentage,
-            'certificate_url' => $isCompleted && $this->certificate_available
-                ? route('student.certificates.download', ['course' => $this->id])
-                : null,
+
+
+                 'certificate_url' =>  $isCompleted &&  $this->certificate_available
+                    ? getOrGeneratePublicCertificateUrl($student, $this)
+                    : null,
+
         ];
     }
 }
