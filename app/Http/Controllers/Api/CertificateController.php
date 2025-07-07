@@ -11,6 +11,20 @@ use App\Models\QuizAttempt;
 
 class CertificateController extends Controller
 {
+    public function verify($id)
+{
+    $certificate = Certificate::where('certificate_id', $id)->first();
+
+    if (!$certificate) {
+        abort(404, __('Certificate not found'));
+    }
+
+    $course = $certificate->course;
+    $student = $certificate->student;
+
+    return view('certificates.verify', compact('certificate', 'course', 'student'));
+}
+
     public function download(Course $course)
     {
         $student = auth('api')->user();
