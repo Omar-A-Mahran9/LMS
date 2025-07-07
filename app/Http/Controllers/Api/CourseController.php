@@ -297,6 +297,7 @@ public function getVideosBySections($id)
 public function checkCourseAccess($id)
 {
     $studentId = auth()->id();
+    $student = auth()->user();
 
     // تحقق من وجود الكورس وكونه مفعلاً ومسجلاً فيه الطالب مع الموافقة
     $course = Course::where('id', $id)
@@ -317,9 +318,12 @@ public function checkCourseAccess($id)
         'course_id'           => $course->id,
         'course_title'        => $course->title,
         'has_certificate'     => $course->certificate_available,
-       'certificate_url' => $course->certificate_available
-                ? route('student.certificates.download', ['course' => $course->id])
-                : null,
+
+
+                   'certificate_url' =>  $course->certificate_available
+                    ? getOrGeneratePublicCertificateUrl($student, $this)
+                    : null,
+
                      'is_completed'        => $course->is_completed,
         'progress_percentage' => $course->progress_percentage,
         'has_rated'           => Student_rate::where('course_id', $course->id)
