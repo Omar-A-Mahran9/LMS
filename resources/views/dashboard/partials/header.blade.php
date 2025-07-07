@@ -749,7 +749,7 @@
                     <!--begin::Drawer wrapper-->
                     <div class="btn btn-icon btn-custom btn-color-gray-500 btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px position-relative"
                         id="kt_drawer_chat_toggle">
-                        <a href="https://lms.sa" target="_blank">
+                        <a href="https://mohamed-elnagar.com/" target="_blank">
                             {{--  <i class="fa-duotone fa-solid fa-globe fs-2"></i>  --}}
                             <i class="fa-solid fa-globe fs-2"></i>
                             {{--  <i class="ki-outline ki-abstract-20 fs-2"></i>  --}}
