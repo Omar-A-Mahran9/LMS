@@ -11,7 +11,6 @@ class CourseStatusResource extends JsonResource
 public function toArray(Request $request): array
     {
         $studentId = auth('api')->id();
-        $student = auth('api')->user();
 
         // هل الطالب أكمل جميع الفيديوهات؟
         $videoIds = $this->videos->pluck('id');
@@ -25,10 +24,9 @@ public function toArray(Request $request): array
         return [
             'is_enrolled'     => $this->is_enrolled,
             'is_completed'    => $isCompleted,
-    //     'certificate_url' => $this->certificate_available
-    // ? getOrGeneratePublicCertificateUrl($student, $this)
-    // : null,
-
+            // 'certificate_url' => $this->certificate_available && $isCompleted
+            //     ? route('student.certificates.download', ['course' => $this->id])
+            //     : null,
         ];
     }
 }
