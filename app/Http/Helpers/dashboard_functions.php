@@ -1,12 +1,12 @@
 <?php
 
 use App\Models\Certificate;
-use Barryvdh\Snappy\Facades\SnappyPdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Cache;
  use Illuminate\Database\Eloquent\Model;
  use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
- use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 if (!function_exists('isArabic')) {
     function isArabic(): bool
@@ -194,7 +194,7 @@ if (!function_exists('streamCertificatePdf')) {
     {
         $certificateUrl = route('certificates.verify', ['id' => $certificate->certificate_id]);
 
-        $pdf = SnappyPdf::loadView('certificates.certificate', [
+        $pdf = PDF::loadView('certificates.certificate', [
             'student'        => $student,
             'course'         => $course,
             'qrCode'         => $certificate->qr_code,
