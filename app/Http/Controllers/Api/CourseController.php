@@ -236,7 +236,7 @@ public function getVideosByClass($id)
 public function getVideosBySections($id)
 {
     $studentId = Auth::id();
-    $student= Auth::user();
+        $student = Auth::user();
 
     // Ensure course has this student enrolled and is active
     $courseExists = Course::where('id', $id)
@@ -284,7 +284,7 @@ public function getVideosBySections($id)
         'course_id'           => $courseExists->id,
         'course_title'        => $courseExists->title,
         'has_certificate'     => $courseExists->certificate_available,
-     'certificate_url' => $courseExists->certificate_available
+          'certificate_url' => $courseExists->certificate_available
     ? getOrGeneratePublicCertificateUrl($student, $courseExists)
     : null,
         'is_completed'        => $courseExists->is_completed,
@@ -297,7 +297,7 @@ public function getVideosBySections($id)
 public function checkCourseAccess($id)
 {
     $studentId = auth()->id();
-    $student = auth()->user();
+         $student = Auth::user();
 
     // تحقق من وجود الكورس وكونه مفعلاً ومسجلاً فيه الطالب مع الموافقة
     $course = Course::where('id', $id)
@@ -318,12 +318,9 @@ public function checkCourseAccess($id)
         'course_id'           => $course->id,
         'course_title'        => $course->title,
         'has_certificate'     => $course->certificate_available,
-
-
-                   'certificate_url' =>  $course->certificate_available
-                    ? getOrGeneratePublicCertificateUrl($student, $course)
-                    : null,
-
+         'certificate_url' => $course->certificate_available
+    ? getOrGeneratePublicCertificateUrl($student, $course)
+    : null,
                      'is_completed'        => $course->is_completed,
         'progress_percentage' => $course->progress_percentage,
         'has_rated'           => Student_rate::where('course_id', $course->id)
