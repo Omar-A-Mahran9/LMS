@@ -202,7 +202,6 @@ if (!function_exists('streamCertificatePdf')) {
             'certificateUrl' => $certificateUrl,
         ])->setOptions([
             'page-size' => 'A4',
-            'defaultFont' => 'Amiri',
             'orientation' => 'Landscape',
             'enable-local-file-access' => true,
             'disable-smart-shrinking' => true,
