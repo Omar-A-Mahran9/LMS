@@ -7,7 +7,7 @@ use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\CourseVideoStudent;
 use App\Models\QuizAttempt;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CertificateController extends Controller
 {
@@ -85,5 +85,28 @@ class CertificateController extends Controller
     return streamCertificatePdf($student, $course, $certificate);
 
 
+}
+
+public function publicDownload($id)
+{
+    $certificate = Certificate::where('certificate_id', $id)->firstOrFail();
+
+    $pdf = Pdf::loadView('certificates.certificate', [
+        'student'        => $certificate->student,
+        'course'         => $certificate->course,
+        'qrCode'         => $certificate->qr_code,
+        'certificateId'  => $certificate->certificate_id,
+        'certificateUrl' => route('certificates.verify', ['id' => $certificate->certificate_id]),
+    ])->setOptions([
+        'orientation' => 'Landscape',
+        'enable-local-file-access' => true,
+        'disable-smart-shrinking' => true,
+    ]);
+
+    if (request()->has('download')) {
+        return $pdf->download("certificate-{$certificate->certificate_id}.pdf");
+    }
+
+    return $pdf->stream("certificate-{$certificate->certificate_id}.pdf");
 }
 }

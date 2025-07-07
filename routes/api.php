@@ -72,6 +72,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     ->name('certificates.verify');
     Route::get('certificates/{course}', [CertificateController::class, 'download'])
         ->name('student.certificates.download');
+        Route::get('certificate/public/{id}', [CertificateController::class, 'publicDownload'])
+    ->name('certificate.public');
     Route::post('login', 'Auth\AuthController@login');
     Route::post('login-otp/{customer:phone}', 'Auth\AuthController@loginOTP');
     Route::post('register', 'Auth\AuthController@register');
