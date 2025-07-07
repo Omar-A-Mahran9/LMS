@@ -211,6 +211,22 @@ if (!function_exists('streamCertificatePdf')) {
     }
 }
 
+if (!function_exists('getOrGeneratePublicCertificateUrl')) {
+    function getOrGeneratePublicCertificateUrl($student, $course)
+    {
+        $certificate = Certificate::where('student_id', $student->id)
+            ->where('course_id', $course->id)
+            ->first();
+
+        if (!$certificate) {
+            $certificate = generateCertificateRecord($student, $course); // make sure this creates a real `certificate_id`
+        }
+
+        // Return public route
+        return route('certificate.public', ['id' => $certificate->certificate_id]);
+    }
+}
+
 
 
 if (!function_exists('isTabActive')) {

@@ -282,9 +282,9 @@ public function getVideosBySections($id)
         'course_id'           => $courseExists->id,
         'course_title'        => $courseExists->title,
         'has_certificate'     => $courseExists->certificate_available,
-        'certificate_url' => $courseExists->certificate_available
-                ? route('student.certificates.download', ['course' => $courseExists->id])
-                : null,
+     'certificate_url' => $courseExists->certificate_available
+    ? getOrGeneratePublicCertificateUrl($student, $courseExists)
+    : null,
         'is_completed'        => $courseExists->is_completed,
         'progress_percentage' => $courseExists->progress_percentage,
         'has_rated' => Student_rate::where('course_id', $courseExists->id)
@@ -431,7 +431,7 @@ public function getprivacypolicy()
 }
 
 
- 
+
 
 
 public function getCourses(Request $request)
