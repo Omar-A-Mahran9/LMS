@@ -83,6 +83,8 @@
             font-weight: bold;
             color: #008080;
             margin: 10px 0;
+            direction: ltr;
+            unicode-bidi: isolate;
         }
 
         .course-title {
@@ -133,54 +135,64 @@
             color: #006699;
             text-decoration: none;
         }
+
+        .motivational {
+            font-size: 14px;
+            margin-top: 15px;
+            color: #00796b;
+            font-style: italic;
+        }
     </style>
 </head>
 
 <body>
     <div class="certificate">
-        {{-- Background watermark --}}
+        <!-- Watermark background -->
         <div class="bg-text">CERTIFICATE</div>
 
         <div class="content">
-            {{-- Logo --}}
+            <!-- Logo -->
             <div class="logo">
                 <img src="{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}" alt="Logo">
             </div>
 
-            {{-- QR Code --}}
+            <!-- QR Code -->
             <img src="data:image/png;base64,{{ $qrCode }}" class="qr" alt="QR Code">
 
-            {{-- Title --}}
+            <!-- Certificate Title -->
             <div class="title">Certificate of Completion</div>
             <div class="sub-title">This is proudly presented to</div>
 
-            {{-- STUDENT NAME --}}
-            <div class="student-name">{{ $student->first_name . ' '. $student->last_name }}</div>
+            <!-- Student Name -->
+            <div class="student-name">{{ $student->first_name . ' ' . $student->last_name }}</div>
 
             <div class="sub-title">for successfully completing the course</div>
 
-            {{-- COURSE TITLE --}}
+            <!-- Course Title -->
             <div class="course-title">"{{ $course->title_en ?? $course->title }}"</div>
 
-            {{-- DETAILS --}}
+            <!-- Details -->
             <div class="details">
                 Certificate ID: <strong>{{ $certificateId }}</strong><br>
                 Student Email: <strong>{{ $student->email }}</strong>
             </div>
 
-            {{-- ISSUE DATE --}}
+            <!-- Motivational Line -->
+            <div class="motivational">We wish you continued success in your learning journey!</div>
+
+            <!-- Issue Date -->
             <div class="issued">
                 Issued on: <strong>{{ now()->format('F d, Y') }}</strong>
             </div>
         </div>
 
-        {{-- INSTRUCTOR SIGNATURE --}}
+        <!-- Signature -->
         <div class="signature">
             <div class="name">Mohamed El-Nagar</div>
             <div>Instructor</div>
         </div>
 
-        {{-- VERIFICATION LINK --}}
+        <!-- Verification Link -->
         <div class="verify">
             Verify this certificate at:<br>
             <a href="https://yourdomain.com/certificates/{{ $certificateId }}">
