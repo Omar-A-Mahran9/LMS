@@ -14,7 +14,6 @@ class CertificateController extends Controller
     public function download(Course $course)
     {
         $student = auth('api')->user();
-dd($student);
         if (!$student) {
             return $this->failure(__('Unauthorized'));
                 }
