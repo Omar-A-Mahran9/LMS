@@ -7,7 +7,7 @@ use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\CourseVideoStudent;
 use App\Models\QuizAttempt;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\Snappy\Facades\SnappyPdf;
 
 class CertificateController extends Controller
 {
@@ -91,7 +91,7 @@ public function publicDownload($id)
 {
     $certificate = Certificate::where('certificate_id', $id)->firstOrFail();
 
-    $pdf = Pdf::loadView('certificates.certificate', [
+    $pdf =SnappyPdf::loadView('certificates.certificate', [
         'student'        => $certificate->student,
         'course'         => $certificate->course,
         'qrCode'         => $certificate->qr_code,
