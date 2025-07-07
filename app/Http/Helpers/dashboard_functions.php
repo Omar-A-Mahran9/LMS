@@ -189,6 +189,27 @@ if (!function_exists('getAudioPathFromDirectory')) {
     }
 
 }
+if (!function_exists('streamCertificatePdf')) {
+    function streamCertificatePdf($student, $course, $certificate)
+    {
+        $certificateUrl = route('certificates.verify', ['id' => $certificate->certificate_id]);
+
+        $pdf = PDF::loadView('certificates.certificate', [
+            'student'        => $student,
+            'course'         => $course,
+            'qrCode'         => $certificate->qr_code,
+            'certificateId'  => $certificate->certificate_id,
+            'certificateUrl' => $certificateUrl,
+        ])->setOptions([
+            'page-size' => 'A4',
+            'orientation' => 'Landscape',
+            'enable-local-file-access' => true,
+            'disable-smart-shrinking' => true,
+        ]);
+
+        return $pdf->stream("certificate-{$student->id}-{$course->id}.pdf");
+    }
+}
 
 
 
@@ -374,45 +395,22 @@ if (!function_exists('generateRandomCode')) {
 
 
 
-if (!function_exists('generateCertificateForStudent')) {
-    function generateCertificateForStudent($student, $course)
+if (!function_exists('generateCertificateRecord')) {
+    function generateCertificateRecord($student, $course)
     {
         $certificateId  = 'CERT-' . strtoupper(Str::random(10));
         $certificateUrl = route('certificates.verify', ['id' => $certificateId]);
         $qrCode         = base64_encode(QrCode::format('png')->size(150)->generate($certificateUrl));
 
-        // اسم الملف داخل مجلد الشهادات المؤقت
-        $filename = "{$certificateId}.pdf";
-        $tempPath = public_path("certificates/{$filename}");
-
-        // إنشاء ملف PDF فعلي
-        PDF::loadView('certificates.certificate', [
-            'student'        => $student,
-            'course'         => $course,
-            'qrCode'         => $qrCode,
-            'certificateId'  => $certificateId,
-            'certificateUrl' => $certificateUrl,
-        ])
-    ->setOptions([
-            'page-size' => 'A4',
-            'orientation' => 'Landscape',
-            'enable-local-file-access' => true,
-            'disable-smart-shrinking' => true,
-        ])
-    ->save($tempPath);
-                // رفعه إلى مجلد attachments
-        $storedFileName = uploadCertificatePdfFromPath($tempPath, $filename, 'Certificate');
-
-        // حفظ في قاعدة البيانات
         return Certificate::create([
             'student_id'     => $student->id,
             'course_id'      => $course->id,
             'certificate_id' => $certificateId,
-            'file_path'      => $storedFileName,
             'qr_code'        => $qrCode,
         ]);
     }
 }
+
 
 if (!function_exists('uploadCertificatePdfFromPath')) {
     function uploadCertificatePdfFromPath($filePath, $filename, $model)

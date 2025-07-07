@@ -3,36 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Course;
 use App\Models\Certificate;
+use App\Models\Course;
 use App\Models\CourseVideoStudent;
 use App\Models\QuizAttempt;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CertificateController extends Controller
 {
-
-public function verify($id)
-{
-    // Find certificate by certificate_id or throw 404
-    $certificate = Certificate::where('certificate_id', $id)->firstOrFail();
-
-    // Load related student and course for convenience (optional)
-    $certificate->load(['student', 'course']);
-
-    // Return the Blade view with the certificate data
-    return view('certificates.verify', [
-        'certificate' => $certificate
-    ]);
-}
-
-
-
     public function download(Course $course)
     {
         $student = auth('api')->user();
@@ -85,17 +67,14 @@ public function verify($id)
         ->where('course_id', $course->id)
         ->first();
 
+
     if (!$certificate) {
-        // Not created yet, so generate it
-        $certificate = generateCertificateForStudent($student, $course);
+        $certificate = generateCertificateRecord($student, $course); // ONLY creates DB record, no PDF
     }
 
-    // ✅ Return certificate info
-    $fileUrl = getAttachmentPathFromDirectory($certificate->file_path, 'Certificate');
+    // ✅ Stream PDF now (in memory)
+    return streamCertificatePdf($student, $course, $certificate);
 
-        return $this->success('',[
-            // 'certificate_id'=> $certificate->certificate_id,
-            'file_url'      => $fileUrl,
-            // 'course_title'  => $course->title_en ?? $course->title,
-        ]);    }
+
+}
 }
