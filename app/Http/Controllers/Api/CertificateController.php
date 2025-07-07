@@ -7,18 +7,14 @@ use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\CourseVideoStudent;
 use App\Models\QuizAttempt;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 
 class CertificateController extends Controller
 {
     public function download(Course $course)
     {
         $student = auth('api')->user();
-
+dd($student);
         if (!$student) {
             return $this->failure(__('Unauthorized'));
                 }
