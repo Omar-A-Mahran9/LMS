@@ -51,7 +51,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('enroll-class', [EnrollmentController::class, 'enroll_class']);
     Route::get('enrollment-status/{course_id}', [EnrollmentController::class, 'enrollmentStatus']);
     Route::get('books/{id}', 'BookController@show');
-
+  Route::get('certificate/verify/{id}', [CertificateController::class, 'verify'])
+    ->name('certificates.verify');
+    Route::get('certificates/{course}', [CertificateController::class, 'download'])
+        ->name('student.certificates.download');
 
     Route::get('profile-info', 'ProfileController@profileInfo')->name('profile-info');
     Route::post('update-profile-info', 'ProfileController@updateProfileInfo')->name('update-profile-info');
@@ -68,10 +71,7 @@ Route::middleware(['auth:api'])->group(function () {
 Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
     Route::get('/courses/{id}/sections/count', [SectionController::class, 'countSectionByCourse']);
-    Route::get('certificate/verify/{id}', [CertificateController::class, 'verify'])
-    ->name('certificates.verify');
-    Route::get('certificates/{course}', [CertificateController::class, 'download'])
-        ->name('student.certificates.download');
+
         Route::get('certificate/public/{id}', [CertificateController::class, 'publicDownload'])
     ->name('certificate.public');
     Route::post('login', 'Auth\AuthController@login');
