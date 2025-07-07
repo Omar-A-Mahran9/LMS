@@ -28,7 +28,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 
 });
-
+        Route::get('certificate/{id}', [CertificateController::class, 'publicDownload'])
+    ->name('certificate.public');
 Route::middleware(['auth:api'])->group(function () {
     Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');
     Route::get('get_rates_for_course/{course_id}', 'CourseController@getRatesForCourse');
@@ -72,8 +73,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
     Route::get('/courses/{id}/sections/count', [SectionController::class, 'countSectionByCourse']);
 
-        Route::get('certificate/{id}', [CertificateController::class, 'publicDownload'])
-    ->name('certificate.public');
+
     Route::post('login', 'Auth\AuthController@login');
     Route::post('login-otp/{customer:phone}', 'Auth\AuthController@loginOTP');
     Route::post('register', 'Auth\AuthController@register');
