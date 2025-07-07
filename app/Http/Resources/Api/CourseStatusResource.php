@@ -25,9 +25,9 @@ public function toArray(Request $request): array
         return [
             'is_enrolled'     => $this->is_enrolled,
             'is_completed'    => $isCompleted,
-        'certificate_url' => $this->certificate_available
-    ? getOrGeneratePublicCertificateUrl($student, $this)
-    : null,
+    //     'certificate_url' => $this->certificate_available
+    // ? getOrGeneratePublicCertificateUrl($student, $this)
+    // : null,
 
         ];
     }
