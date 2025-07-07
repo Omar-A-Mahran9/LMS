@@ -24,9 +24,9 @@ public function toArray(Request $request): array
         return [
             'is_enrolled'     => $this->is_enrolled,
             'is_completed'    => $isCompleted,
-            // 'certificate_url' => $this->certificate_available && $isCompleted
-            //     ? route('student.certificates.download', ['course' => $this->id])
-            //     : null,
+               'certificate_url' =>  $isCompleted &&  $this->certificate_available
+                    ? getOrGeneratePublicCertificateUrl($student, $this)
+                    : null,
         ];
     }
 }

@@ -320,9 +320,9 @@ public function checkCourseAccess($id)
         'has_certificate'     => $course->certificate_available,
 
 
-                //    'certificate_url' =>  $course->certificate_available
-                //     ? getOrGeneratePublicCertificateUrl($student, $this)
-                //     : null,
+                   'certificate_url' =>  $course->certificate_available
+                    ? getOrGeneratePublicCertificateUrl($student, $course)
+                    : null,
 
                      'is_completed'        => $course->is_completed,
         'progress_percentage' => $course->progress_percentage,
