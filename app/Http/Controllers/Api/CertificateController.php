@@ -91,7 +91,7 @@ public function publicDownload($id)
 {
     $certificate = Certificate::where('certificate_id', $id)->firstOrFail();
 
-    $pdf = Pdf::loadView('certificates.certificate', [
+    $pdf = "Pdf::"loadView('certificates.certificate', [
         'student'        => $certificate->student,
         'course'         => $certificate->course,
         'qrCode'         => $certificate->qr_code,

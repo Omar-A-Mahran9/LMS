@@ -22,6 +22,7 @@ class Role extends Model
 
     public static $modules = [
         'admins',
+        'dashboard',
 
         'sliders',
 
