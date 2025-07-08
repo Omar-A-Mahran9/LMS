@@ -169,12 +169,29 @@
                         </ul>
                     </div>
                 </div>
-            @else
-                <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
-                    <img src="{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}" alt="Logo"
-                        style="max-width: 300px;" class="mb-5">
-                </div>
-            @endcan
+       @else
+    <!-- Greeting -->
+    <div class="d-flex flex-column align-items-start justify-content-start ms-3 mt-10">
+        <span class="text-muted fs-6">{{ __('Hello') }}</span>
+        <a href="#" class="text-dark fs-5 fw-semibold text-hover-primary">
+            {{ auth()->user()->name }}
+        </a>
+    </div>
+
+    <!-- Centered Logo Display -->
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
+        <img src="{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}"
+             alt="Logo"
+             style="max-width: 280px;"
+             class="mb-5 img-fluid ">
+
+        <h4 class="text-muted">{{ __('Dashboard access is restricted.') }}</h4>
+        <p class="text-gray-500 fs-6 text-center px-4">
+            {{ __('Please contact the administrator if you think this is an error.') }}
+        </p>
+    </div>
+@endcan
+
 
         </div>
     </div>
