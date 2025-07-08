@@ -174,15 +174,18 @@
 
 
                 <!-- Centered Logo Display -->
-                <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
-                    <div>
-                        <h2 class="text-muted fs-6">{{ __('Hello') }}</h2>
-                        <h2 class="text-dark fs-5 fw-semibold text-hover-primary">
+                <div class="d-flex flex-column align-items-center justify-content-center text-center" style="min-height: 60vh;">
+                    <!-- Greeting Section -->
+                    <div class="mb-5">
+                        <h2 class="text-muted fs-6 mb-1">{{ __('Hello') }}</h2>
+                        <h2 class="text-dark fs-4 fw-bold">
                             {{ auth()->user()->name }}
                         </h2>
                     </div>
+
+                    <!-- Logo Image -->
                     <img src="{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}" alt="Logo"
-                        style="max-width: 280px;" class="mb-5 img-fluid ">
+                        class="img-fluid mb-4" style="max-width: 280px;">
 
 
                 </div>
