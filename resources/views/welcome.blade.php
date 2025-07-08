@@ -169,6 +169,10 @@
                         </ul>
                     </div>
                 </div>
+            @else
+                <div>
+                    <img src="{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}" alt="Logo">
+                </div>
             @endcan
         </div>
     </div>
