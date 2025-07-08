@@ -173,7 +173,6 @@
                 <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
                     <img src="{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}" alt="Logo"
                         style="max-width: 300px;" class="mb-5">
-                    <h3 class="text-muted">{{ __('Access Restricted') }}</h3>
                 </div>
             @endcan
 
