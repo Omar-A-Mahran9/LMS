@@ -176,10 +176,10 @@
                 <!-- Centered Logo Display -->
                 <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
                     <div>
-                        <span class="text-muted fs-6">{{ __('Hello') }}</span>
-                        <a href="#" class="text-dark fs-5 fw-semibold text-hover-primary">
+                        <h2 class="text-muted fs-6">{{ __('Hello') }}</h2>
+                        <h2 class="text-dark fs-5 fw-semibold text-hover-primary">
                             {{ auth()->user()->name }}
-                        </a>
+                        </h2>
                     </div>
                     <img src="{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}" alt="Logo"
                         style="max-width: 280px;" class="mb-5 img-fluid ">
