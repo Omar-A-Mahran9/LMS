@@ -60729,11 +60729,11 @@ body[data-kt-sticky-landing-header="on"] {
 }
 
 [data-bs-theme="light"] {
-    --bs-app-bg-color: ##F7F7F8;
-    --bs-app-blank-bg-color: ##F7F7F8;
-    --bs-app-header-base-bg-color: ##F7F7F8;
+    --bs-app-bg-color: #F7F7F8;
+    --bs-app-blank-bg-color: #F7F7F8;
+    --bs-app-header-base-bg-color: #F7F7F8;
     --bs-app-header-minimize-bg-color: rgba(255, 255, 255, 0.5);
-    --bs-app-sidebar-base-bg-color: ##F7F7F8;
+    --bs-app-sidebar-base-bg-color: #F7F7F8;
 }
 
 [data-bs-theme="dark"] {

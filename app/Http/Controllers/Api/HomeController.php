@@ -124,6 +124,15 @@ class HomeController extends Controller
         $locale = app()->getLocale();
         $suffix = $locale === 'ar' ? '_ar' : '_en';
 
+    $about = [
+            'image_url'=>getImagePathFromDirectory(setting('about_us_image'), 'Settings'),
+            'label'           => setting('label' . $suffix),
+            'description'     => setting('about_us' . $suffix),
+            'experince_year' => Admin::where('id',3)->value('experience_years') ?? 20,
+            'lecture_count' => CourseVideo::count(),
+        ];
+
+
         // Sliders
         $sliders = Slider::where('status', '1')->get();
     $categories = Category::where('is_publish', 1)
@@ -250,6 +259,7 @@ $courses = Course::where('is_active', 1)
  // reindex
         return $this->success('', [
             'sliders' => SliderResource::collection($sliders),
+            'about_us'=> $about,
             'categories' => CategoryResource::collection($categories),
             'rates' => RateResource::collection($rates),
             'heroes_by_category' => $heroesByCategory,
