@@ -370,7 +370,7 @@ public function results($studentQuizId)
             'submitted_at' => $attempt->submitted_at,
             'results'      => $results,
         ]);
-    }
+}
 
 
 
