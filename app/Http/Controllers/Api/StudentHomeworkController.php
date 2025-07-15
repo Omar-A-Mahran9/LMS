@@ -14,6 +14,7 @@ class StudentHomeworkController extends Controller
     // Start or continue a homework attempt
 public function startHomework(Request $request, $homeworkId)
 {
+    dd($homeworkId);
     $studentId = auth()->id();
 
     $homework = HomeWork::with('course')->find($homeworkId);
