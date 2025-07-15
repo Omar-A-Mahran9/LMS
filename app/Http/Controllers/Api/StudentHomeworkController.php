@@ -17,7 +17,6 @@ public function startHomework(Request $request, $homeworkId)
     $studentId = auth()->id();
 
     $homework = HomeWork::with('course')->find($homeworkId);
-        dd($homework);
 
     if($homework){
              return $this->failure(__('Homework is not found'));
