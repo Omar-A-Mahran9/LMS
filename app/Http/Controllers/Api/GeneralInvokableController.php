@@ -57,7 +57,7 @@ class GeneralInvokableController extends Controller
                     ? 'تعلم الإنجليزية بأسلوب سهل مع مستر محمد النجار وخطتك الأكاديمية للنجاح'
                     : 'Learn English with ease and structure with Mohamed El Nagar’s academic method.',
                 'og:image' => getImagePathFromDirectory(setting('logo_image')),
-                'og:url' => url()->current(),
+                'og:url' => 'https://mohamed-elnagar.com/about',
                 'favicon' => getImagePathFromDirectory(setting('favicon_icon'), "Settings"),
             ],
         ]);
