@@ -123,22 +123,27 @@ public function getCoursesById(Request $request, $id)
 public function getClassesByCoursesId(Request $request, $id)
 {
     $student = auth('api')->user();
-
+    $studentId=auth('api')->user()->id;
     if (!$student) {
         return response()->json([
             'message' => 'Unauthorized'
         ], 401);
     }
 
-    $isEnrolled = DB::table('course_student')
-        ->where('course_id', $id)
-        ->where('student_id', $student->id)
-        ->exists();
 
-    if (!$isEnrolled) {
-        return $this->failure(__("You are not enrolled in this course."));
+       // Ensure course has this student enrolled and is active
+    $courseExists = Course::where('id', $id)
+        ->where('is_active', 1)
+        ->whereHas('enrollments', function ($q) use ($studentId) {
+            $q->where('student_id', $studentId)
+              ->where('status', 'approved')
+              ->where('is_active', 1);
+        })
+        ->first();
+
+    if (!$courseExists) {
+        return $this->failure('Course not found or unauthorized.');
     }
-
     $perPage = $request->query('per_page', 10);
 
     $classes = CourseClass::where('course_id', $id)
@@ -220,7 +225,7 @@ public function getVideosByClass($id)
         ->first();
 
     if (!$class) {
-        return $this->failure('Course not found or unpublished');
+        return $this->failure('class not found or unpublished');
     }
 
    // Ensure course has this student enrolled and is active
