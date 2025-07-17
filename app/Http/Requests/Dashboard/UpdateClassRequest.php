@@ -28,7 +28,7 @@ class UpdateClassRequest extends FormRequest
     public function rules()
     {
   $classId = request()->route('class');
-
+dd($classId);
     // Manually resolve the CourseVideo model
   return [
         'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:10240',
