@@ -9,21 +9,13 @@ use Illuminate\Validation\Rule;
 
 class UpdateQuestionRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+
     public function authorize()
     {
         return abilities()->contains('update_quizzes');
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
+
     public function rules()
     {
   $question = request()->route('question');
