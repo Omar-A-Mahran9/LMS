@@ -159,18 +159,6 @@ var KTDatatablesServerSide = (function () {
                 // Repeater logic
                 const repeaterList = $("#form_repeater [data-repeater-list]");
                 repeaterList.html("");
-                if (data.type === "multiple_choice") {
-                    $(".answer-multiple_choice").removeClass("d-none");
-
-                    $("#form_repeater").repeater(
-                        "setList",
-                        data.answers.map((answer) => ({
-                            text_ar: answer.answer_ar,
-                            text_en: answer.answer_en,
-                            is_correct: answer.is_correct ? 1 : 0,
-                        }))
-                    );
-                }
 
                 if (data.type === "multiple_choice") {
                     $(".answer-multiple_choice").removeClass("d-none");

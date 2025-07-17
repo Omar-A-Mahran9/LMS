@@ -58,7 +58,10 @@
                                                     <td class="text-end text-dark">
                                                         {{ $class->created_at->format('Y-m-d') }}</td>
                                                 </tr>
-                                        
+                                                <tr>
+                                                    <td class="text-muted">{{ __('Description') }}</td>
+                                                    <td class="text-end text-dark">{!! $class->description !!}</td>
+                                                </tr>
 
 
                                             </tbody>
