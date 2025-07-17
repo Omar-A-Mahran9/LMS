@@ -216,11 +216,7 @@ public function getVideosByClass($id)
     // Ensure course has this student enrolled and is active
     $courseExists = Course::where('id', $id)
         ->where('is_active', 1)
-        ->whereHas('enrollments', function ($q) use ($studentId) {
-            $q->where('student_id', $studentId)
-              ->where('status', 'approved')
-              ->where('is_active', 1);
-        })
+        
         ->first();
 
     if (!$courseExists) {
