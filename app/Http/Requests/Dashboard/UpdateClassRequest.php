@@ -27,7 +27,7 @@ class UpdateClassRequest extends FormRequest
      */
     public function rules()
     {
-  $sectionId = request()->route('section');
+  $classId = request()->route('class');
 
     // Manually resolve the CourseVideo model
   return [
@@ -47,13 +47,13 @@ class UpdateClassRequest extends FormRequest
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('classes', 'title_ar')->ignore($sectionId->id)
+            Rule::unique('classes', 'title_ar')->ignore($classId->id)
         ],
         'title_en' => [
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('classes', 'title_en')->ignore($sectionId->id)
+            Rule::unique('classes', 'title_en')->ignore($classId->id)
         ],
 
     'description_ar' => ['required', new NotNumbersOnly()],
