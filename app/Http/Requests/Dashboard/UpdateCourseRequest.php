@@ -63,8 +63,7 @@ class UpdateCourseRequest extends FormRequest
 
    // Relationships
     'instructor_id' => ['required', 'exists:admins,id'],
-            'is_class' => ['is_class', 'boolean'],
-
+ 
     'category_id' => ['required_with:is_class,1', 'exists:categories,id'],
 
 
@@ -84,6 +83,7 @@ class UpdateCourseRequest extends FormRequest
 
 
     'is_active' => ['nullable', 'boolean'],
+        'is_class' => ['nullable', 'boolean'],
 
     // Level & Status
     'level' => ['nullable', 'in:beginner,intermediate,advanced'],
