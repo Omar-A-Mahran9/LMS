@@ -213,15 +213,7 @@ public function getVideosByClass($id)
         $studentId = Auth::id();
         $student = Auth::user();
 
-    // Ensure course has this student enrolled and is active
-    $courseExists = Course::where('id', $id)
-        ->where('is_active', 1)
-        
-        ->first();
 
-    if (!$courseExists) {
-        return $this->failure('Course not found or unauthorized.');
-    }
 
     $class = CourseClass::where('id', $id)
         ->where('is_active', 1)
@@ -231,8 +223,19 @@ public function getVideosByClass($id)
         return $this->failure('Course not found or unpublished');
     }
 
-    $studentId = Auth::id();
+   // Ensure course has this student enrolled and is active
+    $courseExists = Course::where('id', $class->course_id)
+        ->where('is_active', 1)
+        ->whereHas('enrollments', function ($q) use ($studentId) {
+            $q->where('student_id', $studentId)
+              ->where('status', 'approved')
+              ->where('is_active', 1);
+        })
+        ->first();
 
+    if (!$courseExists) {
+        return $this->failure('Course not found or unauthorized.');
+    }
     // Eager load student progress for each video, to avoid N+1 queries
     $videos = $class->videos()
         ->with(['studentProgress' => function ($query) use ($studentId) {
