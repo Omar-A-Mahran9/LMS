@@ -27,8 +27,8 @@ class UpdateClassRequest extends FormRequest
      */
     public function rules()
     {
+
   $classId = request()->route('class');
-dd($classId);
     // Manually resolve the CourseVideo model
   return [
         'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:10240',
@@ -47,13 +47,13 @@ dd($classId);
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('classes', 'title_ar')->ignore($classId->id)
+            Rule::unique('classes', 'title_ar')->ignore($classId)
         ],
         'title_en' => [
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('classes', 'title_en')->ignore($classId->id)
+            Rule::unique('classes', 'title_en')->ignore($classId)
         ],
 
     'description_ar' => ['required', new NotNumbersOnly()],
