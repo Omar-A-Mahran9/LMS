@@ -62,7 +62,7 @@ class UpdateClassRequest extends FormRequest
 
     // Video
   'video_url' => [
-            'required',
+            'nullable',
             'regex:/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/'
         ],
 

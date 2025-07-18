@@ -145,10 +145,12 @@ public function getClassesByCoursesId(Request $request, $id)
         return $this->failure('Course not found or unauthorized.');
     }
     $perPage = $request->query('per_page', 10);
-
-    $classes = CourseClass::where('course_id', $id)
-                ->where('is_active', 1)
-                ->paginate($perPage);
+$classes = CourseClass::where('course_id', $id)
+    ->where('is_active', 1)
+    ->whereHas('videos', function ($q) {
+        $q->where('is_active', 1);
+    })
+    ->paginate($perPage);
 
     if ($classes->isEmpty()) {
         return $this->failure('Class not found or unpublished');
