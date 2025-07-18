@@ -81,6 +81,9 @@ class ClassDetailsResource extends JsonResource
             'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,
             'attachment' => $this->full_attachment_path,
             'quiz_id'=>$activeQuiz->id??"not found Quiz",
+   'videos' => $this->videos->map(function ($video) {
+                return new VideoResource($video, $this->studentId);
+            }),
 
 
             // Flags
@@ -94,6 +97,7 @@ class ClassDetailsResource extends JsonResource
             'quiz_attempted'     => $hasAttemptedQuiz,
             'homework_id'        => !$homeworkAttemptLimitReached ? $activeHomework?->id : null,
             'homework_attempted' => $hasAttemptedHomework,
+
         ];
     }
 }

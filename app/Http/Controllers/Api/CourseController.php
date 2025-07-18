@@ -258,9 +258,7 @@ public function getVideosByClass($id)
         ->get();
 
     // Format each video using the resource
-    $videosData = $videos->map(function ($video) use ($studentId) {
-        return new VideoResource($video, $studentId);
-    });
+
 
     return $this->success('Class videos loaded', [
         'course_data' => [
@@ -276,11 +274,7 @@ public function getVideosByClass($id)
                 ->where('student_id', $studentId)
                 ->exists(),
         ],
-        'class_data' => [
-            'class_id'    => $class->id,
-            'class_title' => $class->title,
-            'videos'      => $videosData,
-        ],
+        'class_data' =>new ClassDetailsResource(),
     ]);
 }
 
