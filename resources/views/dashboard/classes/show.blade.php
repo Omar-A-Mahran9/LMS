@@ -58,7 +58,7 @@
                                                     <td class="text-end text-dark">
                                                         {{ $class->created_at->format('Y-m-d') }}</td>
                                                 </tr>
-                                
+
 
                                             </tbody>
                                         </table>
@@ -92,7 +92,7 @@
                         <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
 
                             <!--begin::Toolbar-->
-                            <div class="d-flex justify-content-end w-100"  data-bs-toggle="modal"
+                            <div class="d-flex justify-content-end w-100" data-bs-toggle="modal"
                                 data-bs-target="#videoModal" data-kt-docs-table-toolbar="base">
                                 <!--begin::Add customer-->
                                 <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
@@ -181,9 +181,8 @@
                                     data-kt-docs-table-toolbar="base" for="kt_datatable">
                                     <!--begin::Add customer-->
                                     @if (!$quizExists)
-                                        <button type="button" class="btn btn-primary" id="quiz_btn"
-                                            data-bs-toggle="tooltip" data-bs-original-title="Coming Soon"
-                                            data-kt-initialized="1">
+                                        <button type="button" class="btn btn-primary" id="quiz_btn" data-bs-toggle="tooltip"
+                                            data-bs-original-title="Coming Soon" data-kt-initialized="1">
                                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                             <span class="svg-icon svg-icon-2">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -367,7 +366,7 @@
                                     {{-- Course & Section --}}
                                     <div class="row mb-4">
                                         <input type="hidden" name="class_id" value="{{ $class->id }}">
-                                                                                <input type="hidden" name="course_id" value="{{ $course->id }}">
+                                        <input type="hidden" name="course_id" value="{{ $course->id }}">
 
                                     </div>
 
@@ -434,6 +433,17 @@
                                                     value="1" id="is_active_switch" checked>
                                                 <span class="form-check-label text-dark"
                                                     for="is_active_switch">{{ __('Active') }}</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-3 d-flex align-items-center mt-4">
+                                            <label class="form-check form-switch form-check-custom form-check-solid">
+                                                <input class="form-check-input" name="have_reading_passages"
+                                                    type="checkbox" value="1" id="have_reading_passages_switch">
+                                                <span class="form-check-label text-dark"
+                                                    for="have_reading_passages_switch">
+                                                    {{ __('Has Reading Passage?') }}
+                                                </span>
                                             </label>
                                         </div>
 
@@ -610,7 +620,7 @@
 
                                 <div class="modal-body">
                                     <input type="hidden" name="class_id" value="{{ $class->id }}">
-                                        <input type="hidden" name="course_id" value="{{ $course->id }}">
+                                    <input type="hidden" name="course_id" value="{{ $course->id }}">
 
                                     <div class="row mb-4">
                                         <div class="col-12 d-flex flex-column justify-content-center">
@@ -731,7 +741,7 @@
                                 <div class="modal-body">
                                     <div class="row mb-4">
                                         <input type="hidden" name="class_id" value="{{ $class->id }}">
-                                                                                <input type="hidden" name="course_id" value="{{ $course->id }}">
+                                        <input type="hidden" name="course_id" value="{{ $course->id }}">
 
                                     </div>
 
