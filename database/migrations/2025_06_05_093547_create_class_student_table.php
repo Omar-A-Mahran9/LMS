@@ -16,8 +16,11 @@ return new class extends Migration
              $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
              $table->foreignId('class_id')->constrained('classes')->onDelete('cascade');
 
-            $table->timestamps();
-        });
+            $table->boolean('is_active')->default(false);
+                $table->timestamps();
+
+        // تأكد من عدم تكرار نفس الطالب في نفس الصف
+        $table->unique(['student_id', 'class_id']);        });
     }
 
     /**

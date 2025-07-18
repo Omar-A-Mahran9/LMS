@@ -89,6 +89,9 @@ public function store(Request $request)
         // Add other fields if necessary
     ]);
 
+    $course = Course::findOrFail($enrollment->course_id);
+
+
 }
 
 

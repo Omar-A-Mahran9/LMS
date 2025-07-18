@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ClassStudentView extends Model
+class ClassStudent extends Model
 {
-        protected $table = 'class_student_views'; // specify table if not the plural of model
+        protected $table = 'class_student'; // specify table if not the plural of model
 
     use HasFactory;
      protected $guarded = [];
