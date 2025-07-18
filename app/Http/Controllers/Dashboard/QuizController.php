@@ -100,6 +100,7 @@ public function show(Request $request, Quiz $quiz)
 
         $validated = $request->validated();
         $validated['is_active'] = $request->boolean('is_active');
+        $validated['have_reading_passages'] = $request->boolean('have_reading_passages');
 
         $quiz->update($validated);
 
