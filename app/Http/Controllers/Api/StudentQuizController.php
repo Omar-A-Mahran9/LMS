@@ -235,6 +235,7 @@ public function submitQuiz(Request $request, $quizAttemptId)
         return $this->success(__('Quiz submitted successfully'), [
             'score' => $score,
              'course_id'=>$attempt->quiz?$attempt->quiz?->course->id:null,
+                    'class_id'=>$attempt->quiz?$attempt->quiz?->class->id:null,
 
             'total_points' => $totalPoints,
             'score_text' => $scoreText,
