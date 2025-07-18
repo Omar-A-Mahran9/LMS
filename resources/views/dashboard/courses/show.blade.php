@@ -61,15 +61,15 @@
 
                         <div class="row text-center mt-5">
                             <div class="col-md-4">
-                                <div class="text-gray-600 fw-semibold">{{ __('Pending Enrollments') }}</div>
+                                <div class="text-gray-600 fw-bold">{{ __('Pending Enrollments') }}</div>
                                 <div class="fs-2 fw-bold text-warning">{{ $course->pending_enrollments_count }}</div>
                             </div>
                             <div class="col-md-4">
-                                <div class="text-gray-600 fw-semibold">{{ __('Approved Enrollments') }}</div>
+                                <div class="text-gray-600 fw-bold">{{ __('Approved Enrollments') }}</div>
                                 <div class="fs-2 fw-bold text-success">{{ $course->approved_enrollments_count }}</div>
                             </div>
                             <div class="col-md-4">
-                                <div class="text-gray-600 fw-semibold">{{ __('Rejected Enrollments') }}</div>
+                                <div class="text-gray-600 fw-bold">{{ __('Rejected Enrollments') }}</div>
                                 <div class="fs-2 fw-bold text-danger">{{ $course->rejected_enrollments_count }}</div>
                             </div>
                         </div>
