@@ -13,26 +13,35 @@ use Illuminate\Http\Request;
 
 class SectionController extends Controller
 {
-    public function index(Request $request)
-    {
-          $this->authorize('view_sections');
-        $courseId = $request->input('course_id');
+public function index(Request $request)
+{
+    $this->authorize('view_sections');
 
-        $courses = Course::select('id', 'title_en', 'title_ar')->get();
-        // Example static visited site count (you may want to make this dynamic)
-        $visited_site = 10000;
+    $courseId = $request->input('course_id');
+    $courses = Course::select('id', 'title_en', 'title_ar')->get();
+    $visited_site = 10000;
 
-        if ($request->ajax()) {
+    if ($request->ajax()) {
 
-                    return response()->json(getModelData(model: new Section(), andsFilters: [['course_id', $courseId]],relations: ['course' => ['id', 'title_ar','title_en' ]]));
-
-
-        } else {
-
-            // Return the main view with data
-            return view('dashboard.sections.index', compact( 'courses'));
+        // ✅ Return empty result if course_id is missing or invalid
+        if (!$courseId || !is_numeric($courseId)) {
+            return response()->json([
+                "recordsTotal" => 0,
+                "recordsFiltered" => 0,
+                "data" => [],
+            ]);
         }
+
+        return response()->json(getModelData(
+            model: new Section(),
+            andsFilters: [['course_id', (int) $courseId]],
+            relations: ['course' => ['id', 'title_ar', 'title_en']]
+        ));
     }
+
+    return view('dashboard.sections.index', compact('courses'));
+}
+
 
 
 
