@@ -274,7 +274,7 @@ public function getVideosByClass($id)
                 ->where('student_id', $studentId)
                 ->exists(),
         ],
-        'class_data' =>new ClassDetailsResource(),
+        'class_data' =>new ClassDetailsResource($class, $studentId),
     ]);
 }
 

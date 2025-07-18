@@ -82,7 +82,7 @@ class ClassDetailsResource extends JsonResource
             'attachment' => $this->full_attachment_path,
             'quiz_id'=>$activeQuiz->id??"not found Quiz",
    'videos' => $this->videos->map(function ($video) {
-                return new VideoResource($video, $this->$studentId);
+                return new VideoResource($video, $this->studentId);
             }),
 
 
