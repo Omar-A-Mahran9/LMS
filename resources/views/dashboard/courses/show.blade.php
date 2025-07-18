@@ -58,7 +58,7 @@
                                 <div class="fs-2 fw-bold text-dark">{{ $course->views }}</div>
                             </div>
                         </div>
-
+<hr>
                         <div class="row text-center mt-5">
                             <div class="col-md-4">
                                 <div class="text-gray-600 fw-bold">{{ __('Pending Enrollments') }}</div>
