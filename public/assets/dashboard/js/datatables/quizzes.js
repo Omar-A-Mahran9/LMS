@@ -232,7 +232,10 @@ var KTDatatablesServerSidequiz = (function () {
 
                 // Flags
                 $("#is_active_switch").prop("checked", data.is_active);
-
+                $("#have_reading_passages_switch").prop(
+                    "checked",
+                    data.have_reading_passages
+                );
                 // Reset form method & action
                 $("#crud_form").attr("action", `/dashboard/quizzes/${data.id}`);
 
