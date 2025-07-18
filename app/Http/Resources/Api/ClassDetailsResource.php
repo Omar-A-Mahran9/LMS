@@ -76,6 +76,8 @@ class ClassDetailsResource extends JsonResource
             'image' => $this->full_image_path,
             'title' => $this->title,
             'short_title'        => $this->short_title,
+                        'course_id'        => $this->course_id,
+
             'description'  => $this->description,
             'started_at' => $this->course->start_date,
             'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,
