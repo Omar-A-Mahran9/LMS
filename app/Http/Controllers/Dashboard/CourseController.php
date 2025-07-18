@@ -158,11 +158,22 @@ public function show(Course $course)
     $course->load([
         'category',
         'subCategories',
-        'instructor'
+        'instructor',
     ])->loadCount([
-        'enrollments', // students enrolled in this course
-        'sections',    // if course has sections
-        'classes'      // if course has classes
+        'enrollments', // total enrollments
+        'sections',    // for section-based courses
+        'classes',     // for class-based courses
+
+        // Enrollment counts by status
+        'enrollments as approved_enrollments_count' => function ($q) {
+            $q->where('status', 'approved');
+        },
+        'enrollments as pending_enrollments_count' => function ($q) {
+            $q->where('status', 'pending');
+        },
+        'enrollments as rejected_enrollments_count' => function ($q) {
+            $q->where('status', 'rejected');
+        },
     ]);
 
     return view('dashboard.courses.show', compact('course'));

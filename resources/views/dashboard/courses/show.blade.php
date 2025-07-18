@@ -58,6 +58,22 @@
                                 <div class="fs-2 fw-bold text-dark">{{ $course->views }}</div>
                             </div>
                         </div>
+
+                        <div class="row text-center mt-5">
+                            <div class="col-md-4">
+                                <div class="text-gray-600 fw-semibold">{{ __('Pending Enrollments') }}</div>
+                                <div class="fs-2 fw-bold text-warning">{{ $course->pending_enrollments_count }}</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-gray-600 fw-semibold">{{ __('Approved Enrollments') }}</div>
+                                <div class="fs-2 fw-bold text-success">{{ $course->approved_enrollments_count }}</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-gray-600 fw-semibold">{{ __('Rejected Enrollments') }}</div>
+                                <div class="fs-2 fw-bold text-danger">{{ $course->rejected_enrollments_count }}</div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="card card-flush">
@@ -152,7 +168,7 @@
                                     <div class="col-md-5">
                                         <table class="table table-row-bordered align-middle">
                                             <tbody class="fw-semibold text-gray-600">
-                                     
+
                                                 <tr>
                                                     <td class="text-muted">{{ __('Price') }}</td>
                                                     <td class="text-end text-dark">{{ number_format($course->price, 2) }}
