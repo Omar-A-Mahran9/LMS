@@ -15,7 +15,7 @@ class SectionController extends Controller
 {
     public function index(Request $request)
     {
-           $this->authorize('view_sections');
+          $this->authorize('view_sections');
         $courseId = $request->input('course_id');
 
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
@@ -23,15 +23,14 @@ class SectionController extends Controller
         $visited_site = 10000;
 
         if ($request->ajax()) {
-return response()->json([
-    'course_id' => $courseId,
-    'data' => getModelData(
-        model: new Section(),
-        andsFilters: [['course_id', (int) $courseId]],
-        relations: ['course' => ['id', 'title_ar', 'title_en']]
-    )
-]);
+                if($courseId){
 
+                    return response()->json(getModelData(model: new Section(), andsFilters: [['course_id', (int)$courseId]],relations: ['course' => ['id', 'title_ar','title_en' ]]));
+
+                }else{
+                    return response()->json(getModelData(model: new Section(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
+
+                }
         } else {
 
             // Return the main view with data
