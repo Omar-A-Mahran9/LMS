@@ -15,7 +15,7 @@ use App\Http\Resources\Api\VideoResource;
 
 
 use App\Models\Category;
-use App\Models\ClassStudentView;
+use App\Models\ClassStudent;
 use App\Models\CommonQuestion;
 use App\Models\Course;
 use App\Models\CourseClass;
@@ -170,13 +170,13 @@ public function getClassById($id)
 
     if ($student) {
         // Check if student already viewed this class
-        $alreadyViewed = ClassStudentView::where('student_id', $student->id)
+        $alreadyViewed = ClassStudent::where('student_id', $student->id)
             ->where('class_id', $class->id)
             ->exists();
 
         if (!$alreadyViewed) {
             // Log view and increment class views
-            ClassStudentView::create([
+            ClassStudent::create([
                 'student_id' => $student->id,
                 'class_id' => $class->id,
             ]);
