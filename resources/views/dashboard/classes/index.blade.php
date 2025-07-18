@@ -148,6 +148,8 @@
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
                             </div>
+                            <!-- Hidden input will be added dynamically -->
+                            <div id="hidden_course_input_wrapper"></div>
 
 
                             <div class="col-6">
@@ -315,21 +317,23 @@
             });
         });
     </script>
+
     <script>
         $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
             const courseId = urlParams.get('course_id');
 
             if (courseId) {
-                // Preselect value
+                // Preselect value in select
                 $('#course_id_inp').val(courseId).trigger('change');
 
-                // Optionally disable or hide it
-                $('#course_id_inp').prop('disabled', true); // optional
-                $('#course_select_wrapper').hide(); // hide the whole div
-            } else {
-                $('#course_id_inp').prop('disabled', false);
-                $('#course_select_wrapper').show();
+                // Hide select wrapper
+                $('#course_select_wrapper').hide();
+
+                // Append hidden input
+                $('#hidden_course_input_wrapper').html(`
+                <input type="hidden" name="course_id" value="${courseId}">
+            `);
             }
         });
     </script>
