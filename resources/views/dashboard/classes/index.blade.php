@@ -136,20 +136,23 @@
                         </div>
                         {{-- Course & Section --}}
                         <div class="row mb-4">
-                            <div class="col-6" id="course_select_wrapper">
-                                <label for="course_id_inp" class="form-label">{{ __('Course') }}</label>
-                                <select name="course_id" id="course_id_inp" class="form-select" data-control="select2"
-                                    data-placeholder="{{ __('Select Course') }}"
-                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
-                                    <option value="" selected></option>
-                                    @foreach ($courses as $course)
-                                        <option value="{{ $course->id }}">{{ $course->title_en }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
+                            <div class="col-6">
+                                <div id="course_select_wrapper">
+                                    <label for="course_id_inp" class="form-label">{{ __('Course') }}</label>
+                                    <select name="course_id" id="course_id_inp" class="form-select"
+                                        data-control="select2" data-placeholder="{{ __('Select Course') }}"
+                                        data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                        <option value="" selected></option>
+                                        @foreach ($courses as $course)
+                                            <option value="{{ $course->id }}">{{ $course->title_en }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
+                                </div>
+
+                                {{-- هنا هيتضاف input hidden لو في course_id في الرابط --}}
+                                <div id="hidden_course_input_wrapper"></div>
                             </div>
-                            <!-- Hidden input will be added dynamically -->
-                            <div id="hidden_course_input_wrapper"></div>
 
 
                             <div class="col-6">
@@ -324,16 +327,16 @@
             const courseId = urlParams.get('course_id');
 
             if (courseId) {
-                // Preselect value in select
-                $('#course_id_inp').val(courseId).trigger('change');
-
-                // Hide select wrapper
+                // اخفي الـ select
                 $('#course_select_wrapper').hide();
 
-                // Append hidden input
+                // ضيف input مخفي بالقيمة
                 $('#hidden_course_input_wrapper').html(`
                 <input type="hidden" name="course_id" value="${courseId}">
             `);
+            } else {
+                // لو مفيش course_id في الرابط، خليه ظاهر
+                $('#course_select_wrapper').show();
             }
         });
     </script>
