@@ -136,7 +136,7 @@
                         </div>
                         {{-- Course & Section --}}
                         <div class="row mb-4">
-                            <div class="col-6">
+                            <div class="col-6" id="course_select_wrapper">
                                 <label for="course_id_inp" class="form-label">{{ __('Course') }}</label>
                                 <select name="course_id" id="course_id_inp" class="form-select" data-control="select2"
                                     data-placeholder="{{ __('Select Course') }}"
@@ -148,6 +148,7 @@
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
                             </div>
+
 
                             <div class="col-6">
                                 <div class="d-flex justify-content-between justify-content-center"> <label
@@ -312,6 +313,24 @@
                 // Open modal if you want to show it on "Add"
                 $("#crud_modal").modal('show');
             });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseId = urlParams.get('course_id');
+
+            if (courseId) {
+                // Preselect value
+                $('#course_id_inp').val(courseId).trigger('change');
+
+                // Optionally disable or hide it
+                $('#course_id_inp').prop('disabled', true); // optional
+                $('#course_select_wrapper').hide(); // hide the whole div
+            } else {
+                $('#course_id_inp').prop('disabled', false);
+                $('#course_select_wrapper').show();
+            }
         });
     </script>
 @endpush
