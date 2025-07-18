@@ -15,8 +15,7 @@ class SectionController extends Controller
 {
     public function index(Request $request)
     {
-        dd()
-          $this->authorize('view_sections');
+           $this->authorize('view_sections');
         $courseId = $request->input('course_id');
 
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
