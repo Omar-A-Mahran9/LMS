@@ -365,7 +365,7 @@ public function results($studentQuizId)
 
             'section_id'=> $attempt->quiz->section_id,
 
-            'course_id'=> $attempt->quiz->section->course_id,
+            'course_id'=> $attempt->quiz->section->course_id ??$attempt->quiz->class->course_id,
             'attempt_id'   => $attempt->id,
             'quiz_title'   => $attempt->quiz->title_en,
             'score'        => $totalScore,
