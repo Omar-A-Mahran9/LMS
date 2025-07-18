@@ -214,22 +214,20 @@ public function getQuizClassById($id)
 
 public function getVideosByClass($id)
 {
+    $studentId = Auth::id();
+    $student = Auth::user();
 
-        $studentId = Auth::id();
-        $student = Auth::user();
-
-
-
+    // Fetch class and check if it's active
     $class = CourseClass::where('id', $id)
         ->where('is_active', 1)
         ->first();
 
     if (!$class) {
-        return $this->failure('class not found or unpublished');
+        return $this->failure('Class not found or unpublished');
     }
 
-   // Ensure course has this student enrolled and is active
-    $courseExists = Course::where('id', $class->course_id)
+    // Check if student is enrolled in the course
+    $course = Course::where('id', $class->course_id)
         ->where('is_active', 1)
         ->whereHas('enrollments', function ($q) use ($studentId) {
             $q->where('student_id', $studentId)
@@ -238,23 +236,52 @@ public function getVideosByClass($id)
         })
         ->first();
 
-    if (!$courseExists) {
+    if (!$course) {
         return $this->failure('Course not found or unauthorized.');
     }
-    // Eager load student progress for each video, to avoid N+1 queries
+
+    // Optionally track class view (like section)
+    $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
+    if (!Cache::has($cacheKey)) {
+        $class->increment('views');
+        Cache::put($cacheKey, true, now()->addHours(6));
+    }
+
+    // Eager load videos and student progress
     $videos = $class->videos()
+        ->where('is_active', 1)
         ->with(['studentProgress' => function ($query) use ($studentId) {
             $query->where('student_id', $studentId);
         }])
         ->get();
 
-    // Pass student ID to resource collection so it can access progress
-    $resourceCollection = $videos->map(function ($video) use ($studentId) {
+    // Format each video using the resource
+    $videosData = $videos->map(function ($video) use ($studentId) {
         return new VideoResource($video, $studentId);
     });
 
-    return $this->success('', $resourceCollection);
+    return $this->success('Class videos loaded', [
+        'course_data' => [
+            'course_id'           => $course->id,
+            'course_title'        => $course->title,
+            'has_certificate'     => $course->certificate_available,
+            'certificate_url'     => $course->certificate_available
+                ? getOrGeneratePublicCertificateUrl($student, $course)
+                : null,
+            'is_completed'        => $course->is_completed,
+            'progress_percentage' => $course->progress_percentage,
+            'has_rated'           => Student_rate::where('course_id', $course->id)
+                ->where('student_id', $studentId)
+                ->exists(),
+        ],
+        'class_data' => [
+            'class_id'    => $class->id,
+            'class_title' => $class->title,
+            'videos'      => $videosData,
+        ],
+    ]);
 }
+
 public function getVideosBySections($id)
 {
     $studentId = Auth::id();
