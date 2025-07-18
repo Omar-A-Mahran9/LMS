@@ -72,9 +72,11 @@ class ClassDetailsResource extends JsonResource
         }
 
         return [
-               "id" => $this->id,
+            "id" => $this->id,
             'image' => $this->full_image_path,
             'title' => $this->title,
+            'short_title'        => $this->short_title,
+            'description'  => $this->description,
             'started_at' => $this->course->start_date,
             'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,
             'attachment' => $this->full_attachment_path,
