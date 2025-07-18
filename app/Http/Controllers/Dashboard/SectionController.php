@@ -23,13 +23,12 @@ class SectionController extends Controller
         $visited_site = 10000;
 
         if ($request->ajax()) {
-                if($courseId){
-                    return response()->json(getModelData(model: new Section(), orsFilters: [['course_id', (int) $courseId]],relations: ['course' => ['id', 'title_ar','title_en' ]]));
+return response()->json(getModelData(
+    model: new Section(),
+    andsFilters: [['course_id', (int) $courseId]],
+    relations: ['course' => ['id', 'title_ar', 'title_en']]
+));
 
-                }else{
-                    // return response()->json(getModelData(model: new Section(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
-
-                }
         } else {
 
             // Return the main view with data
