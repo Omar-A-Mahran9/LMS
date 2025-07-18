@@ -122,6 +122,8 @@ public function submitQuiz(Request $request, $quizAttemptId)
                 'The quiz time has expired. You cannot submit your answers.',
                 [
                     'course_id'=>$attempt->quiz?$attempt->quiz?->course->id:null,
+                    'class_id'=>$attempt->quiz?$attempt->quiz?->class->id:null,
+
                     'score' => $score,
                     'total_points' => $totalPoints,
                     'score_text' => $scoreText,
