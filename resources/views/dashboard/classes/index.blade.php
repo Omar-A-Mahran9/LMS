@@ -214,7 +214,7 @@
                                     <input class="form-check-input " name="quiz_required" type="checkbox" value="1"
                                         id="quiz_required_switch">
                                     <span class="form-check-label text-dark"
-                                        for="quiz_required_switch">{{ __('quiz required"') }}</span>
+                                        for="quiz_required_switch">{{ __('quiz required') }}</span>
                                 </label>
                             </div>
 
