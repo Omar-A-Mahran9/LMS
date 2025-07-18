@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Dashboard\StoreClassRequest;
-use App\Http\Requests\Dashboard\StoreSectionRequest;
-use App\Http\Requests\Dashboard\UpdateClassRequest;
-use App\Http\Requests\Dashboard\UpdateSectionRequest;
+ use App\Http\Requests\Dashboard\StoreSectionRequest;
+ use App\Http\Requests\Dashboard\UpdateSectionRequest;
 use App\Models\Course;
-use App\Models\CourseClass;
- use App\Models\CourseVideo;
 use App\Models\Quiz;
 use App\Models\ReadingPassage;
 use App\Models\Section;
@@ -27,14 +23,10 @@ class SectionController extends Controller
         $visited_site = 10000;
 
         if ($request->ajax()) {
-                if($courseId){
-
+      
                     return response()->json(getModelData(model: new Section(), andsFilters: [['course_id', (int)$courseId]],relations: ['course' => ['id', 'title_ar','title_en' ]]));
 
-                }else{
-                    return response()->json(getModelData(model: new Section(),relations: ['course' => ['id', 'title_ar','title_en' ]]));
 
-                }
         } else {
 
             // Return the main view with data
