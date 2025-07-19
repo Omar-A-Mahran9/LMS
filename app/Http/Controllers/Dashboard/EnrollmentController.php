@@ -13,34 +13,42 @@ class EnrollmentController extends Controller
 
 public function index(Request $request)
 {
-    $this->authorize('view_enrollments'); // or a more specific ability like 'view_enrollments'
+    $this->authorize('view_enrollments');
 
     if ($request->ajax()) {
-        // Return JSON for DataTable or AJAX listing
+        $search = $request->input('search.value'); // DataTables search input
+
+        $query = Enrollment::query()
+            ->leftJoin('students', 'course_student.student_id', '=', 'students.id')
+            ->leftJoin('courses', 'course_student.course_id', '=', 'courses.id')
+            ->select('course_student.*')
+            ->with(['student:id,first_name,last_name,email,phone', 'course:id,title_ar,title_en']);
+
+        // Apply search filter
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('students.first_name', 'LIKE', "%{$search}%")
+                    ->orWhere('students.last_name', 'LIKE', "%{$search}%")
+                    ->orWhere('students.email', 'LIKE', "%{$search}%")
+                    ->orWhere('students.phone', 'LIKE', "%{$search}%")
+                    ->orWhere('courses.title_ar', 'LIKE', "%{$search}%")
+                    ->orWhere('courses.title_en', 'LIKE', "%{$search}%");
+            });
+        }
+
         return response()->json(
             getModelData(
-                model: new Enrollment(),
-                relations: [
-                    'student' => ['id', 'first_name', 'last_name'],
-                    'course' => ['id', 'title_ar', 'title_en']
-                ], searchingColumns: [
-                'student.first_name',
-                'student.last_name',
-                'student.email',
-                'student.phone',
-                'courses.title_ar',
-                'courses.title_en'
-            ]
+                query: $query
             )
         );
-    } else {
-                $students = Student::get(); // Get the count of blogs
-                $courses = Course::get(); // Get the count of blogs
-
-        // Return the Blade view
-        return view('dashboard.enrollments.index',compact('students','courses'));
     }
+
+    $students = Student::get();
+    $courses = Course::get();
+
+    return view('dashboard.enrollments.index', compact('students', 'courses'));
 }
+
 public function getCoursesForStudent($studentId)
 {
     // Find all courses that the student is NOT enrolled in
