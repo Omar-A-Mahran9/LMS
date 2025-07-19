@@ -86,17 +86,23 @@
                 @endcan
 
 
-                {{-- @can('view_classes')
+                @can('view_questions')
                     <x-dashboard.aside-item :slug="'classes'" :route="route('dashboard.classes.index')" :title="__('Classes')">
                         <i class="ki-outline ki-book fs-2"></i>
                     </x-dashboard.aside-item>
                 @endcan
 
-                 @can('view_sections')
+                @can('view_sections')
                     <x-dashboard.aside-item :slug="'sections'" :route="route('dashboard.sections.index')" :title="__('Sections')">
                         <i class="ki-outline ki-book fs-2"></i>
                     </x-dashboard.aside-item>
-                @endcan --}}
+                @endcan
+
+                @can('view_questions')
+                    <x-dashboard.aside-item :slug="'questions'" :route="route('dashboard.questions.index')" :title="__('questions')">
+                        <i class="ki-outline ki-book fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
 
                 @can('view_enrollments')
                     <x-dashboard.aside-item :slug="'enrollments'" :route="route('dashboard.enrollments.index')" :title="__('Enrollments')">

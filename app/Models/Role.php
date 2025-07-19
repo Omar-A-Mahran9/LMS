@@ -22,6 +22,7 @@ class Role extends Model
 
     public static $modules = [
         'admins',
+
         'dashboard',
 
         'sliders',
@@ -37,6 +38,8 @@ class Role extends Model
         'videos',
 
         'quizzes',
+
+        'questions',
 
         'homework',
 
