@@ -10,11 +10,7 @@ class Enrollment extends Model
 {
     use HasFactory, SoftDeletes;
       protected $guarded = [];
-        protected $appends = [
-            'student_first_name',
-            'student_last_name',
-            'course_title_ar'
-        ];
+    protected $appends = [];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
@@ -49,20 +45,4 @@ class Enrollment extends Model
             'contact_with_support' => __('التواصل مع الدعم'),
         ][$this->payment_type] ?? null;
     }
-
-
-    public function getStudentFirstNameAttribute()
-{
-    return $this->student->first_name ?? '';
-}
-
-public function getStudentLastNameAttribute()
-{
-    return $this->student->last_name ?? '';
-}
-
-public function getCourseTitleArAttribute()
-{
-    return $this->course->title_ar ?? '';
-}
 }

@@ -23,13 +23,14 @@ public function index(Request $request)
                 relations: [
                     'student' => ['id', 'first_name', 'last_name'],
                     'course' => ['id', 'title_ar', 'title_en']
-                ],
-                //  searchingColumns:['name_' . app()->getLocale(), 'address_' . app()->getLocale(), 'phone', 'whatsapp']
-                       searchingColumns: [
-                'student_first_name',
-                'student_last_name',
-                'course_title_ar'
-                       ],
+                ], searchingColumns: [
+                'student.first_name',
+                'student.last_name',
+                'student.email',
+                'student.phone',
+                'courses.title_ar',
+                'courses.title_en'
+            ]
             )
         );
     } else {
