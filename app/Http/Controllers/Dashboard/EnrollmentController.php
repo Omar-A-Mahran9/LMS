@@ -16,7 +16,7 @@ public function index(Request $request)
     $this->authorize('view_enrollments');
 
 if ($request->ajax()) {
-    // Custom anonymous model to override the query with joins
+    // Custom anonymous model with override
     $model = new class extends \App\Models\Enrollment {
         public function newQuery()
         {
@@ -25,6 +25,11 @@ if ($request->ajax()) {
                 ->join('students', 'students.id', '=', 'cs.student_id')
                 ->join('courses', 'courses.id', '=', 'cs.course_id')
                 ->select('cs.*');
+        }
+
+        public function getTable()
+        {
+            return 'cs'; // important: for where cs.deleted_at IS NULL
         }
     };
 
@@ -46,6 +51,7 @@ if ($request->ajax()) {
         )
     );
 }
+
 
     $students = Student::get();
     $courses = Course::get();
