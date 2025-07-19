@@ -15,36 +15,37 @@ public function index(Request $request)
 {
     $this->authorize('view_enrollments');
 
-    if ($request->ajax()) {
-        $model = new class extends \App\Models\Enrollment {
-            public function newQuery()
-            {
-                return parent::newQuery()
-                    ->from('course_student as cs')
-                    ->join('students', 'students.id', '=', 'cs.student_id')
-                    ->join('courses', 'courses.id', '=', 'cs.course_id')
-                    ->select('cs.*');
-            }
-        };
+if ($request->ajax()) {
+    // Custom anonymous model to override the query with joins
+    $model = new class extends \App\Models\Enrollment {
+        public function newQuery()
+        {
+            return parent::newQuery()
+                ->from('course_student as cs')
+                ->join('students', 'students.id', '=', 'cs.student_id')
+                ->join('courses', 'courses.id', '=', 'cs.course_id')
+                ->select('cs.*');
+        }
+    };
 
-        return response()->json(
-            getModelData(
-                model: $model,
-                relations: [
-                    'student' => ['id', 'first_name', 'last_name', 'email', 'phone'],
-                    'course' => ['id', 'title_ar', 'title_en']
-                ],
-                searchingColumns: [
-                    'students.first_name',
-                    'students.last_name',
-                    'students.email',
-                    'students.phone',
-                    'courses.title_ar',
-                    'courses.title_en',
-                ]
-            )
-        );
-    }
+    return response()->json(
+        getModelData(
+            model: $model,
+            relations: [
+                'student' => ['id', 'first_name', 'last_name', 'email', 'phone'],
+                'course' => ['id', 'title_ar', 'title_en'],
+            ],
+            searchingColumns: [
+                'students.first_name',
+                'students.last_name',
+                'students.email',
+                'students.phone',
+                'courses.title_ar',
+                'courses.title_en',
+            ]
+        )
+    );
+}
 
     $students = Student::get();
     $courses = Course::get();
