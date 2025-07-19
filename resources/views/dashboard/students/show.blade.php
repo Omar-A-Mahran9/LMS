@@ -86,6 +86,47 @@
                 </div>
                 <!--end::Student Card-->
             </div>
+
+            <div class="mt-10">
+                <h3 class="fw-bold">{{ __('Student Report') }}</h3>
+
+                <!-- Enrolled Courses -->
+                <div class="mt-4">
+                    <h5>{{ __('Courses') }}</h5>
+                    @foreach ($student->courses as $course)
+                        <div>- {{ $course->title_ar ?? $course->title_en }} ({{ $course->pivot->payment_type }})</div>
+                    @endforeach
+                </div>
+
+                <!-- Quiz Attempts -->
+                <div class="mt-4">
+                    <h5>{{ __('Quiz Attempts') }} ({{ $quizStats['count'] }}): {{ $quizStats['average_score'] }}%</h5>
+                    @foreach ($student->quizAttempts as $attempt)
+                        <div>
+                            - {{ $attempt->quiz->title_ar ?? $attempt->quiz->title_en }}: {{ $attempt->score }}%
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Homework -->
+                <div class="mt-4">
+                    <h5>{{ __('Homeworks') }} ({{ $homeworkStats['submitted'] }} / {{ $homeworkStats['count'] }})</h5>
+                    @foreach ($student->homeworks as $hw)
+                        <div>
+                            - {{ $hw->homework->title_ar ?? $hw->homework->title_en }}:
+                            {{ $hw->submitted_at ? __('Submitted') : __('Not Submitted') }}
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- PDF Button -->
+                <div class="mt-5">
+                    <a href="{{ route('dashboard.students.report.pdf', $student->id) }}" class="btn btn-primary">
+                        {{ __('Download PDF Report') }}
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
 @endsection

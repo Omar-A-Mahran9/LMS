@@ -9,6 +9,7 @@ use App\Http\Requests\Dashboard\UpdateStudentRequest;
 use App\Models\Category;
  use App\Models\Government;
 use App\Models\Student;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -57,16 +58,32 @@ class StudentController extends Controller
 }
 
 
-    public function show(Student $student)
-    {
-        // Authorize if needed
-        $this->authorize('view_students');
+public function show(Student $student)
+{
+    $this->authorize('view_students');
 
-        // Load any related data if needed, e.g. government, category
-        $student->load(['government', 'category']);
+    $student->load([
+        'government',
+        'category',
+        'courses',
+        'quizAttempts.quiz',
+        'homeworks.homework',
+    ]);
 
-        return view('dashboard.students.show', compact('student'));
-    }
+    $quizStats = [
+        'count' => $student->quizAttempts->count(),
+        'average_score' => round($student->quizAttempts->avg('score'), 2),
+    ];
+
+    $homeworkStats = [
+        'count' => $student->homeworks->count(),
+        'submitted' => $student->homeworks->whereNotNull('submitted_at')->count(),
+    ];
+
+    return view('dashboard.students.show', compact('student', 'quizStats', 'homeworkStats'));
+}
+
+
 
 
     public function destroy(Student $student)
@@ -97,6 +114,33 @@ class StudentController extends Controller
             return response(["Student un blocked successfully"]);
         }
     }
+
+
+    public function reportPdf(Student $student)
+{
+    $student->load([
+        'government',
+        'category',
+        'courses',
+        'quizAttempts.quiz',
+        'homeworks.homework',
+    ]);
+
+    $quizStats = [
+        'count' => $student->quizAttempts->count(),
+        'average_score' => round($student->quizAttempts->avg('score'), 2),
+    ];
+
+    $homeworkStats = [
+        'count' => $student->homeworks->count(),
+        'submitted' => $student->homeworks->whereNotNull('submitted_at')->count(),
+    ];
+
+    $pdf = Pdf::loadView('dashboard.students.report_pdf', compact('student', 'quizStats', 'homeworkStats'))
+        ->setPaper('a4', 'portrait');
+
+    return $pdf->download("student_report_{$student->id}.pdf");
+}
 
 
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Dashboard\HomeworkBySectionController;
 use App\Http\Controllers\Dashboard\QuizByClassController;
 use App\Http\Controllers\Dashboard\QuizBySectionController;
 use App\Http\Controllers\Dashboard\QuizController;
+use App\Http\Controllers\Dashboard\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,7 @@ Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected
  Route::get("howuse/restore-selected", "HowuseController@restoreSelected");
  Route::delete("enrollments/delete-selected", "EnrollmentController@deleteSelected");
  Route::get("enrollments/restore-selected", "EnrollmentController@restoreSelected");
+Route::get('students/{student}/report/pdf', [StudentController::class, 'reportPdf'])->name('dashboard.students.report.pdf');
 
  Route::resource('courses', 'CourseController')->except(['create', 'edit']);
  Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
