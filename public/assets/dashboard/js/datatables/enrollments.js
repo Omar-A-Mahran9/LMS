@@ -181,7 +181,7 @@ var KTDatatablesServerSide = (function () {
                 $("#is_active_switch").prop("checked", !!data.is_active);
 
                 // Delay setting course_id until courses are loaded via AJAX
-                const $courseSelect = $("#course_id_inp");
+                const $courseSelect = $("#course_id_inp").trigger("change");
 
                 // Listen for AJAX completion once
                 const interval = setInterval(function () {
