@@ -24,7 +24,12 @@ public function index(Request $request)
                     'student' => ['id', 'first_name', 'last_name'],
                     'course' => ['id', 'title_ar', 'title_en']
                 ],
-                 searchingColumns:['name_' . app()->getLocale(), 'address_' . app()->getLocale(), 'phone', 'whatsapp']
+                //  searchingColumns:['name_' . app()->getLocale(), 'address_' . app()->getLocale(), 'phone', 'whatsapp']
+                       searchingColumns: [
+                'student_first_name',
+                'student_last_name',
+                'course_title_ar'
+                       ],
             )
         );
     } else {
