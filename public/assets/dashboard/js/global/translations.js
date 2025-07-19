@@ -10,6 +10,8 @@ let translations = {
         Add: "إضافة",
         Correct: "صحيح",
         correct: "صحيح",
+        Sections: "الاقسام",
+        Classes: "الحصص",
 
         "Choose the type": "اختر النوع",
         Approved: "مقبول",
@@ -31,7 +33,7 @@ let translations = {
         "Add Payment ways": "أضف خيارات الدفع",
         "Add Payment parteners": "أضف شريك",
         "Add new Service": " أضف كورس ",
-         "Add new rate": "اضافة تقييم",
+        "Add new rate": "اضافة تقييم",
         "Add new awars": "اضافة انجاز جديد",
         "Add Question": "إضافة سؤال",
         "Current Attachment": "عرض المذكرة",
