@@ -16,13 +16,11 @@ public function index(Request $request)
     $this->authorize('view_enrollments');
 
     if ($request->ajax()) {
-        // نموذج Enrollment مخصص يعمل join تلقائي
         $model = new class extends \App\Models\Enrollment {
-            protected $table = 'course_student as cs';
-
             public function newQuery()
             {
                 return parent::newQuery()
+                    ->from('course_student as cs')
                     ->join('students', 'students.id', '=', 'cs.student_id')
                     ->join('courses', 'courses.id', '=', 'cs.course_id')
                     ->select('cs.*');
