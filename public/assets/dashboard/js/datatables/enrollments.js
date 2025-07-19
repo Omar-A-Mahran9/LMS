@@ -24,7 +24,10 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" }, // checkbox
                 { data: "student.first_name" }, // student name
-                { data: "course.title_ar" }, // course title
+                {
+                    data: "course_id",
+                    name: "courses.title_ar", // يجب أن يكون مطابقًا للـ SQL column بعد عمل join
+                },
                 { data: "payment_type" }, // payment type
                 { data: "status" }, // status
                 { data: "created_at" }, // enrollment date
