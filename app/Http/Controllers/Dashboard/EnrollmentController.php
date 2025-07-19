@@ -23,7 +23,9 @@ public function index(Request $request)
                 relations: [
                     'student' => ['id', 'first_name', 'last_name'],
                     'course' => ['id', 'title_ar', 'title_en']
-                ]
+                ],
+                searchingColumns: ['first_name', 'last_name', 'email', 'phone'] // 👈 نضيف أعمدة البحث هنا
+
             )
         );
     } else {
