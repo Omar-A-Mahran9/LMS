@@ -190,7 +190,7 @@ var KTDatatablesServerSide = (function () {
                             .length > 0;
                     if (optionExists) {
                         $courseSelect.val(data.course_id).trigger("change");
-                        // clearInterval(interval);
+                        clearInterval(interval);
                     }
                 }, 100); // Check every 100ms
 
@@ -209,6 +209,36 @@ var KTDatatablesServerSide = (function () {
                 $("#crud_modal").modal("show");
             });
         });
+
+        // Delay setting course_id until courses are loaded via AJAX
+        const $courseSelect = $("#course_id_inp");
+
+        // Step 1: Show selected course as temporary placeholder if not found yet
+        if (
+            $courseSelect.find(`option[value="${data.course_id}"]`).length === 0
+        ) {
+            $courseSelect.prepend(
+                `<option selected hidden value="${data.course_id}">${
+                    data.course?.title ?? "..."
+                }</option>`
+            );
+        }
+
+        // Step 2: Wait until options are loaded and replace placeholder
+        const interval = setInterval(function () {
+            const optionExists =
+                $courseSelect.find(`option[value="${data.course_id}"]`).length >
+                0;
+
+            if (optionExists) {
+                $courseSelect.val(data.course_id).trigger("change");
+
+                // Remove the temporary hidden option (optional cleanup)
+                $courseSelect.find("option[hidden][selected]").remove();
+
+                clearInterval(interval);
+            }
+        }, 100);
     };
 
     var handlePreviewAttachments = () => {
