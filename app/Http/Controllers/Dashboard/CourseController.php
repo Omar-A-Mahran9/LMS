@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreCourseRequest;
-use App\Http\Requests\Dashboard\UpdateAddonRequest;
+use Illuminate\Support\Str; // ✅ أضفه هنا
 use App\Http\Requests\Dashboard\UpdateCourseRequest;
 use App\Models\Admin;
 use App\Models\Category;
