@@ -68,6 +68,16 @@
                         class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Courses') }}">
                 </div>
                 <!--end::Search-->
+                <div class="col-md-4">
+                    <select id="filter_category_id" class="form-select" data-control="select2"
+                        data-placeholder="{{ __('Filter by Category') }}">
+                        <option value="">{{ __('All Categories') }}</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
 
                 <!--begin::Group actions-->
                 <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
