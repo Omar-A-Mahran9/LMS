@@ -195,8 +195,8 @@ var KTDatatablesServerSide = (function () {
                        class="menu-link px-3">
                         ${
                             data.is_class == 1
-                                ? __("All Classes")
-                                : __("All Sections")
+                                ? __("Classes")
+                                : __("Sections")
                         }
                     </a>
                 </div>
