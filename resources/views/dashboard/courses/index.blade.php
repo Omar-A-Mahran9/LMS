@@ -70,8 +70,8 @@
                 </div>
                 <!--end::Search-->
 
-                <!--begin::Category Filter-->
-                <div style="min-width: 250px;">
+                <!--begin::Category Filter (next to search input)-->
+                <div style="min-width: 250px;" class="ms-5">
                     <select id="filter_category_id" class="form-select" data-control="select2"
                         data-placeholder="{{ __('All Categories') }}">
                         <option value="">{{ __('All') }}</option>
@@ -81,6 +81,7 @@
                     </select>
                 </div>
                 <!--end::Category Filter-->
+
 
                 <!--begin::Group actions (remains hidden until needed)-->
                 <div class="d-flex justify-content-end align-items-center d-none ms-auto"
@@ -464,12 +465,11 @@
 
     <script>
         $(document).ready(() => {
+            $('#filter_category_id').select2();
 
             initTinyMc();
 
-            new Tagify(document.getElementById('tags_inp'), {
-                originalInputValueFormat: valuesArr => valuesArr.map(item => item.value).join(',')
-            });
+ 
 
         });
     </script>
