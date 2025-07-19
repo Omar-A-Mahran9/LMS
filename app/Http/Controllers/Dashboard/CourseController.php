@@ -35,7 +35,7 @@ public function index(Request $request)
     $subcategories = CategorySubCategory::where('is_publish', 1)
         ->get();
 
-if ($request->ajax()) {
+ if ($request->ajax()) {
     $andsFilters = [];
 
     if ($request->filled('category_id')) {
@@ -47,8 +47,10 @@ if ($request->ajax()) {
         relations: ['instructor' => ['id', 'name']],
         andsFilters: $andsFilters
     ));
-}
-
+} else {
+        // Return the main view with data
+        return view('dashboard.courses.index', compact('categories', 'visited_site', 'instructors','subcategories'));
+    }
 }
 
 
