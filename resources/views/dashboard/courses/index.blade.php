@@ -49,11 +49,12 @@
         <!--begin::Content-->
         <div class="card-body">
             <!--begin::Wrapper-->
-            <div class="d-flex flex-stack flex-wrap mb-5">
+            <div class="d-flex flex-wrap align-items-center gap-4 mb-5">
+
                 <!--begin::Search-->
-                <div class="d-flex align-items-center position-relative my-1 mb-2 mb-md-0">
+                <div class="d-flex align-items-center position-relative">
                     <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                    <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                    <span class="svg-icon svg-icon-1 position-absolute ms-4">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
@@ -65,22 +66,25 @@
                     </span>
                     <!--end::Svg Icon-->
                     <input type="text" data-kt-docs-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Courses') }}">
+                        class="form-control form-control-solid w-250px ps-14" placeholder="{{ __('Search Courses') }}">
                 </div>
                 <!--end::Search-->
-                <div class="col-md-4">
+
+                <!--begin::Category Filter-->
+                <div style="min-width: 250px;">
                     <select id="filter_category_id" class="form-select" data-control="select2"
-                        data-placeholder="{{ __('Filter by Category') }}">
-                        <option value="">{{ __('All Categories') }}</option>
+                        data-placeholder="{{ __('All Categories') }}">
+                        <option value="">{{ __('All') }}</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>
+                <!--end::Category Filter-->
 
-
-                <!--begin::Group actions-->
-                <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
+                <!--begin::Group actions (remains hidden until needed)-->
+                <div class="d-flex justify-content-end align-items-center d-none ms-auto"
+                    data-kt-docs-table-toolbar="selected">
                     <div class="fw-bold me-5">
                         <span class="me-2" data-kt-docs-table-select="selected_count"></span>{{ __('Selected item') }}
                     </div>
