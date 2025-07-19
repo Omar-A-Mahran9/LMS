@@ -13,22 +13,30 @@ class EnrollmentController extends Controller
 
 public function index(Request $request)
 {
-    $this->authorize('view_enrollments'); // or a more specific ability like 'view_enrollments'
+    $this->authorize('view_enrollments');
 
     if ($request->ajax()) {
-          $query = Enrollment::query()
-            ->join('students', 'students.id', '=', 'course_student.student_id')
-            ->join('courses', 'courses.id', '=', 'course_student.course_id')
-            ->select('course_student.*');
-        // Return JSON for DataTable or AJAX listing
+        // نموذج Enrollment مخصص يعمل join تلقائي
+        $model = new class extends \App\Models\Enrollment {
+            protected $table = 'course_student as cs';
+
+            public function newQuery()
+            {
+                return parent::newQuery()
+                    ->join('students', 'students.id', '=', 'cs.student_id')
+                    ->join('courses', 'courses.id', '=', 'cs.course_id')
+                    ->select('cs.*');
+            }
+        };
+
         return response()->json(
             getModelData(
-                model: $query->getModel()->setQuery($query),
+                model: $model,
                 relations: [
-                    'student' => ['id', 'first_name', 'last_name'],
+                    'student' => ['id', 'first_name', 'last_name', 'email', 'phone'],
                     'course' => ['id', 'title_ar', 'title_en']
                 ],
-                  searchingColumns: [
+                searchingColumns: [
                     'students.first_name',
                     'students.last_name',
                     'students.email',
@@ -38,14 +46,14 @@ public function index(Request $request)
                 ]
             )
         );
-    } else {
-                $students = Student::get(); // Get the count of blogs
-                $courses = Course::get(); // Get the count of blogs
-
-        // Return the Blade view
-        return view('dashboard.enrollments.index',compact('students','courses'));
     }
+
+    $students = Student::get();
+    $courses = Course::get();
+
+    return view('dashboard.enrollments.index', compact('students', 'courses'));
 }
+
 public function getCoursesForStudent($studentId)
 {
     // Find all courses that the student is NOT enrolled in
