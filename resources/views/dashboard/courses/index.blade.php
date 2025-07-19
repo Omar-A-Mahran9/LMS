@@ -75,10 +75,10 @@
                     <select id="filter_combined" class="form-select" data-control="select2"
                         data-placeholder="{{ __('Filter') }}">
                         <option value="all">{{ __('All Courses & Classes') }}</option>
-                        <option value="courses_only">{{ __('Courses Only') }}</option>
-                        <option value="classes_only">{{ __('Classes Only') }}</option>
+                        <option value="courses_only">{{ __('All Courses') }}</option>
+                        <option value="classes_only">{{ __('All Classes') }}</option>
                         @foreach ($categories as $category)
-                            <option value="category_{{ $category->id }}">{{ __('Class: ') . $category->name }}</option>
+                            <option value="category_{{ $category->id }}">{{ __('Classes: ') . $category->name }}</option>
                         @endforeach
                     </select>
 
