@@ -88,7 +88,7 @@
 
                 @can('view_questions')
                     <x-dashboard.aside-item :slug="'classes'" :route="route('dashboard.classes.index')" :title="__('Classes')">
-                        <i class="ki-outline ki-mark fs-2"></i>
+                        <i class="ki-outline ki-pen fs-2"></i>
                     </x-dashboard.aside-item>
                 @endcan
 
@@ -99,7 +99,7 @@
                 @endcan
 
                 @can('view_questions')
-                    <x-dashboard.aside-item :slug="'questions'" :route="route('dashboard.questions.index')" :title="__('questions')">
+                    <x-dashboard.aside-item :slug="'questions'" :route="route('dashboard.questions.index')" :title="__('Questions')">
                         <i class="ki-outline ki-question fs-2"></i>
                     </x-dashboard.aside-item>
                 @endcan
