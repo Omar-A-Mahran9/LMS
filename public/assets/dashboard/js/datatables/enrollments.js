@@ -182,25 +182,17 @@ var KTDatatablesServerSide = (function () {
 
                 // Delay setting course_id until courses are loaded via AJAX
                 const $courseSelect = $("#course_id_inp");
-                if (
-                    $courseSelect.find(`option[value="${data.course_id}"]`)
-                        .length === 0
-                ) {
-                    $courseSelect.append(
-                        `<option value="${data.course_id}" selected hidden>${data.course.title}</option>`
-                    );
-                }
 
-                // // Listen for AJAX completion once
-                // const interval = setInterval(function () {
-                //     const optionExists =
-                //         $courseSelect.find(`option[value="${data.course_id}"]`)
-                //             .length > 0;
-                //     if (optionExists) {
-                //         $courseSelect.val(data.course_id).trigger("change");
-                //         clearInterval(interval);
-                //     }
-                // }, 100); // Check every 100ms
+                // Listen for AJAX completion once
+                const interval = setInterval(function () {
+                    const optionExists =
+                        $courseSelect.find(`option[value="${data.course_id}"]`)
+                            .length > 0;
+                    if (optionExists) {
+                        $courseSelect.val(data.course_id).trigger("change");
+                        // clearInterval(interval);
+                    }
+                }, 100); // Check every 100ms
 
                 // Set the form action
                 $("#crud_form").attr(
