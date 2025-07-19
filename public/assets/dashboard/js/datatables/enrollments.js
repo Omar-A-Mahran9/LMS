@@ -24,7 +24,7 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" }, // checkbox
                 {
-                    data: "student_id",
+                    data: "student_name",
                     name: "student.first_name", // يجب أن يكون مطابقًا للـ SQL column بعد عمل join
                 },
                 {

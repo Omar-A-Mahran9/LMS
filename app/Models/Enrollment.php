@@ -10,7 +10,7 @@ class Enrollment extends Model
 {
     use HasFactory, SoftDeletes;
       protected $guarded = [];
-    protected $appends = [];
+protected $appends = ['student_name', 'student_email', 'student_phone'];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
@@ -45,4 +45,19 @@ class Enrollment extends Model
             'contact_with_support' => __('التواصل مع الدعم'),
         ][$this->payment_type] ?? null;
     }
+
+    public function getStudentNameAttribute()
+{
+    return $this->student ? $this->student->first_name . ' ' . $this->student->last_name : '';
+}
+
+public function getStudentEmailAttribute()
+{
+    return $this->student->email ?? '';
+}
+
+public function getStudentPhoneAttribute()
+{
+    return $this->student->phone ?? '';
+}
 }
