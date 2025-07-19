@@ -240,6 +240,16 @@ var KTDatatablesServerSide = (function () {
             });
         });
     };
+
+    var handleSearchDatatable = () => {
+        const filterSearch = document.querySelector(
+            '[data-kt-table-widget-4="search"]'
+        );
+        filterSearch.addEventListener("keyup", function (e) {
+            datatable.search(e.target.value).draw();
+        });
+    };
+
     // Public methods
     return {
         init: function () {
