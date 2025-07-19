@@ -24,7 +24,8 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" }, // checkbox
                 {
-                    data: "student.first_name", // يجب أن يكون مطابقًا للـ SQL column بعد عمل join
+                    data: "student_id",
+                    name: "student.first_name", // يجب أن يكون مطابقًا للـ SQL column بعد عمل join
                 },
                 {
                     data: "course_id",
@@ -181,37 +182,18 @@ var KTDatatablesServerSide = (function () {
                 $("#is_active_switch").prop("checked", !!data.is_active);
 
                 // Delay setting course_id until courses are loaded via AJAX
-
-                // Delay setting course_id until courses are loaded via AJAX
                 const $courseSelect = $("#course_id_inp");
 
-                // Step 1: Show selected course as temporary placeholder if not found yet
-                if (
-                    $courseSelect.find(`option[value="${data.course_id}"]`)
-                        .length === 0
-                ) {
-                    $courseSelect.prepend(
-                        `<option selected hidden value="${data.course_id}">${
-                            data.course?.title ?? "..."
-                        }</option>`
-                    );
-                }
-
-                // Step 2: Wait until options are loaded and replace placeholder
+                // Listen for AJAX completion once
                 const interval = setInterval(function () {
                     const optionExists =
                         $courseSelect.find(`option[value="${data.course_id}"]`)
                             .length > 0;
-
                     if (optionExists) {
                         $courseSelect.val(data.course_id).trigger("change");
-
-                        // Remove the temporary hidden option (optional cleanup)
-                        $courseSelect.find("option[hidden][selected]").remove();
-
                         clearInterval(interval);
                     }
-                }, 100);
+                }, 100); // Check every 100ms
 
                 // Set the form action
                 $("#crud_form").attr(
@@ -258,18 +240,6 @@ var KTDatatablesServerSide = (function () {
             });
         });
     };
-
-    var handleSearchDatatable = function () {
-        const filterSearch = document.querySelector(
-            '[data-kt-docs-table-filter="search"]'
-        );
-        if (filterSearch) {
-            filterSearch.addEventListener("keyup", function (e) {
-                datatable.search(e.target.value).draw();
-            });
-        }
-    };
-
     // Public methods
     return {
         init: function () {
