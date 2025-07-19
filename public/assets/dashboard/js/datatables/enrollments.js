@@ -182,14 +182,6 @@ var KTDatatablesServerSide = (function () {
                 const $courseSelect = $("#course_id_inp");
 
                 // 1. أضف الخيار الحالي كـ option مؤقت إذا غير موجود
-                if (
-                    $courseSelect.find(`option[value="${data.course_id}"]`)
-                        .length === 0
-                ) {
-                    $courseSelect.append(
-                        `<option value="${data.course_id}" selected hidden>${data.course.title}</option>`
-                    );
-                }
 
                 // 2. بعد تحميل الخيارات عبر AJAX، اختر القيمة المطلوبة
                 const interval = setInterval(function () {
@@ -201,6 +193,14 @@ var KTDatatablesServerSide = (function () {
                         clearInterval(interval);
                     }
                 }, 100);
+                if (
+                    $courseSelect.find(`option[value="${data.course_id}"]`)
+                        .length === 0
+                ) {
+                    $courseSelect.append(
+                        `<option value="${data.course_id}" selected hidden>${data.course.title}</option>`
+                    );
+                }
 
                 // Set the form action
                 $("#crud_form").attr(
