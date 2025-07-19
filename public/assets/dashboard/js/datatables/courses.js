@@ -4,6 +4,11 @@ var datatable;
 // Class definition
 var KTDatatablesServerSide = (function () {
     let dbTable = "courses";
+
+    $("#filter_category_id").on("change", function () {
+        $("#kt_datatable").DataTable().ajax.reload();
+    });
+
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
@@ -19,9 +24,9 @@ var KTDatatablesServerSide = (function () {
                 className: "row-selected",
             },
             ajax: {
-                url: `/dashboard/${dbTable}`,
+                url: "/dashboard/courses",
                 data: function (d) {
-                    d.category_id = $("#filter_category_id").val(); // Send selected category to backend
+                    d.category_id = $("#filter_category_id").val(); // ✅ send category_id to backend
                 },
             },
 
@@ -205,9 +210,7 @@ var KTDatatablesServerSide = (function () {
                 // $(row).find('td:eq(4)').attr('data-filter', data.CreditCardType);
             },
         });
-        $("#filter_category_id").on("change", function () {
-            table.ajax.reload();
-        });
+
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
         datatable.on("draw", function () {
             initToggleToolbar();

@@ -35,13 +35,20 @@ public function index(Request $request)
     $subcategories = CategorySubCategory::where('is_publish', 1)
         ->get();
 
-    if ($request->ajax()) {
-        // Return JSON data for AJAX requests
-        return response()->json(getModelData(model: new Course(),relations: ['instructor' => ['id', 'name' ]]));
-    } else {
-        // Return the main view with data
-        return view('dashboard.courses.index', compact('categories', 'visited_site', 'instructors','subcategories'));
+if ($request->ajax()) {
+    $andsFilters = [];
+
+    if ($request->filled('category_id')) {
+        $andsFilters[] = ['category_id', '=', $request->category_id];
     }
+
+    return response()->json(getModelData(
+        model: new Course(),
+        relations: ['instructor' => ['id', 'name']],
+        andsFilters: $andsFilters
+    ));
+}
+
 }
 
 
