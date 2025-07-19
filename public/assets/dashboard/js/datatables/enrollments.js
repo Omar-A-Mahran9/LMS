@@ -241,13 +241,15 @@ var KTDatatablesServerSide = (function () {
         });
     };
 
-    var handleSearchDatatable = () => {
+    var handleSearchDatatable = function () {
         const filterSearch = document.querySelector(
-            '[data-kt-table-widget-4="search"]'
+            '[data-kt-docs-table-filter="search"]'
         );
-        filterSearch.addEventListener("keyup", function (e) {
-            datatable.search(e.target.value).draw();
-        });
+        if (filterSearch) {
+            filterSearch.addEventListener("keyup", function (e) {
+                datatable.search(e.target.value).draw();
+            });
+        }
     };
 
     // Public methods
