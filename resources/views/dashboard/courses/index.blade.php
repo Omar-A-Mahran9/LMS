@@ -71,15 +71,14 @@
                 <!--end::Search-->
 
                 <!--begin::Category Filter (next to search input)-->
-                <div style="min-width: 250px;" class="ms-5">
-                    <select id="filter_category_id" class="form-select" data-control="select2"
-                        data-placeholder="{{ __('All Categories') }}">
-                        <option value="">{{ __('All') }}</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <select id="filter_category_id" class="form-select" data-control="select2"
+                    data-placeholder="{{ __('All Categories') }}">
+                    <option value="">{{ __('All') }}</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+
                 <!--end::Category Filter-->
 
 
@@ -469,7 +468,7 @@
 
             initTinyMc();
 
- 
+
 
         });
     </script>
