@@ -187,7 +187,7 @@ var KTDatatablesServerSide = (function () {
                         .length === 0
                 ) {
                     $courseSelect.append(
-                        `<option value="${data.course_id}" selected hidden>${data.course.name}</option>`
+                        `<option value="${data.course_id}" selected hidden>${data.course.title}</option>`
                     );
                 }
 
