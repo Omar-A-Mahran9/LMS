@@ -72,13 +72,16 @@
 
                 <!--begin::Category Filter (next to search input)-->
                 <div style="min-width: 250px;" class="ms-5">
-                    <select id="filter_category_id" class="form-select" data-control="select2"
-                        data-placeholder="{{ __('All Categories') }}">
-                        <option value="">{{ __('All') }}</option>
+                    <select id="filter_combined" class="form-select" data-control="select2"
+                        data-placeholder="{{ __('Filter') }}">
+                        <option value="all">{{ __('All Courses & Classes') }}</option>
+                        <option value="courses_only">{{ __('Courses Only') }}</option>
+                        <option value="classes_only">{{ __('Classes Only') }}</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option value="category_{{ $category->id }}">{{ __('Class: ') . $category->name }}</option>
                         @endforeach
                     </select>
+
                 </div>
                 <!--end::Category Filter-->
 
@@ -467,8 +470,6 @@
         $(document).ready(() => {
 
             initTinyMc();
-
-
 
         });
     </script>

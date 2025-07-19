@@ -5,7 +5,7 @@ var datatable;
 var KTDatatablesServerSide = (function () {
     let dbTable = "courses";
 
-    $("#filter_category_id").on("change", function () {
+    $("#filter_combined").on("change", function () {
         $("#kt_datatable").DataTable().ajax.reload();
     });
 
@@ -26,7 +26,7 @@ var KTDatatablesServerSide = (function () {
             ajax: {
                 url: "/dashboard/courses",
                 data: function (d) {
-                    d.category_id = $("#filter_category_id").val(); // ✅ send category_id to backend
+                    d.filter_combined = $("#filter_combined").val();
                 },
             },
 

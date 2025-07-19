@@ -35,11 +35,21 @@ public function index(Request $request)
     $subcategories = CategorySubCategory::where('is_publish', 1)
         ->get();
 
- if ($request->ajax()) {
+if ($request->ajax()) {
     $andsFilters = [];
 
-    if ($request->filled('category_id')) {
-        $andsFilters[] = ['category_id', '=', $request->category_id];
+    if ($request->filled('filter_combined')) {
+        $value = $request->filter_combined;
+
+        if (Str::startsWith($value, 'category_')) {
+            $categoryId = Str::after($value, 'category_');
+            $andsFilters[] = ['category_id', '=', $categoryId];
+        } elseif ($value === 'courses_only') {
+            $andsFilters[] = ['category_id', '=', null]; // only courses (no category)
+        } elseif ($value === 'classes_only') {
+            $andsFilters[] = ['category_id', '!=', null]; // only classes (have category)
+        }
+        // 'all' = no filter applied
     }
 
     return response()->json(getModelData(
@@ -47,7 +57,7 @@ public function index(Request $request)
         relations: ['instructor' => ['id', 'name']],
         andsFilters: $andsFilters
     ));
-} else {
+}else {
         // Return the main view with data
         return view('dashboard.courses.index', compact('categories', 'visited_site', 'instructors','subcategories'));
     }
