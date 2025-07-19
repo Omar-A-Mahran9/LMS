@@ -19,6 +19,16 @@ var KTDatatablesServerSide = (function () {
             },
             ajax: {
                 url: `/dashboard/${dbTable}`,
+                data: function (d) {
+                    const urlParams = new URLSearchParams(
+                        window.location.search
+                    );
+                    const CourseId = urlParams.get("course_id");
+
+                    if (CourseId) {
+                        d.course_id = CourseId;
+                    }
+                },
             },
             columns: [
                 { data: "id" },
@@ -239,8 +249,10 @@ var KTDatatablesServerSide = (function () {
                 // Attachment preview (link or filename)
                 if (data.full_attachment_path) {
                     $("#attachment_preview").html(
-                        `<a href="${data.full_attachment_path}" target="_blank" class="btn btn-sm btn-info">
-                        ${ __('Current Attachment') }
+                        `<a href="${
+                            data.full_attachment_path
+                        }" target="_blank" class="btn btn-sm btn-info">
+                        ${__("Current Attachment")}
                     </a>`
                     );
                 } else {
@@ -307,7 +319,7 @@ var KTDatatablesServerSide = (function () {
     return {
         init: function () {
             initDatatable();
-             initToggleToolbar();
+            initToggleToolbar();
             handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({
