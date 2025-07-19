@@ -465,7 +465,6 @@
 
     <script>
         $(document).ready(() => {
-            $('#filter_category_id').select2();
 
             initTinyMc();
 
