@@ -16,10 +16,14 @@ public function index(Request $request)
     $this->authorize('view_enrollments'); // or a more specific ability like 'view_enrollments'
 
     if ($request->ajax()) {
+          $query = Enrollment::query()
+            ->join('students', 'students.id', '=', 'course_student.student_id')
+            ->join('courses', 'courses.id', '=', 'course_student.course_id')
+            ->select('course_student.*');
         // Return JSON for DataTable or AJAX listing
         return response()->json(
             getModelData(
-                model: new Enrollment(),
+                model: $query->getModel()->setQuery($query),
                 relations: [
                     'student' => ['id', 'first_name', 'last_name'],
                     'course' => ['id', 'title_ar', 'title_en']
