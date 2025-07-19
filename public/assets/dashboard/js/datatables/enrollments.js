@@ -24,7 +24,7 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" }, // checkbox
                 { data: "student.first_name" }, // student name
-                { data: "course.title" }, // course title
+                { data: "course.title_ar" }, // course title
                 { data: "payment_type" }, // payment type
                 { data: "status" }, // status
                 { data: "created_at" }, // enrollment date
