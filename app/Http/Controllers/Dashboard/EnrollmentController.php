@@ -32,7 +32,7 @@ public function index(Request $request)
 
         // Return JSON for DataTable or AJAX listing
    return response()->json(
-            getModelDataWithQuery(
+            getModelData(
                 $query,
                 relations: [], // skip eager loading, already joined
                 searchingColumns: [
