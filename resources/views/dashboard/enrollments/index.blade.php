@@ -204,29 +204,6 @@
     </form>
 @endsection
 @push('scripts')
-    <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/enrollments.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
-    <script>
-        const addNewEnrollText = "{{ __('Add new Enroll') }}";
-
-        $(document).ready(function() {
-            $("#add_btn").click(function(e) {
-                e.preventDefault();
-                $("#is_active_switch").prop('checked', false);
-                $("#course_id_inp").val("").trigger('change');
-                $("#student_id_inp").val("").trigger('change');
-                $("#payment_method_inp").val("").trigger('change');
-
-                $("#form_title").text(addNewEnrollText);
-                $("[name='_method']").remove();
-                $("#crud_form").trigger('reset');
-                $("#crud_form").attr('action', `/dashboard/enrollments`);
-            });
-        });
-    </script>
-
     <script>
         const langActive = "{{ __('Active') }}";
         const langInactive = "{{ __('Inactive') }}";
@@ -264,6 +241,30 @@
                         console.error('Error fetching courses:', error);
                     }
                 });
+            });
+        });
+    </script>
+
+
+    <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/enrollments.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
+    <script>
+        const addNewEnrollText = "{{ __('Add new Enroll') }}";
+
+        $(document).ready(function() {
+            $("#add_btn").click(function(e) {
+                e.preventDefault();
+                $("#is_active_switch").prop('checked', false);
+                $("#course_id_inp").val("").trigger('change');
+                $("#student_id_inp").val("").trigger('change');
+                $("#payment_method_inp").val("").trigger('change');
+
+                $("#form_title").text(addNewEnrollText);
+                $("[name='_method']").remove();
+                $("#crud_form").trigger('reset');
+                $("#crud_form").attr('action', `/dashboard/enrollments`);
             });
         });
     </script>

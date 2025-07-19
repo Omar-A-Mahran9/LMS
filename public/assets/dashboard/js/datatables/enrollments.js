@@ -179,20 +179,9 @@ var KTDatatablesServerSide = (function () {
                     .val(data.payment_type)
                     .trigger("change");
                 $("#is_active_switch").prop("checked", !!data.is_active);
+
+                // Delay setting course_id until courses are loaded via AJAX
                 const $courseSelect = $("#course_id_inp");
-
-                // 1. أضف الخيار الحالي كـ option مؤقت إذا غير موجود
-
-                // 2. بعد تحميل الخيارات عبر AJAX، اختر القيمة المطلوبة
-                const interval = setInterval(function () {
-                    const optionExists =
-                        $courseSelect.find(`option[value="${data.course_id}"]`)
-                            .length > 0;
-                    if (optionExists) {
-                        $courseSelect.val(data.course_id).trigger("change");
-                        clearInterval(interval);
-                    }
-                }, 100);
                 if (
                     $courseSelect.find(`option[value="${data.course_id}"]`)
                         .length === 0
@@ -201,6 +190,17 @@ var KTDatatablesServerSide = (function () {
                         `<option value="${data.course_id}" selected hidden>${data.course.title}</option>`
                     );
                 }
+
+                // // Listen for AJAX completion once
+                // const interval = setInterval(function () {
+                //     const optionExists =
+                //         $courseSelect.find(`option[value="${data.course_id}"]`)
+                //             .length > 0;
+                //     if (optionExists) {
+                //         $courseSelect.val(data.course_id).trigger("change");
+                //         clearInterval(interval);
+                //     }
+                // }, 100); // Check every 100ms
 
                 // Set the form action
                 $("#crud_form").attr(
