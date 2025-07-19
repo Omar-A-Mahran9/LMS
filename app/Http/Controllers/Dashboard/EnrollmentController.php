@@ -16,9 +16,8 @@ public function index(Request $request)
     $this->authorize('view_enrollments'); // or a more specific ability like 'view_enrollments'
 
     if ($request->ajax()) {
-             // Start building the query manually
- // بناء الكويري مع join يدوي
-        $query = Enrollment::query()
+
+             $query = Enrollment::query()
             ->leftJoin('students', 'students.id', '=', 'course_student.student_id')
             ->leftJoin('courses', 'courses.id', '=', 'course_student.course_id')
             ->select(
@@ -27,24 +26,21 @@ public function index(Request $request)
                 'students.last_name as student_last_name',
                 'students.email as student_email',
                 'students.phone as student_phone',
-                'courses.title_ar as course_title'
+                'courses.title_ar as course_title_ar',
+                'courses.title_en as course_title_en'
             );
 
-        // تمرير model فقط إلى getModelData (لا تمرر query مباشرة)
-        $model = new Enrollment();
-
         // Return JSON for DataTable or AJAX listing
-        return response()->json(
-            getModelData(
-                                model:$model, // 👈 نمرر فقط الـ Model
-
-                // model: new Enrollment(),
-                relations: [
-                    'student' => ['id', 'first_name', 'last_name'],
-                    'course' => ['id', 'title_ar', 'title_en']
-                ],
-                searchingColumns: ['first_name', 'last_name', 'email', 'phone'] // 👈 نضيف أعمدة البحث هنا
-
+   return response()->json(
+            getModelDataWithQuery(
+                $query,
+                relations: [], // skip eager loading, already joined
+                searchingColumns: [
+                    'students.first_name',
+                    'students.last_name',
+                    'students.email',
+                    'students.phone'
+                ]
             )
         );
     } else {
