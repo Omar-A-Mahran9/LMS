@@ -13,7 +13,7 @@
             data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
             <!--begin::Card title-->
             <div class="card-title m-0">
-                <h3 class="fw-bold m-0">{{ __('Courses list') }}</h3>
+                <h3 class="fw-bold m-0">{{ __('Courses and Class list') }}</h3>
             </div>
             <!--end::Card title-->
 
