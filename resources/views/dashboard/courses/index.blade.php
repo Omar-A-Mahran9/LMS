@@ -78,7 +78,8 @@
                         <option value="courses_only">{{ __('All Courses') }}</option>
                         <option value="classes_only">{{ __('All Classes') }}</option>
                         @foreach ($categories as $category)
-                            <option value="category_{{ $category->id }}">{{ __('Classes: ').' '. $category->name }}</option>
+                            <option value="category_{{ $category->id }}">{{ __('Classes: ') . ' ' . $category->name }}
+                            </option>
                         @endforeach
                     </select>
 
