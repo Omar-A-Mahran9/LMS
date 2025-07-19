@@ -51,8 +51,9 @@ var KTDatatablesServerSide = (function () {
                             <div>
                                 <!--begin::Info-->
                                 <div class="d-flex flex-column justify-content-center">
-                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.title}</a>
-                                </div>
+<a href="/dashboard/courses/${row.id}" class="mb-1 text-gray-800 text-hover-primary">
+                        ${row.title}
+                    </a>                                </div>
                                 <!--end::Info-->
                             </div>
                         `;
