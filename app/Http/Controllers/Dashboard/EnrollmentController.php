@@ -17,7 +17,8 @@ public function index(Request $request)
 
     if ($request->ajax()) {
              // Start building the query manually
-        $model = Enrollment::query()
+ // بناء الكويري مع join يدوي
+        $query = Enrollment::query()
             ->leftJoin('students', 'students.id', '=', 'course_student.student_id')
             ->leftJoin('courses', 'courses.id', '=', 'course_student.course_id')
             ->select(
@@ -26,12 +27,16 @@ public function index(Request $request)
                 'students.last_name as student_last_name',
                 'students.email as student_email',
                 'students.phone as student_phone',
-                'courses.title_ar as course_title_ar'
+                'courses.title_ar as course_title'
             );
+
+        // تمرير model فقط إلى getModelData (لا تمرر query مباشرة)
+        $model = new Enrollment();
+
         // Return JSON for DataTable or AJAX listing
         return response()->json(
             getModelData(
-                                model: $model->getModel(), // 👈 نمرر فقط الـ Model
+                                model:$model, // 👈 نمرر فقط الـ Model
 
                 // model: new Enrollment(),
                 relations: [
