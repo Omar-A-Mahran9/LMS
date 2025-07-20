@@ -98,18 +98,60 @@
                                     </div>
                                     <hr>
                                     <ul class="list-unstyled mt-3">
+                                        @php $i = 1; @endphp
                                         @foreach ($student->courses as $course)
                                             @if (empty($course->is_class) || $course->is_class == 0)
-                                                <li class="d-flex justify-content-between">
-                                                    <span>{{ $course->title }}</span>
-                                                    @if ($course->is_completed_for_student ?? false)
-                                                        <span class="badge bg-success">{{ __('Completed') }}</span>
-                                                    @endif
+                                                <li class="d-flex justify-content-between align-items-center mb-2">
+                                                    <span>{{ $i++ }} - {{ $course->title }}</span>
+
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        @if ($course->is_completed_for_student ?? false)
+                                                            <span class="badge bg-success">{{ __('Completed') }}</span>
+                                                        @endif
+
+                                                        @php
+                                                            $status = $course->is_active ? 'active' : 'inactive';
+                                                            $color = match ($status) {
+                                                                'active' => 'success',
+                                                                'inactive' => 'secondary',
+                                                                default => 'light',
+                                                            };
+                                                        @endphp
+
+                                                        <!-- Status dropdown -->
+                                                        <div>
+                                                            <a href="#"
+                                                                class="badge badge-light-{{ $color }} fw-bold border rounded"
+                                                                data-kt-menu-trigger="click"
+                                                                data-kt-menu-placement="bottom-end">
+                                                                {{ __(ucfirst($status)) }}
+                                                            </a>
+                                                            <div class="menu menu-sub menu-sub-dropdown"
+                                                                data-kt-menu="true">
+                                                                <div class="menu-item px-3">
+                                                                    <a href="javascript:;"
+                                                                        class="menu-link px-3 change-course-status"
+                                                                        data-id="{{ $course->id }}" data-status="active">
+                                                                        {{ __('Active') }}
+                                                                    </a>
+                                                                </div>
+                                                                <div class="menu-item px-3">
+                                                                    <a href="javascript:;"
+                                                                        class="menu-link px-3 change-course-status"
+                                                                        data-id="{{ $course->id }}"
+                                                                        data-status="inactive">
+                                                                        {{ __('Inactive') }}
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </li>
                                             @endif
                                         @endforeach
                                     </ul>
                                 </div>
+
                             </div>
                         </div>
 
