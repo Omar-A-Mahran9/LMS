@@ -139,6 +139,7 @@
                                                                     <a href="javascript:;"
                                                                         class="menu-link px-3 change-course-status"
                                                                         data-id="{{ $course->id }}"
+                                                                        data-student-id="{{ $student->id }}"
                                                                         data-status="inactive">
                                                                         {{ __('Inactive') }}
                                                                     </a>
@@ -304,6 +305,8 @@
         $(document).on('click', '.change-course-status', function() {
             const $link = $(this);
             const courseId = $link.data('id');
+            const studentId = $link.data('sudent_id');
+
             const newStatus = $link.data('status');
 
             $.ajax({
