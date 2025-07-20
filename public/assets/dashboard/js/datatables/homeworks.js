@@ -135,7 +135,7 @@ var KTDatatablesHomeworkServerSide = (function () {
                                 <!--end::Menu item-->
         <!--end::Menu item-->
                                  <div class="menu-item px-3">
-                                    <a href="/dashboard/questions?quiz_id=${
+                                    <a href="/dashboard/homeworks-questions?homework_id=${
                                         data.id
                                     }" class="menu-link px-3">
                                         ${__("Show Questions")}
