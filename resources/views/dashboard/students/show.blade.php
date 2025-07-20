@@ -90,7 +90,7 @@
             <div class="mt-10">
 
                 <div class="card card-flush ">
-                    <div class="card-header">
+                    <div class="card-header mt-10">
                         <h3 class="fw-bold">{{ __('Student Report') }}</h3>
                     </div>
                     <div class="row g-5">
