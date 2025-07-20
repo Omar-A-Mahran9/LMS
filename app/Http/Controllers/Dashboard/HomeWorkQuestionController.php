@@ -24,6 +24,7 @@ class HomeWorkQuestionController extends Controller
 
         // Example static value (customize as needed)
         $total_attempts = 1000;
+    $homeworkId = $request->query('homework_id'); // or $request->get('quiz_id');
 
         // Get all published courses and sections
         $courses = Course::where('is_active', 1)->get();
@@ -33,6 +34,8 @@ class HomeWorkQuestionController extends Controller
             // Return JSON data (use getModelData helper if you have it set up)
             return response()->json(getModelData(
                 model: new HomeWorkQuestion(),
+                            andsFilters: $homeworkId ? [['homework_id', '=', $homeworkId]] : [],
+
                 relations: [
                         'homework' => ['id', 'title_en', 'title_ar'],
                         'answers' => ['id', 'home_work_question_id', 'answer_ar', 'answer_en', 'is_correct']

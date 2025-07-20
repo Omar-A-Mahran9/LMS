@@ -20,6 +20,16 @@ var KTDatatablesServerSide = (function () {
             },
             ajax: {
                 url: `/dashboard/${dbTable}`,
+                data: function (d) {
+                    const urlParams = new URLSearchParams(
+                        window.location.search
+                    );
+                    const homeworkId = urlParams.get("homework_id");
+
+                    if (homeworkId) {
+                        d.homework_id = homeworkId;
+                    }
+                },
             },
             columns: [
                 { data: "id" },
