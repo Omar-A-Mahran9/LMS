@@ -69,7 +69,7 @@ public function show(Student $student)
         'enrolledClasses.course',
         'quizAttempts.quiz',
         'homeworks.homework',
-        'videoProgress.video'
+        'studentProgress.video'
     ]);
 
     return view('dashboard.students.show', compact('student'));

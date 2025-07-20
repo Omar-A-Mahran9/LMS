@@ -235,7 +235,7 @@ public function getIsCompletedForStudentAttribute()
     $studentId = auth()->id(); // أو مرره من الخارج
     $total = $this->videos()->count();
     $completed = $this->videos()
-        ->whereHas('videoProgress', fn($q) => $q->where('student_id', $studentId)->where('is_completed', 1))
+        ->whereHas('studentProgress', fn($q) => $q->where('student_id', $studentId)->where('is_completed', 1))
         ->count();
 
     return $total > 0 && $total == $completed;

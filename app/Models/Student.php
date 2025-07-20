@@ -92,7 +92,7 @@ class Student extends Authenticatable
             ->withTimestamps();
     }
 
-    public function videoProgress()
+    public function studentProgress()
     {
         return $this->hasMany(CourseVideoStudent::class);
     }
