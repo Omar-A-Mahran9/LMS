@@ -216,7 +216,8 @@
                                     <ul class="list-unstyled mt-3">
                                         @foreach ($student->quizAttempts as $attempt)
                                             <li>{{ $attempt->quiz->title ?? '-' }}:
-                                                <strong>{{ $attempt->score }}%</strong></li>
+                                                <strong>{{ $attempt->score }}%</strong>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -323,8 +324,8 @@
                     toastr.success('{{ __('Status updated successfully') }}');
                     const badge = $link.closest('.menu-sub-dropdown').siblings('a');
                     badge
-                        .removeClass('badge-light-success badge-light-secondary')
-                        .addClass('badge-light-' + (newStatus === 'active' ? 'success' : 'secondary'))
+                        .removeClass('badge-light-success badge-light-danger')
+                        .addClass('badge-light-' + (newStatus === 'active' ? 'success' : 'danger'))
                         .text(newStatus.charAt(0).toUpperCase() + newStatus.slice(1));
                 },
                 error: function() {
