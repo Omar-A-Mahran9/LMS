@@ -36,7 +36,7 @@ Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected
  Route::get("howuse/restore-selected", "HowuseController@restoreSelected");
  Route::delete("enrollments/delete-selected", "EnrollmentController@deleteSelected");
  Route::get("enrollments/restore-selected", "EnrollmentController@restoreSelected");
-Route::get('students/{student}/report/pdf', [StudentController::class, 'reportPdf'])->name('dashboard.students.report.pdf');
+Route::get('students/{student}/report/pdf', [StudentController::class, 'reportPdf'])->name('students.report.pdf');
 
  Route::resource('courses', 'CourseController')->except(['create', 'edit']);
  Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
