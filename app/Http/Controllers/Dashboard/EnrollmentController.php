@@ -202,6 +202,8 @@ public function destroy($id)
 
     public function toggleStatus(Request $request)
 {
+
+    dd($request);
     $enrollment = Enrollment::where('student_id', $request->student_id)
         ->where('course_id', $request->course_id)
         ->first();
