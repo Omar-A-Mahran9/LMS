@@ -10,7 +10,10 @@ use App\Models\Admin;
 use App\Models\Category;
 use App\Models\CategorySubCategory;
 use App\Models\Course;
+use App\Models\Enrollment;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
@@ -35,7 +38,7 @@ public function index(Request $request)
     $subcategories = CategorySubCategory::where('is_publish', 1)
         ->get();
 
-if ($request->ajax()) {
+    if ($request->ajax()) {
     $andsFilters = [];
 
     if ($request->filled('filter_combined')) {
@@ -57,7 +60,7 @@ if ($request->ajax()) {
         relations: ['instructor' => ['id', 'name']],
         andsFilters: $andsFilters
     ));
-}else {
+    }else {
         // Return the main view with data
         return view('dashboard.courses.index', compact('categories', 'visited_site', 'instructors','subcategories'));
     }
@@ -225,4 +228,7 @@ public function show(Course $course)
 
         return response(["selected services restored successfully"]);
     }
+
+
+
 }

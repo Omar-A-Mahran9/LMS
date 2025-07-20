@@ -199,4 +199,21 @@ public function destroy($id)
 
         return response(["selected Enrollment restored successfully"]);
     }
+
+    public function toggleStatus(Request $request)
+{
+    $enrollment = Enrollment::where('student_id', $request->student_id)
+        ->where('course_id', $request->course_id)
+        ->first();
+
+    if (!$enrollment) {
+        return response()->json(['success' => false, 'message' => 'Enrollment not found'], 404);
+    }
+
+    $enrollment->is_active = $request->status === 'active' ? 1 : 0;
+    $enrollment->save();
+
+    return response()->json(['success' => true]);
+}
+
 }

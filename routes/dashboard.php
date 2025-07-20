@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\BookOrderController;
+use App\Http\Controllers\Dashboard\CourseController;
 use App\Http\Controllers\Dashboard\EnrollmentController;
 use App\Http\Controllers\Dashboard\HomeworkByClassController;
 use App\Http\Controllers\Dashboard\HomeworkBySectionController;
@@ -37,6 +38,8 @@ Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected
  Route::delete("enrollments/delete-selected", "EnrollmentController@deleteSelected");
  Route::get("enrollments/restore-selected", "EnrollmentController@restoreSelected");
 Route::get('students/{student}/report/pdf', [StudentController::class, 'reportPdf'])->name('students.report.pdf');
+Route::post('/dashboard/enrollments/toggle-status', [EnrollmentController::class, 'toggleStatus'])
+    ->name('enrollments.toggleStatus');
 
  Route::resource('courses', 'CourseController')->except(['create', 'edit']);
  Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);

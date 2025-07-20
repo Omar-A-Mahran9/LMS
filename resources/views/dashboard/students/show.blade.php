@@ -307,20 +307,22 @@
             const newStatus = $link.data('status');
 
             $.ajax({
-                url: `/dashboard/courses/${courseId}/toggle-status`, // 🔁 عدل المسار حسب مشروعك
+                url: '{{ route('dashboard.enrollments.toggleStatus') }}',
                 type: 'POST',
                 data: {
-                    status: newStatus,
+                    student_id: studentId,
+                    course_id: courseId,
+                    status: 'active', // or 'inactive'
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    toastr.success("{{ __('Status updated successfully') }}");
-                    location.reload(); // أو حدث فقط العنصر بدلاً من reload
+                    toastr.success('Status updated');
                 },
                 error: function() {
-                    toastr.error("{{ __('Something went wrong') }}");
+                    toastr.error('Error updating status');
                 }
             });
+
         });
     </script>
 @endpush
