@@ -34,7 +34,7 @@ class HomeWorkQuestionController extends Controller
             // Return JSON data (use getModelData helper if you have it set up)
             return response()->json(getModelData(
                 model: new HomeWorkQuestion(),
-                            andsFilters: $homeworkId ? [['homework_id', '=', $homeworkId]] : [],
+                            andsFilters: $homeworkId ? [['home_work_id', '=', $homeworkId]] : [],
 
                 relations: [
                         'homework' => ['id', 'title_en', 'title_ar'],
