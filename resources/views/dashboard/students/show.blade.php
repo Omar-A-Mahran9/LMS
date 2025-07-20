@@ -263,14 +263,14 @@
             }, () => location.reload());
         });
 
-        $(document).on('click', '.change-enrollment-status', function() {
-            const $btn = $(this);
-            $.post('{{ route('dashboard.enrollments.toggleEnrollmentStatus') }}', {
-                _token: '{{ csrf_token() }}',
-                student_id: $btn.data('student-id'),
-                course_id: $btn.data('id'),
-                enrollment_status: $btn.data('status')
-            }, () => location.reload());
-        });
+        // $(document).on('click', '.change-enrollment-status', function() {
+        //     const $btn = $(this);
+        //     $.post('{{ route('dashboard.enrollments.toggleEnrollmentStatus') }}', {
+        //         _token: '{{ csrf_token() }}',
+        //         student_id: $btn.data('student-id'),
+        //         course_id: $btn.data('id'),
+        //         enrollment_status: $btn.data('status')
+        //     }, () => location.reload());
+        // });
     </script>
 @endpush
