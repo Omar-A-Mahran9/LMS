@@ -111,7 +111,7 @@
                                             @foreach ($student->courses as $course)
                                                 @if (empty($course->is_class) || $course->is_class == 0)
                                                     <li class="d-flex justify-content-between">
-                                                        <span>{{ $course->title_ar }}</span>
+                                                        <span>{{ $course->title }}</span>
                                                         @if ($course->is_completed_for_student ?? false)
                                                             <span class="badge bg-success">{{ __('Completed') }}</span>
                                                         @endif
@@ -140,7 +140,7 @@
                                                 @foreach ($student->courses as $course)
                                                     @if ($course->is_class || $course->is_class == 1)
                                                         <li class="d-flex justify-content-between">
-                                                            <span>{{ $course->title_ar }}</span>
+                                                            <span>{{ $course->title }}</span>
                                                             @if ($course->is_completed_for_student ?? false)
                                                                 <span class="badge bg-success">{{ __('Completed') }}</span>
                                                             @endif
@@ -168,7 +168,7 @@
                                             <ul class="list-unstyled mt-3">
                                                 @foreach ($student->quizAttempts as $attempt)
                                                     <li>
-                                                        {{ $attempt->quiz->title_ar ?? '-' }}:
+                                                        {{ $attempt->quiz->title ?? '-' }}:
                                                         <strong>{{ $attempt->score }}%</strong>
                                                     </li>
                                                 @endforeach
@@ -193,7 +193,7 @@
                                             <ul class="list-unstyled mt-3">
                                                 @foreach ($student->homeWorkAttempts->take(5) as $attempt)
                                                     <li>
-                                                        {{ $attempt->homework->title_ar ?? '-' }}:
+                                                        {{ $attempt->homework->title ?? '-' }}:
                                                         {{ __('Attempted') }}
                                                         {{ $student->homeWorkAttempts->where('home_work_id', $attempt->home_work_id)->count() }}
                                                         {{ __('time(s)') }}
@@ -220,7 +220,7 @@
                                             <ul class="list-unstyled mt-3">
                                                 @foreach ($student->watchedVideos->take(5) as $video)
                                                     <li>
-                                                        {{ $video->title_ar ?? '-' }} -
+                                                        {{ $video->title ?? '-' }} -
                                                         {{ $video->pivot->is_completed ? __('Completed') : __('In Progress') }}
                                                     </li>
                                                 @endforeach
