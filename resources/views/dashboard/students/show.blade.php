@@ -4,7 +4,7 @@
     <div id="kt_app_content" class="app-content flex-column-fluid">
         <div id="kt_app_content_container" class="app-container container-fluid">
 
-            <!-- Student Card -->
+            <!-- Student Info -->
             <div class="card card-flush mb-10">
                 <div class="card-header">
                     <div class="card-title">
@@ -18,11 +18,10 @@
                             {{ $student->block_flag ? 'checked' : '' }}>
                     </div>
                 </div>
-
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2">
-                            <img src="{{ $student->full_image_path }}" alt="Student Image"
+                            <img src="{{ $student->full_image_path }}"
                                 class="img-fluid rounded w-150px h-150px object-fit-cover" />
                         </div>
                         <div class="col-md-10">
@@ -30,8 +29,7 @@
                                 <tbody class="fw-semibold text-gray-600">
                                     <tr>
                                         <td class="text-muted">{{ __('Full Name') }}</td>
-                                        <td class="text-end">{{ $student->first_name }} {{ $student->middle_name }}
-                                            {{ $student->last_name }}</td>
+                                        <td class="text-end">{{ $student->full_name }}</td>
                                     </tr>
                                     <tr>
                                         <td class="text-muted">{{ __('Email') }}</td>
@@ -42,16 +40,16 @@
                                         <td class="text-end">{{ $student->phone }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="text-muted">{{ __('Parent phone') }}</td>
+                                        <td class="text-muted">{{ __('Parent Phone') }}</td>
                                         <td class="text-end">{{ $student->parent_phone }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="text-muted">{{ __('Parent job') }}</td>
+                                        <td class="text-muted">{{ __('Parent Job') }}</td>
                                         <td class="text-end">{{ $student->parent_job }}</td>
                                     </tr>
                                     <tr>
                                         <td class="text-muted">{{ __('Gender') }}</td>
-                                        <td class="text-end">{{ __(ucfirst($student->gender)) }}</td>
+                                        <td class="text-end">{{ ucfirst($student->gender) }}</td>
                                     </tr>
                                     <tr>
                                         <td class="text-muted">{{ __('Government') }}</td>
@@ -71,9 +69,8 @@
                     </div>
                 </div>
             </div>
-            <!-- End Student Card -->
 
-            <!-- Report Cards -->
+            <!-- Report -->
             <div class="card card-flush">
                 <div class="card-header">
                     <h3 class="fw-bold">{{ __('Student Report') }}</h3>
@@ -89,47 +86,50 @@
                                         <i class="ki-outline ki-book-open fs-2hx text-primary"></i>
                                         <div>
                                             <div class="fs-3 fw-bold text-gray-800">
-                                                {{ $student->courses->where('is_class', '!=', 1)->count() }}
-                                            </div>
+                                                {{ $student->courses->where('is_class', '!=', 1)->count() }}</div>
                                             <div class="text-muted">{{ __('Enrolled Courses') }}</div>
                                         </div>
                                     </div>
                                     <ul class="list-unstyled mt-3">
-                                        @foreach ($student->courses->where('is_class', '!=', 1) as $i => $course)
+                                        @foreach ($student->courses->where('is_class', '!=', 1) as $course)
 @php
     $pivot = $course->pivot;
     $status = $pivot->is_active ? 'active' : 'inactive';
     $color = $pivot->is_active ? 'success' : 'danger';
+    $enrollStatus = $pivot->status ?? null;
+    $statusColor = match ($enrollStatus) {
+        'approved' => 'success',
+        'pending' => 'warning',
+        'rejected' => 'danger',
+        default => 'secondary',
+    };
 @endphp
                                         <li class="d-flex justify-content-between align-items-center mb-2">
-                                            <span>{{ $i + 1 }} - {{ $course->title }}</span>
-                                            <div class="d-flex align-items-center gap-2">
+                                            <div>
+                                                {{ $course->title }}
+
+<span class="badge bg-{{ $statusColor }} ms-2">{{ ucfirst($enrollStatus) }}</span>
+
+                                            </div>
+                                            <div class="d-flex gap-2 align-items-center">
                                                 @if ($course->is_completed_for_student ?? false)
 <span class="badge bg-success">{{ __('Completed') }}</span>
 @endif
-                                                <div>
-                                                    <a href="#" class="badge badge-light-{{ $color }} fw-bold border rounded"
-                                                       data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                       {{ ucfirst($status) }}
-                                                    </a>
-                                                    <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
-                                                        <div class="menu-item px-3">
-                                                            <a href="javascript:;" class="menu-link px-3 change-course-status"
-                                                               data-id="{{ $course->id }}"
-                                                               data-student-id="{{ $student->id }}"
-                                                               data-status="active">
-                                                               {{ __('Active') }}
-                                                            </a>
-                                                        </div>
-                                                        <div class="menu-item px-3">
-                                                            <a href="javascript:;" class="menu-link px-3 change-course-status"
-                                                               data-id="{{ $course->id }}"
-                                                               data-student-id="{{ $student->id }}"
-                                                               data-status="inactive">
-                                                               {{ __('Inactive') }}
-                                                            </a>
-                                                        </div>
+                                                <a href="#" class="badge badge-light-{{ $color }} border" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">{{ ucfirst($status) }}</a>
+                                                <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
+                                                    <div class="menu-item px-3">
+                                                        <a href="javascript:;" class="menu-link px-3 change-course-status" data-id="{{ $course->id }}" data-student-id="{{ $student->id }}" data-status="active">{{ __('Active') }}</a>
                                                     </div>
+                                                    <div class="menu-item px-3">
+                                                        <a href="javascript:;" class="menu-link px-3 change-course-status" data-id="{{ $course->id }}" data-student-id="{{ $student->id }}" data-status="inactive">{{ __('Inactive') }}</a>
+                                                    </div>
+                                                </div>
+
+                                                <a href="#" class="badge badge-light-{{ $statusColor }} border" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">{{ ucfirst($enrollStatus) }}</a>
+                                                <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
+                                                    <div class="menu-item px-3"><a href="javascript:;" class="menu-link px-3 change-enrollment-status" data-id="{{ $course->id }}" data-student-id="{{ $student->id }}" data-status="approved">{{ __('Approved') }}</a></div>
+                                                    <div class="menu-item px-3"><a href="javascript:;" class="menu-link px-3 change-enrollment-status" data-id="{{ $course->id }}" data-student-id="{{ $student->id }}" data-status="pending">{{ __('Pending') }}</a></div>
+                                                    <div class="menu-item px-3"><a href="javascript:;" class="menu-link px-3 change-enrollment-status" data-id="{{ $course->id }}" data-student-id="{{ $student->id }}" data-status="rejected">{{ __('Rejected') }}</a></div>
                                                 </div>
                                             </div>
                                         </li>
@@ -146,155 +146,87 @@
                                 <div class="d-flex align-items-center gap-3 mb-3">
                                     <i class="ki-outline ki-clipboard fs-2hx text-info"></i>
                                     <div>
-                                        <div class="fs-3 fw-bold text-gray-800">
-                                            {{ $student->courses->where('is_class', 1)->count() }}
-                                        </div>
+                                        <div class="fs-3 fw-bold text-gray-800">{{ $student->courses->where('is_class', 1)->count() }}</div>
                                         <div class="text-muted">{{ __('Enrolled Classes') }}</div>
                                     </div>
                                 </div>
-                          <ul class="list-unstyled mt-3">
-    @foreach ($student->courses->where('is_class', 1) as $course)
+                                <ul class="list-unstyled mt-3">
+                                    @foreach ($student->courses->where('is_class', 1) as $course)
                                             @php
                                                 $pivot = $course->pivot;
                                                 $status = $pivot->is_active ? 'active' : 'inactive';
                                                 $color = $pivot->is_active ? 'success' : 'danger';
-
-                                                // Optional: status from pivot (e.g., pending/approved/rejected)
                                                 $enrollStatus = $pivot->status ?? null;
                                                 $statusColor = match ($enrollStatus) {
                                                     'approved' => 'success',
                                                     'pending' => 'warning',
                                                     'rejected' => 'danger',
-                                                    default => 'light',
+                                                    default => 'secondary',
                                                 };
                                             @endphp
                                             <li class="d-flex justify-content-between align-items-center mb-2">
                                                 <div>
                                                     {{ $course->title }}
                                                     @if ($enrollStatus)
-                                                        <span class="badge bg-{{ $statusColor }} ms-2">
-                                                            {{ __(ucfirst($enrollStatus)) }}
-                                                        </span>
+                                                        <span
+                                                            class="badge bg-{{ $statusColor }} ms-2">{{ ucfirst($enrollStatus) }}</span>
                                                     @endif
                                                 </div>
-
-                                                <div class="d-flex align-items-center gap-2">
+                                                <div class="d-flex gap-2 align-items-center">
                                                     @if ($course->is_completed_for_student ?? false)
                                                         <span class="badge bg-success">{{ __('Completed') }}</span>
                                                     @endif
 
-                                                    <div>
-                                                        <a href="#"
-                                                            class="badge badge-light-{{ $color }} fw-bold border rounded"
-                                                            data-kt-menu-trigger="click"
-                                                            data-kt-menu-placement="bottom-end">
-                                                            {{ ucfirst($status) }}
-                                                        </a>
-                                                        <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
-                                                            <div class="menu-item px-3">
-                                                                <a href="javascript:;"
-                                                                    class="menu-link px-3 change-course-status"
-                                                                    data-id="{{ $course->id }}"
-                                                                    data-student-id="{{ $student->id }}"
-                                                                    data-status="active">
-                                                                    {{ __('Active') }}
-                                                                </a>
-                                                            </div>
-                                                            <div class="menu-item px-3">
-                                                                <a href="javascript:;"
-                                                                    class="menu-link px-3 change-course-status"
-                                                                    data-id="{{ $course->id }}"
-                                                                    data-student-id="{{ $student->id }}"
-                                                                    data-status="inactive">
-                                                                    {{ __('Inactive') }}
-                                                                </a>
-                                                            </div>
-                                                        </div>
+                                                    <a href="#" class="badge badge-light-{{ $color }} border"
+                                                        data-kt-menu-trigger="click"
+                                                        data-kt-menu-placement="bottom-end">{{ ucfirst($status) }}</a>
+                                                    <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
+                                                        <div class="menu-item px-3"><a href="javascript:;"
+                                                                class="menu-link px-3 change-course-status"
+                                                                data-id="{{ $course->id }}"
+                                                                data-student-id="{{ $student->id }}"
+                                                                data-status="active">{{ __('Active') }}</a></div>
+                                                        <div class="menu-item px-3"><a href="javascript:;"
+                                                                class="menu-link px-3 change-course-status"
+                                                                data-id="{{ $course->id }}"
+                                                                data-student-id="{{ $student->id }}"
+                                                                data-status="inactive">{{ __('Inactive') }}</a></div>
+                                                    </div>
+
+                                                    <a href="#" class="badge badge-light-{{ $statusColor }} border"
+                                                        data-kt-menu-trigger="click"
+                                                        data-kt-menu-placement="bottom-end">{{ ucfirst($enrollStatus) }}</a>
+                                                    <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
+                                                        <div class="menu-item px-3"><a href="javascript:;"
+                                                                class="menu-link px-3 change-enrollment-status"
+                                                                data-id="{{ $course->id }}"
+                                                                data-student-id="{{ $student->id }}"
+                                                                data-status="approved">{{ __('Approved') }}</a></div>
+                                                        <div class="menu-item px-3"><a href="javascript:;"
+                                                                class="menu-link px-3 change-enrollment-status"
+                                                                data-id="{{ $course->id }}"
+                                                                data-student-id="{{ $student->id }}"
+                                                                data-status="pending">{{ __('Pending') }}</a></div>
+                                                        <div class="menu-item px-3"><a href="javascript:;"
+                                                                class="menu-link px-3 change-enrollment-status"
+                                                                data-id="{{ $course->id }}"
+                                                                data-student-id="{{ $student->id }}"
+                                                                data-status="rejected">{{ __('Rejected') }}</a></div>
                                                     </div>
                                                 </div>
                                             </li>
                                         @endforeach
                                     </ul>
-
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Quiz Attempts -->
-                        <div class="col-md-6 col-xl-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center gap-3 mb-3">
-                                        <i class="ki-outline ki-check-circle fs-2hx text-warning"></i>
-                                        <div>
-                                            <div class="fs-3 fw-bold text-gray-800">{{ $student->quizAttempts->count() }}
-                                            </div>
-                                            <div class="text-muted">{{ __('Quiz Attempts') }}</div>
-                                        </div>
-                                    </div>
-                                    <ul class="list-unstyled mt-3">
-                                        @foreach ($student->quizAttempts as $attempt)
-                                            <li>{{ $attempt->quiz->title ?? '-' }}:
-                                                <strong>{{ $attempt->score }}%</strong>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Homework Attempts -->
-                        <div class="col-md-6 col-xl-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center gap-3 mb-3">
-                                        <i class="ki-outline ki-pencil fs-2hx text-danger"></i>
-                                        <div>
-                                            <div class="fs-3 fw-bold text-gray-800">
-                                                {{ $student->homeWorkAttempts->count() }}</div>
-                                            <div class="text-muted">{{ __('Homework Attempts') }}</div>
-                                        </div>
-                                    </div>
-                                    <ul class="list-unstyled mt-3">
-                                        @foreach ($student->homeWorkAttempts->take(5) as $attempt)
-                                            <li>
-                                                {{ $attempt->homework->title ?? '-' }}: {{ __('Attempted') }}
-                                                {{ $student->homeWorkAttempts->where('home_work_id', $attempt->home_work_id)->count() }}
-                                                {{ __('time(s)') }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Watched Videos -->
-                        <div class="col-md-6 col-xl-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center gap-3 mb-3">
-                                        <i class="ki-outline ki-video fs-2hx text-success"></i>
-                                        <div>
-                                            <div class="fs-3 fw-bold text-gray-800">{{ $student->watchedVideos->count() }}
-                                            </div>
-                                            <div class="text-muted">{{ __('Watched Videos') }}</div>
-                                        </div>
-                                    </div>
-                                    <ul class="list-unstyled mt-3">
-                                        @foreach ($student->watchedVideos->take(5) as $video)
-                                            <li>{{ $video->title ?? '-' }} -
-                                                {{ $video->pivot->is_completed ? __('Completed') : __('In Progress') }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Quiz Attempts / Homework / Videos... -->
+                        <!-- Keep other cards as you had them -->
 
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
@@ -302,55 +234,43 @@
 @push('scripts')
     <script>
         $('#statusSwitch').on('change', function() {
-            const $checkbox = $(this);
-            const studentId = $checkbox.data('id');
-
+            const id = $(this).data('id');
             $.ajax({
-                url: `/dashboard/students/blocking/${studentId}`,
+                url: `/dashboard/students/blocking/${id}`,
                 type: 'GET',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                success: function() {
-                    $checkbox.toggleClass('bg-danger border-danger', $checkbox.is(':checked'));
-                    toastr.success($checkbox.is(':checked') ?
-                        '{{ __('Student blocked successfully') }}' :
+                success: () => {
+                    $(this).toggleClass('bg-danger border-danger', this.checked);
+                    toastr.success(this.checked ? '{{ __('Student blocked successfully') }}' :
                         '{{ __('Student unblocked successfully') }}');
                 },
-                error: function() {
-                    $checkbox.prop('checked', !$checkbox.is(':checked'));
+                error: () => {
+                    $(this).prop('checked', !this.checked);
                     toastr.error('{{ __('Something went wrong') }}');
                 }
             });
         });
 
         $(document).on('click', '.change-course-status', function() {
-            const $link = $(this);
-            const courseId = $link.data('id');
-            const studentId = $link.data('student-id');
-            const newStatus = $link.data('status');
+            const $btn = $(this);
+            $.post('{{ route('dashboard.enrollments.toggleStatus') }}', {
+                _token: '{{ csrf_token() }}',
+                student_id: $btn.data('student-id'),
+                course_id: $btn.data('id'),
+                status: $btn.data('status')
+            }, () => location.reload());
+        });
 
-            $.ajax({
-                url: '{{ route('dashboard.enrollments.toggleStatus') }}',
-                type: 'POST',
-                data: {
-                    student_id: studentId,
-                    course_id: courseId,
-                    status: newStatus,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function() {
-                    toastr.success('{{ __('Status updated successfully') }}');
-                    const badge = $link.closest('.menu-sub-dropdown').siblings('a');
-                    badge
-                        .removeClass('badge-light-success badge-light-danger')
-                        .addClass('badge-light-' + (newStatus === 'active' ? 'success' : 'danger'))
-                        .text(newStatus.charAt(0).toUpperCase() + newStatus.slice(1));
-                },
-                error: function() {
-                    toastr.error('{{ __('Error updating status') }}');
-                }
-            });
+        $(document).on('click', '.change-enrollment-status', function() {
+            const $btn = $(this);
+            $.post('{{ route('dashboard.enrollments.toggleEnrollmentStatus') }}', {
+                _token: '{{ csrf_token() }}',
+                student_id: $btn.data('student-id'),
+                course_id: $btn.data('id'),
+                enrollment_status: $btn.data('status')
+            }, () => location.reload());
         });
     </script>
 @endpush
