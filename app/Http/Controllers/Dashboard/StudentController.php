@@ -65,24 +65,15 @@ public function show(Student $student)
     $student->load([
         'government',
         'category',
-        'courses',
+        'courses' => ['sections', 'quizzes'], // لو كنت تحتاج مزيد من العلاقات
+        'enrolledClasses.course',
         'quizAttempts.quiz',
         'homeworks.homework',
+        'videoProgress.video'
     ]);
 
-    $quizStats = [
-        'count' => $student->quizAttempts->count(),
-        'average_score' => round($student->quizAttempts->avg('score'), 2),
-    ];
-
-    $homeworkStats = [
-        'count' => $student->homeworks->count(),
-        'submitted' => $student->homeworks->whereNotNull('submitted_at')->count(),
-    ];
-
-    return view('dashboard.students.show', compact('student', 'quizStats', 'homeworkStats'));
+    return view('dashboard.students.show', compact('student'));
 }
-
 
 
 

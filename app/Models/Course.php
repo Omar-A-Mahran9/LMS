@@ -19,6 +19,7 @@ class Course extends Model
 
     protected $appends = [
         'title',
+        'is_completed_for_student',
         'description',
         'note',
         'full_image_path',
@@ -226,4 +227,18 @@ class Course extends Model
             ->where('is_active', 1)
             ->exists();
     }
+
+
+    // Course.php
+public function getIsCompletedForStudentAttribute()
+{
+    $studentId = auth('student')->id(); // أو مرره من الخارج
+    $total = $this->videos()->count();
+    $completed = $this->videos()
+        ->whereHas('videoProgress', fn($q) => $q->where('student_id', $studentId)->where('is_completed', 1))
+        ->count();
+
+    return $total > 0 && $total == $completed;
+}
+
 }
