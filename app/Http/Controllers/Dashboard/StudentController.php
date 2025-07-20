@@ -89,7 +89,7 @@ public function show(Student $student)
 
     public function blocked(Request $request, Student $student)
     {
-        $this->authorize('delete_students');
+        // $this->authorize('delete_students');
         if ($student->block_flag === 0)
         {
             $student->update([
