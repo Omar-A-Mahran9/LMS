@@ -232,7 +232,7 @@ class Course extends Model
     // Course.php
 public function getIsCompletedForStudentAttribute()
 {
-    $studentId = auth('Api')->id(); // أو مرره من الخارج
+    $studentId = auth()->id(); // أو مرره من الخارج
     $total = $this->videos()->count();
     $completed = $this->videos()
         ->whereHas('videoProgress', fn($q) => $q->where('student_id', $studentId)->where('is_completed', 1))
