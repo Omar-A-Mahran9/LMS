@@ -27,4 +27,10 @@ public function courseVideo()
 {
     return $this->belongsTo(CourseVideo::class);
 }
+
+public function video()
+{
+    return $this->belongsTo(CourseVideo::class, 'course_video_id');
+}
+
 }
