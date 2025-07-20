@@ -152,19 +152,37 @@
                                         <div class="text-muted">{{ __('Enrolled Classes') }}</div>
                                     </div>
                                 </div>
-                                <ul class="list-unstyled mt-3">
-                                    @foreach ($student->courses->where('is_class', 1) as $course)
+                          <ul class="list-unstyled mt-3">
+    @foreach ($student->courses->where('is_class', 1) as $course)
                                             @php
                                                 $pivot = $course->pivot;
                                                 $status = $pivot->is_active ? 'active' : 'inactive';
                                                 $color = $pivot->is_active ? 'success' : 'secondary';
+
+                                                // Optional: status from pivot (e.g., pending/approved/rejected)
+                                                $enrollStatus = $pivot->status ?? null;
+                                                $statusColor = match ($enrollStatus) {
+                                                    'approved' => 'success',
+                                                    'pending' => 'warning',
+                                                    'rejected' => 'danger',
+                                                    default => 'light',
+                                                };
                                             @endphp
                                             <li class="d-flex justify-content-between align-items-center mb-2">
-                                                <span>{{ $course->title }}</span>
+                                                <div>
+                                                    {{ $course->title }}
+                                                    @if ($enrollStatus)
+                                                        <span class="badge bg-{{ $statusColor }} ms-2">
+                                                            {{ __(ucfirst($enrollStatus)) }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+
                                                 <div class="d-flex align-items-center gap-2">
                                                     @if ($course->is_completed_for_student ?? false)
                                                         <span class="badge bg-success">{{ __('Completed') }}</span>
                                                     @endif
+
                                                     <div>
                                                         <a href="#"
                                                             class="badge badge-light-{{ $color }} fw-bold border rounded"
@@ -197,6 +215,7 @@
                                             </li>
                                         @endforeach
                                     </ul>
+
                                 </div>
                             </div>
                         </div>
