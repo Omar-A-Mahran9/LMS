@@ -126,11 +126,7 @@
                                                 </div>
 
                                                 <a href="#" class="badge badge-light-{{ $statusColor }} border" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">{{ ucfirst($enrollStatus) }}</a>
-                                                <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
-                                                    <div class="menu-item px-3"><a href="javascript:;" class="menu-link px-3 change-enrollment-status" data-id="{{ $course->id }}" data-student-id="{{ $student->id }}" data-status="approved">{{ __('Approved') }}</a></div>
-                                                    <div class="menu-item px-3"><a href="javascript:;" class="menu-link px-3 change-enrollment-status" data-id="{{ $course->id }}" data-student-id="{{ $student->id }}" data-status="pending">{{ __('Pending') }}</a></div>
-                                                    <div class="menu-item px-3"><a href="javascript:;" class="menu-link px-3 change-enrollment-status" data-id="{{ $course->id }}" data-student-id="{{ $student->id }}" data-status="rejected">{{ __('Rejected') }}</a></div>
-                                                </div>
+
                                             </div>
                                         </li>
 @endforeach
@@ -196,23 +192,7 @@
                                                     <a href="#" class="badge badge-light-{{ $statusColor }} border"
                                                         data-kt-menu-trigger="click"
                                                         data-kt-menu-placement="bottom-end">{{ ucfirst($enrollStatus) }}</a>
-                                                    <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
-                                                        <div class="menu-item px-3"><a href="javascript:;"
-                                                                class="menu-link px-3 change-enrollment-status"
-                                                                data-id="{{ $course->id }}"
-                                                                data-student-id="{{ $student->id }}"
-                                                                data-status="approved">{{ __('Approved') }}</a></div>
-                                                        <div class="menu-item px-3"><a href="javascript:;"
-                                                                class="menu-link px-3 change-enrollment-status"
-                                                                data-id="{{ $course->id }}"
-                                                                data-student-id="{{ $student->id }}"
-                                                                data-status="pending">{{ __('Pending') }}</a></div>
-                                                        <div class="menu-item px-3"><a href="javascript:;"
-                                                                class="menu-link px-3 change-enrollment-status"
-                                                                data-id="{{ $course->id }}"
-                                                                data-student-id="{{ $student->id }}"
-                                                                data-status="rejected">{{ __('Rejected') }}</a></div>
-                                                    </div>
+
                                                 </div>
                                             </li>
                                         @endforeach
@@ -262,5 +242,5 @@
                 status: $btn.data('status')
             }, () => location.reload());
         });
-     </script>
+    </script>
 @endpush
