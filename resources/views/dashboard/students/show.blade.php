@@ -94,101 +94,50 @@
                                             <div class="text-muted">{{ __('Enrolled Courses') }}</div>
                                         </div>
                                     </div>
-
                                     <ul class="list-unstyled mt-3">
                                         @foreach ($student->courses->where('is_class', '!=', 1) as $i => $course)
-@php
-    $pivot = $course->pivot;
-    $status = $pivot->is_active ? 'active' : 'inactive';
-    $color = $pivot->is_active ? 'success' : 'danger';
-    $enrollStatus = $pivot->status ?? null;
-    $statusColor = match ($enrollStatus) {
-        'approved' => 'success',
-        'pending' => 'warning',
-        'rejected' => 'danger',
-        default => 'secondary',
-    };
-@endphp
-
-                    <li class="d-flex justify-content-between align-items-center mb-2">
-                        <div>
-                            {{ $i + 1 }} - {{ $course->title }}
-                            @if ($enrollStatus)
-<span class="badge bg-{{ $statusColor }} ms-2">
-                                    {{ ucfirst($enrollStatus) }}
-                                </span>
-@endif
-                        </div>
-
-                        <div class="d-flex align-items-center gap-2">
-                            @if ($course->is_completed_for_student ?? false)
+                        @php
+                            $pivot = $course->pivot;
+                            $status = $pivot->is_active ? 'active' : 'inactive';
+                            $color = $pivot->is_active ? 'success' : 'danger';
+                        @endphp
+                                        <li class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>{{ $i + 1 }} - {{ $course->title }}</span>
+                                            <div class="d-flex align-items-center gap-2">
+                                                @if ($course->is_completed_for_student ?? false)
 <span class="badge bg-success">{{ __('Completed') }}</span>
 @endif
-
-                            <!-- is_active dropdown -->
-                            <a href="#" class="badge badge-light-{{ $color }} border"
-                               data-kt-menu-trigger="click"
-                               data-kt-menu-placement="bottom-end">
-                                {{ ucfirst($status) }}
-                            </a>
-                            <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
-                                <div class="menu-item px-3">
-                                    <a href="javascript:;" class="menu-link px-3 change-course-status"
-                                       data-id="{{ $course->id }}"
-                                       data-student-id="{{ $student->id }}"
-                                       data-status="active">
-                                       {{ __('Active') }}
-                                    </a>
-                                </div>
-                                <div class="menu-item px-3">
-                                    <a href="javascript:;" class="menu-link px-3 change-course-status"
-                                       data-id="{{ $course->id }}"
-                                       data-student-id="{{ $student->id }}"
-                                       data-status="inactive">
-                                       {{ __('Inactive') }}
-                                    </a>
-                                </div>
-                            </div>
-
-                            <!-- enrollment status dropdown -->
-                            <a href="#" class="badge badge-light-{{ $statusColor }} border"
-                               data-kt-menu-trigger="click"
-                               data-kt-menu-placement="bottom-end">
-                                {{ ucfirst($enrollStatus ?? 'Status') }}
-                            </a>
-                            <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
-                                <div class="menu-item px-3">
-                                    <a href="javascript:;" class="menu-link px-3 change-enrollment-status"
-                                       data-id="{{ $course->id }}"
-                                       data-student-id="{{ $student->id }}"
-                                       data-status="approved">
-                                       {{ __('Approved') }}
-                                    </a>
-                                </div>
-                                <div class="menu-item px-3">
-                                    <a href="javascript:;" class="menu-link px-3 change-enrollment-status"
-                                       data-id="{{ $course->id }}"
-                                       data-student-id="{{ $student->id }}"
-                                       data-status="pending">
-                                       {{ __('Pending') }}
-                                    </a>
-                                </div>
-                                <div class="menu-item px-3">
-                                    <a href="javascript:;" class="menu-link px-3 change-enrollment-status"
-                                       data-id="{{ $course->id }}"
-                                       data-student-id="{{ $student->id }}"
-                                       data-status="rejected">
-                                       {{ __('Rejected') }}
-                                    </a>
-                                </div>
+                                                <div>
+                                                    <a href="#" class="badge badge-light-{{ $color }} fw-bold border rounded"
+                                                       data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                                       {{ ucfirst($status) }}
+                                                    </a>
+                                                    <div class="menu menu-sub menu-sub-dropdown" data-kt-menu="true">
+                                                        <div class="menu-item px-3">
+                                                            <a href="javascript:;" class="menu-link px-3 change-course-status"
+                                                               data-id="{{ $course->id }}"
+                                                               data-student-id="{{ $student->id }}"
+                                                               data-status="active">
+                                                               {{ __('Active') }}
+                                                            </a>
+                                                        </div>
+                                                        <div class="menu-item px-3">
+                                                            <a href="javascript:;" class="menu-link px-3 change-course-status"
+                                                               data-id="{{ $course->id }}"
+                                                               data-student-id="{{ $student->id }}"
+                                                               data-status="inactive">
+                                                               {{ __('Inactive') }}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+@endforeach
+                                </ul>
                             </div>
                         </div>
-                    </li>
-@endforeach
-            </ul>
-        </div>
-    </div>
-</div>
+                    </div>
 
                     <!-- Enrolled Classes -->
                     <div class="col-md-6 col-xl-4">
