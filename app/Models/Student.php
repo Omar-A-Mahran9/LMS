@@ -106,4 +106,10 @@ class Student extends Authenticatable
         return $this->otp;
     }
 
+    public function homeworks()
+{
+    return $this->hasMany(HomeWorkAttempt::class, 'student_id');
+}
+
+
 }
