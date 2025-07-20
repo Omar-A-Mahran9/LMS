@@ -111,5 +111,10 @@ class Student extends Authenticatable
     return $this->hasMany(HomeWorkAttempt::class, 'student_id');
 }
 
+// App\Models\Student.php
+public function homeWorkAttempts()
+{
+    return $this->hasMany(HomeWorkAttempt::class);
+}
 
 }
