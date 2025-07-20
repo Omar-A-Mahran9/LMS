@@ -3,9 +3,7 @@
 @section('content')
     <div id="kt_app_content" class="flex-column-fluid">
         <div id="kt_app_content_container" class="app-container container-xxl">
-
             <div class="row gy-5 g-xl-10">
-                <!-- Student Overview Card -->
                 <div class="col-12">
                     <div class="card card-flush shadow-sm">
                         <div class="card-header justify-content-between">
@@ -28,19 +26,17 @@
                         </div>
 
                         <div class="card-body">
-                            <!-- Student Info -->
+                            <!-- Basic Info -->
                             <div class="d-flex align-items-center gap-10 mb-7">
                                 <div class="symbol symbol-100px">
-                                    <img src="{{ $student->full_image_path }}" class="object-fit-cover" alt="image">
+                                    <img src="{{ $student->full_image_path }}" class="object-fit-cover" alt="Student Image">
                                 </div>
                                 <div>
-                                    <h4 class="fw-bold mb-1">
-                                        {{ $student->first_name }} {{ $student->middle_name }} {{ $student->last_name }}
-                                    </h4>
+                                    <h4 class="fw-bold mb-1">{{ $student->first_name }} {{ $student->middle_name }}
+                                        {{ $student->last_name }}</h4>
                                     <div class="text-muted">{{ $student->email }} - {{ $student->phone }}</div>
-                                    <div class="text-muted">
-                                        {{ __('Parent:') }} {{ $student->parent_phone }} ({{ $student->parent_job }})
-                                    </div>
+                                    <div class="text-muted">{{ __('Parent:') }} {{ $student->parent_phone }}
+                                        ({{ $student->parent_job }})</div>
                                     <div class="text-muted">
                                         {{ __('Gov:') }} {{ $student->government->name ?? '-' }} |
                                         {{ __('Category:') }} {{ $student->category->name ?? '-' }}
@@ -50,62 +46,139 @@
                                 </div>
                             </div>
 
-                            <!-- Stats Cards -->
                             <div class="row g-5">
                                 <!-- Enrolled Courses -->
-                                <x-dashboard.student-stat icon="ki-book-open" title="{{ __('Enrolled Courses') }}"
-                                    count="{{ $student->courses->count() }}" color="primary" :items="$student->courses"
-                                    itemLabel="title_ar" completedAttr="is_completed_for_student" />
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <i class="ki-outline ki-book-open fs-2hx text-primary"></i>
+                                                <div>
+                                                    <div class="fs-3 fw-bold text-gray-800">
+                                                        {{ $student->courses->count() }}</div>
+                                                    <div class="text-muted">{{ __('Enrolled Courses') }}</div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <ul class="list-unstyled mt-3">
+                                                @foreach ($student->courses as $course)
+                                                    <li class="d-flex justify-content-between">
+                                                        <span>{{ $course->title_ar }}</span>
+                                                        @if ($course->is_completed_for_student ?? false)
+                                                            <span class="badge bg-success">{{ __('Completed') }}</span>
+                                                        @endif
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Enrolled Classes -->
-                                <x-dashboard.student-stat icon="ki-clipboard" title="{{ __('Enrolled Classes') }}"
-                                    count="{{ $student->enrolledClasses->count() }}" color="info" :items="$student->enrolledClasses"
-                                    :itemSlot="true">
-                                    @foreach ($student->enrolledClasses as $class)
-                                        <li>{{ $class->title }} <small
-                                                class="text-muted">({{ $class->course->title_ar ?? '-' }})</small></li>
-                                    @endforeach
-                                </x-dashboard.student-stat>
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <i class="ki-outline ki-clipboard fs-2hx text-info"></i>
+                                                <div>
+                                                    <div class="fs-3 fw-bold text-gray-800">
+                                                        {{ $student->enrolledClasses->count() }}</div>
+                                                    <div class="text-muted">{{ __('Enrolled Classes') }}</div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <ul class="list-unstyled mt-3">
+                                                @foreach ($student->enrolledClasses as $class)
+                                                    <li>{{ $class->title }} <small
+                                                            class="text-muted">({{ $class->course->title_ar ?? '-' }})</small>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Quiz Attempts -->
-                                <x-dashboard.student-stat icon="ki-check-circle" title="{{ __('Quiz Attempts') }}"
-                                    count="{{ $student->quizAttempts->count() }}" color="warning" :items="$student->quizAttempts"
-                                    :itemSlot="true">
-                                    @foreach ($student->quizAttempts as $attempt)
-                                        <li>{{ $attempt->quiz->title_ar ?? '-' }}: <strong>{{ $attempt->score }}%</strong>
-                                        </li>
-                                    @endforeach
-                                </x-dashboard.student-stat>
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <i class="ki-outline ki-check-circle fs-2hx text-warning"></i>
+                                                <div>
+                                                    <div class="fs-3 fw-bold text-gray-800">
+                                                        {{ $student->quizAttempts->count() }}</div>
+                                                    <div class="text-muted">{{ __('Quiz Attempts') }}</div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <ul class="list-unstyled mt-3">
+                                                @foreach ($student->quizAttempts as $attempt)
+                                                    <li>
+                                                        {{ $attempt->quiz->title_ar ?? '-' }}:
+                                                        <strong>{{ $attempt->score }}%</strong>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Homework Attempts -->
-                                <x-dashboard.student-stat icon="ki-pencil" title="{{ __('Homework Attempts') }}"
-                                    count="{{ $student->homeWorkAttempts->count() }}" color="danger" :items="$student->homeWorkAttempts"
-                                    :itemSlot="true">
-                                    @foreach ($student->homeWorkAttempts->groupBy('home_work_id') as $group)
-                                        <li>
-                                            {{ $group->first()->homework->title_ar ?? '-' }}:
-                                            {{ __('Attempted') }} {{ $group->count() }} {{ __('time(s)') }}
-                                        </li>
-                                    @endforeach
-                                </x-dashboard.student-stat>
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <i class="ki-outline ki-pencil fs-2hx text-danger"></i>
+                                                <div>
+                                                    <div class="fs-3 fw-bold text-gray-800">
+                                                        {{ $student->homeWorkAttempts->count() }}</div>
+                                                    <div class="text-muted">{{ __('Homework Attempts') }}</div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <ul class="list-unstyled mt-3">
+                                                @foreach ($student->homeWorkAttempts->take(5) as $attempt)
+                                                    <li>
+                                                        {{ $attempt->homework->title_ar ?? '-' }}:
+                                                        {{ __('Attempted') }}
+                                                        {{ $student->homeWorkAttempts->where('home_work_id', $attempt->home_work_id)->count() }}
+                                                        {{ __('time(s)') }}
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Watched Videos -->
-                                <x-dashboard.student-stat icon="ki-video" title="{{ __('Watched Videos') }}"
-                                    count="{{ $student->watchedVideos->count() }}" color="success" :items="$student->watchedVideos->take(5)"
-                                    :itemSlot="true">
-                                    @foreach ($student->watchedVideos->take(5) as $video)
-                                        <li>
-                                            {{ $video->title_ar ?? '-' }} -
-                                            {{ $video->pivot->is_completed ? __('Completed') : __('In Progress') }}
-                                        </li>
-                                    @endforeach
-                                </x-dashboard.student-stat>
-                            </div>
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <i class="ki-outline ki-video fs-2hx text-success"></i>
+                                                <div>
+                                                    <div class="fs-3 fw-bold text-gray-800">
+                                                        {{ $student->watchedVideos->count() }}</div>
+                                                    <div class="text-muted">{{ __('Watched Videos') }}</div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <ul class="list-unstyled mt-3">
+                                                @foreach ($student->watchedVideos->take(5) as $video)
+                                                    <li>
+                                                        {{ $video->title_ar ?? '-' }} -
+                                                        {{ $video->pivot->is_completed ? __('Completed') : __('In Progress') }}
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- /.row -->
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
@@ -115,6 +188,7 @@
         $('#statusSwitch').on('change', function() {
             const $checkbox = $(this);
             const studentId = $checkbox.data('id');
+
             $.ajax({
                 url: `/dashboard/students/blocking/${studentId}`,
                 type: 'GET',
