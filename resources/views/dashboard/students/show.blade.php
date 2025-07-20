@@ -99,7 +99,7 @@
 @php
     $pivot = $course->pivot;
     $status = $pivot->is_active ? 'active' : 'inactive';
-    $color = $pivot->is_active ? 'success' : 'secondary';
+    $color = $pivot->is_active ? 'success' : 'danger';
 @endphp
                                         <li class="d-flex justify-content-between align-items-center mb-2">
                                             <span>{{ $i + 1 }} - {{ $course->title }}</span>
@@ -157,7 +157,7 @@
                                             @php
                                                 $pivot = $course->pivot;
                                                 $status = $pivot->is_active ? 'active' : 'inactive';
-                                                $color = $pivot->is_active ? 'success' : 'secondary';
+                                                $color = $pivot->is_active ? 'success' : 'danger';
 
                                                 // Optional: status from pivot (e.g., pending/approved/rejected)
                                                 $enrollStatus = $pivot->status ?? null;
