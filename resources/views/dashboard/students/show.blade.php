@@ -96,11 +96,11 @@
                                     </div>
                                     <ul class="list-unstyled mt-3">
                                         @foreach ($student->courses->where('is_class', '!=', 1) as $i => $course)
-                        @php
-                            $pivot = $course->pivot;
-                            $status = $pivot->is_active ? 'active' : 'inactive';
-                            $color = $pivot->is_active ? 'success' : 'danger';
-                        @endphp
+@php
+    $pivot = $course->pivot;
+    $status = $pivot->is_active ? 'active' : 'inactive';
+    $color = $pivot->is_active ? 'success' : 'danger';
+@endphp
                                         <li class="d-flex justify-content-between align-items-center mb-2">
                                             <span>{{ $i + 1 }} - {{ $course->title }}</span>
                                             <div class="d-flex align-items-center gap-2">
@@ -153,7 +153,7 @@
                                     </div>
                                 </div>
                           <ul class="list-unstyled mt-3">
-                         @foreach ($student->courses->where('is_class', 1) as $course)
+                 @foreach ($student->courses->where('is_class', 1) as $course)
                                             @php
                                                 $pivot = $course->pivot;
                                                 $status = $pivot->is_active ? 'active' : 'inactive';
