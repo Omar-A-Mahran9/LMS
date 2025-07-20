@@ -296,4 +296,31 @@
             });
         });
     </script>
+
+    <script>
+        const langActive = "{{ __('Active') }}";
+        const langInactive = "{{ __('Inactive') }}";
+
+        $(document).on('click', '.change-course-status', function() {
+            const $link = $(this);
+            const courseId = $link.data('id');
+            const newStatus = $link.data('status');
+
+            $.ajax({
+                url: `/dashboard/courses/${courseId}/toggle-status`, // 🔁 عدل المسار حسب مشروعك
+                type: 'POST',
+                data: {
+                    status: newStatus,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    toastr.success("{{ __('Status updated successfully') }}");
+                    location.reload(); // أو حدث فقط العنصر بدلاً من reload
+                },
+                error: function() {
+                    toastr.error("{{ __('Something went wrong') }}");
+                }
+            });
+        });
+    </script>
 @endpush
