@@ -131,9 +131,13 @@
                                                                 <div class="menu-item px-3">
                                                                     <a href="javascript:;"
                                                                         class="menu-link px-3 change-course-status"
-                                                                        data-id="{{ $course->id }}" data-status="active">
+                                                                        data-id="{{ $course->id }}"
+                                                                        data-student-id="{{ $student->id }}"
+                                                                        data-status="active">
                                                                         {{ __('Active') }}
                                                                     </a>
+
+
                                                                 </div>
                                                                 <div class="menu-item px-3">
                                                                     <a href="javascript:;"
@@ -143,6 +147,7 @@
                                                                         data-status="inactive">
                                                                         {{ __('Inactive') }}
                                                                     </a>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -306,7 +311,7 @@
             const $link = $(this);
             const courseId = $link.data('id');
             const studentId = $link.data('student-id');
-            const newStatus = $link.data('status'); // ← استخدمها هنا
+            const newStatus = $link.data('status');
 
             $.ajax({
                 url: '{{ route('dashboard.enrollments.toggleStatus') }}',
@@ -314,21 +319,19 @@
                 data: {
                     student_id: studentId,
                     course_id: courseId,
-                    status: newStatus, // ← استخدم القيمة الديناميكية
+                    status: newStatus,
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
                     toastr.success('{{ __('Status updated successfully') }}');
 
-                    // تغيير نص البادج
                     const badge = $link.closest('.menu-sub-dropdown').siblings('a');
                     const colorClass = newStatus === 'active' ? 'success' : 'secondary';
                     badge
                         .removeClass('badge-light-success badge-light-secondary')
                         .addClass('badge-light-' + colorClass)
                         .text(newStatus.charAt(0).toUpperCase() + newStatus.slice(1));
-                }
-
+                },
                 error: function() {
                     toastr.error('{{ __('Error updating status') }}');
                 }
