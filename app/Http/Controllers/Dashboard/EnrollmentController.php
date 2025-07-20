@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EnrollmentController extends Controller
 {
@@ -200,11 +201,10 @@ public function destroy($id)
         return response(["selected Enrollment restored successfully"]);
     }
 
-    public function toggleStatus(Request $request)
+public function toggleStatus(Request $request)
 {
-
-    dd($request);
-    $enrollment = Enrollment::where('student_id', $request->student_id)
+    $enrollment = DB::table('course_student')
+        ->where('student_id', $request->student_id)
         ->where('course_id', $request->course_id)
         ->first();
 
@@ -212,8 +212,10 @@ public function destroy($id)
         return response()->json(['success' => false, 'message' => 'Enrollment not found'], 404);
     }
 
-    $enrollment->is_active = $request->status === 'active' ? 1 : 0;
-    $enrollment->save();
+    DB::table('course_student')
+        ->where('student_id', $request->student_id)
+        ->where('course_id', $request->course_id)
+        ->update(['is_active' => $request->status === 'active' ? 1 : 0]);
 
     return response()->json(['success' => true]);
 }

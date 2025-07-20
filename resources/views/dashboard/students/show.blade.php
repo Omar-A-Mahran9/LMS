@@ -303,28 +303,39 @@
         const langInactive = "{{ __('Inactive') }}";
 
         $(document).on('click', '.change-course-status', function() {
-            const $link = $(this);
-            const courseId = $link.data('id');
-            const studentId = $link.data('student-id');
+            $(document).on('click', '.change-course-status', function() {
+                const $link = $(this);
+                const courseId = $link.data('id');
+                const studentId = $link.data('student-id');
+                const newStatus = $link.data('status'); // ← استخدمها هنا
 
-            const newStatus = $link.data('status');
+                $.ajax({
+                    url: '{{ route('dashboard.enrollments.toggleStatus') }}',
+                    type: 'POST',
+                    data: {
+                        student_id: studentId,
+                        course_id: courseId,
+                        status: newStatus, // ← استخدم القيمة الديناميكية
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        toastr.success('{{ __('Status updated successfully') }}');
 
-            $.ajax({
-                url: '{{ route('dashboard.enrollments.toggleStatus') }}',
-                type: 'POST',
-                data: {
-                    student_id: studentId,
-                    course_id: courseId,
-                    status: 'active', // or 'inactive'
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    toastr.success('Status updated');
-                },
-                error: function() {
-                    toastr.error('Error updating status');
-                }
+                        // تغيير نص البادج
+                        const badge = $link.closest('.menu-sub-dropdown').siblings('a');
+                        const colorClass = newStatus === 'active' ? 'success' : 'secondary';
+                        badge
+                            .removeClass('badge-light-success badge-light-secondary')
+                            .addClass('badge-light-' + colorClass)
+                            .text(newStatus.charAt(0).toUpperCase() + newStatus.slice(1));
+                    }
+
+                    error: function() {
+                        toastr.error('{{ __('Error updating status') }}');
+                    }
+                });
             });
+
 
         });
     </script>
