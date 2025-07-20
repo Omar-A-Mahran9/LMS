@@ -118,6 +118,9 @@ let translations = {
 
         Search: "ابحث",
         active: "فعال",
+        Active: "فعال",
+        Inactive: "غير فعال",
+
         inactive: "غير فعال",
         expired: "منتهي الصلاحية",
         ads: "اعلان",

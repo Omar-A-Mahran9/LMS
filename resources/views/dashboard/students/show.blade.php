@@ -326,9 +326,9 @@
                     toastr.success('{{ __('Status updated successfully') }}');
 
                     const badge = $link.closest('.menu-sub-dropdown').siblings('a');
-                    const colorClass = newStatus === 'active' ? 'success' : 'secondary';
+                    const colorClass = newStatus === 'active' ? 'success' : 'danger';
                     badge
-                        .removeClass('badge-light-success badge-light-secondary')
+                        .removeClass('badge-light-success badge-light-danger')
                         .addClass('badge-light-' + colorClass)
                         .text(newStatus.charAt(0).toUpperCase() + newStatus.slice(1));
                 },
