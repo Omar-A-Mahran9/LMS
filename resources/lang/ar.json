@@ -144,6 +144,8 @@
     "Quiz Attempts": "الامتحانات التي حضرها",
     "Homework Attempts": "الواجبات التي حضرها",
     "Watched Videos": "الفيديوهات التي شاهدها",
+    "Active": "نشظ",
+    "Inactive": "غير نشظ",
 
     "A quiz already exists for this class.": "يوجد بالفعل اختبار للحصة",
     "The quiz time has expired. You cannot submit your answers.": "",
