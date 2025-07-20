@@ -305,7 +305,7 @@
         $(document).on('click', '.change-course-status', function() {
             const $link = $(this);
             const courseId = $link.data('id');
-            const studentId = $link.data('sudent_id');
+            const studentId = $link.data('student-id');
 
             const newStatus = $link.data('status');
 
