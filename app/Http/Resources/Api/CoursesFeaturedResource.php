@@ -32,6 +32,8 @@ class CoursesFeaturedResource extends JsonResource
 
         return [
                "id" => $this->id,
+                              "title" => $this->title,
+
             'image' => $this->full_image_path,
             'started_at' => $this->start_date,
 
