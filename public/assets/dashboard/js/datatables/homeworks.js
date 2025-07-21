@@ -203,11 +203,13 @@ var KTDatatablesHomeworkServerSide = (function () {
                     .setContent(data.description_en || "");
 
                 // Duration
-                $("#duration_minutes_inp").val(data.duration_minutes || "");
-                $("#attempt_count_inp").val(data.attempt_count || "");
+                $("#duration_minutes_inp_homework").val(
+                    data.duration_minutes || ""
+                );
+                $("#attempt_count_inp_homework").val(data.attempt_count || "");
 
                 // Active switch
-                $("#is_active_switch").prop("checked", !!data.is_active);
+                $("#is_active_switch_homework").prop("checked", !!data.is_active);
 
                 // Set form action to PUT
                 $("#crud_form_homework").attr(
