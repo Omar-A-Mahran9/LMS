@@ -149,74 +149,63 @@ var KTDatatablesServerSide = (function () {
                 let currentBtnIndex = $(editButtons).index(btn);
                 let data = datatable.row(currentBtnIndex).data();
 
-                // Set form title
-                $("#form_title").text(__("Edit Question"));
+                // Set modal title
+                $("#form_title").text(__("Edit Homework Question"));
 
-                // Fill basic inputs
-                $("#quiz_id_inp").val(data.quiz_id).trigger("change");
+                // Fill inputs
+                $("#homework_id_inp").val(data.homework_id).trigger("change");
                 $("#question_ar_inp").val(data.question_ar);
                 $("#question_en_inp").val(data.question_en);
                 $("#type_inp").val(data.type).trigger("change");
                 $("#points_inp").val(data.points);
 
-                // Reset dynamic sections
+                // Reset answer types visibility
                 $(".answer-type").addClass("d-none");
                 $("[name='short_answer']").val("");
                 $("input[name='correct_tf']").prop("checked", false);
 
-                // Clear existing answers in repeater list
+                // Reset Repeater
                 const repeaterList = $("#form_repeater [data-repeater-list]");
                 repeaterList.html("");
 
                 if (data.type === "multiple_choice") {
                     $(".answer-multiple_choice").removeClass("d-none");
 
-                    // Assuming you have a hidden template item somewhere with data-repeater-item
-                    const templateItem = $(
-                        "#form_repeater [data-repeater-item]"
-                    ).first();
-
                     data.answers.forEach((answer) => {
-                        // Clone template
-                        let item = templateItem.clone();
-
-                        // Clear inputs inside cloned item
-                        item.find("input").each(function () {
-                            $(this).val("");
-                            if (
-                                $(this).is(":checkbox") ||
-                                $(this).is(":radio")
-                            ) {
-                                $(this).prop("checked", false);
-                            }
-                        });
-
-                        // Fill inputs with actual data
-                        item.find("input[name='text_ar']").val(
-                            answer.answer_ar
-                        );
-                        item.find("input[name='text_en']").val(
-                            answer.answer_en
-                        );
-                        item.find("input[name='is_correct']").prop(
-                            "checked",
-                            answer.is_correct == 1
-                        );
-
-                        // Important: remove any 'd-none' or hidden class from cloned item
-                        item.removeClass("d-none");
-
-                        // Append to repeater list
-                        repeaterList.append(item);
+                        const html = `
+                    <div data-repeater-item class="row mb-2">
+                        <div class="col-md-4">
+                            <input type="text" name="text_ar" class="form-control" value="${
+                                answer.answer_ar || ""
+                            }">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="text_en" class="form-control" value="${
+                                answer.answer_en || ""
+                            }">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label class="form-check-label">
+                                <input type="checkbox" name="is_correct" class="form-check-input" value="1" ${
+                                    answer.is_correct ? "checked" : ""
+                                }>
+                                ${__("Correct")}
+                            </label>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-danger">
+                                ${__("Delete")}
+                            </a>
+                        </div>
+                    </div>`;
+                        repeaterList.append(html);
                     });
-
-                    // If your original template was hidden in the DOM, keep it hidden but do NOT append it here
-                    // So no need to remove template from DOM
                 } else if (data.type === "true_false") {
                     $(".answer-true_false").removeClass("d-none");
-
-                    const correct = data.answers.find((ans) => ans.is_correct);
-                    if (correct && correct.answer_en.toLowerCase() === "true") {
+                    const correct = data.answers.find((a) => a.is_correct);
+                    if (correct?.answer_en.toLowerCase() === "true") {
                         $("input[name='correct_tf'][value='true']").prop(
                             "checked",
                             true
@@ -232,7 +221,7 @@ var KTDatatablesServerSide = (function () {
                     $("#short_answer_inp").val(data.expected_answer || "");
                 }
 
-                // Reset form method & action
+                // Set form action to PUT
                 $("#crud_form").attr(
                     "action",
                     `/dashboard/homeworks-questions/${data.id}`
