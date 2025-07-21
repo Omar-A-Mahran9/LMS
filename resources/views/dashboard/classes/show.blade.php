@@ -751,15 +751,15 @@
                                         <div class="col-6">
                                             <label for="title_ar_homework_inp"
                                                 class="form-label">{{ __('Title (Arabic)') }}</label>
-                                            <input type="text" name="title_ar" id="title_ar_homework_inp" class="form-control"
-                                                placeholder="{{ __('Enter Arabic title') }}">
+                                            <input type="text" name="title_ar" id="title_ar_homework_inp"
+                                                class="form-control" placeholder="{{ __('Enter Arabic title') }}">
                                             <div class="invalid-feedback" id="title_ar"></div>
                                         </div>
                                         <div class="col-6">
                                             <label for="title_en_homework_inp"
                                                 class="form-label">{{ __('Title (English)') }}</label>
-                                            <input type="text" name="title_en" id="title_en_homework_inp" class="form-control"
-                                                placeholder="{{ __('Enter English title') }}">
+                                            <input type="text" name="title_en" id="title_en_homework_inp"
+                                                class="form-control" placeholder="{{ __('Enter English title') }}">
                                             <div class="invalid-feedback" id="title_en"></div>
                                         </div>
                                     </div>
@@ -788,19 +788,19 @@
                                     {{-- homework Info --}}
                                     <div class="row mb-4">
                                         <div class="col-3">
-                                            <label for="duration_minutes_inp"
+                                            <label for="duration_minutes_inp_homework"
                                                 class="form-label">{{ __('Duration (Minutes)') }}</label>
-                                            <input type="number" name="duration_minutes" id="duration_minutes_inp"
-                                                class="form-control" min="0">
+                                            <input type="number" name="duration_minutes"
+                                                id="duration_minutes_inp_homework" class="form-control" min="0">
                                             <div class="fv-plugins-message-container invalid-feedback"
                                                 id="duration_minutes">
                                             </div>
                                         </div>
 
                                         <div class="col-3">
-                                            <label for="attempt_count_inp"
+                                            <label for="attempt_count_inp_homework"
                                                 class="form-label">{{ __('attempt count') }}</label>
-                                            <input type="number" name="attempt_count" id="attempt_count_inp"
+                                            <input type="number" name="attempt_count" id="attempt_count_inp_homework"
                                                 class="form-control" min="0">
                                             <div class="fv-plugins-message-container invalid-feedback" id="attempt_count">
                                             </div>
@@ -808,9 +808,9 @@
                                         <div class="col-2 d-flex align-items-center mt-4">
                                             <label class="form-check form-switch form-check-custom form-check-solid">
                                                 <input class="form-check-input" name="is_active" type="checkbox"
-                                                    value="1" id="is_active_switch" checked>
+                                                    value="1" id="is_active_switch_homework" checked>
                                                 <span class="form-check-label text-dark"
-                                                    for="is_active_switch">{{ __('Active') }}</span>
+                                                    for="is_active_switch_homework">{{ __('Active') }}</span>
                                             </label>
                                         </div>
 
@@ -1104,7 +1104,7 @@
                 }
 
                 // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#is_active_switch")
+                $("#is_active_switch_homework")
                     .prop('checked', false);
                 $("#crud_form_homework").attr('action', `/dashboard/classes/${classId}/homeworks`);
 
@@ -1113,7 +1113,7 @@
                 $("#form_title").text("{{ __('Add new quiz') }}");
 
                 // Optionally, reset date inputs
-                $(" #duration_minutes_inp").val('');
+                $(" #duration_minutes_inp_homework").val('');
 
                 // Open modal if you want to show it on "Add"
                 $("#crud_homework").modal('show');
