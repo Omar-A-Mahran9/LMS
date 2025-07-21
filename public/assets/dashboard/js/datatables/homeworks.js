@@ -187,41 +187,35 @@ var KTDatatablesHomeworkServerSide = (function () {
                 let currentBtnIndex = $(editButtons).index(btn);
                 let data = homeworkdatatable.row(currentBtnIndex).data();
 
-                // Set form title
-                $("#form_title").text(__("Edit Course"));
+                // Set modal title
+                $("#form_title").text(__("Edit Homework"));
 
                 // Titles
-                // $("#title_ar_inp").val(data.title_ar);
+                $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
 
+                // Descriptions (using correct IDs)
                 tinymce
-                    .get("description_ar_inp")
-                    .setContent(data.description_ar);
+                    .get("description_homework_ar_inp")
+                    .setContent(data.description_ar || "");
                 tinymce
-                    .get("description_en_inp")
-                    .setContent(data.description_en);
+                    .get("description_homework_en_inp")
+                    .setContent(data.description_en || "");
 
-                // Relationships
-                $("#course_section_id_inp")
-                    .val(data.course_section_id)
-                    .trigger("change");
+                // Duration
+                $("#duration_minutes_inp").val(data.duration_minutes || "");
+                $("#attempt_count_inp").val(data.attempt_count || "");
 
-                // Relationships
-                $("#course_id_inp").val(data.course_id).trigger("change");
+                // Active switch
+                $("#is_active_switch").prop("checked", !!data.is_active);
 
-                $("#duration_minutes_inp").val(data.duration_minutes);
-                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-
-                // Flags
-                $("#is_active_switch").prop("checked", data.is_active);
-
-                // Reset form method & action
+                // Set form action to PUT
                 $("#crud_form_homework").attr(
                     "action",
-                    `/dashboard/homeworkzes/${data.id}`
+                    `/dashboard/homeworks/${data.id}`
                 );
 
-                // Remove previous _method input if any, then add PUT
+                // Replace _method hidden input with PUT
                 $("#crud_form_homework").find('input[name="_method"]').remove();
                 $("#crud_form_homework").prepend(
                     `<input type="hidden" name="_method" value="PUT">`
