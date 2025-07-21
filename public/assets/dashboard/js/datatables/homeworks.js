@@ -191,7 +191,7 @@ var KTDatatablesHomeworkServerSide = (function () {
                 $("#form_title").text(__("Edit Course"));
 
                 // Titles
-                $("#title_ar_inp").val(data.title_ar);
+                // $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
 
                 tinymce
