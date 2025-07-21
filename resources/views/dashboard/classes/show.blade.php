@@ -749,16 +749,16 @@
                                     {{-- Titles --}}
                                     <div class="row mb-4">
                                         <div class="col-6">
-                                            <label for="title_ar_inp"
+                                            <label for="title_ar_homework_inp"
                                                 class="form-label">{{ __('Title (Arabic)') }}</label>
-                                            <input type="text" name="title_ar" id="title_ar_inp" class="form-control"
+                                            <input type="text" name="title_ar" id="title_ar_homework_inp" class="form-control"
                                                 placeholder="{{ __('Enter Arabic title') }}">
                                             <div class="invalid-feedback" id="title_ar"></div>
                                         </div>
                                         <div class="col-6">
-                                            <label for="title_en_inp"
+                                            <label for="title_en_homework_inp"
                                                 class="form-label">{{ __('Title (English)') }}</label>
-                                            <input type="text" name="title_en" id="title_en_inp" class="form-control"
+                                            <input type="text" name="title_en" id="title_en_homework_inp" class="form-control"
                                                 placeholder="{{ __('Enter English title') }}">
                                             <div class="invalid-feedback" id="title_en"></div>
                                         </div>
