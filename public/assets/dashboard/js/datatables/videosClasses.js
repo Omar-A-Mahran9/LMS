@@ -12,7 +12,7 @@ var KTDatatablesServerSidevid = (function () {
         }
         vid_datatable = $("#video_datatable").DataTable({
             language: language,
-             processing: processing,
+            processing: processing,
             serverSide: serverSide,
             order: [],
             stateSave: saveState,
@@ -230,10 +230,10 @@ var KTDatatablesServerSidevid = (function () {
                 // Set form title
                 $("#form_title").text(__("Edit Course"));
 
-                $(".image-input-wrapper").css(
-                    "background-image",
-                    `url('${data.full_image_path}')`
-                );
+                // $(".image-input-wrapper").css(
+                //     "background-image",
+                //     `url('${data.full_image_path}')`
+                // );
 
                 // Titles
                 $("#title_ar_vid_inp").val(data.title_ar);
@@ -283,7 +283,7 @@ var KTDatatablesServerSidevid = (function () {
     return {
         init: function () {
             initvidDatatable();
-             initToggleToolbar();
+            initToggleToolbar();
             handleEditRows();
             deleteVideoRowWithURL(`/dashboard/videos/`);
             deleteSelectedRowsWithURL({
