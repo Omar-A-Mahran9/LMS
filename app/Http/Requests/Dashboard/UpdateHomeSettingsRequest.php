@@ -68,9 +68,9 @@ class UpdateHomeSettingsRequest extends FormRequest
                 'description_common_question_en' => 'required|string',
 
 
-                'common_question_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
-                'how_to_use_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
-                'contact_banner' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
+                'common_question_banner' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
+                'how_to_use_banner' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
+                'contact_banner' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
                 'video_how_to_use_url' => 'required|url',
 
             ],
