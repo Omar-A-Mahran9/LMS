@@ -15,6 +15,21 @@ class HomeworkResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+            $studentId = auth('api')->id();
+
+    $attemptsMade = $this->attempts()
+        ->where('student_id', $studentId)
+        ->count();
+
+    // Load questions with readingPassage
+    $questions = $this->relationLoaded('questions')
+        ? $this->questions
+        : $this->questions()->with('readingPassage')->get();
+
+    $questions = $questions->sortBy('id')->values(); // Keep original order
+
+    $finalQuestions = [];
+    $handledPassages = [];
         return [
             "id" => $this->id,
             'have_duration'=> $this->duration_minutes?true:false,
