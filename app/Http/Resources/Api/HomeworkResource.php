@@ -18,6 +18,8 @@ class HomeworkResource extends JsonResource
         return [
             "id" => $this->id,
             'have_duration'=> $this->duration_minutes?true:false,
+            "description" => $this->description,
+
             'duration_minutes' => $this->duration_minutes,
             'questions' => $this->whenLoaded('questions')
             ? QuestionHomeworkResource::collection($this->questions)
