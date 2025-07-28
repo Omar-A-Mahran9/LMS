@@ -62,7 +62,7 @@ public function getCoursesByCategory(Request $request)
 
         $query->where('category_id', $category->id);
     }
-$courses =null;
+$courses =[];
 
   if (Auth::guard('api')->check()) {
     $student = Auth::guard('api')->user();
