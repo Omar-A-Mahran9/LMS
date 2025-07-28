@@ -49,6 +49,7 @@ public function getCoursesByCategory(Request $request)
         ->whereDate('start_date', '<=', now())
         ->whereDate('end_date', '>=', now());
 
+    // فلترة حسب الفئة
     if ($categoryId) {
         $category = Category::find($categoryId);
         if (!$category) {
@@ -57,20 +58,23 @@ public function getCoursesByCategory(Request $request)
         $query->where('category_id', $category->id);
     }
 
+    // فلترة حسب الطالب إذا كان مسجل دخول
     if (Auth::guard('api')->check()) {
         $student = Auth::guard('api')->user();
 
         if ($filter === 'my') {
-            // فقط الكورسات اللي الطالب مشترك فيها
+            // الكورسات اللي الطالب مشترك فيها فعليًا
             $query->whereHas('students', function ($q) use ($student) {
                 $q->where('student_id', $student->id)
                   ->whereIn('course_student.status', ['approved', 'pending'])
                   ->where('course_student.is_active', 1);
             });
         } elseif ($filter === 'other') {
-            // فقط الكورسات اللي الطالب مش مشترك فيها
+            // الكورسات اللي الطالب مش مشترك فيها أو مشترك بس حالته غير نشطة
             $query->whereDoesntHave('students', function ($q) use ($student) {
-                $q->where('student_id', $student->id);
+                $q->where('student_id', $student->id)
+                  ->whereIn('course_student.status', ['approved', 'pending'])
+                  ->where('course_student.is_active', 1);
             });
         }
     }
@@ -80,7 +84,6 @@ public function getCoursesByCategory(Request $request)
 
     return $this->successWithPagination('Courses retrieved successfully.', $resource);
 }
-
 
 
 
