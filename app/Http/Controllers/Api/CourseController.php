@@ -70,11 +70,9 @@ public function getCoursesByCategory(Request $request)
                   ->where('course_student.is_active', 1);
             });
         } elseif ($filter === 'other') {
-            // الكورسات اللي الطالب مش مشترك فيها أو مشترك بس حالته غير نشطة
+            // الكورسات اللي الطالب لا يملك أي علاقة بها (مهما كانت الحالة)
             $query->whereDoesntHave('students', function ($q) use ($student) {
-                $q->where('student_id', $student->id)
-                  ->whereIn('course_student.status', ['approved', 'pending'])
-                  ->where('course_student.is_active', 1);
+                $q->where('student_id', $student->id);
             });
         }
     }
@@ -84,6 +82,7 @@ public function getCoursesByCategory(Request $request)
 
     return $this->successWithPagination('Courses retrieved successfully.', $resource);
 }
+
 
 
 
