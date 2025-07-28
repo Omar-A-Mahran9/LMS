@@ -38,9 +38,12 @@ class CourseController extends Controller
 {
 public function getCoursesByCategory(Request $request)
 {
+
     $categoryId = $request->query('category_id');
     $perPage = $request->query('per_page', 10);
     $filter = $request->query('filter'); // values: 'my', 'other', or null
+    dd($filter);
+
   if ($filter === 'my' && !Auth::guard('api')->check()) {
         $empty = Course::whereRaw('0=1')->paginate($perPage); // empty pagination
         $resource = CoursesDetailsResource::collection($empty)->response()->getData(true);
