@@ -48,7 +48,6 @@ public function getCoursesByCategory(Request $request)
         $resource = CoursesDetailsResource::collection($empty)->response()->getData(true);
         return $this->successWithPagination('No courses found.', $resource);
     }
-        dd($filter);
 
     $query = Course::query()
         ->where('is_active', 1)
@@ -56,6 +55,7 @@ public function getCoursesByCategory(Request $request)
         ->where('is_enrollment_open', 1)
         ->whereDate('start_date', '<=', now())
         ->whereDate('end_date', '>=', now());
+        dd($filter);
 
     if ($categoryId) {
         $category = Category::find($categoryId);
