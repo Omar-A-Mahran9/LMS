@@ -40,7 +40,7 @@ public function getCoursesByCategory(Request $request)
 {
     $categoryId = $request->query('category_id');
     $perPage = $request->query('per_page', 10);
-    $filter = $request->query('filter'); // values: 'my', 'other', or null
+    $filter = $request->query('filter'); // 'my', 'other', or null
 
     $query = Course::query()
         ->where('is_active', 1)
@@ -58,19 +58,18 @@ public function getCoursesByCategory(Request $request)
         $query->where('category_id', $category->id);
     }
 
-    // فلترة حسب الطالب إذا كان مسجل دخول
+    // فلترة حسب حالة الطالب
     if (Auth::guard('api')->check()) {
         $student = Auth::guard('api')->user();
 
         if ($filter === 'my') {
-            // الكورسات اللي الطالب مشترك فيها فعليًا
+            // ✅ هات كل الكورسات اللي الطالب مشترك فيها بأي حالة كانت
             $query->whereHas('students', function ($q) use ($student) {
-                $q->where('student_id', $student->id)
-                  ->whereIn('course_student.status', ['approved', 'pending'])
-                  ->where('course_student.is_active', 1);
+                $q->where('student_id', $student->id);
             });
+
         } elseif ($filter === 'other') {
-            // الكورسات اللي الطالب لا يملك أي علاقة بها (مهما كانت الحالة)
+            // ✅ استبعد أي كورس فيه الطالب مشترك حتى لو حالته rejected أو inactive
             $query->whereDoesntHave('students', function ($q) use ($student) {
                 $q->where('student_id', $student->id);
             });
