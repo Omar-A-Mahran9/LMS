@@ -41,11 +41,7 @@ public function getCoursesByCategory(Request $request)
     $categoryId = $request->query('category_id');
     $perPage = $request->query('per_page', 10);
     $filter = $request->query('filter'); // values: 'my', 'other', or null
-  if ($filter === 'my' && Auth::guard('api')->check()) {
-        $empty = Course::whereRaw('0=1')->paginate($perPage); // empty pagination
-        $resource = CoursesDetailsResource::collection($empty)->response()->getData(true);
-        return $this->successWithPagination('No courses found.', $resource);
-    }
+
     $query = Course::query()
         ->where('is_active', 1)
         ->where('is_class', 1)
@@ -55,31 +51,27 @@ public function getCoursesByCategory(Request $request)
 
     if ($categoryId) {
         $category = Category::find($categoryId);
-
         if (!$category) {
             return $this->error('Category not found', 404);
         }
-
         $query->where('category_id', $category->id);
     }
 
-  if (Auth::guard('api')->check()) {
-    $student = Auth::guard('api')->user();
+    if (Auth::guard('api')->check()) {
+        $student = Auth::guard('api')->user();
 
-    if ($filter === 'my') {
-    $query->whereHas('students', function ($q) use ($student) {
-        $q->where('student_id', $student->id)
-          ->whereIn('course_student.status', ['approved', 'pending'])
-          ->where('course_student.is_active', 1);
-    });
-    }  elseif ($filter === 'other') {
-    $query->whereDoesntHave('students', function ($q) use ($student) {
-        $q->where('student_id', $student->id); // just not booked
-    });
+        if ($filter === 'my') {
+            $query->whereHas('students', function ($q) use ($student) {
+                $q->where('student_id', $student->id)
+                  ->whereIn('course_student.status', ['approved', 'pending'])
+                  ->where('course_student.is_active', 1);
+            });
+        } elseif ($filter === 'other') {
+            $query->whereDoesntHave('students', function ($q) use ($student) {
+                $q->where('student_id', $student->id);
+            });
+        }
     }
-
-    }
-
 
     $courses = $query->paginate($perPage);
     $resource = CoursesDetailsResource::collection($courses)->response()->getData(true);
