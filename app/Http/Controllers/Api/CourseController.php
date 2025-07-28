@@ -44,8 +44,6 @@ public function getCoursesByCategory(Request $request)
     $filter = $request->query('filter'); // values: 'my', 'other', or null
 
   if ($filter === 'my' && !Auth::guard('api')->check()) {
-            dd($filter);
-
         $empty = Course::whereRaw('0=1')->paginate($perPage); // empty pagination
         $resource = CoursesDetailsResource::collection($empty)->response()->getData(true);
         return $this->successWithPagination('No courses found.', $resource);
