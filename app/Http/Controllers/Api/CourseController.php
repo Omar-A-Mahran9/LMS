@@ -65,7 +65,7 @@ public function getCoursesByCategory(Request $request)
 
   if (Auth::guard('api')->check()) {
     $student = Auth::guard('api')->user();
-
+dd($filter);
     if ($filter === 'my') {
     $query->whereHas('students', function ($q) use ($student) {
         $q->where('student_id', $student->id)
