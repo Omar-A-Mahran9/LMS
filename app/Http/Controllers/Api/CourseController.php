@@ -62,29 +62,26 @@ public function getCoursesByCategory(Request $request)
 
         $query->where('category_id', $category->id);
     }
-$courses =[];
 
   if (Auth::guard('api')->check()) {
     $student = Auth::guard('api')->user();
+
     if ($filter === 'my') {
     $query->whereHas('students', function ($q) use ($student) {
         $q->where('student_id', $student->id)
           ->whereIn('course_student.status', ['approved', 'pending'])
           ->where('course_student.is_active', 1);
     });
-        $courses = $query->paginate($perPage);
-
     }  elseif ($filter === 'other') {
     $query->whereDoesntHave('students', function ($q) use ($student) {
         $q->where('student_id', $student->id); // just not booked
     });
-        $courses = $query->paginate($perPage);
-
     }
 
     }
 
 
+    $courses = $query->paginate($perPage);
     $resource = CoursesDetailsResource::collection($courses)->response()->getData(true);
 
     return $this->successWithPagination('Courses retrieved successfully.', $resource);
