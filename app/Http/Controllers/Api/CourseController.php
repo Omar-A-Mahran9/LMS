@@ -61,12 +61,14 @@ public function getCoursesByCategory(Request $request)
         $student = Auth::guard('api')->user();
 
         if ($filter === 'my') {
+            // فقط الكورسات اللي الطالب مشترك فيها
             $query->whereHas('students', function ($q) use ($student) {
                 $q->where('student_id', $student->id)
                   ->whereIn('course_student.status', ['approved', 'pending'])
                   ->where('course_student.is_active', 1);
             });
         } elseif ($filter === 'other') {
+            // فقط الكورسات اللي الطالب مش مشترك فيها
             $query->whereDoesntHave('students', function ($q) use ($student) {
                 $q->where('student_id', $student->id);
             });
@@ -78,6 +80,7 @@ public function getCoursesByCategory(Request $request)
 
     return $this->successWithPagination('Courses retrieved successfully.', $resource);
 }
+
 
 
 
