@@ -18,6 +18,13 @@ class ClassDetailsResource extends JsonResource
     public function toArray(Request $request): array
     {
         $studentId = $this->studentId;
+// Find next class in the same course
+$nextClass = $this->course
+    ? $this->course->classes()
+        ->where('id', '>', $this->id)
+        ->orderBy('id', 'asc')
+        ->first()
+    : null;
 
         $student = auth('api')->user();
         $activeQuiz = $this->quizzes()->where('is_active', true)->first();
@@ -73,6 +80,8 @@ class ClassDetailsResource extends JsonResource
 
         return [
             "id" => $this->id,
+            'next_class_id' => $nextClass?->id,
+
             'image' => $this->full_image_path,
             'title' => $this->title,
             'short_title'        => $this->short_title,
