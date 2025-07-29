@@ -227,6 +227,7 @@ public function startHomework(Request $request, $homeworkId)
             'homework_title' => $attempt->homework->title_en,
             'class_id' =>  $attempt->homework->class_id,
             'section_id'=> $attempt->homework->section_id,
+            'score_text' => "{$score}/{$total}",
 
             'score' => $score,
             'full_score' => $total,
