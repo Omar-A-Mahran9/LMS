@@ -170,7 +170,7 @@ class HomeController extends Controller
 
             ];
         // Combine and return
-$heroesByCategory = [Category::where('is_publish', 1)
+    $heroesByCategory = Category::where('is_publish', 1)
     ->whereNull('parent_id') // فقط التصنيفات الرئيسية
     ->with(['courses.classes.quizzes.attempts.student']) // eager load all necessary levels
     ->get()
@@ -181,28 +181,13 @@ $heroesByCategory = [Category::where('is_publish', 1)
             foreach ($course->classes as $class) {
                 foreach ($class->quizzes as $quiz) {
                     foreach ($quiz->attempts as $attempt) {
-                        $student = $attempt->student;
-
-                        // ✅ Skip if no student or clearly dummy data
-                        if (
-                            !$student ||
-                            !isset($student->id) ||
-                            str_contains(strtolower($student->name), 'test') ||
-                            str_contains(strtolower($student->name), 'demo') ||
-                            str_contains(strtolower($student->name), 'student') ||
-                            str_contains(strtolower($student->email ?? ''), 'test') ||
-                            str_contains(strtolower($student->email ?? ''), 'example')
-                        ) {
-                            continue;
-                        }
-
-                        $studentId = $student->id;
+                        $studentId = $attempt->student_id;
 
                         if (!isset($studentScores[$studentId])) {
                             $studentScores[$studentId] = [
                                 'total_score' => 0,
                                 'attempts' => 0,
-                                'student' => $student
+                                'student' => $attempt->student
                             ];
                         }
 
@@ -213,11 +198,7 @@ $heroesByCategory = [Category::where('is_publish', 1)
             }
         }
 
-        // ✅ Only include students with 2 or more attempts (optional, but recommended)
         $students = collect($studentScores)
-            ->filter(function ($data) {
-                return $data['attempts'] >= 2; // filter low-activity or test data
-            })
             ->map(function ($data) {
                 $data['average'] = $data['attempts'] > 0
                     ? $data['total_score'] / $data['attempts']
@@ -241,7 +222,7 @@ $heroesByCategory = [Category::where('is_publish', 1)
             }),
         ];
     });
-]
+
     $today = Carbon::today()->toDateString(); // أو ->now() لو فيه وقت
 
     $featured_courses = Course::where('is_active', 1)->where('is_enrollment_open', 1)
