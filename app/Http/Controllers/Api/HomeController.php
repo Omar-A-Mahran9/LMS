@@ -75,7 +75,7 @@ class HomeController extends Controller
                     : 0;
                 $full = $data['attempts'] * 100; // Adjust if quiz full mark is different
                 return [
-                    'name' => $data['student']->name,
+                    'name' => $data['student'],
                     'image' => $data['student']->full_image_path ,
                     'category' => $data['student']->category->name ?? 'N/A', // optional fallback
                     'average_score' => round($average, 2),
