@@ -73,7 +73,7 @@ class HomeController extends Controller
                 $average = $data['attempts'] > 0
                     ? $data['total_score'] / $data['attempts']
                     : 0;
-                $full = $data; // Adjust if quiz full mark is different
+                $full = $data['total_score']; // Adjust if quiz full mark is different
                 return [
                     'name' => $data['student']->first_name ." ". $data['student']->last_name,
                     'image' => $data['student']->full_image_path ,
