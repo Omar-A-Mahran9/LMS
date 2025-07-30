@@ -198,7 +198,7 @@ public function topHeroesByCategory(Request $request)
                 'attempts' => $item['attempts'],
                 'average_score' => round($item['average'], 2),
                 'percentage' => round($item['percentage'], 2),
-                'total_score' => $item['total_score'],
+                'full_score' => $item['total_score'],
                 'total_possible' => $item['total_possible'],
             ];
         });
