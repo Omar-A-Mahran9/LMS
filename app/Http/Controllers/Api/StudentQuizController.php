@@ -217,7 +217,7 @@ public function submitQuiz(Request $request, $quizAttemptId)
       } elseif ($question->type === 'short_answer') {
             $attemptAnswer->answer_text = $studentAnswer;
 
-            $correctAnswer = $question;
+            $correctAnswer = $question->expected_answer;
             dd($correctAnswer);
 
             if ($correctAnswer) {
