@@ -346,9 +346,20 @@ public function results($studentQuizId)
                     'answer' => $studentAnswerText,
                 ] : null;
 
-                if ($studentAnswerText && strtolower(trim($studentAnswerText)) === strtolower(trim($question->expected_answer))) {
+
+                  $correctAnswer = $question->expected_answer;
+        if ($correctAnswer) {
+            $normalizedStudent = $this->normalizeAnswer($studentAnswerText);
+            $normalizedCorrect = $this->normalizeAnswer($correctAnswer);
+
+            similar_text($normalizedStudent, $normalizedCorrect, $percent);
+
+            // dd($normalizedStudent, $normalizedCorrect, $percent);
+
+            if ($percent >= 80) {
                     $isCorrect = true;
-                }
+            }
+            }
             }
 
             $pointsAwarded = $isCorrect ? $question->points : 0;
@@ -357,7 +368,7 @@ public function results($studentQuizId)
             $results[] = [
                 'question_id'      => $question->id,
                 'question_type'      => $question->type,
-'answer_percent' => round($question->answer_percent) . '%',
+                'answer_percent' => round($question->answer_percent) . '%',
 
                 'question'         => $question->question,
                 'question_answers' => $question->answers->map(fn($ans) => [
