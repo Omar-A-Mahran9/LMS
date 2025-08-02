@@ -214,12 +214,20 @@ public function submitQuiz(Request $request, $quizAttemptId)
                     $score += $question->points;
                 }
             }
-        } elseif ($question->type === 'short_answer') {
+      } elseif ($question->type === 'short_answer') {
             $attemptAnswer->answer_text = $studentAnswer;
-            if ($this->checkAnswer($question, $studentAnswer)) {
-                $score += $question->points;
+
+            $correctAnswer = $question->answers->first()?->answer_en;
+
+            if ($correctAnswer) {
+                similar_text(strtolower(trim($studentAnswer)), strtolower(trim($correctAnswer)), $percent);
+
+                if ($percent >= 80) {
+                    $score += $question->points;
+                }
             }
         }
+
 
         $attempt->answers()->save($attemptAnswer);
     }

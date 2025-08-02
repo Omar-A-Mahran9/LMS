@@ -205,7 +205,6 @@ public function topHeroesByCategory(Request $request)
 
     return $this->success('', [
          'image'=>getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
-
         'topStudents' => $topStudents,
     ]);
 }
