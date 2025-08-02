@@ -226,7 +226,7 @@ public function submitQuiz(Request $request, $quizAttemptId)
 
             // dd($normalizedStudent, $normalizedCorrect, $percent);
 
-            if ($percent >= 80) {
+            if ($percent >= 90) {
                 $score += $question->points;
             }
 
@@ -356,7 +356,7 @@ public function results($studentQuizId)
 
             // dd($normalizedStudent, $normalizedCorrect, $percent);
 
-            if ($percent >= 80) {
+            if ($percent >= 90) {
                     $isCorrect = true;
             }
             }
