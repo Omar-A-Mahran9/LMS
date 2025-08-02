@@ -221,15 +221,16 @@ public function submitQuiz(Request $request, $quizAttemptId)
 
             if ($correctAnswer) {
                 similar_text(strtolower(trim($studentAnswer)), strtolower(trim($correctAnswer)), $percent);
-                dd(strtolower(trim($studentAnswer)),
-                strtolower(trim($correctAnswer)),
-                $percent,
-                similar_text(strtolower(trim($studentAnswer)), strtolower(trim($correctAnswer)), $percent)
-            );
+            //     dd(strtolower(trim($studentAnswer)),
+            //     strtolower(trim($correctAnswer)),
+            //     $percent,
+            //     similar_text(strtolower(trim($studentAnswer)), strtolower(trim($correctAnswer)), $percent)
+            // );
 
                 if ($percent >= 80) {
                     $score += $question->points;
                 }
+                $attemptAnswer->answer_percent=$percent;
             }
         }
 

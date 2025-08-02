@@ -73,6 +73,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('quiz_attempt_id')->constrained()->onDelete('cascade');
             $table->foreignId('quiz_question_id')->constrained()->onDelete('cascade');
+            $table->text('answer_percent')->nullable(); // for short answers
 
             $table->text('answer_text')->nullable(); // for short answers
             $table->foreignId('quiz_answer_id')->nullable()->constrained()->onDelete('set null'); // for MCQ
