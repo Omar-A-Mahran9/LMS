@@ -216,6 +216,7 @@ public function submitQuiz(Request $request, $quizAttemptId)
             }
       } elseif ($question->type === 'short_answer') {
             $attemptAnswer->answer_text = $studentAnswer;
+            dd($attemptAnswer->answer_text);
 
             $correctAnswer = $question->answers->first()?->answer_en;
 
