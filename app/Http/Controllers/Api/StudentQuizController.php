@@ -218,10 +218,10 @@ public function submitQuiz(Request $request, $quizAttemptId)
             $attemptAnswer->answer_text = $studentAnswer;
 
             $correctAnswer = $question->expected_answer;
-            dd($correctAnswer);
 
             if ($correctAnswer) {
                 similar_text(strtolower(trim($studentAnswer)), strtolower(trim($correctAnswer)), $percent);
+            dd( similar_text(strtolower(trim($studentAnswer)), strtolower(trim($correctAnswer)), $percent));
 
                 if ($percent >= 80) {
                     $score += $question->points;
