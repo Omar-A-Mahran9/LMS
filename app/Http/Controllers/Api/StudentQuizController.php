@@ -357,6 +357,7 @@ public function results($studentQuizId)
             $results[] = [
                 'question_id'      => $question->id,
                 'question_type'      => $question->type,
+                'answer_percent'      => $question->answer_percent,
 
                 'question'         => $question->question,
                 'question_answers' => $question->answers->map(fn($ans) => [
