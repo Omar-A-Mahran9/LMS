@@ -217,19 +217,19 @@ public function submitQuiz(Request $request, $quizAttemptId)
       } elseif ($question->type === 'short_answer') {
             $attemptAnswer->answer_text = $studentAnswer;
 
-            $correctAnswer = $question->expected_answer;
+                    $correctAnswer = $question->expected_answer;
+        if ($correctAnswer) {
+            $normalizedStudent = $this->normalizeAnswer($studentAnswer);
+            $normalizedCorrect = $this->normalizeAnswer($correctAnswer);
 
-            if ($correctAnswer) {
-                similar_text(strtolower(trim($studentAnswer)), strtolower(trim($correctAnswer)), $percent);
-                dd(strtolower(trim($studentAnswer)),
-                strtolower(trim($correctAnswer)),
-                $percent,
-                similar_text(strtolower(trim($studentAnswer)), strtolower(trim($correctAnswer)), $percent)
-            );
+            similar_text($normalizedStudent, $normalizedCorrect, $percent);
 
-                if ($percent >= 80) {
-                    $score += $question->points;
-                }
+            dd($normalizedStudent, $normalizedCorrect, $percent);
+
+            if ($percent >= 80) {
+                $score += $question->points;
+            }
+
                 $attemptAnswer->answer_percent=$percent;
             }
         }
@@ -390,6 +390,10 @@ public function results($studentQuizId)
 }
 
 
+function normalizeAnswer($text)
+{
+    return preg_replace('/[^a-z0-9]+/i', '', strtolower(trim($text)));
+}
 
 
 }
