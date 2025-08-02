@@ -217,14 +217,14 @@ public function submitQuiz(Request $request, $quizAttemptId)
       } elseif ($question->type === 'short_answer') {
             $attemptAnswer->answer_text = $studentAnswer;
 
-                    $correctAnswer = $question->expected_answer;
+            $correctAnswer = $question->expected_answer;
         if ($correctAnswer) {
             $normalizedStudent = $this->normalizeAnswer($studentAnswer);
             $normalizedCorrect = $this->normalizeAnswer($correctAnswer);
 
             similar_text($normalizedStudent, $normalizedCorrect, $percent);
 
-            dd($normalizedStudent, $normalizedCorrect, $percent);
+            // dd($normalizedStudent, $normalizedCorrect, $percent);
 
             if ($percent >= 80) {
                 $score += $question->points;
