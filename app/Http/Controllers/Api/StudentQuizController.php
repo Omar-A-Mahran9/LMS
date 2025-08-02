@@ -216,9 +216,9 @@ public function submitQuiz(Request $request, $quizAttemptId)
             }
       } elseif ($question->type === 'short_answer') {
             $attemptAnswer->answer_text = $studentAnswer;
-            dd($attemptAnswer->answer_text);
 
-            $correctAnswer = $question->answers->first()?->answer_en;
+            $correctAnswer = $question->answers->first()?->answer;
+            dd($correctAnswer);
 
             if ($correctAnswer) {
                 similar_text(strtolower(trim($studentAnswer)), strtolower(trim($correctAnswer)), $percent);
