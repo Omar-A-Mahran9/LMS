@@ -364,11 +364,11 @@ public function results($studentQuizId)
 
             $pointsAwarded = $isCorrect ? $question->points : 0;
             $totalScore += $pointsAwarded;
-
+dd($question);
             $results[] = [
                 'question_id'      => $question->id,
                 'question_type'      => $question->type,
-                'answer_percent' => $question->answer_percent . '%',
+                'answer_percent' => round($question->answer_percent) . '%',
 
                 'question'         => $question->question,
                 'question_answers' => $question->answers->map(fn($ans) => [
