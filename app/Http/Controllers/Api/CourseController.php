@@ -478,10 +478,6 @@ public function getprivacypolicy()
     return $this->success('', $data);
 }
 
-
-
-
-
 public function getCourses(Request $request)
 {
     $perPage = $request->query('per_page', 10);
@@ -597,5 +593,14 @@ public function getRatesForCourse($course_id)
 
 }
 
+public function getAllClasses(Request $request)
+{
+    $perPage = $request->query('per_page', 10);
 
+    $classes = CourseClass::where('is_active', 1)
+        ->with('course') // optional: load related course
+        ->paginate($perPage);
+
+    return $this->successWithPagination('', ClassesDetailsResource::collection($classes)->response()->getData(true));
+}
 }

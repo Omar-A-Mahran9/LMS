@@ -36,6 +36,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('student_rates_for_course', 'CourseController@storerate');
     Route::get('videos_by_course/{id}', 'CourseController@getVideosBySections');
     Route::get('check_course/{id}', 'CourseController@checkCourseAccess');
+    Route::get('all_classes', 'CourseController@getAllClasses');
 
     Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
     Route::post('videos/{video}/watch', 'CourseController@logWatch');
