@@ -30,13 +30,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
         Route::get('certificate/{id}', [CertificateController::class, 'publicDownload'])
     ->name('certificate.public');
+        Route::get('all_classes', 'CourseController@getAllClasses');
+
 Route::middleware(['auth:api'])->group(function () {
     Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');
     Route::get('get_rates_for_course/{course_id}', 'CourseController@getRatesForCourse');
     Route::post('student_rates_for_course', 'CourseController@storerate');
     Route::get('videos_by_course/{id}', 'CourseController@getVideosBySections');
     Route::get('check_course/{id}', 'CourseController@checkCourseAccess');
-    Route::get('all_classes', 'CourseController@getAllClasses');
 
     Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
     Route::post('videos/{video}/watch', 'CourseController@logWatch');
