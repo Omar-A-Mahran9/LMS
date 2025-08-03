@@ -105,7 +105,9 @@ public function quizzesResults(Request $request)
 
             $bestAttempt = $attempts->sortByDesc('score')->first();
             $latestAttempt = $attempts->sortByDesc('started_at')->first();
-
+   $finalAttempt = $bestAttempt && $bestAttempt->submitted_at
+                ? $bestAttempt
+                : $latestAttempt;
             $totalPoints = $quiz->questions->sum('points') ?: 1;
 
             $bestScore = $bestAttempt?->score;
@@ -122,8 +124,9 @@ public function quizzesResults(Request $request)
                 'attempt_count'    => $attempts->count(),
                 'score'            =>   $bestScore? $bestScore . ' / ' . $totalPoints : __("Not found") ,
                 'score_percentage' =>$percentage? $percentage .'%':__("Not found"),
-                'last_attempt_at' => optional($latestAttempt?->started_at)?->format('Y-m-d h:i A'),
-                'is_submitted'     => $latestAttempt?->submitted_at !== null,
+                'last_attempt_at'  => optional($latestAttempt?->started_at)?->format('Y-m-d h:i A'),
+                'is_submitted'     => $finalAttempt?->submitted_at !== null,
+
             ];
         });
 
