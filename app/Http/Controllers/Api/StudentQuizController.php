@@ -364,7 +364,7 @@ public function results($studentQuizId)
 
             $pointsAwarded = $isCorrect ? $question->points : 0;
             $totalScore += $pointsAwarded;
-dd($$attempt);
+dd($studentAnswer);
             $results[] = [
                 'question_id'      => $question->id,
                 'question_type'      => $question->type,
