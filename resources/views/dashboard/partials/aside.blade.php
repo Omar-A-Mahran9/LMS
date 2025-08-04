@@ -117,9 +117,9 @@
                     </x-dashboard.aside-item>
                 @endcan
 
-                @can('view_books')
-                    <x-dashboard.aside-item :slug="'books'" :route="route('dashboard.books.index')" :title="__('Books')">
-                        <i class="ki-outline ki-book fs-2"></i>
+                @can('view_generateCode')
+                    <x-dashboard.aside-item :slug="'generateCode'" :route="route('dashboard.generateCode.index')" :title="__('Generate Code')">
+                        <i class="ki-outline ki-code fs-2"></i>
                     </x-dashboard.aside-item>
                 @endcan
 

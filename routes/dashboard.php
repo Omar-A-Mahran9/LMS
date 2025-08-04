@@ -53,6 +53,8 @@ Route::get('quizzes/{quiz}/has-passages', [QuizController::class, 'hasPassages']
   Route::resource('sections', 'SectionController')->except(['create', 'edit']);
 
  Route::resource('books', 'BookController')->except(['create', 'edit']);
+  Route::resource('generate_code', 'BookController')->except(['create', 'edit']);
+
  Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
  Route::resource('classes.quizzes', QuizByClassController::class);
   Route::resource('sections.quizzes', QuizBySectionController::class);

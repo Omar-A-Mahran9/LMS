@@ -36,6 +36,8 @@ class Role extends Model
         'sections',
 
         'videos',
+        
+        'generateCode',
 
         'quizzes',
 

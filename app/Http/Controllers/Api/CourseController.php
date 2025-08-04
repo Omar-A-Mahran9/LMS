@@ -619,12 +619,12 @@ public function access(Request $request)
         ->first();
 
     if (!$code) {
-        return response()->json(['status' => false, 'message' => 'Invalid or inactive code'], 403);
+        return response()->json(['status' => false, 'message' => __('Invalid or inactive code')], 403);
     }
 
     // Check usage
     if ($code->single_use && $code->used_count >= 1) {
-        return response()->json(['status' => false, 'message' => 'This code has already been used'], 403);
+        return response()->json(['status' => false, 'message' => __('This code has already been used')], 403);
     }
 
     if ($code->usage_limit && $code->used_count >= $code->usage_limit) {
