@@ -231,6 +231,7 @@ public function getVideosByClass($id)
     }
 
     // Check if student is enrolled in the course
+    if($studentId ){
     $course = Course::where('id', $class->course_id)
         ->where('is_active', 1)
         ->whereHas('enrollments', function ($q) use ($studentId) {
@@ -250,7 +251,7 @@ public function getVideosByClass($id)
         $class->increment('views');
         Cache::put($cacheKey, true, now()->addHours(6));
     }
-
+}
     // Eager load videos and student progress
     $videos = $class->videos()
         ->where('is_active', 1)
