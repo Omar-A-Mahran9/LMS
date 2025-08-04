@@ -629,7 +629,7 @@ public function access(Request $request)
     }
 
     if ($code->usage_limit && $code->used_count >= $code->usage_limit) {
-        return $this->failure( __('Usage limit exceeded'));
+        return $this->failure( __('This access code has expired or reached its usage limit.'));
      }
 
     // // Log access
