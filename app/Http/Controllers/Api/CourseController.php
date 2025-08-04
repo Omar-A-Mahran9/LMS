@@ -609,7 +609,7 @@ public function getAllClasses(Request $request)
 public function access(Request $request)
 {
     $request->validate([
-        'class_id' => 'required|exists:course_classes,id',
+        'class_id' => 'required|exists:classes,id',
         'code' => 'required|string',
     ]);
 
