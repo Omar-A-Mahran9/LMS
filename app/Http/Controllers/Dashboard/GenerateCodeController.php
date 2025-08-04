@@ -17,9 +17,9 @@ class GenerateCodeController extends Controller
 
         if ($request->ajax()) {
             // Return JSON data for AJAX requests
-            return response()->json(getModelData(model: new ClassAccessCode()));
+            return response()->json(getModelData(model: new ClassAccessCode(),relations: ['class' => ['id', 'title_ar','title_en' ]]));
         } else {
-    $classes = CourseClass::where('is_active', 1)->get();
+            $classes = CourseClass::where('is_active', 1)->get();
             // Return the main view with data
             return view('dashboard.codes.index',compact('classes'));
         }
