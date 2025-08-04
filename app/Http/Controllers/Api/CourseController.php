@@ -712,7 +712,7 @@ public function getVideosByClassCode(Request $request, $id)
             $accessCode->increment('used_count');
                 ClassAccessLog::create([
         'student_id' => auth('api')->id(), // or null if not logged in
-        'class_id' => $request->class_id,
+        'class_id' => $class->id,
         'access_code' => $request->code,
         'device_ip' => $request->ip(),
         'user_agent' => $request->userAgent(),
