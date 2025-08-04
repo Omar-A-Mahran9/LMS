@@ -603,4 +603,40 @@ public function getAllClasses(Request $request)
 
     return $this->successWithPagination('', ClassesDetailsResource::collection($classes)->response()->getData(true));
 }
+
+public function accessClass(Request $request)
+{
+    $classId = $request->input('class_id');
+
+    $class = CourseClass::where('is_active', 1)->find($classId);
+    if (!$class) {
+        return $this->failure('Class not found or unpublished');
+    }
+
+    // ✅ تحديد هوية الشخص الزائر
+    $student = auth()->user(); // مستخدم إن وجد
+    $identifier = $student ? 'student_' . $student->id : 'guest_' . $request->ip();
+
+    // ✅ استخدم cache لتحديد ما إذا سبق له مشاهدة الحصة
+    $cacheKey = "class_viewed_{$classId}_{$identifier}";
+    if (!Cache::has($cacheKey)) {
+        // 🟢 إذا لم يشاهدها من قبل
+        Cache::put($cacheKey, true, now()->addDays(1)); // مشاهدته تستمر يوم مثلاً
+
+        if ($student) {
+            // إذا كان مسجل دخوله، سجل حضوره في الجدول
+            ClassStudent::firstOrCreate([
+                'student_id' => $student->id,
+                'class_id' => $class->id,
+            ]);
+        }
+
+        // 🟢 زيادة العداد
+        $class->increment('views');
+    }
+
+    return $this->success('Accessed class', new ClassDetailsResource($class, optional($student)->id));
+}
+
+
 }
