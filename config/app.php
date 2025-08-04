@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://admin.mohamed-elnagar.com'),
 
     'asset_url' => env('ASSET_URL'),
     'oto_refresh_token' => env('OTO_REFRESH_TOKEN', 'default_value_if_not_set'),
