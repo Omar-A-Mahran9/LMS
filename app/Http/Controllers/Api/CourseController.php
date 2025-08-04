@@ -15,6 +15,8 @@ use App\Http\Resources\Api\VideoResource;
 
 
 use App\Models\Category;
+use App\Models\ClassAccessCode;
+use App\Models\ClassAccessLog;
 use App\Models\ClassStudent;
 use App\Models\CommonQuestion;
 use App\Models\Course;
@@ -604,36 +606,35 @@ public function getAllClasses(Request $request)
     return $this->successWithPagination('', ClassesDetailsResource::collection($classes)->response()->getData(true));
 }
 
-public function accessClass(Request $request)
+public function accessClassViaCode(Request $request)
 {
-    $classId = $request->input('class_id');
+    $request->validate([
+        'class_id' => 'required|exists:course_classes,id',
+        'access_code' => 'required|string'
+    ]);
 
-    $class = CourseClass::where('is_active', 1)->find($classId);
-    if (!$class) {
-        return $this->failure('Class not found or unpublished');
+    $class = CourseClass::findOrFail($request->class_id);
+    $code = ClassAccessCode::where('class_id', $class->id)
+                ->where('code', $request->access_code)
+                ->first();
+
+    if (!$code || !$code->canBeUsed()) {
+        return response()->json(['message' => 'Invalid or expired code'], 403);
     }
 
-    $student = auth()->user();
-    $identifier = $student ? 'student_' . $student->id : 'guest_' . $request->ip();
-    $cacheKey = "class_viewed_{$classId}_{$identifier}";
+    // سجل الاستخدام
+    ClassAccessLog::create([
+        'student_id' => auth()->id(),
+        'class_id' => $class->id,
+        'access_code' => $code->code,
+        'device_ip' => $request->ip(),
+        'used' => true,
+        'used_at' => now(),
+    ]);
 
-    if (Cache::has($cacheKey)) {
-        return $this->failure('You have already accessed this class');
-    }
+    $code->increment('used_count');
 
-    // أول مرة يشوف الحصة
-    Cache::put($cacheKey, true, now()->addDays(1)); // يمنعه لمدة يوم
-
-    if ($student) {
-        ClassStudent::firstOrCreate([
-            'student_id' => $student->id,
-            'class_id' => $class->id,
-        ]);
-    }
-
-    $class->increment('views');
-
-    return $this->success('Accessed class', new ClassDetailsResource($class, optional($student)->id));
+    return response()->json(['message' => 'Access granted', 'class' => new ClassDetailsResource($class)]);
 }
 
 
