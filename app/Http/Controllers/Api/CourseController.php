@@ -705,7 +705,7 @@ public function getVideosByClassCode(Request $request, $id)
                 ($accessCode->single_use && $accessCode->used_count >= 1) ||
                 ($accessCode->usage_limit !== null && $accessCode->used_count >= $accessCode->usage_limit)
             ) {
-                return $this->failure('This access code has expired or reached its usage limit.');
+                return $this->failure(__('This access code has expired or reached its usage limit.'));
             }
 
             // Increment usage count
