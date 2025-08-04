@@ -710,6 +710,14 @@ public function getVideosByClassCode(Request $request, $id)
 
             // Increment usage count
             $accessCode->increment('used_count');
+                ClassAccessLog::create([
+        'student_id' => auth('api')->id(), // or null if not logged in
+        'class_id' => $request->class_id,
+        'access_code' => $request->code,
+        'device_ip' => $request->ip(),
+        'user_agent' => $request->userAgent(),
+        'used_at' => now(),
+    ]);
             $isAuthorized = true;
         } else {
             return $this->failure('Invalid or inactive access code.');
