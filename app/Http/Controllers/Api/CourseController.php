@@ -231,7 +231,6 @@ public function getVideosByClass($id)
     }
 
     // Check if student is enrolled in the course
-    if($studentId ){
     $course = Course::where('id', $class->course_id)
         ->where('is_active', 1)
         ->whereHas('enrollments', function ($q) use ($studentId) {
@@ -251,7 +250,7 @@ public function getVideosByClass($id)
         $class->increment('views');
         Cache::put($cacheKey, true, now()->addHours(6));
     }
-}
+
     // Eager load videos and student progress
     $videos = $class->videos()
         ->where('is_active', 1)
@@ -654,7 +653,70 @@ return $this->success('', [
 
 }
 
+public function getVideosByClassCode($id)
+{
+    $studentId = Auth::id();
+    $student = Auth::user();
 
+    // Fetch class and check if it's active
+    $class = CourseClass::where('id', $id)
+        ->where('is_active', 1)
+        ->first();
+
+    if (!$class) {
+        return $this->failure('Class not found or unpublished');
+    }
+
+    // Check if student is enrolled in the course
+    if($studentId ){
+    $course = Course::where('id', $class->course_id)
+        ->where('is_active', 1)
+        ->whereHas('enrollments', function ($q) use ($studentId) {
+            $q->where('student_id', $studentId)
+              ->where('status', 'approved')
+              ->where('is_active', 1);
+        })
+        ->first();
+
+    if (!$course) {
+        return $this->failure('Course not found or unauthorized.');
+    }
+
+    // Optionally track class view (like section)
+    $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
+    if (!Cache::has($cacheKey)) {
+        $class->increment('views');
+        Cache::put($cacheKey, true, now()->addHours(6));
+    }
+}
+    // Eager load videos and student progress
+    $videos = $class->videos()
+        ->where('is_active', 1)
+        ->with(['studentProgress' => function ($query) use ($studentId) {
+            $query->where('student_id', $studentId);
+        }])
+        ->get();
+
+    // Format each video using the resource
+
+
+    return $this->success('Class videos loaded', [
+        // 'course_data' => [
+        //     'course_id'           => $course->id,
+        //     'course_title'        => $course->title,
+        //     'has_certificate'     => $course->certificate_available,
+        //     'certificate_url'     => $course->certificate_available
+        //         ? getOrGeneratePublicCertificateUrl($student, $course)
+        //         : null,
+        //     'is_completed'        => $course->is_completed,
+        //     'progress_percentage' => $course->progress_percentage,
+        //     'has_rated'           => Student_rate::where('course_id', $course->id)
+        //         ->where('student_id', $studentId)
+        //         ->exists(),
+        // ],
+        'class_data' =>new ClassDetailsResource($class, $studentId),
+    ]);
+}
 
 
 }
