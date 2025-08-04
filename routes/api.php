@@ -30,9 +30,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
         Route::get('certificate/{id}', [CertificateController::class, 'publicDownload'])
     ->name('certificate.public');
-        Route::get('all_classes', 'CourseController@getAllClasses');
-    Route::post('access_class', 'CourseController@access');
-    Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
 
 Route::middleware(['auth:api'])->group(function () {
     Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');
@@ -76,6 +73,9 @@ Route::middleware(['auth:api'])->group(function () {
 Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
     Route::get('/courses/{id}/sections/count', [SectionController::class, 'countSectionByCourse']);
+    Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
+   Route::get('all_classes', 'CourseController@getAllClasses');
+    Route::post('access_class', 'CourseController@access');
 
 
     Route::post('login', 'Auth\AuthController@login');
