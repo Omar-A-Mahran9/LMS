@@ -25,7 +25,7 @@ var KTDatatablesServerSide = (function () {
                 { data: "id" }, // Checkbox
                 { data: "code" }, // Code
                 { data: "class.title" }, // Class
-                { data: "usage_limit" }, // Usage Limit
+                { data: "usage_limit" ?? "-" }, // Usage Limit
                 { data: "used_count" }, // Used Count
                 { data: "is_single_use" }, // Single Use
                 { data: "is_active" }, // Active
