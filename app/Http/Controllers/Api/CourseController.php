@@ -660,7 +660,7 @@ public function access(Request $request)
 
 
 return $this->success('', [
-    'class_url' => config('app.url') . '/api/videos_by_classes/' . $request->class_id,
+    'class_url' => config('app.url') . '/api/videos_by_classes_with_code/' . $request->class_id,
 ]);
 
 
