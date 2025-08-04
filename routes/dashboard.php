@@ -53,7 +53,7 @@ Route::get('quizzes/{quiz}/has-passages', [QuizController::class, 'hasPassages']
   Route::resource('sections', 'SectionController')->except(['create', 'edit']);
 
  Route::resource('books', 'BookController')->except(['create', 'edit']);
-  Route::resource('generate_code', 'BookController')->except(['create', 'edit']);
+  Route::resource('generateCode', 'GenerateCodeController')->except(['create', 'edit']);
 
  Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
  Route::resource('classes.quizzes', QuizByClassController::class);
@@ -65,16 +65,11 @@ Route::get('quizzes/{quiz}/has-passages', [QuizController::class, 'hasPassages']
  Route::resource('homeworks', 'HomeWorkController')->except(['create', 'edit']);
  Route::resource('questions', 'QuestionController')->except(['create', 'edit']);
  Route::resource('homeworks-questions', 'HomeWorkQuestionController')->except(['create', 'edit']);
- Route::resource('whyus', 'WhyusController')->except(['create', 'edit']);
- Route::resource('howuse', 'HowuseController')->except(['create', 'edit']);
- Route::resource('CommonQuestion', 'CommonQuestionController')->except(['create', 'edit']);
+  Route::resource('CommonQuestion', 'CommonQuestionController')->except(['create', 'edit']);
 /** begin resources routes **/
  Route::resource('admins', 'AdminController')->except(['create', 'edit']);
 Route::resource('booking', 'BookingController')->except(['create', 'edit']);
 Route::resource('brands', 'BrandController')->except(['create', 'edit']);
-Route::resource('award', 'BrandController')->except(['create', 'edit']);
-Route::resource('partner', 'PartenerController')->except(['create', 'edit']);
-Route::resource('gallary', 'GallaryController')->except(['create', 'edit']);
 Route::resource('enrollments', 'EnrollmentController')->except(['create', 'edit']);
 Route::resource('orders', 'OrderController')->except(['create', 'edit']);
 

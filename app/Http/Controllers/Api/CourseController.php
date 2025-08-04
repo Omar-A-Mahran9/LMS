@@ -619,17 +619,18 @@ public function access(Request $request)
         ->first();
 
     if (!$code) {
-        return response()->json(['status' => false, 'message' => __('Invalid or inactive code')], 403);
+         return $this->failure( __('Invalid or inactive code'));
     }
 
     // Check usage
     if ($code->single_use && $code->used_count >= 1) {
-        return response()->json(['status' => false, 'message' => __('This code has already been used')], 403);
+                  return $this->failure( __('This code has already been used'));
+
     }
 
     if ($code->usage_limit && $code->used_count >= $code->usage_limit) {
-        return response()->json(['status' => false, 'message' => 'Usage limit exceeded'], 403);
-    }
+        return $this->failure( __('Usage limit exceeded'));
+     }
 
     // Log access
     ClassAccessLog::create([
@@ -644,11 +645,12 @@ public function access(Request $request)
     // Increment counter
     $code->increment('used_count');
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Access granted',
-        'class_url' => 'https://your-domain.com/live-class/' . $request->class_id, // adjust as needed
+
+    return $this->success('', [
+        'class_url' => '
+https://admin.mohamed-elnagar.com/api/videos_by_classes/' . $request->class_id,
     ]);
+
 }
 
 
