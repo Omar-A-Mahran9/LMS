@@ -613,30 +613,29 @@ public function accessClass(Request $request)
         return $this->failure('Class not found or unpublished');
     }
 
-    // ✅ تحديد هوية الشخص الزائر
-    $student = auth()->user(); // مستخدم إن وجد
+    $student = auth()->user();
     $identifier = $student ? 'student_' . $student->id : 'guest_' . $request->ip();
-
-    // ✅ استخدم cache لتحديد ما إذا سبق له مشاهدة الحصة
     $cacheKey = "class_viewed_{$classId}_{$identifier}";
-    if (!Cache::has($cacheKey)) {
-        // 🟢 إذا لم يشاهدها من قبل
-        Cache::put($cacheKey, true, now()->addDays(1)); // مشاهدته تستمر يوم مثلاً
 
-        if ($student) {
-            // إذا كان مسجل دخوله، سجل حضوره في الجدول
-            ClassStudent::firstOrCreate([
-                'student_id' => $student->id,
-                'class_id' => $class->id,
-            ]);
-        }
-
-        // 🟢 زيادة العداد
-        $class->increment('views');
+    if (Cache::has($cacheKey)) {
+        return $this->failure('You have already accessed this class');
     }
+
+    // أول مرة يشوف الحصة
+    Cache::put($cacheKey, true, now()->addDays(1)); // يمنعه لمدة يوم
+
+    if ($student) {
+        ClassStudent::firstOrCreate([
+            'student_id' => $student->id,
+            'class_id' => $class->id,
+        ]);
+    }
+
+    $class->increment('views');
 
     return $this->success('Accessed class', new ClassDetailsResource($class, optional($student)->id));
 }
+
 
 
 }
