@@ -646,10 +646,10 @@ public function access(Request $request)
     $code->increment('used_count');
 
 
-    return $this->success('', [
-        'class_url' => '
-https://admin.mohamed-elnagar.com/api/videos_by_classes/' . $request->class_id,
-    ]);
+return $this->success('', [
+    'class_url' => config('app.url') . '/api/videos_by_classes/' . $request->class_id,
+]);
+
 
 }
 
