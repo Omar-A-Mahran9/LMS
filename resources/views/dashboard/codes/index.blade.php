@@ -1,4 +1,5 @@
 @extends('dashboard.partials.master')
+
 @push('styles')
     <link href="{{ asset('assets/dashboard/css/datatables' . (isDarkMode() ? '.dark' : '') . '.bundle.css') }}"
         rel="stylesheet" type="text/css" />
@@ -6,53 +7,37 @@
         href="{{ asset('assets/dashboard/plugins/custom/datatables/datatables.bundle' . (isArabic() ? '.rtl' : '') . '.css') }}"
         rel="stylesheet" type="text/css" />
 @endpush
+
 @section('content')
     <div class="card mb-5 mb-x-10">
-        <!--begin::Card header-->
         <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
             data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
-            <!--begin::Card title-->
             <div class="card-title m-0">
-                <h3 class="fw-bold m-0">{{ __('Books list') }}</h3>
+                <h3 class="fw-bold m-0">{{ __('Access Codes List') }}</h3>
             </div>
-            <!--end::Card title-->
 
             <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
-
-                <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end w-100" id="add_btn" data-bs-toggle="modal"
                     data-bs-target="#crud_modal" data-kt-docs-table-toolbar="base">
-                    <!--begin::Add customer-->
-                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
-                        data-bs-original-title="Coming Soon" data-kt-initialized="1">
-                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
+                    <button type="button" class="btn btn-primary w-100">
                         <span class="svg-icon svg-icon-2">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1"
-                                    transform="rotate(-90 11.364 20.364)" fill="currentColor">
-                                </rect>
+                                    transform="rotate(-90 11.364 20.364)" fill="currentColor"></rect>
                                 <rect x="4.36396" y="11.364" width="16" height="2" rx="1"
                                     fill="currentColor"></rect>
                             </svg>
                         </span>
-                        <!--end::Svg Icon-->{{ __('Add new book') }}
+                        {{ __('Add Access Code') }}
                     </button>
-                    <!--end::Add customer-->
                 </div>
-                <!--end::Toolbar-->
-
             </div>
-            <!--end::Info-->
         </div>
-        <!--begin::Card header-->
-        <!--begin::Content-->
+
         <div class="card-body">
-            <!--begin::Wrapper-->
             <div class="d-flex flex-stack flex-wrap mb-5">
-                <!--begin::Search-->
                 <div class="d-flex align-items-center position-relative my-1 mb-2 mb-md-0">
-                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
                     <span class="svg-icon svg-icon-1 position-absolute ms-6">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -63,85 +48,72 @@
                                 fill="currentColor"></path>
                         </svg>
                     </span>
-                    <!--end::Svg Icon-->
                     <input type="text" data-kt-docs-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Books') }}">
+                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Search Access Codes') }}">
                 </div>
-                <!--end::Search-->
 
-                <!--begin::Group actions-->
                 <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
                     <div class="fw-bold me-5">
-                        <span class="me-2" data-kt-docs-table-select="selected_count"></span>{{ __('Selected item') }}
+                        <span class="me-2" data-kt-docs-table-select="selected_count"></span>{{ __('Selected') }}
                     </div>
                     <button type="button" class="btn btn-danger"
-                        data-kt-docs-table-select="delete_selected">{{ __('delete') }}</button>
+                        data-kt-docs-table-select="delete_selected">{{ __('Delete') }}</button>
                 </div>
-                <!--end::Group actions-->
             </div>
-            <!--end::Wrapper-->
 
-            <!--begin::Datatable-->
             <table id="kt_datatable" class="table align-middle text-center table-row-dashed fs-6 gy-5">
                 <thead>
-                    <tr class=" text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                    <tr class="text-gray-400 fw-bold fs-7 text-uppercase gs-0">
                         <th class="w-10px pe-2">
                             <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                                 <input class="form-check-input" type="checkbox" data-kt-check="true"
                                     data-kt-check-target="#kt_datatable .form-check-input" value="1" />
                             </div>
                         </th>
-                        <th>{{ __('Title') }}</th>
-                        <th>{{ __('Image') }}</th>
-
-                        <th>{{ __('Status') }}</th>
-                        <th>{{ __('Created at') }}</th>
-
-
-                        <th class=" min-w-100px">{{ __('Actions') }}</th>
+                        <th>{{ __('Code') }}</th>
+                        <th>{{ __('Class') }}</th>
+                        <th>{{ __('Usage Limit') }}</th>
+                        <th>{{ __('Used Count') }}</th>
+                        <th>{{ __('Single Use') }}</th>
+                        <th>{{ __('Active') }}</th>
+                        <th>{{ __('Created At') }}</th>
+                        <th class="min-w-100px">{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold">
                 </tbody>
             </table>
-            <!--end::Datatable-->
         </div>
-        <!--end::Content-->
     </div>
 
     <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.generateCode.store') }}" method="post"
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
-
         <div class="modal fade" tabindex="-1" id="crud_modal">
             <div class="modal-dialog modal-md modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="form_title">{{ __('Add Access Code') }}</h5>
                         <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                            aria-label="Close">
-                            <i class="ki-outline ki-cross fs-1"></i>
-                        </div>
+                            aria-label="Close"><i class="ki-outline ki-cross fs-1"></i></div>
                     </div>
 
                     <div class="modal-body">
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <label for="class_id" class="form-label">{{ __('Class') }}</label>
-                                <select name="class_id" id="class_id" class="form-select">
-                                    @foreach ($classes as $class)
-                                        <option value="{{ $class->id }}">{{ $class->title }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="invalid-feedback" id="class_id_error"></div>
-                            </div>
+                        <div class="mb-4">
+                            <label for="class_id" class="form-label">{{ __('Class') }}</label>
+                            <select name="class_id" id="class_id" class="form-select">
+                                @foreach ($classes as $class)
+                                    <option value="{{ $class->id }}">{{ $class->title }}</option>
+                                @endforeach
+                            </select>
+                            <div class="invalid-feedback" id="class_id_error"></div>
                         </div>
 
                         <div class="row mb-4">
                             <div class="col-8">
                                 <label for="code" class="form-label">{{ __('Access Code') }}</label>
                                 <input type="text" name="code" id="code" class="form-control"
-                                    placeholder="{{ __('Leave empty to auto-generate') }}">
+                                    placeholder="{{ __('Leave blank to auto-generate') }}">
                                 <div class="invalid-feedback" id="code_error"></div>
                             </div>
 
@@ -159,7 +131,7 @@
                             <div class="col-6">
                                 <label for="usage_limit" class="form-label">{{ __('Usage Limit') }}</label>
                                 <input type="number" name="usage_limit" id="usage_limit" class="form-control"
-                                    min="1" placeholder="{{ __('Leave empty for unlimited') }}">
+                                    min="1" placeholder="{{ __('Leave blank for unlimited') }}">
                                 <div class="invalid-feedback" id="usage_limit_error"></div>
                             </div>
 
@@ -180,8 +152,7 @@
                         <button type="submit" class="btn btn-primary">
                             <span class="indicator-label">{{ __('Save') }}</span>
                             <span class="indicator-progress">
-                                {{ __('Please wait...') }} <span
-                                    class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                {{ __('Please wait...') }} <span class="spinner-border spinner-border-sm ms-2"></span>
                             </span>
                         </button>
                     </div>
@@ -190,74 +161,23 @@
         </div>
     </form>
 @endsection
+
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/books.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/access_codes.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
-    <script>
-        $(document).ready(() => {
-
-            initTinyMc();
-
-        });
-    </script>
-    <script>
-        function toggleDiscountFields() {
-            const isFree = $('#is_free_switch').is(':checked');
-            const hasDiscount = $('#have_discount_switch').is(':checked');
-
-            $('#price_inp').prop('disabled', isFree);
-            $('#have_discount_switch').prop('disabled', isFree);
-            $('#discount_percentage_inp').prop('disabled', isFree || !hasDiscount);
-        }
-
-        $(document).ready(function() {
-            toggleDiscountFields();
-
-            $('#is_free_switch, #have_discount_switch').on('change', function() {
-                toggleDiscountFields();
-            });
-        });
-    </script>
 
     <script>
         $(document).ready(function() {
             $("#add_btn").click(function(e) {
                 e.preventDefault();
-
-                // Remove method override inputs (_method) used for PUT/PATCH on edit
                 $("[title='_method']").remove();
-
-                // Reset the form fields
                 $("#crud_form")[0].reset();
-
-
-                // Reset image previews to placeholder (assuming your image wrapper has this class)
-                $('.image-input-wrapper').css('background-image', "url('/placeholder_images/default.svg')");
-
                 $("#crud_form").find('.invalid-feedback').text('');
                 $("#crud_form").find('.is-invalid').removeClass('is-invalid');
-
-                // Reset TinyMCE editors content if present
-                if (typeof tinymce !== 'undefined') {
-                    tinymce.editors.forEach(editor => editor.setContent(''));
-                }
-
-                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#is_active_switch", "#is_preview_switch", "#quiz_required_switch")
-                    .prop('checked', false);
-
                 $("#crud_form").attr('action', "{{ route('dashboard.generateCode.store') }}");
-
-                // Reset modal title
-                $("#form_title").text("{{ __('Add new book') }}");
-
-                // Optionally, reset date inputs
-                $("#start_date_inp, #end_date_inp").val('');
-
-                // Open modal if you want to show it on "Add"
+                $("#form_title").text("{{ __('Add Access Code') }}");
                 $("#crud_modal").modal('show');
             });
         });

@@ -606,52 +606,52 @@ public function getAllClasses(Request $request)
     return $this->successWithPagination('', ClassesDetailsResource::collection($classes)->response()->getData(true));
 }
 
-// public function access(Request $request)
-// {
-//     $request->validate([
-//         'class_id' => 'required|exists:classes,id',
-//         'code' => 'required|string',
-//     ]);
+public function access(Request $request)
+{
+    $request->validate([
+        'class_id' => 'required|exists:classes,id',
+        'code' => 'required|string',
+    ]);
 
-//     $code = ClassAccessCode::where('class_id', $request->class_id)
-//         ->where('code', $request->code)
-//         ->where('is_active', true)
-//         ->first();
+    $code = ClassAccessCode::where('class_id', $request->class_id)
+        ->where('code', $request->code)
+        ->where('is_active', true)
+        ->first();
 
-//     if (!$code) {
-//          return $this->failure( __('Invalid or inactive code'));
-//     }
+    if (!$code) {
+         return $this->failure( __('Invalid or inactive code'));
+    }
 
-//     // Check usage
-//     if ($code->single_use && $code->used_count >= 1) {
-//                   return $this->failure( __('This code has already been used'));
+    // Check usage
+    if ($code->single_use && $code->used_count >= 1) {
+                  return $this->failure( __('This code has already been used'));
 
-//     }
+    }
 
-//     if ($code->usage_limit && $code->used_count >= $code->usage_limit) {
-//         return $this->failure( __('Usage limit exceeded'));
-//      }
+    if ($code->usage_limit && $code->used_count >= $code->usage_limit) {
+        return $this->failure( __('Usage limit exceeded'));
+     }
 
-//     // Log access
-//     ClassAccessLog::create([
-//         'student_id' => auth('api')->id(), // or null if not logged in
-//         'class_id' => $request->class_id,
-//         'access_code' => $request->code,
-//         'device_ip' => $request->ip(),
-//         'user_agent' => $request->userAgent(),
-//         'used_at' => now(),
-//     ]);
+    // // Log access
+    // ClassAccessLog::create([
+    //     'student_id' => auth('api')->id(), // or null if not logged in
+    //     'class_id' => $request->class_id,
+    //     'access_code' => $request->code,
+    //     'device_ip' => $request->ip(),
+    //     'user_agent' => $request->userAgent(),
+    //     'used_at' => now(),
+    // ]);
 
-//     // Increment counter
-//     $code->increment('used_count');
-
-
-// return $this->success('', [
-//     'class_url' => env('APP_URL') . '/api/videos_by_classes_with_code/' . $request->class_id,
-// ]);
+    // // Increment counter
+    // $code->increment('used_count');
 
 
-// }
+return $this->success('successfully code', [
+    // 'class_url' => env('APP_URL') . '/api/videos_by_classes_with_code/' . $request->class_id,
+]);
+
+
+}
 
 
 public function getVideosByClassCode(Request $request, $id)
