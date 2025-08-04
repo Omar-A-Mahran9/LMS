@@ -234,7 +234,7 @@ public function getVideosByClass($id)
     $course = Course::where('id', $class->course_id)
         ->where('is_active', 1)
         ->whereHas('enrollments', function ($q) use ($studentId) {
-            $q
+            $q->where('student_id', $studentId)
               ->where('status', 'approved')
               ->where('is_active', 1);
         })
