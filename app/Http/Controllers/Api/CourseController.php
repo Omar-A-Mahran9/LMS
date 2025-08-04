@@ -647,7 +647,7 @@ public function access(Request $request)
 
 
 return $this->success('', [
-    'class_url' => config('app.env') . '/api/videos_by_classes/' . $request->class_id,
+    'class_url' => env('APP_ENV') . '/api/videos_by_classes/' . $request->class_id,
 ]);
 
 
