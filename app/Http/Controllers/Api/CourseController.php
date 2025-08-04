@@ -216,12 +216,8 @@ public function getQuizClassById($id)
     }
 
 
-public function getVideosByClass($id)
+public function getVideosByClass($id, Request $request)
 {
-    $studentId = Auth::id();
-    $student = Auth::user();
-
-    // Fetch class and check if it's active
     $class = CourseClass::where('id', $id)
         ->where('is_active', 1)
         ->first();
@@ -230,55 +226,72 @@ public function getVideosByClass($id)
         return $this->failure('Class not found or unpublished');
     }
 
-    // Check if student is enrolled in the course
     $course = Course::where('id', $class->course_id)
         ->where('is_active', 1)
-        ->whereHas('enrollments', function ($q) use ($studentId) {
-            $q->where('student_id', $studentId)
-              ->where('status', 'approved')
-              ->where('is_active', 1);
-        })
         ->first();
 
     if (!$course) {
-        return $this->failure('Course not found or unauthorized.');
+        return $this->failure('Course not found or inactive');
     }
 
-    // Optionally track class view (like section)
-    $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
-    if (!Cache::has($cacheKey)) {
-        $class->increment('views');
-        Cache::put($cacheKey, true, now()->addHours(6));
+    $studentId = null;
+
+    // ✅ Check if student is authenticated
+    if (Auth::check()) {
+        $studentId = Auth::id();
+
+        // Must be enrolled
+        $isEnrolled = $course->enrollments()
+            ->where('student_id', $studentId)
+            ->where('status', 'approved')
+            ->where('is_active', 1)
+            ->exists();
+
+        if (!$isEnrolled) {
+            return $this->failure('Unauthorized: not enrolled in this course');
+        }
+    } else {
+        // ✅ Check if access is allowed via code
+        $code = $request->query('code');
+        if (!$code) {
+            return $this->failure('Unauthorized: code required');
+        }
+
+        $accessCode = AccessCode::where('code', $code)
+            ->where('course_id', $course->id)
+            ->where('is_active', 1)
+            ->first();
+
+        if (!$accessCode) {
+            return $this->failure('Unauthorized: invalid code');
+        }
+
+        // Optionally: Log access, track views by IP, etc.
     }
 
-    // Eager load videos and student progress
+    // ✅ Optional: Track class views for logged-in students only
+    if ($studentId) {
+        $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
+        if (!Cache::has($cacheKey)) {
+            $class->increment('views');
+            Cache::put($cacheKey, true, now()->addHours(6));
+        }
+    }
+
     $videos = $class->videos()
         ->where('is_active', 1)
-        ->with(['studentProgress' => function ($query) use ($studentId) {
-            $query->where('student_id', $studentId);
+        ->with(['studentProgress' => function ($q) use ($studentId) {
+            if ($studentId) {
+                $q->where('student_id', $studentId);
+            }
         }])
         ->get();
 
-    // Format each video using the resource
-
-
     return $this->success('Class videos loaded', [
-        // 'course_data' => [
-        //     'course_id'           => $course->id,
-        //     'course_title'        => $course->title,
-        //     'has_certificate'     => $course->certificate_available,
-        //     'certificate_url'     => $course->certificate_available
-        //         ? getOrGeneratePublicCertificateUrl($student, $course)
-        //         : null,
-        //     'is_completed'        => $course->is_completed,
-        //     'progress_percentage' => $course->progress_percentage,
-        //     'has_rated'           => Student_rate::where('course_id', $course->id)
-        //         ->where('student_id', $studentId)
-        //         ->exists(),
-        // ],
-        'class_data' =>new ClassDetailsResource($class, $studentId),
+        'class_data' => new ClassDetailsResource($class, $studentId),
     ]);
 }
+
 
 public function getVideosBySections($id)
 {
