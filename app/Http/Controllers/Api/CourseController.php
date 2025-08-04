@@ -219,9 +219,9 @@ public function getQuizClassById($id)
 public function getVideosByClass($id, Request $request)
 {
     $class = CourseClass::where('id', $id)
-        // ->where('is_active', 1)
-        ->get();
-dd($class);
+        ->where('is_active', 1)
+        ->first();
+// dd($id);
     if (!$class) {
         return $this->failure('Class not found or unpublished');
     }
