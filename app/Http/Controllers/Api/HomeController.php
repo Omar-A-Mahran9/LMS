@@ -482,6 +482,10 @@ public function getfooter()
 
             'description'     => setting('description_about_us' . $suffix),
             'instagram_link'   => setting('instagram_link'),
+            
+            'ios_link'   => setting('instagram_link'),
+            'google_play_link'   => setting('instagram_link'),
+
             'facebook_link'    => setting('facebook_link'),
             'youtube_link'     => setting('youtube_link'),
             'telegram_link'     => setting('youtube_link'),

@@ -25,6 +25,8 @@ class GeneralInvokableController extends Controller
             'google_map_url'   => setting('google_map_url'),
             'logo'           =>  getImagePathFromDirectory(setting('logo_image'), "Settings"),
             'light_logo'           =>  getImagePathFromDirectory(setting('light_logo_image'), "Settings"),
+          'ios_link'   => setting('instagram_link'),
+            'google_play_link'   => setting('instagram_link'),
 
             // Dynamic SEO Meta Tags
             // 'meta' => [
