@@ -21,7 +21,7 @@ return new class extends Migration
                 $table->boolean('is_active')->default(true); // الكود مفعل؟
                 $table->timestamps();
 
-                $table->foreign('class_id')->references('id')->on('course_classes')->onDelete('cascade');
+                $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
             });
     }
 
