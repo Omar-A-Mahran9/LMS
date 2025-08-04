@@ -653,12 +653,12 @@ return $this->success('', [
 
 }
 
-public function getVideosByClassCode($id)
+
+public function getVideosByClassCode(Request $request, $id)
 {
     $studentId = Auth::id();
     $student = Auth::user();
 
-    // Fetch class and check if it's active
     $class = CourseClass::where('id', $id)
         ->where('is_active', 1)
         ->first();
@@ -667,29 +667,68 @@ public function getVideosByClassCode($id)
         return $this->failure('Class not found or unpublished');
     }
 
-    // Check if student is enrolled in the course
-    if($studentId ){
     $course = Course::where('id', $class->course_id)
         ->where('is_active', 1)
-        ->whereHas('enrollments', function ($q) use ($studentId) {
-            $q->where('student_id', $studentId)
-              ->where('status', 'approved')
-              ->where('is_active', 1);
-        })
         ->first();
 
     if (!$course) {
-        return $this->failure('Course not found or unauthorized.');
+        return $this->failure('Course not found.');
     }
 
-    // Optionally track class view (like section)
-    $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
-    if (!Cache::has($cacheKey)) {
-        $class->increment('views');
-        Cache::put($cacheKey, true, now()->addHours(6));
+    $isAuthorized = false;
+
+    // ✅ Check if student is enrolled
+    if ($studentId) {
+        $enrolled = $course->enrollments()
+            ->where('student_id', $studentId)
+            ->where('status', 'approved')
+            ->where('is_active', 1)
+            ->exists();
+
+        if ($enrolled) {
+            $isAuthorized = true;
+        }
     }
-}
-    // Eager load videos and student progress
+
+    // ✅ If not enrolled, check access code
+    if (!$isAuthorized && $request->has('code')) {
+        $code = $request->get('code');
+
+        $accessCode = ClassAccessCode::where('class_id', $class->id)
+            ->where('code', $code)
+            ->where('is_active', 1)
+            ->first();
+
+        if ($accessCode) {
+            // Check usage limits
+            if (
+                ($accessCode->single_use && $accessCode->used_count >= 1) ||
+                ($accessCode->usage_limit !== null && $accessCode->used_count >= $accessCode->usage_limit)
+            ) {
+                return $this->failure('This access code has expired or reached its usage limit.');
+            }
+
+            // Increment usage count
+            $accessCode->increment('used_count');
+            $isAuthorized = true;
+        } else {
+            return $this->failure('Invalid or inactive access code.');
+        }
+    }
+
+    if (!$isAuthorized) {
+        return $this->failure('Unauthorized access.');
+    }
+
+    // ✅ Track view
+    if ($studentId) {
+        $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
+        if (!Cache::has($cacheKey)) {
+            $class->increment('views');
+            Cache::put($cacheKey, true, now()->addHours(6));
+        }
+    }
+
     $videos = $class->videos()
         ->where('is_active', 1)
         ->with(['studentProgress' => function ($query) use ($studentId) {
@@ -697,26 +736,13 @@ public function getVideosByClassCode($id)
         }])
         ->get();
 
-    // Format each video using the resource
-
-
     return $this->success('Class videos loaded', [
-        // 'course_data' => [
-        //     'course_id'           => $course->id,
-        //     'course_title'        => $course->title,
-        //     'has_certificate'     => $course->certificate_available,
-        //     'certificate_url'     => $course->certificate_available
-        //         ? getOrGeneratePublicCertificateUrl($student, $course)
-        //         : null,
-        //     'is_completed'        => $course->is_completed,
-        //     'progress_percentage' => $course->progress_percentage,
-        //     'has_rated'           => Student_rate::where('course_id', $course->id)
-        //         ->where('student_id', $studentId)
-        //         ->exists(),
-        // ],
-        'class_data' =>new ClassDetailsResource($class, $studentId),
+        'class_data' => new ClassDetailsResource($class, $studentId),
+        'videos' => $videos,
     ]);
 }
+
+
 
 
 }
