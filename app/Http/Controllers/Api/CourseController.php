@@ -221,7 +221,7 @@ public function getVideosByClass($id, Request $request)
     $class = CourseClass::where('id', $id)
         // ->where('is_active', 1)
         ->get();
-// dd($id);
+dd($class);
     if (!$class) {
         return $this->failure('Class not found or unpublished');
     }
