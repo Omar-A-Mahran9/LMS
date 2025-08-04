@@ -725,7 +725,7 @@ public function getVideosByClassCode(Request $request, $id)
     }
 
     if (!$isAuthorized) {
-        return $this->failure('Unauthorized access.');
+        return $this->failure(__('Unauthorized access.'));
     }
 
     // ✅ Track view
