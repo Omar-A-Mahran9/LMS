@@ -11,24 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('class_access_logs', function (Blueprint $table) {
+            Schema::create('class_access_logs', function (Blueprint $table) {
             $table->id();
-
-            // Core access info
-            $table->unsignedBigInteger('student_id');
+            $table->unsignedBigInteger('student_id')->nullable(); // ممكن null لو المستخدم مش مسجل
             $table->unsignedBigInteger('class_id');
-            $table->string('access_code');
-            $table->boolean('used')->default(false);
+            $table->string('access_code'); // الكود المستخدم
+            $table->ipAddress('device_ip')->nullable(); // IP
+            $table->string('user_agent')->nullable(); // بيانات الجهاز/المتصفح
             $table->timestamp('used_at')->nullable();
-
-            // New: IP address of device
-            $table->ipAddress('device_ip')->nullable();
-
             $table->timestamps();
 
-            // Foreign keys
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->foreign('class_id')->references('id')->on('course_classes')->onDelete('cascade');
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
         });
     }
 

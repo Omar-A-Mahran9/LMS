@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         Route::get('certificate/{id}', [CertificateController::class, 'publicDownload'])
     ->name('certificate.public');
         Route::get('all_classes', 'CourseController@getAllClasses');
-    Route::post('access_class', 'CourseController@accessClassViaCode');
+    Route::post('access_class', 'CourseController@access');
 
 Route::middleware(['auth:api'])->group(function () {
     Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');

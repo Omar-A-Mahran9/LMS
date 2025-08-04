@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
- Schema::create('class_access_codes', function (Blueprint $table) {
-    $table->id();
-    $table->unsignedBigInteger('class_id');
-    $table->string('code')->unique();
-    $table->boolean('single_use')->default(true); // true = مرة واحدة
-    $table->unsignedInteger('usage_limit')->nullable(); // null = غير محدود
-    $table->unsignedInteger('used_count')->default(0);
-    $table->boolean('is_active')->default(true);
-    $table->timestamps();
+            Schema::create('class_access_codes', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('class_id');
+                $table->string('code')->unique(); // الكود نفسه
+                $table->boolean('single_use')->default(true); // true = مرة واحدة فقط
+                $table->unsignedInteger('usage_limit')->nullable(); // null = غير محدود
+                $table->unsignedInteger('used_count')->default(0); // كم مرة تم استخدامه
+                $table->boolean('is_active')->default(true); // الكود مفعل؟
+                $table->timestamps();
 
-    $table->foreign('class_id')->references('id')->on('course_classes')->onDelete('cascade');
-});
+                $table->foreign('class_id')->references('id')->on('course_classes')->onDelete('cascade');
+            });
     }
 
     /**

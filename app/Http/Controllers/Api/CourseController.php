@@ -606,36 +606,51 @@ public function getAllClasses(Request $request)
     return $this->successWithPagination('', ClassesDetailsResource::collection($classes)->response()->getData(true));
 }
 
-public function accessClassViaCode(Request $request)
+public function access(Request $request)
 {
     $request->validate([
         'class_id' => 'required|exists:course_classes,id',
-        'access_code' => 'required|string'
+        'code' => 'required|string',
     ]);
 
-    $class = CourseClass::findOrFail($request->class_id);
-    $code = ClassAccessCode::where('class_id', $class->id)
-                ->where('code', $request->access_code)
-                ->first();
+    $code = ClassAccessCode::where('class_id', $request->class_id)
+        ->where('code', $request->code)
+        ->where('is_active', true)
+        ->first();
 
-    if (!$code || !$code->canBeUsed()) {
-        return response()->json(['message' => 'Invalid or expired code'], 403);
+    if (!$code) {
+        return response()->json(['status' => false, 'message' => 'Invalid or inactive code'], 403);
     }
 
-    // سجل الاستخدام
+    // Check usage
+    if ($code->single_use && $code->used_count >= 1) {
+        return response()->json(['status' => false, 'message' => 'This code has already been used'], 403);
+    }
+
+    if ($code->usage_limit && $code->used_count >= $code->usage_limit) {
+        return response()->json(['status' => false, 'message' => 'Usage limit exceeded'], 403);
+    }
+
+    // Log access
     ClassAccessLog::create([
-        'student_id' => auth()->id(),
-        'class_id' => $class->id,
-        'access_code' => $code->code,
+        'student_id' => auth('api')->id(), // or null if not logged in
+        'class_id' => $request->class_id,
+        'access_code' => $request->code,
         'device_ip' => $request->ip(),
-        'used' => true,
+        'user_agent' => $request->userAgent(),
         'used_at' => now(),
     ]);
 
+    // Increment counter
     $code->increment('used_count');
 
-    return response()->json(['message' => 'Access granted', 'class' => new ClassDetailsResource($class)]);
+    return response()->json([
+        'status' => true,
+        'message' => 'Access granted',
+        'class_url' => 'https://your-domain.com/live-class/' . $request->class_id, // adjust as needed
+    ]);
 }
+
 
 
 
