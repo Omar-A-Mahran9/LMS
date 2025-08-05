@@ -24,7 +24,7 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" }, // Checkbox
                 { data: "code" }, // Code
-                { data: "class_id", name: "title" }, // Class
+                { data: "class_id" }, // Class
                 { data: "usage_limit" ?? "-" }, // Usage Limit
                 { data: "used_count" }, // Used Count
                 { data: "is_single_use" }, // Single Use
@@ -41,6 +41,25 @@ var KTDatatablesServerSide = (function () {
                 <div class="form-check form-check-sm form-check-custom form-check-solid">
                     <input class="form-check-input" type="checkbox" value="${data}" />
                 </div>`;
+                    },
+                },
+
+                {
+                    targets: 2,
+                    render: function (data, type, row) {
+                        return `
+                <div class="d-flex flex-column justify-content-center">
+                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${
+                        row.class?.title || "-"
+                    }</a>
+                </div>
+            `;
+                    },
+                },
+                {
+                    targets: 3, // usage_limit
+                    render: function (data) {
+                        return data ?? "-";
                     },
                 },
                 {
