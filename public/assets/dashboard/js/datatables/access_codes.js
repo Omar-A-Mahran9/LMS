@@ -24,7 +24,7 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" }, // Checkbox
                 { data: "code" }, // Code
-                { data: "class.title" }, // Class
+                { data: "class_id", name: "title" }, // Class
                 { data: "usage_limit" ?? "-" }, // Usage Limit
                 { data: "used_count" }, // Used Count
                 { data: "is_single_use" }, // Single Use
