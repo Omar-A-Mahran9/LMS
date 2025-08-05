@@ -115,6 +115,7 @@ let translations = {
         "Student blocked successfully": "تم حظر الطالب",
         "Student unblocked successfully": "تم إلفاء حظر الطالب",
         Free: "مجاني",
+        "Edit Access Code": "تعديل الكود",
 
         Search: "ابحث",
         active: "فعال",

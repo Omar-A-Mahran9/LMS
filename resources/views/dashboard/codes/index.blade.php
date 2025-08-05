@@ -90,7 +90,7 @@
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
         <div class="modal fade" tabindex="-1" id="crud_modal">
-            <div class="modal-dialog modal-md modal-dialog-scrollable">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="form_title">{{ __('Add Access Code') }}</h5>
@@ -100,24 +100,27 @@
 
                     <div class="modal-body">
                         <div class="mb-4">
-                            <label for="class_id" class="form-label">{{ __('Class') }}</label>
-                            <select name="class_id" id="class_id" class="form-select">
+                            <label for="class_id_inp" class="form-label">{{ __('Class') }}</label>
+                            <select name="class_id" id="class_id_inp" class="form-select" data-control="select2"
+                                data-placeholder="{{ __('Select class') }}" data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                <option value="" selected></option>
+
                                 @foreach ($classes as $class)
                                     <option value="{{ $class->id }}">{{ $class->title }}</option>
                                 @endforeach
                             </select>
-                            <div class="invalid-feedback" id="class_id_error"></div>
+                            <div class="invalid-feedback" id="class_id"></div>
                         </div>
 
                         <div class="row mb-4">
-                            <div class="col-8">
-                                <label for="code" class="form-label">{{ __('Access Code') }}</label>
-                                <input type="text" name="code" id="code" class="form-control"
+                            <div class="col-10">
+                                <label for="code_inp" class="form-label">{{ __('Access Code') }}</label>
+                                <input type="text" name="code" id="code_inp" class="form-control"
                                     placeholder="{{ __('Leave blank to auto-generate') }}">
-                                <div class="invalid-feedback" id="code_error"></div>
+                                <div class="invalid-feedback" id="code"></div>
                             </div>
 
-                            <div class="col-4 d-flex align-items-center mt-4">
+                            <div class="col-2 d-flex align-items-center mt-4">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
                                     <input class="form-check-input" name="is_active" type="checkbox" value="1"
                                         id="is_active_switch" checked>
@@ -128,14 +131,14 @@
                         </div>
 
                         <div class="row mb-4">
-                            <div class="col-6">
-                                <label for="usage_limit" class="form-label">{{ __('Usage Limit') }}</label>
-                                <input type="number" name="usage_limit" id="usage_limit" class="form-control"
+                            <div class="col-10">
+                                <label for="usage_limit_inp" class="form-label">{{ __('Usage Limit') }}</label>
+                                <input type="number" name="usage_limit" id="usage_limit_inp" class="form-control"
                                     min="1" placeholder="{{ __('Leave blank for unlimited') }}">
-                                <div class="invalid-feedback" id="usage_limit_error"></div>
+                                <div class="invalid-feedback" id="usage_limit"></div>
                             </div>
 
-                            <div class="col-6 d-flex align-items-center mt-4">
+                            <div class="col-2 d-flex align-items-center mt-4">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
                                     <input class="form-check-input" name="single_use" type="checkbox" value="1"
                                         id="single_use_switch" checked>
@@ -144,6 +147,14 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="mb-4" id="code_count_wrapper" style="display: none;">
+                            <label for="code_count_inp"
+                                class="form-label">{{ __('Number of Codes to Generate') }}</label>
+                            <input type="number" name="code_count" id="code_count_inp" class="form-control"
+                                min="1" placeholder="{{ __('Enter number of codes (e.g. 40)') }}">
+                            <div class="invalid-feedback" id="code_count"></div>
+                        </div>
+
                     </div>
 
                     <div class="modal-footer">
@@ -174,12 +185,31 @@
                 e.preventDefault();
                 $("[title='_method']").remove();
                 $("#crud_form")[0].reset();
+                $('#class_id_inp').val('').trigger('change');
+
                 $("#crud_form").find('.invalid-feedback').text('');
                 $("#crud_form").find('.is-invalid').removeClass('is-invalid');
                 $("#crud_form").attr('action', "{{ route('dashboard.generateCode.store') }}");
                 $("#form_title").text("{{ __('Add Access Code') }}");
                 $("#crud_modal").modal('show');
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInput = document.getElementById('code_inp');
+            const codeCountWrapper = document.getElementById('code_count_wrapper');
+
+            function toggleCodeCountField() {
+                if (codeInput.value.trim() === '') {
+                    codeCountWrapper.style.display = 'block';
+                } else {
+                    codeCountWrapper.style.display = 'none';
+                }
+            }
+
+            codeInput.addEventListener('input', toggleCodeCountField);
+            toggleCodeCountField(); // Run on page load too
         });
     </script>
 @endpush

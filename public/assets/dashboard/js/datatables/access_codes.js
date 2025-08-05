@@ -46,7 +46,7 @@ var KTDatatablesServerSide = (function () {
                 {
                     targets: 5, // Single Use column
                     render: function (data, type, row) {
-                        return row.is_single_use
+                        return row.single_use
                             ? `<span class="badge badge-info">${__(
                                   "Yes"
                               )}</span>`
@@ -140,7 +140,7 @@ var KTDatatablesServerSide = (function () {
         const editButtons = document.querySelectorAll(
             '[data-kt-docs-table-filter="edit_row"]'
         );
-
+        const codeCountWrapper = document.getElementById("code_count_wrapper");
         editButtons.forEach((btn) => {
             btn.addEventListener("click", function (e) {
                 e.preventDefault();
@@ -152,11 +152,13 @@ var KTDatatablesServerSide = (function () {
                 $("#form_title").text(__("Edit Access Code"));
 
                 // Set form values
-                $("#class_id").val(data.class_id).trigger("change");
-                $("#code").val(data.code);
-                $("#usage_limit").val(data.usage_limit ?? "");
+                $("#class_id_inp").val(data.class_id).trigger("change");
+                $("#code_inp").val(data.code);
+                $("#usage_limit_inp").val(data.usage_limit ?? "");
                 $("#is_active_switch").prop("checked", data.is_active == 1);
                 $("#single_use_switch").prop("checked", data.single_use == 1);
+
+                codeCountWrapper.style.display = "none";
 
                 // Set form action
                 $("#crud_form").attr(

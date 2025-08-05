@@ -25,40 +25,82 @@ class GenerateCodeController extends Controller
         }
     }
 
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'class_id' => 'required|exists:classes,id',
-            'code' => 'nullable|string|unique:class_access_codes,code',
-            'single_use' => 'required|boolean',
-            'usage_limit' => 'nullable|integer|min:1',
-            'is_active' => 'required|boolean',
+
+
+public function store(Request $request)
+{
+    $request->validate([
+        'class_id'    => 'required|exists:classes,id',
+        'code'        => 'nullable|string|unique:access_codes,code',
+        'usage_limit' => 'nullable|integer|min:1',
+        'code_count'  => 'nullable|integer|min:1',
+    ]);
+
+    $codes = [];
+
+    if ($request->filled('code')) {
+        // حالة كود واحد مخصص من المستخدم
+        $accessCode = ClassAccessCode::create([
+            'class_id'    => $request->input('class_id'),
+            'code'        => $request->input('code'),
+            'is_active'   => $request->boolean('is_active'),
+            'single_use'  => $request->boolean('single_use'),
+            'usage_limit' => $request->input('usage_limit'),
         ]);
 
-        // Generate code if not provided
-        if (empty($data['code'])) {
-            $data['code'] = strtoupper(Str::random(8));
+        $codes[] = $accessCode;
+
+    } else {
+        // حالة توليد عدة أكواد تلقائيًا
+        $count = $request->input('code_count') ?? 1;
+
+        for ($i = 0; $i < $count; $i++) {
+            $generatedCode = strtoupper(Str::random(10));
+
+            // التأكد من أن الكود غير مكرر
+            while (ClassAccessCode::where('code', $generatedCode)->exists()) {
+                $generatedCode = strtoupper(Str::random(10));
+            }
+
+            $codes[] = ClassAccessCode::create([
+                'class_id'    => $request->input('class_id'),
+                'code'        => $generatedCode,
+                'is_active'   => $request->boolean('is_active'),
+                'single_use'  => $request->boolean('single_use'),
+                'usage_limit' => $request->input('usage_limit'),
+            ]);
         }
-
-        ClassAccessCode::create($data);
-
-        return response()->json(['status' => true, 'message' => 'تم إنشاء الكود بنجاح.']);
     }
 
-    public function update(Request $request, ClassAccessCode $generateCode)
-    {
-        $data = $request->validate([
-            'class_id' => 'required|exists:classes,id',
-            'code' => 'required|string|unique:class_access_codes,code,' . $generateCode->id,
-            'single_use' => 'required|boolean',
-            'usage_limit' => 'nullable|integer|min:1',
-            'is_active' => 'required|boolean',
-        ]);
 
-        $generateCode->update($data);
+}
 
-        return response()->json(['status' => true, 'message' => 'تم تحديث الكود بنجاح.']);
-    }
+
+public function update(Request $request, ClassAccessCode $generateCode)
+{
+    $request->validate([
+        'class_id'    => 'required|exists:classes,id',
+        'code'        => 'nullable|string|unique:access_codes,code,' . $generateCode->id,
+        'usage_limit' => 'nullable|integer|min:1',
+        'is_active'   => 'nullable|boolean',
+        'single_use'  => 'nullable|boolean',
+    ]);
+
+    $generateCode->update([
+        'class_id'    => $request->input('class_id'),
+        'code'        => $request->input('code') ?? $generateCode->code,
+        'is_active'   => $request->has('is_active') ? $request->boolean('is_active') : $generateCode->is_active,
+        'single_use'  => $request->has('single_use') ? $request->boolean('single_use') : $generateCode->single_use,
+        'usage_limit' => $request->input('usage_limit') ?? $generateCode->usage_limit,
+    ]);
+
+    return response()->json([
+        'status'  => true,
+        'message' => 'تم تحديث الكود بنجاح.',
+        'data'    => $generateCode,
+    ]);
+}
+
 
     public function destroy(ClassAccessCode $generateCode)
     {
