@@ -714,6 +714,7 @@ public function getVideosByClassCode(Request $request, $id)
         'student_id' => auth('api')->id(), // or null if not logged in
         'class_id' => $class->id,
         'access_code' => $request->code,
+        "access_code_id"=>$accessCode->id,
         'device_ip' => $request->ip(),
         'user_agent' => $request->userAgent(),
         'used_at' => now(),
