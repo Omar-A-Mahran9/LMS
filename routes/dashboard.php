@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\BookOrderController;
 use App\Http\Controllers\Dashboard\CourseController;
 use App\Http\Controllers\Dashboard\EnrollmentController;
+use App\Http\Controllers\Dashboard\GenerateCodeController;
 use App\Http\Controllers\Dashboard\HomeworkByClassController;
 use App\Http\Controllers\Dashboard\HomeworkBySectionController;
 use App\Http\Controllers\Dashboard\QuizByClassController;
@@ -54,6 +55,8 @@ Route::get('quizzes/{quiz}/has-passages', [QuizController::class, 'hasPassages']
 
  Route::resource('books', 'BookController')->except(['create', 'edit']);
   Route::resource('generateCode', 'GenerateCodeController')->except(['create', 'edit']);
+Route::get('generate-codes/export/pdf', [GenerateCodeController::class, 'exportPDF'])
+    ->name('generateCode.exportPDF');
 
  Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
  Route::resource('classes.quizzes', QuizByClassController::class);

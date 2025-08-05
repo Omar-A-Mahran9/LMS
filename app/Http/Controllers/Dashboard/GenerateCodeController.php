@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\ClassAccessCode;
 use App\Models\CourseClass;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -74,7 +75,22 @@ public function store(Request $request)
 
 
 }
+public function exportPDF(Request $request)
+{
+    $classId = $request->get('class_id');
 
+    $query = ClassAccessCode::with('class')->where('is_active', 1);
+
+    if ($classId) {
+        $query->where('class_id', $classId);
+    }
+
+    $codes = $query->get();
+
+    $pdf = Pdf::loadView('dashboard.codes.code', compact('codes'));
+
+    return $pdf->download('access_codes_report.pdf');
+}
 
 public function update(Request $request, ClassAccessCode $generateCode)
 {

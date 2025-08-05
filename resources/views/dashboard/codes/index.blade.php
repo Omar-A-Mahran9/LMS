@@ -17,8 +17,8 @@
             </div>
 
             <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
-                <div class="d-flex justify-content-end w-100" id="add_btn" data-bs-toggle="modal"
-                    data-bs-target="#crud_modal" data-kt-docs-table-toolbar="base">
+                <div class="d-flex justify-content-end  " id="add_btn" data-bs-toggle="modal" data-bs-target="#crud_modal"
+                    data-kt-docs-table-toolbar="base">
                     <button type="button" class="btn btn-primary w-100">
                         <span class="svg-icon svg-icon-2">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -32,7 +32,15 @@
                         {{ __('Add Access Code') }}
                     </button>
                 </div>
+                <div>
+                    <a href="{{ route('dashboard.generateCode.exportPDF') }}" class="btn btn-secondary ms-3"
+                        target="_blank">
+                        <i class="fas fa-file-pdf me-2"></i> {{ __('Export PDF') }}
+                    </a>
+
+                </div>
             </div>
+
         </div>
 
         <div class="card-body">
@@ -210,6 +218,17 @@
 
             codeInput.addEventListener('input', toggleCodeCountField);
             toggleCodeCountField(); // Run on page load too
+        });
+
+        $('#class_filter').on('change', function() {
+            let selectedClass = $(this).val();
+            let url = '{{ route('dashboard.generateCode.exportPDF') }}';
+
+            if (selectedClass) {
+                url += '?class_id=' + selectedClass;
+            }
+
+            $('.btn-export-pdf').attr('href', url);
         });
     </script>
 @endpush
