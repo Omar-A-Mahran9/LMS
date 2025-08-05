@@ -79,7 +79,7 @@
                             </div>
                         </th>
                         <th>{{ __('Code') }}</th>
-                        <th>{{ __('URLال') }}</th>
+                        <th>{{ __('URL') }}</th>
 
                         <th>{{ __('Class') }}</th>
                         <th>{{ __('Usage Limit') }}</th>
