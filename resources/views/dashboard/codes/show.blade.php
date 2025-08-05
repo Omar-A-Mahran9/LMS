@@ -40,7 +40,7 @@
                             <td>{{ $log->student?->first_name ?? __('Guest') }}</td>
                             <td>{{ $log->device_ip ?? '-' }}</td>
                             <td>{{ $log->user_agent ? Str::limit($log->user_agent, 50) : '-' }}</td>
-                            <td>{{ $log->used_at ? $log->used_at->format('Y-m-d H:i') : '-' }}</td>
+                            <td>{{ $log->used_at ?? '-' }}</td>
                         </tr>
                     @empty
                         <tr>
