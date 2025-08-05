@@ -92,7 +92,7 @@ var KTDatatablesServerSide = (function () {
                                 <!--end::Menu item-->
 
                                 <div class="menu-item px-3">
-                                    <a href="/dashboard/books/${
+                                    <a href="/dashboard/generateCode/${
                                         data.id
                                     }" class="menu-link px-3 show_button" data-kt-docs-table-filter="show_row">
                                         ${__("Show")}

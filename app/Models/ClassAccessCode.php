@@ -32,4 +32,5 @@ public function logs()
     return $this->hasMany(ClassAccessLog::class, 'access_code_id');
 }
 
+
 }

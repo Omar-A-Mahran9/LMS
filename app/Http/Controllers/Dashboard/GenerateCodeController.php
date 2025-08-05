@@ -109,8 +109,14 @@ public function update(Request $request, ClassAccessCode $generateCode)
         return response()->json(['status' => true, 'message' => 'تم حذف الكود بنجاح.']);
     }
 
-    public function show(ClassAccessCode $generateCode)
-    {
-        return response()->json($generateCode);
-    }
+
+public function show(ClassAccessCode $generateCode)
+{
+    $generateCode->load(['class', 'logs.student']);
+
+    return view('dashboard.codes.show', [
+        'code' => $generateCode
+    ]);
+}
+
 }

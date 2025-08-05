@@ -17,10 +17,7 @@ class ClassAccessLog extends Model
 
 
 
-        public function student()
-    {
-        return $this->belongsTo(Student::class);
-    }
+
 
     public function class()
     {
@@ -31,6 +28,10 @@ class ClassAccessLog extends Model
 public function accessCode()
 {
     return $this->belongsTo(ClassAccessCode::class, 'access_code_id');
+}
+public function student()
+{
+    return $this->belongsTo(Student::class, 'student_id');
 }
 
 
