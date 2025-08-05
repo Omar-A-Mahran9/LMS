@@ -31,7 +31,7 @@ public function store(Request $request)
 {
     $request->validate([
         'class_id'    => 'required|exists:classes,id',
-        'code'        => 'nullable|string|unique:access_codes,code',
+        'code'        => 'nullable|string|unique:class_access_codes,code',
         'usage_limit' => 'nullable|integer|min:1',
         'code_count'  => 'nullable|integer|min:1',
     ]);
@@ -80,7 +80,7 @@ public function update(Request $request, ClassAccessCode $generateCode)
 {
     $request->validate([
         'class_id'    => 'required|exists:classes,id',
-        'code'        => 'nullable|string|unique:access_codes,code,' . $generateCode->id,
+        'code'        => 'nullable|string|unique:class_access_codes,code,' . $generateCode->id,
         'usage_limit' => 'nullable|integer|min:1',
         'is_active'   => 'nullable|boolean',
         'single_use'  => 'nullable|boolean',

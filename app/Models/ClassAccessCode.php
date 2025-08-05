@@ -27,5 +27,9 @@ class ClassAccessCode extends Model
         if (!is_null($this->usage_limit) && $this->used_count >= $this->usage_limit) return false;
         return true;
     }
+public function logs()
+{
+    return $this->hasMany(ClassAccessLog::class, 'access_code_id');
+}
 
 }
