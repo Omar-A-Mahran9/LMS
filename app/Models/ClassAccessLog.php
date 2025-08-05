@@ -28,16 +28,10 @@ class ClassAccessLog extends Model
     }
 
 
-    public function students()
+public function accessCode()
 {
-    return $this->hasManyThrough(
-        Student::class,
-        ClassAccessLog::class,
-        'access_code_id', // Foreign key on ClassAccessLog
-        'id',             // Foreign key on Student
-        'id',             // Local key on ClassAccessCode
-        'student_id'      // Local key on ClassAccessLog
-    );
+    return $this->belongsTo(ClassAccessCode::class, 'access_code_id');
 }
+
 
 }

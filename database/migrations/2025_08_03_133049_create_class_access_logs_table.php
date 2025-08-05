@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('user_agent')->nullable(); // بيانات الجهاز/المتصفح
             $table->timestamp('used_at')->nullable();
             $table->timestamps();
-            $table->foreign('access_code_id')->references('id')->on('class_access_codes')->onDelete('cascade');
+$table->unsignedBigInteger('access_code_id')->nullable();
+$table->foreign('access_code_id')->references('id')->on('class_access_codes')->onDelete('cascade');
 
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
