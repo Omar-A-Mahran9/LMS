@@ -35,7 +35,7 @@
                 <div>
                     <a href="{{ route('dashboard.generateCode.exportPDF') }}" class="btn btn-secondary ms-3"
                         target="_blank">
-                        <i class="fas fa-file-pdf me-2"></i> {{ __('Export PDF') }}
+                        <i class="fas fa-file-pdf me-2"></i>
                     </a>
 
                 </div>
@@ -79,6 +79,8 @@
                             </div>
                         </th>
                         <th>{{ __('Code') }}</th>
+                        <th>{{ __('URLال') }}</th>
+
                         <th>{{ __('Class') }}</th>
                         <th>{{ __('Usage Limit') }}</th>
                         <th>{{ __('Used Count') }}</th>

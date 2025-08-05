@@ -24,6 +24,7 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" }, // Checkbox
                 { data: "code" }, // Code
+                { data: null }, // Actions
                 { data: "class_id" }, // Class
                 { data: "usage_limit" ?? "-" }, // Usage Limit
                 { data: "used_count" }, // Used Count
@@ -43,9 +44,19 @@ var KTDatatablesServerSide = (function () {
                 </div>`;
                     },
                 },
-
                 {
                     targets: 2,
+                    render: function (data, type, row) {
+                        return `
+                <div class="d-flex flex-column justify-content-center">
+                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${"https://mohamed-elnagar.com/classes-by-code"}</a>
+                </div>
+            `;
+                    },
+                },
+
+                {
+                    targets: 3,
                     render: function (data, type, row) {
                         return `
                 <div class="d-flex flex-column justify-content-center">
@@ -57,13 +68,13 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
-                    targets: 3, // usage_limit
+                    targets: 4, // usage_limit
                     render: function (data) {
                         return data ?? "-";
                     },
                 },
                 {
-                    targets: 5, // Single Use column
+                    targets: 6, // Single Use column
                     render: function (data, type, row) {
                         return row.single_use
                             ? `<span class="badge badge-info">${__(
@@ -75,7 +86,7 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
-                    targets: 6, // Active column
+                    targets: 7, // Active column
                     render: function (data, type, row) {
                         return row.is_active
                             ? `<span class="badge badge-success">${__(
