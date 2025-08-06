@@ -56,6 +56,7 @@ Route::middleware(['auth:api'])->group(function () {
     ->name('certificates.verify');
     Route::get('certificates/{course}', [CertificateController::class, 'download'])
         ->name('student.certificates.download');
+    Route::get('check_course/{id}', 'CourseController@checkCourseAccess');
 
     Route::get('profile-info', 'ProfileController@profileInfo')->name('profile-info');
     Route::post('update-profile-info', 'ProfileController@updateProfileInfo')->name('update-profile-info');
