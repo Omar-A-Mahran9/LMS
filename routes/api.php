@@ -75,7 +75,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('videos_by_classes_with_code/{id}', 'CourseController@getVideosByClassCode');
    Route::get('all_classes', 'CourseController@getAllClasses');
     Route::post('access_class', 'CourseController@access');
-    Route::get('check_course/{id}', 'CourseController@checkCourseAccess');
 
 
     Route::post('login', 'Auth\AuthController@login');
