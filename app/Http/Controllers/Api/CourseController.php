@@ -355,6 +355,8 @@ if(auth()){
               ->where('status', 'approved')
               ->where('is_active', 1);
         })
+        ->first()??Course::where('id', $id)
+        ->where('is_active', 1)
         ->first();
 
     if (!$course) {
