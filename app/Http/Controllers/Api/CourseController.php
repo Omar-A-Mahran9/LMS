@@ -362,7 +362,7 @@ if(auth()){
     if (!$course) {
         return $this->failure('Course not found or unauthorized.');
     }
-
+dd($course);
     // إعداد البيانات مثل getVideosBySections
     $courseData = [
         'course_id'           => $course->id,
