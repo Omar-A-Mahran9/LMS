@@ -36,6 +36,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('get_rates_for_course/{course_id}', 'CourseController@getRatesForCourse');
     Route::post('student_rates_for_course', 'CourseController@storerate');
     Route::get('videos_by_course/{id}', 'CourseController@getVideosBySections');
+    Route::get('check_course/{id}', 'CourseController@checkCourseAccess');
 
     Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
     Route::post('videos/{video}/watch', 'CourseController@logWatch');
@@ -75,7 +76,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('videos_by_classes_with_code/{id}', 'CourseController@getVideosByClassCode');
    Route::get('all_classes', 'CourseController@getAllClasses');
     Route::post('access_class', 'CourseController@access');
-    // Route::get('check_course/{id}', 'CourseController@checkCourseAccess');
 
 
     Route::post('login', 'Auth\AuthController@login');
