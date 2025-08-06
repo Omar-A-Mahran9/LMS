@@ -80,7 +80,6 @@
                         </th>
                         <th>{{ __('Code') }}</th>
                         <th>{{ __('URL') }}</th>
-
                         <th>{{ __('Class') }}</th>
                         <th>{{ __('Usage Limit') }}</th>
                         <th>{{ __('Used Count') }}</th>
