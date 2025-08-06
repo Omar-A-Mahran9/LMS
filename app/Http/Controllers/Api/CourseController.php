@@ -343,6 +343,7 @@ public function getVideosBySections($id)
 }
 public function checkCourseAccess($id)
 {
+    dd(Auth::user());
     if(auth()){
     $studentId = auth()->id();
          $student = Auth::user();
