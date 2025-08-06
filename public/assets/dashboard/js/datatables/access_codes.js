@@ -24,7 +24,7 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" }, // Checkbox
                 { data: "code" }, // Code
-                { data: null }, // Actions
+                { data: "https://mohamed-elnagar.com/classes-by-code" }, // Actions
                 { data: "class_id" }, // Class
                 { data: "usage_limit" ?? "-" }, // Usage Limit
                 { data: "used_count" }, // Used Count
