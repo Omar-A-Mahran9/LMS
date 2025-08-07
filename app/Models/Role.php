@@ -67,6 +67,8 @@ class Role extends Model
 
         'settings',
 
+        'orders',
+
         'lives',
 
     ];

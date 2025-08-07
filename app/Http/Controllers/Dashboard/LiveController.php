@@ -18,16 +18,14 @@ class LiveController extends Controller
 
         $courseId = $request->input('course_id');
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
+        $classes=CourseClass::select('id', 'title_en', 'title_ar')->get();
 
         if ($request->ajax()) {
-            $query = Live::with(['course:id,title_en,title_ar', 'class:id,title_en,title_ar']);
-            if ($courseId) {
-                $query->where('course_id', $courseId);
-            }
-            return response()->json(getModelData(model: $query));
+        return  getModelData(model:new Live());
+
         }
 
-        return view('dashboard.lives.index', compact('courses'));
+        return view('dashboard.lives.index', compact('courses','classes'));
     }
 
     public function store(StoreLiveRequest $request)

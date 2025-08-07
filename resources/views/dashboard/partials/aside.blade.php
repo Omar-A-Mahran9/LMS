@@ -85,6 +85,11 @@
                     </x-dashboard.aside-item>
                 @endcan
 
+                @can('view_lives')
+                    <x-dashboard.aside-item :slug="'lives'" :route="route('dashboard.lives.index')" :title="__('Lives')">
+                        <i class="fas fa-tv fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
 
                 @can('view_questions')
                     <x-dashboard.aside-item :slug="'classes'" :route="route('dashboard.classes.index')" :title="__('Classes')">

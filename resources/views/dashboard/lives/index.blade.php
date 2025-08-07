@@ -13,7 +13,7 @@
             data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
             <!--begin::Card title-->
             <div class="card-title m-0">
-                <h3 class="fw-bold m-0">{{ __('classes list') }}</h3>
+                <h3 class="fw-bold m-0">{{ __('lives list') }}</h3>
             </div>
             <!--end::Card title-->
 
@@ -36,7 +36,7 @@
                                     fill="currentColor"></rect>
                             </svg>
                         </span>
-                        <!--end::Svg Icon-->{{ __('Add new class') }}
+                        <!--end::Svg Icon-->{{ __('Add new live') }}
                     </button>
                     <!--end::Add customer-->
                 </div>
@@ -110,7 +110,7 @@
         <!--end::Content-->
     </div>
 
-    <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.classes.store') }}" method="post"
+    <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.lives.store') }}" method="post"
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
         @csrf
 
@@ -118,7 +118,7 @@
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="form_title">{{ __('Add new class') }}</h5>
+                        <h5 class="modal-title" id="form_title">{{ __('Add Live Session') }}</h5>
                         <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                             aria-label="Close">
                             <i class="ki-outline ki-cross fs-1"></i>
@@ -126,59 +126,46 @@
                     </div>
 
                     <div class="modal-body">
-                        <div class="row mb-4">
-                            <div class="col-12 d-flex flex-column justify-content-center">
-                                <label for="image_inp"
-                                    class="form-label  text-center fs-6 fw-bold mb-3">{{ __('Thumbnail Image') }}</label>
-                                <x-dashboard.upload-image-inp name="image" :image="null" :directory="'courses'"
-                                    placeholder="default.svg" type="editable" />
-                            </div>
-                        </div>
-                        {{-- Course & Section --}}
+                        {{-- Course & Class --}}
                         <div class="row mb-4">
                             <div class="col-6">
-                                <div id="course_select_wrapper">
-                                    <label for="course_id_inp" class="form-label">{{ __('Course') }}</label>
-                                    <select name="course_id" id="course_id_inp" class="form-select"
-                                        data-control="select2" data-placeholder="{{ __('Select Course') }}"
-                                        data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
-                                        <option value="" selected></option>
-                                        @foreach ($courses as $course)
-                                            <option value="{{ $course->id }}">{{ $course->title_en }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div class="fv-plugins-message-container invalid-feedback" id="course_id"></div>
-                                </div>
-
-                                {{-- هنا هيتضاف input hidden لو في course_id في الرابط --}}
-                                <div id="hidden_course_input_wrapper"></div>
+                                <label for="course_id" class="form-label">{{ __('Course') }}</label>
+                                <select name="course_id" id="course_id" class="form-select" data-control="select2"
+                                    data-placeholder="{{ __('Select Course') }}"
+                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                    <option value=""></option>
+                                    @foreach ($courses as $course)
+                                        <option value="{{ $course->id }}">{{ $course->title_en }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="invalid-feedback" id="course_id"></div>
                             </div>
-
 
                             <div class="col-6">
-                                <div class="d-flex justify-content-between justify-content-center"> <label
-                                        for="attachment_inp" class="form-label">{{ __('Attachment') }}</label>
-                                    <div id="attachment_preview"></div>
-                                </div>
-
-                                <input type="file" name="attachment" id="attachment_inp" class="form-control"
-                                    accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx">
-                                <div class="fv-plugins-message-container invalid-feedback" id="attachment"></div>
+                                <label for="class_id" class="form-label">{{ __('Class (Optional)') }}</label>
+                                <select name="class_id" id="class_id" class="form-select" data-control="select2"
+                                    data-placeholder="{{ __('Select Class') }}"
+                                    data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                    <option value=""></option>
+                                    @foreach ($classes as $class)
+                                        <option value="{{ $class->id }}">{{ $class->title_en }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="invalid-feedback" id="class_id"></div>
                             </div>
-
                         </div>
 
                         {{-- Titles --}}
                         <div class="row mb-4">
                             <div class="col-6">
-                                <label for="title_ar_inp" class="form-label">{{ __('Title (Arabic)') }}</label>
-                                <input type="text" name="title_ar" id="title_ar_inp" class="form-control"
+                                <label for="title_ar" class="form-label">{{ __('Title (Arabic)') }}</label>
+                                <input type="text" name="title_ar" id="title_ar" class="form-control"
                                     placeholder="{{ __('Enter Arabic title') }}">
                                 <div class="invalid-feedback" id="title_ar"></div>
                             </div>
                             <div class="col-6">
-                                <label for="title_en_inp" class="form-label">{{ __('Title (English)') }}</label>
-                                <input type="text" name="title_en" id="title_en_inp" class="form-control"
+                                <label for="title_en" class="form-label">{{ __('Title (English)') }}</label>
+                                <input type="text" name="title_en" id="title_en" class="form-control"
                                     placeholder="{{ __('Enter English title') }}">
                                 <div class="invalid-feedback" id="title_en"></div>
                             </div>
@@ -187,59 +174,94 @@
                         {{-- Descriptions --}}
                         <div class="row mb-4">
                             <div class="col-6">
-                                <label for="description_ar_inp"
-                                    class="form-label">{{ __('Description (Arabic)') }}</label>
-                                <textarea name="description_ar" id="description_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
-                                <div class="fv-plugins-message-container invalid-feedback" id="description_ar"></div>
+                                <label for="description_ar" class="form-label">{{ __('Description (Arabic)') }}</label>
+                                <textarea name="description_ar" id="description_ar" class="tinymce form-control" rows="4"></textarea>
+                                <div class="invalid-feedback" id="description_ar"></div>
                             </div>
                             <div class="col-6">
-                                <label for="description_en_inp"
-                                    class="form-label">{{ __('Description (English)') }}</label>
-                                <textarea name="description_en" id="description_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
-                                <div class="fv-plugins-message-container invalid-feedback" id="description_en"></div>
+                                <label for="description_en" class="form-label">{{ __('Description (English)') }}</label>
+                                <textarea name="description_en" id="description_en" class="tinymce form-control" rows="4"></textarea>
+                                <div class="invalid-feedback" id="description_en"></div>
                             </div>
                         </div>
 
-                        {{-- class Info --}}
+                        {{-- Platform & URL --}}
+                        <div class="row mb-4">
+                            <div class="col-4">
+                                <label for="platform" class="form-label">{{ __('Platform') }}</label>
+                                <select data-control="select2" name="platform" id="platform" class="form-select">
+                                    <option value="zoom">Zoom</option>
+                                    <option value="youtube">YouTube</option>
+                                    <option value="twitch">Twitch</option>
+                                </select>
+                                <div class="invalid-feedback" id="platform"></div>
+                            </div>
+
+                            <div class="col-8">
+                                <label for="embed_url" class="form-label">{{ __('Embed URL') }}</label>
+                                <input type="url" name="embed_url" id="embed_url" class="form-control"
+                                    placeholder="{{ __('Paste YouTube/Zoom/Twitch Embed URL') }}">
+                                <div class="invalid-feedback" id="embed_url"></div>
+                            </div>
+                        </div>
+
+                        {{-- Streaming Credentials --}}
+                        <div class="row mb-4">
+                            <div class="col-4">
+                                <label for="stream_key" class="form-label">{{ __('Stream Key') }}</label>
+                                <input type="text" name="stream_key" id="stream_key" class="form-control">
+                                <div class="invalid-feedback" id="stream_key"></div>
+                            </div>
+                            <div class="col-4">
+                                <label for="meeting_id" class="form-label">{{ __('Meeting ID') }}</label>
+                                <input type="text" name="meeting_id" id="meeting_id" class="form-control">
+                                <div class="invalid-feedback" id="meeting_id"></div>
+                            </div>
+                            <div class="col-4">
+                                <label for="password" class="form-label">{{ __('Password') }}</label>
+                                <input type="text" name="password" id="password" class="form-control">
+                                <div class="invalid-feedback" id="password"></div>
+                            </div>
+                        </div>
+
+                        {{-- Date & Duration --}}
                         <div class="row mb-4">
                             <div class="col-6">
-                                <label for="video_url_inp" class="form-label">{{ __('Video URL') }}</label>
-                                <input type="url" name="video_url" id="video_url_inp" class="form-control"
-                                    placeholder="{{ __('Enter video URL') }}">
-                                <div class="fv-plugins-message-container invalid-feedback" id="video_url"></div>
+                                <label for="start_time" class="form-label">{{ __('Start Time') }}</label>
+                                <input type="datetime-local" name="start_time" id="start_time" class="form-control">
+                                <div class="invalid-feedback" id="start_time"></div>
                             </div>
-
-                            <div class="col-2 d-flex align-items-center mt-4">
-                                <label class="form-check form-switch form-check-custom form-check-solid  ">
-                                    <input class="form-check-input " name="quiz_required" type="checkbox" value="1"
-                                        id="quiz_required_switch">
-                                    <span class="form-check-label text-dark"
-                                        for="quiz_required_switch">{{ __('quiz required') }}</span>
-                                </label>
+                            <div class="col-6">
+                                <label for="duration_minutes" class="form-label">{{ __('Duration (Minutes)') }}</label>
+                                <input type="number" name="duration_minutes" id="duration_minutes" class="form-control"
+                                    placeholder="e.g. 60">
+                                <div class="invalid-feedback" id="duration_minutes"></div>
                             </div>
-
-                            <div class="col-2 d-flex align-items-center mt-4">
-                                <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="is_preview" type="checkbox" value="1"
-                                        id="is_preview_switch">
-                                    <span class="form-check-label text-dark"
-                                        for="is_preview_switch">{{ __('Free Preview?') }}</span>
-                                </label>
-                            </div>
-                            <div class="col-2 d-flex align-items-center mt-4">
-                                <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="is_active" type="checkbox" value="1"
-                                        id="is_active_switch" checked>
-                                    <span class="form-check-label text-dark"
-                                        for="is_active_switch">{{ __('Active') }}</span>
-                                </label>
-                            </div>
-
-
-
                         </div>
 
-
+                        {{-- Toggles --}}
+                        <div class="row mb-4">
+                            <div class="col-4 d-flex align-items-center">
+                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input" name="chat_enabled" type="checkbox" value="1"
+                                        checked>
+                                    <span class="form-check-label">{{ __('Enable Chat') }}</span>
+                                </label>
+                            </div>
+                            <div class="col-4 d-flex align-items-center">
+                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input" name="is_recorded" type="checkbox" value="1">
+                                    <span class="form-check-label">{{ __('Record Session') }}</span>
+                                </label>
+                            </div>
+                            <div class="col-4 d-flex align-items-center">
+                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input" name="is_active" type="checkbox" value="1"
+                                        checked>
+                                    <span class="form-check-label">{{ __('Active') }}</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -259,16 +281,9 @@
     </form>
 @endsection
 @push('scripts')
-    {{-- <script>
-        // Pass the $classId variable from Laravel to JS
-        let classId = @json($classId)??;
-
-        // Then build the endpoint dynamically
-    </script> --}}
-
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/js/datatables/classes.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/js/datatables/lives.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
@@ -307,10 +322,10 @@
                 $("#is_active_switch", "#is_preview_switch", "#quiz_required_switch")
                     .prop('checked', false);
 
-                $("#crud_form").attr('action', "{{ route('dashboard.classes.store') }}");
+                $("#crud_form").attr('action', "{{ route('dashboard.lives.store') }}");
 
                 // Reset modal title
-                $("#form_title").text("{{ __('Add new class') }}");
+                $("#form_title").text("{{ __('Add new live') }}");
 
                 // Optionally, reset date inputs
                 $("#start_date_inp, #end_date_inp").val('');
@@ -322,22 +337,36 @@
     </script>
 
     <script>
-        $(document).ready(function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const courseId = urlParams.get('course_id');
+        document.addEventListener("DOMContentLoaded", function() {
+            const platformSelect = document.getElementById('platform');
+            const meetingIdField = document.getElementById('meeting_id').closest('.col-4');
+            const passwordField = document.getElementById('password').closest('.col-4');
+            const streamKeyField = document.getElementById('stream_key').closest('.col-4');
 
-            if (courseId) {
-                // اخفي الـ select
-                $('#course_select_wrapper').hide();
+            function toggleFields() {
+                const platform = platformSelect.value;
 
-                // ضيف input مخفي بالقيمة
-                $('#hidden_course_input_wrapper').html(`
-                <input type="hidden" name="course_id" value="${courseId}">
-            `);
-            } else {
-                // لو مفيش course_id في الرابط، خليه ظاهر
-                $('#course_select_wrapper').show();
+                if (platform === 'zoom') {
+                    meetingIdField.style.display = 'block';
+                    passwordField.style.display = 'block';
+                    streamKeyField.style.display = 'none';
+                } else if (platform === 'youtube' || platform === 'twitch') {
+                    meetingIdField.style.display = 'none';
+                    passwordField.style.display = 'none';
+                    streamKeyField.style.display = 'block';
+                } else {
+                    // Hide all if unknown platform
+                    meetingIdField.style.display = 'none';
+                    passwordField.style.display = 'none';
+                    streamKeyField.style.display = 'none';
+                }
             }
+
+            // Initial toggle
+            toggleFields();
+
+            // Listen for change
+            platformSelect.addEventListener('change', toggleFields);
         });
     </script>
 @endpush

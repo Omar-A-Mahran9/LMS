@@ -41,6 +41,7 @@ Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected
 Route::get('students/{student}/report/pdf', [StudentController::class, 'reportPdf'])->name('students.report.pdf');
 Route::post('enrollments/toggle-status', [EnrollmentController::class, 'toggleStatus'])
     ->name('enrollments.toggleStatus');
+ Route::resource('lives', 'LiveController')->except(['create', 'edit']);
 
  Route::resource('courses', 'CourseController')->except(['create', 'edit']);
  Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
