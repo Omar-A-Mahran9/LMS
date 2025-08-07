@@ -36,7 +36,7 @@ class Role extends Model
         'sections',
 
         'videos',
-        
+
         'generateCode',
 
         'quizzes',
@@ -67,7 +67,7 @@ class Role extends Model
 
         'settings',
 
-        'orders',
+        'lives',
 
     ];
 

@@ -14,7 +14,7 @@ class LiveController extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorize('view_classes');
+        $this->authorize('view_lives');
 
         $courseId = $request->input('course_id');
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
@@ -32,7 +32,7 @@ class LiveController extends Controller
 
     public function store(StoreLiveRequest $request)
     {
-        $this->authorize('create_classes');
+        $this->authorize('create_lives');
 
         $validated = $request->validated();
 
@@ -42,12 +42,11 @@ class LiveController extends Controller
 
         $live = Live::create($validated);
 
-        return response()->json(['status' => true, 'message' => __('Live session created successfully.'), 'data' => $live]);
-    }
+     }
 
     public function update(UpdateLiveRequest $request, $id)
     {
-        $this->authorize('update_classes');
+        $this->authorize('update_lives');
         $live = Live::findOrFail($id);
         $validated = $request->validated();
 
@@ -62,7 +61,7 @@ class LiveController extends Controller
 
     public function show($id)
     {
-        $this->authorize('view_classes');
+        $this->authorize('view_lives');
 
         $live = Live::with(['course:id,title_en,title_ar', 'class:id,title_en,title_ar'])->findOrFail($id);
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
@@ -73,7 +72,7 @@ class LiveController extends Controller
 
     public function destroy($id)
     {
-        $this->authorize('delete_classes');
+        $this->authorize('delete_lives');
 
         $live = Live::findOrFail($id);
         $live->delete();
