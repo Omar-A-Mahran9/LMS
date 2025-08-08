@@ -34,7 +34,7 @@ public function topHeroesByCategory(Request $request)
 {
     $categoryId = $request->get('category_id');
     $classId = $request->get('class_id');
-    $quizId = $request->get('quiz_id');
+    $quizId = $request->get('quiz_id')??31;
 
     $category = Category::where('is_publish', 1)
         ->whereNull('parent_id')
