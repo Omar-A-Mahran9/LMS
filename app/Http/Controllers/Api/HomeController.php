@@ -204,10 +204,10 @@ public function topHeroesByCategory(Request $request)
                 'image' => $item['student']->full_image_path,
                 'category' => $item['student']->category->name ?? 'N/A',
                 'attempts' => $item['attempts'],
-                'average_score' => 333,
+                'average_score' =>  $item['total_possible'],
                 // 'percentage' => round($item['percentage'], 2),
                 'full_score' => $item['total_score'],
-                'total_possible' => $item['total_possible']??333,
+                // 'total_possible' => $item['total_possible'],
             ];
         });
 
