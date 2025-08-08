@@ -101,15 +101,22 @@ public function topHeroesByCategory(Request $request)
             }
         }
     }
-
+dd($studentStats);
     $topStudents = collect($studentStats)
         ->filter(fn($data) => $data['attempts'] > 0)
         ->map(function ($data) {
             $data['average'] = $data['total_score'] / $data['attempts'];
-
+            $data['percentage'] = $data['total_possible'] > 0
+                ? ($data['total_score'] / $data['total_possible']) * 100
+                : 0;
             return $data;
         })
- 
+        ->sort(function ($a, $b) {
+            if ($a['percentage'] == $b['percentage']) {
+                return $a['attempts'] <=> $b['attempts']; // fewer attempts is better
+            }
+            return $b['percentage'] <=> $a['percentage']; // higher percentage is better
+        })
         ->take(10)
         ->values()
         ->map(function ($item) {
