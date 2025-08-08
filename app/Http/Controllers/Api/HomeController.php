@@ -120,62 +120,72 @@ class HomeController extends Controller
     // }
 public function topHeroesByCategory(Request $request)
 {
-
     $categoryId = $request->get('category_id');
+    $classId    = $request->get('class_id');
+    $quizId     = $request->get('quiz_id');
 
+    // Get the root or selected category
     $category = Category::where('is_publish', 1)
         ->whereNull('parent_id')
         ->when($categoryId, fn($q) => $q->where('id', $categoryId))
-        ->with(['courses.classes.quizzes.attempts.student'])
+        ->with([
+            'courses.classes.quizzes.questions',
+            'courses.classes.quizzes.attempts.student.category'
+        ])
         ->first();
 
     if (!$category) {
         return $this->failure('Category not found');
     }
 
-$studentStats = [];
+    $studentStats = [];
 
-foreach ($category->courses as $course) {
+    foreach ($category->courses as $course) {
+        foreach ($course->classes as $class) {
+            // Skip if class_id filter exists and doesn't match
+            if ($classId && $class->id != $classId) continue;
 
-    foreach ($course->classes as $class) {
+            foreach ($class->quizzes as $quiz) {
+                // Skip if quiz_id filter exists and doesn't match
+                if ($quizId && $quiz->id != $quizId) continue;
 
-        foreach ($class->quizzes as $quiz) {
-            // Ensure quiz has questions
-            $quizFullMark = $quiz->questions->sum('points') ?? 100;
+                $quizFullMark = $quiz->questions->sum('points') ?? 100;
 
-            foreach ($quiz->attempts as $attempt) {
+                foreach ($quiz->attempts as $attempt) {
+                    $student = $attempt->student;
 
-                $student = $attempt->student;
+                    if (!$student) continue;
 
-                if (!$student) {
-                    continue; // Skip if student does not exist
+                    // Skip test accounts
+                    if (
+                        str_contains(strtolower($student->first_name), 'test') ||
+                        str_contains(strtolower($student->last_name), 'test') ||
+                        str_contains(strtolower($student->email ?? ''), 'test')
+                    ) {
+                        continue;
+                    }
+
+                    $studentId = $student->id;
+
+                    if (!isset($studentStats[$studentId])) {
+                        $studentStats[$studentId] = [
+                            'total_score' => 0,
+                            'total_possible' => 0,
+                            'attempts' => 0,
+                            'student' => $student,
+                        ];
+                    }
+
+                    $studentStats[$studentId]['total_score'] += $attempt->score;
+                    $studentStats[$studentId]['total_possible'] += $quizFullMark;
+                    $studentStats[$studentId]['attempts'] += 1;
                 }
-                else{
-
-                $studentId = $student->id;
-                // Initialize stats if student not yet tracked
-                 if (!isset($studentStats[$studentId])) {
-                    $studentStats[$studentId] = [
-                        'total_score' => 0,
-                        'total_possible' => 0,
-                        'attempts' => 0,
-                        'student' => $student,
-                    ];
-                }
-                 // Accumulate stats
-                $studentStats[$studentId]['total_score'] += $attempt->score;
-                $studentStats[$studentId]['total_possible'] = $quizFullMark;
-                $studentStats[$studentId]['attempts'] += 1;
-                }
-
             }
         }
     }
-}
-dd($studentStats );
 
     $topStudents = collect($studentStats)
-        ->filter(fn($data) => $data['attempts'] > 0) // تجاهل اللي ملوش محاولات
+        ->filter(fn($data) => $data['attempts'] > 0)
         ->map(function ($data) {
             $data['average'] = $data['total_score'] / $data['attempts'];
             $data['percentage'] = $data['total_possible'] > 0
@@ -183,7 +193,6 @@ dd($studentStats );
                 : 0;
             return $data;
         })
-        // الترتيب حسب أقل حضور وأعلى درجة
         ->sort(function ($a, $b) {
             if ($a['attempts'] == $b['attempts']) {
                 return $b['total_score'] <=> $a['total_score'];
@@ -195,7 +204,7 @@ dd($studentStats );
         ->map(function ($item) {
             return [
                 'student_id' => $item['student']->id,
-                'name' => $item['student']->first_name . " " . $item['student']->last_name,
+                'name' => $item['student']->first_name . ' ' . $item['student']->last_name,
                 'image' => $item['student']->full_image_path,
                 'category' => $item['student']->category->name ?? 'N/A',
                 'attempts' => $item['attempts'],
@@ -207,7 +216,7 @@ dd($studentStats );
         });
 
     return $this->success('', [
-         'image'=>getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
+        'image' => getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
         'topStudents' => $topStudents,
     ]);
 }
