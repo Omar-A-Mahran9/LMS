@@ -34,14 +34,14 @@ public function topHeroesByCategory(Request $request)
 {
     $categoryId = $request->get('category_id');
     $classId = $request->get('class_id');
-    $quizId = $request->get('quiz_id');
+    $quizId = $request->get('quiz_id')??31;
 
     $category = Category::where('is_publish', 1)
         ->whereNull('parent_id')
         ->when($categoryId, fn($q) => $q->where('id', $categoryId))
         ->with([
-            'courses.classes.quizzes.attempts.student.user',
-            'courses.classes.quizzes.questions',
+            'courses.classes.quizzes.attempts.student',
+            'courses.classes.quizzes.questions'
         ])
         ->first();
 
@@ -49,28 +49,30 @@ public function topHeroesByCategory(Request $request)
         return $this->failure('Category not found');
     }
 
-    $studentScores = [];
+    $studentStats = [];
 
     foreach ($category->courses as $course) {
         foreach ($course->classes as $class) {
 
+            // Filter by class if provided
             if ($classId && $class->id != $classId) {
                 continue;
             }
 
             foreach ($class->quizzes as $quiz) {
 
+                // Filter by quiz if provided
                 if ($quizId && $quiz->id != $quizId) {
                     continue;
                 }
 
-                $quizFullMark = $quiz->questions->sum('points') ?: 100;
+                $quizFullMark = $quiz->questions->sum('points') ?? 100;
 
                 foreach ($quiz->attempts as $attempt) {
                     $student = $attempt->student;
                     if (!$student) continue;
 
-                    // Ignore test/fake data
+                    // Skip test or fake data
                     if (
                         str_contains(strtolower($student->first_name), 'test') ||
                         str_contains(strtolower($student->last_name), 'test') ||
@@ -80,36 +82,54 @@ public function topHeroesByCategory(Request $request)
                     }
 
                     $studentId = $student->id;
-                    $score = $attempt->score;
-                    $percentage = ($score / $quizFullMark) * 100;
 
-                    // Keep best attempt only (highest score)
-                    if (!isset($studentScores[$studentId]) || $studentScores[$studentId]['score'] < $score) {
-                        $studentScores[$studentId] = [
-                            'student'     => $student,
-                            'score'       => $score,
-                            'percentage'  => round($percentage, 2),
-                            'quiz_full'   => $quizFullMark,
+                    // Initialize if not already
+                    if (!isset($studentStats[$studentId])) {
+                        $studentStats[$studentId] = [
+                            'total_score' => 0,
+                            'total_possible' => 0,
+                            'attempts' => 0,
+                            'student' => $student,
                         ];
                     }
+
+                    // Accumulate stats
+                    $studentStats[$studentId]['total_score'] += $attempt->score;
+                    $studentStats[$studentId]['total_possible'] = $quizFullMark;
+                    $studentStats[$studentId]['attempts'] += 1;
                 }
             }
         }
     }
 
-    $topStudents = collect($studentScores)
-        ->sortByDesc('percentage')
+    $topStudents = collect($studentStats)
+        ->filter(fn($data) => $data['attempts'] > 0)
+        ->map(function ($data) {
+            $data['average'] = $data['total_score'] / $data['attempts'];
+            $data['percentage'] = $data['total_possible'] > 0
+                ? ($data['total_score'] / $data['total_possible']) * 100
+                : 0;
+            return $data;
+        })
+        ->sort(function ($a, $b) {
+            if ($a['percentage'] == $b['percentage']) {
+                return $a['attempts'] <=> $b['attempts']; // fewer attempts is better
+            }
+            return $b['percentage'] <=> $a['percentage']; // higher percentage is better
+        })
         ->take(10)
         ->values()
         ->map(function ($item) {
             return [
-                'student_id'     => $item['student']->id,
-                'name'           => $item['student']->first_name . ' ' . $item['student']->last_name,
-                'image'          => $item['student']->full_image_path,
-                'category'       => $item['student']->category->name ?? 'N/A',
-                'score'          => $item['score'],
-                'total_possible' => $item['quiz_full'],
-                'percentage'     => $item['percentage'],
+                'student_id' => $item['student']->id,
+                'name' => $item['student']->first_name . " " . $item['student']->last_name,
+                'image' => $item['student']->full_image_path,
+                'category' => $item['student']->category->name ?? 'N/A',
+                'attempts' => $item['attempts'],
+                'average_score' => round($item['average'], 2),
+                'percentage' => round($item['percentage'], 2),
+                'full_score' => $item['total_score'],
+                'total_possible' => $item['total_possible'],
             ];
         });
 
