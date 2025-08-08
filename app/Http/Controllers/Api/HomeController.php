@@ -104,7 +104,7 @@ public function topHeroesByCategory(Request $request)
                     // Accumulate stats
                     $studentStats[$studentId]['total_score'] += $attempt->score;
                     $studentStats[$studentId]['total_possible'] += $quizFullMark;
-                    $studentStats[$studentId]['attempts'] += 1;
+                    // $studentStats[$studentId]['attempts'] += 1;
                 }
             }
         }
