@@ -146,7 +146,7 @@ public function topHeroesByCategory(Request $request)
             if ($classId && $class->id != $classId) {
                 continue;
             }
-
+dd('d');
             foreach ($class->quizzes as $quiz) {
 
                 // تصفية حسب الكويز
