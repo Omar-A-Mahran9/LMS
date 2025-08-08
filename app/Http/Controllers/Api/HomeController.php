@@ -93,7 +93,7 @@ public function topHeroesByCategory(Request $request)
                     //     ];
                     // }
     // If student not seen yet, or this attempt is better, store it
-    if (!isset($studentStats[$studentId]) || $attempt->score > $studentStats[$studentId]['best_score']) {
+    if (!isset($studentStats[$studentId]) || $attempt->score > $studentStats[$studentId]['total_score']) {
         $studentStats[$studentId] = [
             'total_score' => $attempt->score,
             'total_possible' => $quizFullMark,
