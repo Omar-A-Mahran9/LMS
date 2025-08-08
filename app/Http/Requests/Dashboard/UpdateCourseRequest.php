@@ -37,13 +37,13 @@ class UpdateCourseRequest extends FormRequest
     'required',
     'max:255',
     new NotNumbersOnly(),
-    Rule::unique('courses', 'title_ar')->ignore($course->id)
+
 ],
 'title_en' => [
     'required',
     'max:255',
     new NotNumbersOnly(),
-    Rule::unique('courses', 'title_en')->ignore($course->id)
+   
 ],
 
     'description_ar' => ['required', new NotNumbersOnly()],
@@ -63,7 +63,7 @@ class UpdateCourseRequest extends FormRequest
 
    // Relationships
     'instructor_id' => ['required', 'exists:admins,id'],
- 
+
     'category_id' => ['required_with:is_class,1', 'exists:categories,id'],
 
 
