@@ -146,7 +146,6 @@ foreach ($category->courses as $course) {
             foreach ($quiz->attempts as $attempt) {
 
                 $student = $attempt->student;
-dd($student);
 
                 if (!$student) {
                     continue; // Skip if student does not exist
@@ -155,6 +154,8 @@ dd($student);
 
                 $studentId = $student->id;
                 // Initialize stats if student not yet tracked
+                dd($studentStats);
+
                 if (!isset($studentStats[$studentId])) {
                     $studentStats[$studentId] = [
                         'total_score' => 0,
