@@ -37,7 +37,9 @@ class LiveController extends Controller
         $validated['chat_enabled'] = $request->boolean('chat_enabled');
         $validated['is_recorded'] = $request->boolean('is_recorded');
         $validated['is_active'] = $request->boolean('is_active');
-
+    if ($request->hasFile('image')) {
+            $validated['image'] = uploadImageToDirectory($request->file('image'), 'Lives');
+        }
         $live = Live::create($validated);
 
      }

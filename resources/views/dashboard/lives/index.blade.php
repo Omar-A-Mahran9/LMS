@@ -128,18 +128,13 @@
                     <div class="modal-body">
                         {{-- Course & Class --}}
                         <div class="row mb-4">
-                            <div class="col-6 d-flex flex-column justify-content-center">
+                            <div class="col-12 d-flex flex-column justify-content-center">
                                 <label for="image_inp"
                                     class="form-label  text-center fs-6 fw-bold mb-3">{{ __('Thumbnail Image') }}</label>
                                 <x-dashboard.upload-image-inp name="image" :image="null" :directory="'courses'"
                                     placeholder="default.svg" type="editable" />
                             </div>
-                            <div class="col-6 d-flex flex-column justify-content-center">
-                                <label for="slide_image_inp"
-                                    class="form-label  text-center fs-6 fw-bold mb-3">{{ __('Slide Image') }}</label>
-                                <x-dashboard.upload-image-inp name="slide_image" :image="null" :directory="'courses'"
-                                    placeholder="default.svg" type="editable" />
-                            </div>
+
                         </div>
                         <div class="row mb-4">
                             <div class="col-6">

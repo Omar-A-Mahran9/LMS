@@ -52,7 +52,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('enroll-class', [EnrollmentController::class, 'enroll_class']);
     Route::get('enrollment-status/{course_id}', [EnrollmentController::class, 'enrollmentStatus']);
     Route::get('books/{id}', 'BookController@show');
-  Route::get('certificate/verify/{id}', [CertificateController::class, 'verify'])
+    Route::get('certificate/verify/{id}', [CertificateController::class, 'verify'])
     ->name('certificates.verify');
     Route::get('certificates/{course}', [CertificateController::class, 'download'])
         ->name('student.certificates.download');
@@ -93,6 +93,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('governments', 'HomeController@getgovernments');
     Route::get('home', 'HomeController@getHome');
     Route::get('general', 'GeneralInvokableController');
+    Route::get('lives', 'LivesController@index');
 
     Route::get('categories', 'HomeController@getCategory');
     Route::get('footer', 'HomeController@getfooter');

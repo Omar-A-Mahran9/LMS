@@ -25,6 +25,8 @@ class StoreLiveRequest extends FormRequest
     public function rules()
     {
         return [
+                        'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
+
             'course_id' => 'required|exists:courses,id',
             'class_id' => 'nullable|exists:classes,id',
 
