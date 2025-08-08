@@ -44,8 +44,9 @@ class LiveController extends Controller
 
      }
 
-  public function update(UpdateLiveRequest $request, Live $live)
+  public function update(UpdateLiveRequest $request,  $id)
 {
+    $live=Live::find($id);
     $this->authorize('update_lives');
 
     $validated = $request->validated();
@@ -56,11 +57,10 @@ class LiveController extends Controller
 
     if ($request->hasFile('image')) {
         // Optional: delete old image if needed
-        deleteImage($live->image); // Only if you want to delete the old image
+        deleteImageFromDirectory($live->image,'Lives'); // Only if you want to delete the old image
         $validated['image'] = uploadImageToDirectory($request->file('image'), 'Lives');
     }
-
-    $live->update($validated);
+     $live->update($validated);
 
     return response()->json([
         'message' => 'Live updated successfully',

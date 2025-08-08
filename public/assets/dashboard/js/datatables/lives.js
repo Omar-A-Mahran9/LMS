@@ -185,10 +185,14 @@ var KTDatatablesServerSide = (function () {
                     "background-image",
                     `url('${data.full_image_path}')`
                 );
+                $("#start_time_inp").val(data.start_time);
+                $("#end_time_inp").val(data.end_time);
 
                 // Titles
                 $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
+                $("#embed_url_inp").val(data.embed_url);
+                $("#chat_embed_url_inp").val(data.chat_embed_url);
 
                 if (tinymce.get("description_ar_inp")) {
                     tinymce
@@ -204,33 +208,19 @@ var KTDatatablesServerSide = (function () {
 
                 // Video URL
                 $("#video_url_inp").val(data.video_url);
-                // Attachment preview (link or filename)
-                if (data.full_attachment_path) {
-                    $("#attachment_preview").html(
-                        `<a href="${
-                            data.full_attachment_path
-                        }" target="_blank" class="btn btn-sm btn-info">
-                        ${__("Current Attachment")}
-                    </a>`
-                    );
-                } else {
-                    $("#attachment_preview").html("");
-                }
 
                 // Reset file input (clear any previously selected file)
                 $("#attachment_inp").val("");
                 // Relationships
                 $("#course_id_inp").val(data.course_id).trigger("change");
-
-                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#quiz_required_switch").prop("checked", data.quiz_required);
+                $("#class_id_inp").val(data.class_id).trigger("change");
 
                 // Flags
                 $("#is_active_switch").prop("checked", data.is_active);
-                $("#is_preview_switch").prop("checked", data.is_preview);
+                $("#chat_enabled_switch").prop("checked", data.chat_enabled);
 
                 // Reset form method & action
-                $("#crud_form").attr("action", `/dashboard/classes/${data.id}`);
+                $("#crud_form").attr("action", `/dashboard/lives/${data.id}`);
 
                 // Remove previous _method input if any, then add PUT
                 $("#crud_form").find('input[name="_method"]').remove();

@@ -248,12 +248,17 @@
 
                         {{-- Date & Duration --}}
                         <div class="row mb-4">
-                            <div class="col-6">
+                            <div class="col-4">
                                 <label for="start_time_inp" class="form-label">{{ __('Start Time') }}</label>
                                 <input type="datetime-local" name="start_time" id="start_time_inp" class="form-control">
                                 <div class="invalid-feedback" id="start_time"></div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
+                                <label for="end_time_inp" class="form-label">{{ __('End Time') }}</label>
+                                <input type="datetime-local" name="end_time" id="end_time_inp" class="form-control">
+                                <div class="invalid-feedback" id="end_time"></div>
+                            </div>
+                            <div class="col-4">
                                 <label for="duration_minutes_inp"
                                     class="form-label">{{ __('Duration (Minutes)') }}</label>
                                 <input type="number" name="duration_minutes" id="duration_minutes_inp"
@@ -264,11 +269,14 @@
 
                         {{-- Toggles --}}
                         <div class="row mb-4">
-                            <div class="col-4 d-flex align-items-center">
+
+
+                            <div class="col-4 d-flex align-items-center mt-4">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
                                     <input class="form-check-input" name="chat_enabled" type="checkbox" value="1"
-                                        checked>
-                                    <span class="form-check-label">{{ __('Enable Chat') }}</span>
+                                        id="chat_enabled_switch" checked>
+                                    <span class="form-check-label text-dark"
+                                        for="chat_enabled_switch">{{ __('Enable Chat') }}</span>
                                 </label>
                             </div>
                             <div class="col-4 d-flex align-items-center">
@@ -277,11 +285,14 @@
                                     <span class="form-check-label">{{ __('Record Session') }}</span>
                                 </label>
                             </div>
-                            <div class="col-4 d-flex align-items-center">
+
+
+                            <div class="col-4 d-flex align-items-center mt-4">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
                                     <input class="form-check-input" name="is_active" type="checkbox" value="1"
-                                        checked>
-                                    <span class="form-check-label">{{ __('Active') }}</span>
+                                        id="is_active_switch" checked>
+                                    <span class="form-check-label text-dark"
+                                        for="is_active_switch">{{ __('Active') }}</span>
                                 </label>
                             </div>
                         </div>
