@@ -150,16 +150,10 @@ foreach ($category->courses as $course) {
                 if (!$student) {
                     continue; // Skip if student does not exist
                 }
-
-                // Skip test/dummy students
-                $first = strtolower($student->first_name);
-                $last = strtolower($student->last_name);
-                $email = strtolower($student->email ?? '');
-
-          
+                else{
 
                 $studentId = $student->id;
-
+dd($studentId);
                 // Initialize stats if student not yet tracked
                 if (!isset($studentStats[$studentId])) {
                     $studentStats[$studentId] = [
@@ -174,6 +168,9 @@ foreach ($category->courses as $course) {
                 $studentStats[$studentId]['total_score'] += $attempt->score;
                 $studentStats[$studentId]['total_possible'] += $quizFullMark;
                 $studentStats[$studentId]['attempts'] += 1;
+                }
+
+
             }
         }
     }
