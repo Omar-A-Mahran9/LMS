@@ -160,7 +160,7 @@ public function topHeroesByCategory(Request $request)
                 $bestAttempts = $quiz->attempts
                     ->groupBy('student_id')
                     ->map(fn($attempts) => $attempts->sortByDesc('score')->first());
-dd($bestAttempts);
+
                 foreach ($bestAttempts as $attempt) {
                     $student = $attempt->student;
                     if (!$student) continue;
@@ -185,7 +185,7 @@ dd($bestAttempts);
                         ];
                     }
 
-                    $studentStats[$studentId]['total_score'] += $attempt->score;
+                    $studentStats[$studentId]['total_score'] = $attempt->score;
                     $studentStats[$studentId]['total_possible'] = $quizFullMark;
                     $studentStats[$studentId]['attempts'] += 1;
                 }
