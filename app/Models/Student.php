@@ -37,7 +37,7 @@ class Student extends Authenticatable
 
     public function getFullImagePathAttribute()
     {
-        return asset(getImagePathFromDirectory($this->image, 'Students', "default.svg"));
+        return asset(getImagePathFromDirectory($this->image, 'Students', "ddframe.png"));
     }
     public function category()
     {
