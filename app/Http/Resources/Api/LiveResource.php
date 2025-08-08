@@ -19,6 +19,8 @@ public function toArray(Request $request): array
             'course_id'       => $this->course_id,
             'class_id'        => $this->class_id,
             'chat_enabled'    => (bool) $this->chat_enabled,
+            'chat_embed_url'  => $this->chat_enabled ? $this->chat_embed_url : null,
+            'video_embed_url' => $this->embed_url,
             'created_at'      => $this->created_at?->toDateTimeString(),
             'updated_at'      => $this->updated_at?->toDateTimeString(),
         ];

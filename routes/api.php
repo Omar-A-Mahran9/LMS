@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\BookOrderController;
 use App\Http\Controllers\Api\CertificateController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\LivesController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\StudentHomeworkController;
 use App\Http\Controllers\Api\StudentQuizController;
@@ -94,6 +95,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('home', 'HomeController@getHome');
     Route::get('general', 'GeneralInvokableController');
     Route::get('lives', 'LivesController@index');
+    Route::get('lives/{id}', [LivesController::class, 'show']);
 
     Route::get('categories', 'HomeController@getCategory');
     Route::get('footer', 'HomeController@getfooter');

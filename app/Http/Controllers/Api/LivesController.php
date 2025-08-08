@@ -30,4 +30,10 @@ class LivesController extends Controller
         return $this->success('',LivesResource::collection($lives));
     }
 
+  public function show($id)
+    {
+        $live = Live::where('is_active', true)->findOrFail($id);
+        return $this->success('', new LivesResource($live));
+    }
+
 }
