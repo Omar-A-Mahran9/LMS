@@ -84,15 +84,23 @@ public function topHeroesByCategory(Request $request)
                     $studentId = $student->id;
 
                     // Initialize if not already
-                    if (!isset($studentStats[$studentId])) {
-                        $studentStats[$studentId] = [
-                            'total_score' => 0,
-                            'total_possible' => 0,
-                            'attempts' => 0,
-                            'student' => $student,
-                        ];
-                    }
-
+                    // if (!isset($studentStats[$studentId])) {
+                    //     $studentStats[$studentId] = [
+                    //         'total_score' => 0,
+                    //         'total_possible' => 0,
+                    //         'attempts' => 0,
+                    //         'student' => $student,
+                    //     ];
+                    // }
+    // If student not seen yet, or this attempt is better, store it
+    if (!isset($studentStats[$studentId]) || $attempt->score > $studentStats[$studentId]['best_score']) {
+        $studentStats[$studentId] = [
+            'total_score' => $attempt->score,
+            'total_possible' => $quizFullMark,
+            'student' => $student,
+            'attempt_id' => $attempt->id,
+        ];
+    }
                     // Accumulate stats
                     $studentStats[$studentId]['total_score'] += $attempt->score;
                     $studentStats[$studentId]['total_possible'] += $quizFullMark;
