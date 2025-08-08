@@ -185,49 +185,14 @@ public function topHeroesByCategory(Request $request)
                         ];
                     }
 
-                    $studentStats[$studentId]['total_score'] = $attempt->score;
+                    $studentStats[$studentId]['total_score'] += $attempt->score;
                     $studentStats[$studentId]['total_possible'] = $quizFullMark;
                     $studentStats[$studentId]['attempts'] += 1;
                 }
             }
         }
     }
-
-    $topStudents = collect($studentStats)
-        ->filter(fn($data) => $data['attempts'] > 0)
-        ->map(function ($data) {
-            $data['average'] = $data['total_score'] / $data['attempts'];
-            $data['percentage'] = $data['total_possible'] > 0
-                ? ($data['total_score'] / $data['total_possible']) * 100
-                : 0;
-            return $data;
-        })
-        ->sort(function ($a, $b) {
-            if ($a['percentage'] == $b['percentage']) {
-                return $a['attempts'] <=> $b['attempts']; // الأفضل الأقل محاولات
-            }
-            return $b['percentage'] <=> $a['percentage']; // الأعلى نسبة أولاً
-        })
-        ->take(10)
-        ->values()
-        ->map(function ($item) {
-            return [
-                'student_id' => $item['student']->id,
-                'name' => $item['student']->first_name . " " . $item['student']->last_name,
-                'image' => $item['student']->full_image_path,
-                'category' => $item['student']->category->name ?? 'N/A',
-                'attempts' => $item['attempts'],
-                'average_score' => round($item['average'], 2),
-                'percentage' => round($item['percentage'], 2),
-                'full_score' => $item['total_score'],
-                'total_possible' => $item['total_possible'],
-            ];
-        });
-
-    return $this->success('', [
-        'image' => getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
-        'topStudents' => $topStudents,
-    ]);
+ return $studentStats;
 }
 
 
