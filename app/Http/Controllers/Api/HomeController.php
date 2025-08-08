@@ -195,8 +195,8 @@ public function topHeroesByCategory(Request $request)
 
     $topStudents = collect($studentStats)
        ;
-dd($topStudents);
-    return $this->success('', [
+return $topStudents;
+       return $this->success('', [
         'image' => getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
         'topStudents' => $topStudents,
     ]);
