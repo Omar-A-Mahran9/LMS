@@ -10,13 +10,18 @@ use Illuminate\Support\Facades\DB;
 
 class LivesResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
+public function toArray(Request $request): array
     {
-
+        return [
+            'id'              => $this->id,
+            'title'           => $this->title,
+            'course_id'       => $this->course_id,
+            'class_id'        => $this->class_id,
+            'chat_enabled'    => (bool) $this->chat_enabled,
+            'chat_embed_url'  => $this->chat_enabled ? $this->chat_embed_url : null,
+            'video_embed_url' => $this->video_embed_url,
+            'created_at'      => $this->created_at?->toDateTimeString(),
+            'updated_at'      => $this->updated_at?->toDateTimeString(),
+        ];
     }
 }
