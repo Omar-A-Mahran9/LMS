@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\LiveResource;
 use App\Http\Resources\Api\LivesResource;
 use App\Models\Live;
 use Illuminate\Http\Request;
@@ -33,7 +34,7 @@ class LivesController extends Controller
   public function show($id)
     {
         $live = Live::where('is_active', true)->findOrFail($id);
-        return $this->success('', new LivesResource($live));
+        return $this->success('', new LiveResource($live));
     }
 
 }
