@@ -142,9 +142,10 @@ foreach ($category->courses as $course) {
         foreach ($class->quizzes as $quiz) {
             // Ensure quiz has questions
             $quizFullMark = $quiz->questions->sum('points') ?? 100;
-dd($quizFullMark);
 
             foreach ($quiz->attempts as $attempt) {
+                dd($attempt);
+
                 $student = $attempt->student;
 
                 if (!$student) {
