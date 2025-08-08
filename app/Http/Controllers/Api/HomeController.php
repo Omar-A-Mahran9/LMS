@@ -196,7 +196,7 @@ public function topHeroesByCategory(Request $request)
 $topStudents = collect($studentStats)
     ->filter(fn($data) => $data['attempts'] > 0)
     ->sortByDesc(fn($data) => $data['total_score']) // Sort by highest score
-    // ->take(10) // Get top 10
+    ->take(10) // Get top 10
     ->values()
     ->map(function ($item) {
         return [
