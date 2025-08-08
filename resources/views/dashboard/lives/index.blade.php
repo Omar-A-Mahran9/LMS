@@ -129,8 +129,8 @@
                         {{-- Course & Class --}}
                         <div class="row mb-4">
                             <div class="col-6">
-                                <label for="course_id" class="form-label">{{ __('Course') }}</label>
-                                <select name="course_id" id="course_id" class="form-select" data-control="select2"
+                                <label for="course_id_inp" class="form-label">{{ __('Course') }}</label>
+                                <select name="course_id" id="course_id_inp" class="form-select" data-control="select2"
                                     data-placeholder="{{ __('Select Course') }}"
                                     data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
                                     <option value=""></option>
@@ -142,8 +142,8 @@
                             </div>
 
                             <div class="col-6">
-                                <label for="class_id" class="form-label">{{ __('Class (Optional)') }}</label>
-                                <select name="class_id" id="class_id" class="form-select" data-control="select2"
+                                <label for="class_id_inp" class="form-label">{{ __('Class (Optional)') }}</label>
+                                <select name="class_id" id="class_id_inp" class="form-select" data-control="select2"
                                     data-placeholder="{{ __('Select Class') }}"
                                     data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
                                     <option value=""></option>
@@ -158,14 +158,14 @@
                         {{-- Titles --}}
                         <div class="row mb-4">
                             <div class="col-6">
-                                <label for="title_ar" class="form-label">{{ __('Title (Arabic)') }}</label>
-                                <input type="text" name="title_ar" id="title_ar" class="form-control"
+                                <label for="title_ar_inp" class="form-label">{{ __('Title (Arabic)') }}</label>
+                                <input type="text" name="title_ar" id="title_ar_inp" class="form-control"
                                     placeholder="{{ __('Enter Arabic title') }}">
                                 <div class="invalid-feedback" id="title_ar"></div>
                             </div>
                             <div class="col-6">
-                                <label for="title_en" class="form-label">{{ __('Title (English)') }}</label>
-                                <input type="text" name="title_en" id="title_en" class="form-control"
+                                <label for="title_en_inp" class="form-label">{{ __('Title (English)') }}</label>
+                                <input type="text" name="title_en" id="title_en_inp" class="form-control"
                                     placeholder="{{ __('Enter English title') }}">
                                 <div class="invalid-feedback" id="title_en"></div>
                             </div>
@@ -174,22 +174,25 @@
                         {{-- Descriptions --}}
                         <div class="row mb-4">
                             <div class="col-6">
-                                <label for="description_ar" class="form-label">{{ __('Description (Arabic)') }}</label>
-                                <textarea name="description_ar" id="description_ar" class="tinymce form-control" rows="4"></textarea>
+                                <label for="description_ar_inp"
+                                    class="form-label">{{ __('Description (Arabic)') }}</label>
+                                <textarea name="description_ar" id="description_ar_inp" class="tinymce form-control" rows="4"></textarea>
                                 <div class="invalid-feedback" id="description_ar"></div>
                             </div>
                             <div class="col-6">
-                                <label for="description_en" class="form-label">{{ __('Description (English)') }}</label>
-                                <textarea name="description_en" id="description_en" class="tinymce form-control" rows="4"></textarea>
+                                <label for="description_en_inp"
+                                    class="form-label">{{ __('Description (English)') }}</label>
+                                <textarea name="description_en" id="description_en_inp" class="tinymce form-control" rows="4"></textarea>
                                 <div class="invalid-feedback" id="description_en"></div>
                             </div>
                         </div>
 
                         {{-- Platform & URL --}}
+                        {{-- Platform & URL --}}
                         <div class="row mb-4">
                             <div class="col-4">
-                                <label for="platform" class="form-label">{{ __('Platform') }}</label>
-                                <select data-control="select2" name="platform" id="platform" class="form-select">
+                                <label for="platform_inp" class="form-label">{{ __('Platform') }}</label>
+                                <select data-control="select2" name="platform" id="platform_inp" class="form-select">
                                     <option value="zoom">Zoom</option>
                                     <option value="youtube">YouTube</option>
                                     <option value="twitch">Twitch</option>
@@ -198,28 +201,41 @@
                             </div>
 
                             <div class="col-8">
-                                <label for="embed_url" class="form-label">{{ __('Embed URL') }}</label>
-                                <input type="url" name="embed_url" id="embed_url" class="form-control"
+                                <label for="embed_url_inp" class="form-label">{{ __('Embed URL') }}</label>
+                                <input type="url" name="embed_url" id="embed_url_inp" class="form-control"
                                     placeholder="{{ __('Paste YouTube/Zoom/Twitch Embed URL') }}">
                                 <div class="invalid-feedback" id="embed_url"></div>
                             </div>
                         </div>
 
+                        {{-- Chat URL --}}
+                        {{-- Chat URL (wrapped for toggle control) --}}
+                        <div class="row mb-4" id="chat_url_container">
+                            <div class="col-12">
+                                <label for="chat_url_inp" class="form-label">{{ __('Chat Embed URL') }}</label>
+                                <input type="url" name="chat_url" id="chat_url_inp" class="form-control"
+                                    placeholder="{{ __('Paste chat embed URL (optional)') }}">
+                                <div class="invalid-feedback" id="chat_url"></div>
+                            </div>
+                        </div>
+
+
+
                         {{-- Streaming Credentials --}}
                         <div class="row mb-4">
                             <div class="col-4">
-                                <label for="stream_key" class="form-label">{{ __('Stream Key') }}</label>
-                                <input type="text" name="stream_key" id="stream_key" class="form-control">
+                                <label for="stream_key_inp" class="form-label">{{ __('Stream Key') }}</label>
+                                <input type="text" name="stream_key" id="stream_key_inp" class="form-control">
                                 <div class="invalid-feedback" id="stream_key"></div>
                             </div>
                             <div class="col-4">
-                                <label for="meeting_id" class="form-label">{{ __('Meeting ID') }}</label>
-                                <input type="text" name="meeting_id" id="meeting_id" class="form-control">
+                                <label for="meeting_id_inp" class="form-label">{{ __('Meeting ID') }}</label>
+                                <input type="text" name="meeting_id" id="meeting_id_inp" class="form-control">
                                 <div class="invalid-feedback" id="meeting_id"></div>
                             </div>
                             <div class="col-4">
-                                <label for="password" class="form-label">{{ __('Password') }}</label>
-                                <input type="text" name="password" id="password" class="form-control">
+                                <label for="password_inp" class="form-label">{{ __('Password') }}</label>
+                                <input type="text" name="password" id="password_inp" class="form-control">
                                 <div class="invalid-feedback" id="password"></div>
                             </div>
                         </div>
@@ -227,14 +243,15 @@
                         {{-- Date & Duration --}}
                         <div class="row mb-4">
                             <div class="col-6">
-                                <label for="start_time" class="form-label">{{ __('Start Time') }}</label>
-                                <input type="datetime-local" name="start_time" id="start_time" class="form-control">
+                                <label for="start_time_inp" class="form-label">{{ __('Start Time') }}</label>
+                                <input type="datetime-local" name="start_time" id="start_time_inp" class="form-control">
                                 <div class="invalid-feedback" id="start_time"></div>
                             </div>
                             <div class="col-6">
-                                <label for="duration_minutes" class="form-label">{{ __('Duration (Minutes)') }}</label>
-                                <input type="number" name="duration_minutes" id="duration_minutes" class="form-control"
-                                    placeholder="e.g. 60">
+                                <label for="duration_minutes_inp"
+                                    class="form-label">{{ __('Duration (Minutes)') }}</label>
+                                <input type="number" name="duration_minutes" id="duration_minutes_inp"
+                                    class="form-control" placeholder="e.g. 60">
                                 <div class="invalid-feedback" id="duration_minutes"></div>
                             </div>
                         </div>
@@ -367,6 +384,26 @@
 
             // Listen for change
             platformSelect.addEventListener('change', toggleFields);
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatToggle = document.querySelector('input[name="chat_enabled"]');
+            const chatUrlContainer = document.getElementById('chat_url_container');
+            const chatUrlInput = document.getElementById('chat_url_inp');
+
+            function toggleChatUrl() {
+                if (chatToggle.checked) {
+                    chatUrlContainer.style.display = 'block';
+                } else {
+                    chatUrlContainer.style.display = 'none';
+                    chatUrlInput.value = ''; // Optional: clear input when hidden
+                }
+            }
+
+            // Initial check on page load
+            toggleChatUrl();
+
+            // Toggle on change
+            chatToggle.addEventListener('change', toggleChatUrl);
         });
     </script>
 @endpush

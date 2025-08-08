@@ -120,6 +120,7 @@ class HomeController extends Controller
     // }
 public function topHeroesByCategory(Request $request)
 {
+
     $categoryId = $request->get('category_id');
 
     $category = Category::where('is_publish', 1)
@@ -132,44 +133,57 @@ public function topHeroesByCategory(Request $request)
         return $this->failure('Category not found');
     }
 
-    $studentStats = [];
+$studentStats = [];
 
-    foreach ($category->courses as $course) {
-        foreach ($course->classes as $class) {
-            foreach ($class->quizzes as $quiz) {
-                $quizFullMark = $quiz->full_mark ?? 100; // تأكد من وجود full_mark
+foreach ($category->courses as $course) {
 
-                foreach ($quiz->attempts as $attempt) {
-                    $student = $attempt->student;
-                    if (!$student) continue;
+    foreach ($course->classes as $class) {
 
-                    // تخطي الداتا الوهمية
-                    if (
-                        str_contains(strtolower($student->first_name), 'test') ||
-                        str_contains(strtolower($student->last_name), 'test') ||
-                        str_contains(strtolower($student->email ?? ''), 'test')
-                    ) {
-                        continue;
-                    }
+        foreach ($class->quizzes as $quiz) {
+            // Ensure quiz has questions
+            $quizFullMark = $quiz->questions->sum('points') ?? 100;
+dd($quizFullMark);
 
-                    $studentId = $student->id;
+            foreach ($quiz->attempts as $attempt) {
+                $student = $attempt->student;
 
-                    if (!isset($studentStats[$studentId])) {
-                        $studentStats[$studentId] = [
-                            'total_score' => 0,
-                            'total_possible' => 0,
-                            'attempts' => 0,
-                            'student' => $student,
-                        ];
-                    }
-
-                    $studentStats[$studentId]['total_score'] += $attempt->score;
-                    $studentStats[$studentId]['total_possible'] += $quizFullMark;
-                    $studentStats[$studentId]['attempts'] += 1;
+                if (!$student) {
+                    continue; // Skip if student does not exist
                 }
+
+                // Skip test/dummy students
+                $first = strtolower($student->first_name);
+                $last = strtolower($student->last_name);
+                $email = strtolower($student->email ?? '');
+
+                if (
+                    str_contains($first, 'test') ||
+                    str_contains($last, 'test') ||
+                    str_contains($email, 'test')
+                ) {
+                    continue;
+                }
+
+                $studentId = $student->id;
+
+                // Initialize stats if student not yet tracked
+                if (!isset($studentStats[$studentId])) {
+                    $studentStats[$studentId] = [
+                        'total_score' => 0,
+                        'total_possible' => 0,
+                        'attempts' => 0,
+                        'student' => $student,
+                    ];
+                }
+
+                // Accumulate stats
+                $studentStats[$studentId]['total_score'] += $attempt->score;
+                $studentStats[$studentId]['total_possible'] += $quizFullMark;
+                $studentStats[$studentId]['attempts'] += 1;
             }
         }
     }
+}
 
     $topStudents = collect($studentStats)
         ->filter(fn($data) => $data['attempts'] > 0) // تجاهل اللي ملوش محاولات
@@ -482,7 +496,7 @@ public function getfooter()
 
             'description'     => setting('description_about_us' . $suffix),
             'instagram_link'   => setting('instagram_link'),
-            
+
             'ios_link'   => setting('instagram_link'),
             'google_play_link'   => setting('instagram_link'),
 

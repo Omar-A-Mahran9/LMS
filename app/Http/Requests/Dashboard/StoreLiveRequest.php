@@ -35,6 +35,8 @@ class StoreLiveRequest extends FormRequest
 
             'platform' => 'required|in:zoom,youtube,twitch',
             'embed_url' => 'required|url',
+            'chat_url' => 'required|url',
+
             'stream_key' => 'nullable|string|max:255',
             'meeting_id' => 'nullable|string|max:255',
             'password' => 'nullable|string|max:255',
