@@ -35,7 +35,9 @@ class StoreLiveRequest extends FormRequest
 
             'platform' => 'required|in:zoom,youtube,twitch',
             'embed_url' => 'required|url',
-            'chat_url' => 'required|url',
+   'chat_enabled' => 'sometimes|boolean',
+'chat_embed_url' => 'required_if:chat_enabled,true|url',
+
 
             'stream_key' => 'nullable|string|max:255',
             'meeting_id' => 'nullable|string|max:255',
@@ -44,7 +46,6 @@ class StoreLiveRequest extends FormRequest
             'start_time' => 'required|date',
             'duration_minutes' => 'nullable|integer|min:0',
 
-            'chat_enabled' => 'sometimes|boolean',
             'is_recorded' => 'sometimes|boolean',
             'is_active' => 'sometimes|boolean',
         ];

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('lives', function (Blueprint $table) {
             $table->id();
+            $table->string('image')->nullable(); // Thumbnail
 
             $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
             $table->foreignId('class_id')->nullable()->constrained('classes')->nullOnDelete();

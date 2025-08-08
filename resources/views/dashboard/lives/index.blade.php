@@ -224,12 +224,12 @@
 
                         {{-- Chat URL --}}
                         {{-- Chat URL (wrapped for toggle control) --}}
-                        <div class="row mb-4" id="chat_url_container">
+                        <div class="row mb-4" id="chat_embed_url_container">
                             <div class="col-12">
-                                <label for="chat_url_inp" class="form-label">{{ __('Chat Embed URL') }}</label>
-                                <input type="url" name="chat_url" id="chat_url_inp" class="form-control"
+                                <label for="chat_embed_url_inp" class="form-label">{{ __('Chat Embed URL') }}</label>
+                                <input type="url" name="chat_embed_url" id="chat_embed_url_inp" class="form-control"
                                     placeholder="{{ __('Paste chat embed URL (optional)') }}">
-                                <div class="invalid-feedback" id="chat_url"></div>
+                                <div class="invalid-feedback" id="chat_embed_url"></div>
                             </div>
                         </div>
 
