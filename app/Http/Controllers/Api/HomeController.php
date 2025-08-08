@@ -95,7 +95,7 @@ public function topHeroesByCategory(Request $request)
 
                     // Accumulate stats
                     $studentStats[$studentId]['total_score'] += $attempt->score;
-                    $studentStats[$studentId]['total_possible'] = $quizFullMark;
+                    $studentStats[$studentId]['total_possible'] += $quizFullMark;
                     $studentStats[$studentId]['attempts'] += 1;
                 }
             }
@@ -106,16 +106,10 @@ public function topHeroesByCategory(Request $request)
         ->filter(fn($data) => $data['attempts'] > 0)
         ->map(function ($data) {
             $data['average'] = $data['total_score'] / $data['attempts'];
-            $data['percentage'] = $data['total_possible'] > 0
-                ? ($data['total_score'] / $data['total_possible']) * 100
-                : 0;
+
             return $data;
         })
-        ->sort(function ($a, $b) {
-            if ($a['percentage'] == $b['percentage']) {
-                return $a['attempts'] <=> $b['attempts']; // fewer attempts is better
-            }
-         })
+ 
         ->take(10)
         ->values()
         ->map(function ($item) {
