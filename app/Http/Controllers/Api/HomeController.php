@@ -154,7 +154,7 @@ foreach ($category->courses as $course) {
 
                 $studentId = $student->id;
                 // Initialize stats if student not yet tracked
-
+dd(isset($studentStats[$studentId]));
                 // if (!isset($studentStats[$studentId])) {
                 //     $studentStats[$studentId] = [
                 //         'total_score' => 0,
@@ -163,8 +163,7 @@ foreach ($category->courses as $course) {
                 //         'student' => $student,
                 //     ];
                 // }
- $studentStats[$studentId]=[];
-                // Accumulate stats
+                 // Accumulate stats
                 $studentStats[$studentId]['total_score'] += $attempt->score;
                 $studentStats[$studentId]['total_possible'] += $quizFullMark;
                 $studentStats[$studentId]['attempts'] += 1;
