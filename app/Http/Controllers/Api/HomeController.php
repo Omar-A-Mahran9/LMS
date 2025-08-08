@@ -195,7 +195,7 @@ public function topHeroesByCategory(Request $request)
 
     $topStudents = collect($studentStats)
         ->filter(fn($data) => $data['attempts'] > 0)
-        ->take(10)
+        // ->take(10)
         ->values()
         ->map(function ($item) {
             return [
