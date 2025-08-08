@@ -154,8 +154,7 @@ foreach ($category->courses as $course) {
 
                 $studentId = $student->id;
                 // Initialize stats if student not yet tracked
-dd(isset($studentStats[$studentId]));
-                if (!isset($studentStats[$studentId])) {
+                 if (!isset($studentStats[$studentId])) {
                     $studentStats[$studentId] = [
                         'total_score' => 0,
                         'total_possible' => 0,
@@ -169,7 +168,7 @@ dd(isset($studentStats[$studentId]));
                 $studentStats[$studentId]['attempts'] += 1;
                 }
 
-
+dd($studentStats);
             }
         }
     }
