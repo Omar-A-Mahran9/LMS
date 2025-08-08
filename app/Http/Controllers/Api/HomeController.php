@@ -168,11 +168,11 @@ foreach ($category->courses as $course) {
                 $studentStats[$studentId]['attempts'] += 1;
                 }
 
-dd($studentStats[$studentId]);
             }
         }
     }
 }
+dd($studentStats );
 
     $topStudents = collect($studentStats)
         ->filter(fn($data) => $data['attempts'] > 0) // تجاهل اللي ملوش محاولات
