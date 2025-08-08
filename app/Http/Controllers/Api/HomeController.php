@@ -164,7 +164,7 @@ foreach ($category->courses as $course) {
                 }
                  // Accumulate stats
                 $studentStats[$studentId]['total_score'] += $attempt->score;
-                $studentStats[$studentId]['total_possible'] += $quizFullMark;
+                $studentStats[$studentId]['total_possible'] = $quizFullMark;
                 $studentStats[$studentId]['attempts'] += 1;
                 }
 
