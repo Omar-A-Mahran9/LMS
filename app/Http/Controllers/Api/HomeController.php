@@ -122,7 +122,7 @@ public function topHeroesByCategory(Request $request)
 {
     $categoryId = $request->get('category_id');
     $classId = $request->get('class_id');
-    $quizId = $request->get('quiz_id') ;
+    $quizId = $request->get('quiz_id')??31;
 
     $category = Category::where('is_publish', 1)
         ->whereNull('parent_id')
@@ -146,6 +146,7 @@ public function topHeroesByCategory(Request $request)
             if ($classId && $class->id != $classId) {
                 continue;
             }
+
             foreach ($class->quizzes as $quiz) {
 
                 // تصفية حسب الكويز
@@ -191,7 +192,14 @@ public function topHeroesByCategory(Request $request)
             }
         }
     }
- return $studentStats;
+
+    $topStudents = collect($studentStats)
+       ;
+dd($topStudents);
+    return $this->success('', [
+        'image' => getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
+        'topStudents' => $topStudents,
+    ]);
 }
 
 
