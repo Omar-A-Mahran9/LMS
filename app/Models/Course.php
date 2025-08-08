@@ -242,5 +242,9 @@ class Course extends Model
 
     return $total > 0 && $total == $completed;
 }
+public function lives()
+{
+    return $this->hasMany(Live::class, 'course_id');
+}
 
 }

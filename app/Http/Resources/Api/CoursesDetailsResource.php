@@ -28,9 +28,14 @@ class CoursesDetailsResource extends JsonResource
         $progressPercentage = $totalVideos > 0
             ? round(($completedCount / $totalVideos) * 100)
             : 0;
+  $hasLive = $this->lives()
+            ->where('is_active', true)
+            ->exists();
 
         return [
             'id' => $this->id,
+                        'has_live'=> $hasLive,
+
             'image' => $this->full_image_path,
             'video_url' => base64_encode(convertToYoutubeEmbed($this->video_url)),
             'title' => $this->title,

@@ -77,16 +77,17 @@ $nextClass = $this->course
                 }
             }
         }
-
+      $hasLive = $this->lives()
+            ->where('is_active', true)
+            ->exists();
         return [
             "id" => $this->id,
             'next_class_id' => $nextClass?->id,
-
             'image' => $this->full_image_path,
             'title' => $this->title,
             'short_title'        => $this->short_title,
                         'course_id'        => $this->course_id,
-
+            'has_live'=>$hasLive,
             'description'  => $this->description,
             'started_at' => $this->course->start_date,
             'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,

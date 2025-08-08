@@ -30,6 +30,8 @@ return new class extends Migration
             $table->string('password')->nullable();
 
             $table->dateTime('start_time');
+            $table->dateTime('end_time');
+
             $table->integer('duration_minutes')->nullable();
 
             $table->boolean('chat_enabled')->default(true);

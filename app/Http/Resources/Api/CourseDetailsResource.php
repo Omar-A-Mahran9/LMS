@@ -30,13 +30,15 @@ class CourseDetailsResource extends JsonResource
         ->count();
 
         $isCompleted = $this->videos->count() > 0 && $completedCount === $this->videos->count();
-
+  $hasLive = $this->lives()
+            ->where('is_active', true)
+            ->exists();
 
         return [
             "id" => $this->id,
             'image' => $this->full_image_path,
             'video_url' => base64_encode(convertToYoutubeEmbed($this->video_url)),
-
+            'has_live'=> $hasLive,
             'title' => $this->title,
             'description' => $this->description,
             'note' => $this->note,

@@ -73,6 +73,10 @@ public function students()
 {
     return $this->belongsToMany(Student::class, 'class_student', 'class_id', 'student_id')->withTimestamps();
 }
+public function lives()
+{
+    return $this->hasMany(Live::class, 'class_id');
+}
 
 
 }

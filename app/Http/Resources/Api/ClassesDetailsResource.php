@@ -26,10 +26,14 @@ class ClassesDetailsResource extends JsonResource
                 ->where('student_id', $student->id)
                 ->exists();
         }
-
+  $hasLive = $this->lives()
+            ->where('is_active', true)
+            ->exists();
         return [
                "id" => $this->id,
             'image' => $this->full_image_path,
+            'has_live'=>  $hasLive,
+
             'title' => $this->title,
             'started_at' => $this->course->start_date,
             'quiz_required'=>$this->quiz_required,
