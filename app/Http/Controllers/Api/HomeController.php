@@ -168,7 +168,7 @@ foreach ($category->courses as $course) {
                 $studentStats[$studentId]['attempts'] += 1;
                 }
 
-dd($studentStats);
+dd($studentStats[$studentId]);
             }
         }
     }
