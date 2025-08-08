@@ -136,39 +136,7 @@
                 </div>
 
 
-                <!-- Monthly Earnings -->
-                <div class="card mt-5">
-                    <div class="card-header">
-                        <h3 class="card-title">{{ __('Monthly Course Earnings (Last 6 Months)') }}</h3>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            @foreach ($monthlyEarnings as $month)
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <span>{{ $month->month }}</span>
-                                    <strong>{{ number_format($month->total, 2) }} SAR</strong>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Top Courses by Student Count -->
-                <div class="card mt-5">
-                    <div class="card-header">
-                        <h3 class="card-title">{{ __('Top Courses by Enrolled Students') }}</h3>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            @foreach ($topCourses as $course)
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <span>{{ $course->title_en }} ({{ $course->students_count }} {{ __('Students') }})</span>
-                                    <strong>{{ number_format($course->earnings, 2) }} SAR</strong>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
+            
             @else
                 <!-- Greeting -->
 
