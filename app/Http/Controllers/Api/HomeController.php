@@ -146,7 +146,6 @@ foreach ($category->courses as $course) {
             foreach ($quiz->attempts as $attempt) {
 
                 $student = $attempt->student;
-                dd($student);
 
                 if (!$student) {
                     continue; // Skip if student does not exist
@@ -157,13 +156,7 @@ foreach ($category->courses as $course) {
                 $last = strtolower($student->last_name);
                 $email = strtolower($student->email ?? '');
 
-                if (
-                    str_contains($first, 'test') ||
-                    str_contains($last, 'test') ||
-                    str_contains($email, 'test')
-                ) {
-                    continue;
-                }
+          
 
                 $studentId = $student->id;
 
