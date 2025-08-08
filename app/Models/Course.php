@@ -230,7 +230,9 @@ class Course extends Model
 
 
     // Course.php
-public function getIsCompletedForStudentAttribute()
+
+
+    public function getIsCompletedForStudentAttribute()
 {
     $studentId = auth()->id(); // أو مرره من الخارج
     $total = $this->videos()->count();
