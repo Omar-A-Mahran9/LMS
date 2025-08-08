@@ -98,7 +98,7 @@ public function topHeroesByCategory(Request $request)
             'total_score' => $attempt->score,
             'total_possible' => $quizFullMark,
             'student' => $student,
-            'attempt_id' => $attempt->id,
+            // 'attempt_id' => $attempt->id,
         ];
     }
                     // Accumulate stats
