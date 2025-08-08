@@ -37,27 +37,37 @@ class LiveController extends Controller
         $validated['chat_enabled'] = $request->boolean('chat_enabled');
         $validated['is_recorded'] = $request->boolean('is_recorded');
         $validated['is_active'] = $request->boolean('is_active');
-    if ($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             $validated['image'] = uploadImageToDirectory($request->file('image'), 'Lives');
         }
         $live = Live::create($validated);
 
      }
 
-    public function update(UpdateLiveRequest $request, $id)
-    {
-        $this->authorize('update_lives');
-        $live = Live::findOrFail($id);
-        $validated = $request->validated();
+  public function update(UpdateLiveRequest $request, Live $live)
+{
+    $this->authorize('update_lives');
 
-        $validated['chat_enabled'] = $request->boolean('chat_enabled');
-        $validated['is_recorded'] = $request->boolean('is_recorded');
-        $validated['is_active'] = $request->boolean('is_active');
+    $validated = $request->validated();
 
-        $live->update($validated);
+    $validated['chat_enabled'] = $request->boolean('chat_enabled');
+    $validated['is_recorded'] = $request->boolean('is_recorded');
+    $validated['is_active'] = $request->boolean('is_active');
 
-        return response()->json(['status' => true, 'message' => __('Live session updated successfully.')]);
+    if ($request->hasFile('image')) {
+        // Optional: delete old image if needed
+        deleteImage($live->image); // Only if you want to delete the old image
+        $validated['image'] = uploadImageToDirectory($request->file('image'), 'Lives');
     }
+
+    $live->update($validated);
+
+    return response()->json([
+        'message' => 'Live updated successfully',
+        'data' => $live,
+    ]);
+}
+
 
     public function show($id)
     {

@@ -14,6 +14,7 @@ public function toArray(Request $request): array
             'id'              => $this->id,
             'title'           => $this->title,
             'description'           => $this->description,
+            'image' => $this->full_image_path,
             'course_id'       => $this->course_id,
             'class_id'        => $this->class_id,
             'chat_enabled'    => (bool) $this->chat_enabled,

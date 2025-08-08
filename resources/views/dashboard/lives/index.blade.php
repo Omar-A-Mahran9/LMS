@@ -93,11 +93,8 @@
                         </th>
                         <th>{{ __('Title') }}</th>
                         <th>{{ __('Image') }}</th>
-                        <th>{{ __('Course') }}</th>
                         <th>{{ __('Status') }}</th>
                         <th>{{ __('Created at') }}</th>
-                        <th>{{ __('Is Free Preview') }}</th>
-                        <th>{{ __('views') }}</th>
 
                         <th class=" min-w-100px">{{ __('Actions') }}</th>
                     </tr>
@@ -396,8 +393,8 @@
         });
         document.addEventListener('DOMContentLoaded', function() {
             const chatToggle = document.querySelector('input[name="chat_enabled"]');
-            const chatUrlContainer = document.getElementById('chat_url_container');
-            const chatUrlInput = document.getElementById('chat_url_inp');
+            const chatUrlContainer = document.getElementById('chat_embed_url_container');
+            const chatUrlInput = document.getElementById('chat_embed_url_inp_inp');
 
             function toggleChatUrl() {
                 if (chatToggle.checked) {

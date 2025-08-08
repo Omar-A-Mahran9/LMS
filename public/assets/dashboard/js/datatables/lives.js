@@ -19,26 +19,13 @@ var KTDatatablesServerSide = (function () {
             },
             ajax: {
                 url: `/dashboard/${dbTable}`,
-                data: function (d) {
-                    const urlParams = new URLSearchParams(
-                        window.location.search
-                    );
-                    const CourseId = urlParams.get("course_id");
-
-                    if (CourseId) {
-                        d.course_id = CourseId;
-                    }
-                },
             },
             columns: [
                 { data: "id" },
                 { data: "title" },
                 { data: "image" },
-                { data: "course" },
                 { data: "is_active" },
                 { data: "created_at" },
-                { data: "is_preview" },
-                { data: "views" },
                 { data: null },
             ],
             columnDefs: [
@@ -92,43 +79,9 @@ var KTDatatablesServerSide = (function () {
                 },
 
                 {
-                    targets: 3,
-                    render: function (data, type, row) {
-                        return `
-                            <div>
-                                <!--begin::Info-->
-                                <div class="d-flex flex-column justify-content-center">
-                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.course.title}</a>
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                        `;
-                    },
-                },
-                {
-                    targets: 4, // This is the "Status" column
+                    targets: 3, // This is the "Status" column
                     render: function (data, type, row) {
                         if (row.is_active) {
-                            return `
-                                     <span class="badge badge-success">${__(
-                                         "active"
-                                     )}</span>
-
-                            `;
-                        } else {
-                            return `
-                                     <span class="badge badge-danger">${__(
-                                         "inactive"
-                                     )}</span>
-                             `;
-                        }
-                    },
-                },
-
-                {
-                    targets: 6, // This is the "Status" column
-                    render: function (data, type, row) {
-                        if (row.is_preview) {
                             return `
                                      <span class="badge badge-success">${__(
                                          "active"
@@ -237,12 +190,17 @@ var KTDatatablesServerSide = (function () {
                 $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
 
-                tinymce
-                    .get("description_ar_inp")
-                    .setContent(data.description_ar);
-                tinymce
-                    .get("description_en_inp")
-                    .setContent(data.description_en);
+                if (tinymce.get("description_ar_inp")) {
+                    tinymce
+                        .get("description_ar_inp")
+                        .setContent(data.description_ar || "");
+                }
+
+                if (tinymce.get("description_en_inp")) {
+                    tinymce
+                        .get("description_en_inp")
+                        .setContent(data.description_en || "");
+                }
 
                 // Video URL
                 $("#video_url_inp").val(data.video_url);
