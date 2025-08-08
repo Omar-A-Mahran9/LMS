@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\LivesResource;
 use App\Models\Live;
 use Illuminate\Http\Request;
 
@@ -26,7 +27,7 @@ class LivesController extends Controller
 
         $lives = $query->latest()->get();
 
-        return $this->success('',$lives);
+        return $this->success('',LivesResource::collection($lives));
     }
 
 }
