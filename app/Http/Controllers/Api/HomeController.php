@@ -194,9 +194,24 @@ public function topHeroesByCategory(Request $request)
     }
 
     $topStudents = collect($studentStats)
-       ;
-return $topStudents;
-       return $this->success('', [
+        ->filter(fn($data) => $data['attempts'] > 0)
+        ->take(10)
+        ->values()
+        ->map(function ($item) {
+            return [
+                'student_id' => $item['student']->id,
+                'name' => $item['student']->first_name . " " . $item['student']->last_name,
+                'image' => $item['student']->full_image_path,
+                'category' => $item['student']->category->name ?? 'N/A',
+                'attempts' => $item['attempts'],
+                'average_score' => round($item['average'], 2),
+                'percentage' => round($item['percentage'], 2),
+                'full_score' => $item['total_score'],
+                'total_possible' => $item['total_possible'],
+            ];
+        });
+
+    return $this->success('', [
         'image' => getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
         'topStudents' => $topStudents,
     ]);
