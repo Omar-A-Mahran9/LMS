@@ -144,9 +144,9 @@ foreach ($category->courses as $course) {
             $quizFullMark = $quiz->questions->sum('points') ?? 100;
 
             foreach ($quiz->attempts as $attempt) {
-                dd($attempt);
 
                 $student = $attempt->student;
+                dd($student);
 
                 if (!$student) {
                     continue; // Skip if student does not exist
