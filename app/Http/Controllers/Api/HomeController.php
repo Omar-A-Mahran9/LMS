@@ -193,23 +193,23 @@ public function topHeroesByCategory(Request $request)
         }
     }
 
-    $topStudents = collect($studentStats)
-        ->filter(fn($data) => $data['attempts'] > 0)
-        // ->take(10)
-        ->values()
-        ->map(function ($item) {
-            return [
-                'student_id' => $item['student']->id,
-                'name' => $item['student']->first_name . " " . $item['student']->last_name,
-                'image' => $item['student']->full_image_path,
-                'category' => $item['student']->category->name ?? 'N/A',
-                'attempts' => $item['attempts'],
-                'average_score' =>  $item['total_possible'],
-                // 'percentage' => round($item['percentage'], 2),
-                'full_score' => $item['total_score'],
-                // 'total_possible' => $item['total_possible'],
-            ];
-        });
+$topStudents = collect($studentStats)
+    ->filter(fn($data) => $data['attempts'] > 0)
+    ->sortByDesc(fn($data) => $data['total_score']) // Sort by highest score
+    ->take(10) // Get top 10
+    ->values()
+    ->map(function ($item) {
+        return [
+            'student_id' => $item['student']->id,
+            'name' => $item['student']->first_name . " " . $item['student']->last_name,
+            'image' => $item['student']->full_image_path,
+            'category' => $item['student']->category->name ?? 'N/A',
+            'attempts' => $item['attempts'],
+            'average_score' => $item['total_possible'], // Consider renaming if this isn't the average
+            'full_score' => $item['total_score'],
+        ];
+    });
+
 
     return $this->success('', [
         'image' => getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
