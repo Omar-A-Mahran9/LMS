@@ -602,14 +602,28 @@ public function getRatesForCourse($course_id)
 
 public function getAllClasses(Request $request)
 {
-    $perPage = $request->query('per_page', 10);
+    $perPage    = $request->query('per_page', 10);
+    $categoryId = $request->query('category_id');
+    $courseId   = $request->query('course_id');
 
     $classes = CourseClass::where('is_active', 1)
-        ->with('course') // optional: load related course
+        ->when($categoryId, function ($query) use ($categoryId) {
+            $query->whereHas('course', function ($q) use ($categoryId) {
+                $q->where('category_id', $categoryId);
+            });
+        })
+        ->when($courseId, function ($query) use ($courseId) {
+            $query->where('course_id', $courseId);
+        })
+        ->with('course')
         ->paginate($perPage);
 
-    return $this->successWithPagination('', ClassesDetailsResource::collection($classes)->response()->getData(true));
+    return $this->successWithPagination(
+        '',
+        ClassesDetailsResource::collection($classes)->response()->getData(true)
+    );
 }
+
 
 public function access(Request $request)
 {
@@ -651,9 +665,9 @@ public function access(Request $request)
     // $code->increment('used_count');
 
 
-return $this->success('successfully code', [
+    return $this->success('successfully code', [
     // 'class_url' => env('APP_URL') . '/api/videos_by_classes_with_code/' . $request->class_id,
-]);
+    ]);
 
 
 }
