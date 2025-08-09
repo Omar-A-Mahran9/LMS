@@ -282,7 +282,7 @@ $courses = Course::where('is_active', 1)
             'categories' => CategoryResource::collection($categories),
             'rates' => RateResource::collection($rates),
             'heroes_by_category' => $heroesByCategory,
-            'classes_by_code' => ClassDetailsResource::collection($classes_by_code),
+            'classes_by_code' => ClassesDetailsResource::collection($classes_by_code),
 
             'ask_us' =>$ask_us,
             'HowUse' =>$HowUse,
