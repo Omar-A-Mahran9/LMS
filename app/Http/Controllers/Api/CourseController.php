@@ -487,12 +487,14 @@ public function getprivacypolicy()
 
 public function CoursesList()
 {
-    $locale = app()->getLocale(); // 'ar' or 'en'
-    $titleColumn = $locale === 'ar' ? 'title_ar' : 'title_en';
-
-    $courses = Course::select('id', $titleColumn . ' as title')
-        ->where('is_active', 1)
-        ->get();
+    $courses = Course::where('is_active', 1)
+        ->get()
+        ->map(function ($course) {
+            return [
+                'id'    => $course->id,
+                'title' => $course->title, // or $course->title_en / title_ar
+            ];
+        });
 
     return $this->success('Courses list retrieved successfully.', $courses);
 }
