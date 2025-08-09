@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\BookResource;
 use App\Http\Resources\Api\CategoryResource;
 use App\Http\Resources\Api\ClassDetailsResource;
+use App\Http\Resources\Api\ClassesDetailsResource;
 use App\Http\Resources\Api\GovernmentsResource;
 use App\Http\Resources\Api\CommonQuestionResource;
 
