@@ -18,6 +18,7 @@ use App\Models\Book;
 use App\Models\Category;
  use App\Models\CommonQuestion;
 use App\Models\Course;
+use App\Models\CourseClass;
 use App\Models\CourseVideo;
 use App\Models\Government;
 use App\Models\Student_rate;
@@ -269,12 +270,18 @@ $courses = Course::where('is_active', 1)
     })
     ->values()->take(6);  // get latest 6
  // reindex
+ $classes_by_code = CourseClass::where('is_active', 1)
+    ->latest('id') // or latest('created_at')
+    ->take(10)
+    ->get();
+
         return $this->success('', [
             'sliders' => SliderResource::collection($sliders),
             'about_us'=> $about,
             'categories' => CategoryResource::collection($categories),
             'rates' => RateResource::collection($rates),
             'heroes_by_category' => $heroesByCategory,
+            'classes_by_code' => $classes_by_code,
 
             'ask_us' =>$ask_us,
             'HowUse' =>$HowUse,
