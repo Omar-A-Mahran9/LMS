@@ -487,7 +487,7 @@ public function getprivacypolicy()
 
 public function CoursesList()
 {
-    $courses = Course::where('is_active', 1)
+    $courses = Course::where('is_active', 1)->where('is_class', 1)
         ->get()
         ->map(function ($course) {
             return [
