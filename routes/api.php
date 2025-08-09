@@ -105,6 +105,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
      Route::get('books', 'BookController@index');
     Route::get('books/{id}', 'BookController@show');
     Route::post('/books/order', [BookOrderController::class, 'store']);
+    Route::get('coursesList', 'CourseController@CoursesList');
 
     Route::post('news-letter', 'HomeController@newsLetter');
     Route::post('Ask_us', 'ContactUsController@store');
