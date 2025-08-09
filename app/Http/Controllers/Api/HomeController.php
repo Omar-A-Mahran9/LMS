@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\BookResource;
 use App\Http\Resources\Api\CategoryResource;
+use App\Http\Resources\Api\ClassDetailsResource;
 use App\Http\Resources\Api\GovernmentsResource;
 use App\Http\Resources\Api\CommonQuestionResource;
 
@@ -281,7 +282,7 @@ $courses = Course::where('is_active', 1)
             'categories' => CategoryResource::collection($categories),
             'rates' => RateResource::collection($rates),
             'heroes_by_category' => $heroesByCategory,
-            'classes_by_code' => $classes_by_code,
+            'classes_by_code' => ClassDetailsResource::collection($classes_by_code),
 
             'ask_us' =>$ask_us,
             'HowUse' =>$HowUse,
