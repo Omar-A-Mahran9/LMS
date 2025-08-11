@@ -485,19 +485,26 @@ public function getprivacypolicy()
     return $this->success('', $data);
 }
 
-public function CoursesList()
+public function CoursesList(Request $request)
 {
-    $courses = Course::where('is_active', 1)->where('is_class', 1)
-        ->get()
-        ->map(function ($course) {
-            return [
-                'id'    => $course->id,
-                'title' => $course->title, // or $course->title_en / title_ar
-            ];
-        });
+    $query = Course::where('is_active', 1)
+        ->where('is_class', 1);
+
+    // Optional filter by category_id if present
+    if ($request->has('category_id') && !empty($request->category_id)) {
+        $query->where('category_id', $request->category_id);
+    }
+
+    $courses = $query->get()->map(function ($course) {
+        return [
+            'id'    => $course->id,
+            'title' => $course->title, // Or title_en/title_ar depending on locale
+        ];
+    });
 
     return $this->success('Courses list retrieved successfully.', $courses);
 }
+
 
 
 public function getCourses(Request $request)
