@@ -142,7 +142,7 @@
                                     <option value=""></option>
                                     @foreach ($courses as $course)
                                         <option value="{{ $course->id }}">
-                                            {{ $course->title . '-' . ($course->class ? $course->class->title : '') }}
+                                            {{ $course->title   }}
                                         </option>
                                     @endforeach
                                 </select>
