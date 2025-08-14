@@ -645,10 +645,8 @@ public function getAllClasses(Request $request)
         ClassesDetailsResource::collection($classes)->response()->getData(true)
     );
 }
-
 public function getAllClassesData(Request $request)
 {
-    $perPage    = $request->query('per_page', 10);
     $categoryId = $request->query('category_id');
     $courseId   = $request->query('course_id');
 
@@ -661,30 +659,34 @@ public function getAllClassesData(Request $request)
         ->when($courseId, function ($query) use ($courseId) {
             $query->where('course_id', $courseId);
         })
-        ->with('course')
-        ->paginate($perPage);
+        ->get()
+        ->map(function ($class) {
+            return [
+                'id'    => $class->id,
+                'title' => $class->title, // adjust for multilingual if needed
+            ];
+        });
 
-    return $this->successWithPagination(
-        '',
-        ClassesDetailsResource::collection($classes)->response()->getData(true)
-    );
+    return $this->success('Classes list retrieved successfully.', $classes);
 }
+
 public function getAllQuizesData(Request $request)
 {
-    $perPage  = $request->query('per_page', 10);
-    $classId  = $request->query('class_id');
+    $classId = $request->query('class_id');
 
     $quizzes = Quiz::where('is_active', 1)
         ->when($classId, function ($query) use ($classId) {
             $query->where('class_id', $classId);
         })
-        ->with('class.course') // eager load class and its course if needed
-        ->paginate($perPage);
+        ->get()
+        ->map(function ($quiz) {
+            return [
+                'id'    => $quiz->id,
+                'title' => $quiz->title, // adjust if multilingual: $quiz->title_en / title_ar
+            ];
+        });
 
-    return $this->successWithPagination(
-        '',
-        QuizResource::collection($quizzes)->response()->getData(true)
-    );
+    return $this->success('Quizzes list retrieved successfully.', $quizzes);
 }
 
 public function access(Request $request)
