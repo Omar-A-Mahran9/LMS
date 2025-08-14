@@ -457,7 +457,8 @@
         function fetchYoutubeData(videoId) {
             const apiKey = "YOUR_YOUTUBE_API_KEY";
             fetch(
-                    `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,liveStreamingDetails,contentDetails&key=${apiKey}`)
+                    `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,liveStreamingDetails,contentDetails&key=${apiKey}`
+                    )
                 .then(res => res.json())
                 .then(data => {
                     if (data.items.length > 0) {
