@@ -16,19 +16,16 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
- public function login(Request $request)
+public function login(Request $request)
 {
     $request->validate([
-        'login' => ['required', 'string'], // هنا ممكن يكون إيميل أو رقم هاتف
+        'login' => ['required', 'string'], // Email or phone
         'password' => ['required', 'min:6'],
     ]);
 
     $loginInput = $request->input('login');
-
-    // تحديد هل هو إيميل أو رقم هاتف
     $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
-    // جلب الطالب حسب النوع
     $student = Student::where($fieldType, $loginInput)->first();
 
     if (!$student) {
@@ -44,17 +41,19 @@ class AuthController extends Controller
     }
 
     if (Hash::check($request->password, $student->password)) {
-        $tokenResult = $student->createToken('Personal access token to apis');
 
-        // Set token to expire after 24 hours
+        // 🔹 Revoke all previous tokens (logout from other devices)
+        $student->tokens()->delete();
+
+        // Create new token
+        $tokenResult = $student->createToken('Personal access token to apis');
         $tokenResult->accessToken->expires_at = now()->addHours(24);
         $tokenResult->accessToken->save();
 
         return $this->success("logged in successfully", [
             'token' => $tokenResult->plainTextToken,
-            'user' => new StudentResource($student),
+            'user'  => new StudentResource($student),
         ]);
-
     }
 
     return $this->validationFailure([
