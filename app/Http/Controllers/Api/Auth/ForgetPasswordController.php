@@ -149,53 +149,7 @@ public function reSendOtp(Request $request)
 }
 
 
-
-// public function reSendOtp(Request $request)
-// {
-//      $request->validate([
-//         'email' => ['nullable', 'email', 'exists:students,email'],
-//         'phone' => ['nullable', 'string', 'exists:students,phone'],
-//     ], [], [
-//         'email' => __('Email'),
-//         'phone' => __('Phone'),
-//     ]);
-
-//     if (!$request->filled('email') && !$request->filled('phone')) {
-//         return $this->validationFailure(__('You must provide either an email or a phone.'));
-//     }
-
-//     // Find student by email or phone
-//     $student = $request->filled('email')
-//         ? Student::where('email', $request->email)->first()
-//         : Student::where('phone', $request->phone)->first();
-
-//     if (!$student) {
-//         return $this->failure(__("This user does not exist"));
-//     }
-
-//     if ($student->block_flag === 1) {
-//         return $this->failure(__("Your account is blocked. Please contact support."));
-//     }
-
-//     // Re-send OTP
-//     $otp = $student->sendOTP();
-
-//     $now = now();
-//     $expiresAt = $student->otp_expiration;
-
-//     if (!$expiresAt || $now->greaterThan($expiresAt)) {
-//         return $this->failure(__("OTP has expired."));
-//     }
-
-//     $remainingSeconds = $now->diffInSeconds($expiresAt, false);
-
-//     return $this->success(__("OTP re-sent successfully."), [
-//         'otp' => $otp,
-//         'remaining_seconds' => $remainingSeconds,
-//         'via' => $request->filled('email') ? 'email' : 'phone',
-//     ]);
-// }
-
+ 
 
 
 

@@ -47,14 +47,12 @@ class UpdateClassRequest extends FormRequest
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('classes', 'title_ar')->ignore($classId)
-        ],
+         ],
         'title_en' => [
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('classes', 'title_en')->ignore($classId)
-        ],
+         ],
 
     'description_ar' => ['required', new NotNumbersOnly()],
     'description_en' => ['required', new NotNumbersOnly()],
