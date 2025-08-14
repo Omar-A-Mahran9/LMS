@@ -141,7 +141,9 @@
                                     data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
                                     <option value=""></option>
                                     @foreach ($courses as $course)
-                                        <option value="{{ $course->id }}">{{ $course->title }}</option>
+                                        <option value="{{ $course->id }}">
+                                            {{ $course->title + '-' + $course->class->title }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <div class="invalid-feedback" id="course_id"></div>
@@ -154,7 +156,9 @@
                                     data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
                                     <option value=""></option>
                                     @foreach ($classes as $class)
-                                        <option value="{{ $class->id }}">{{ $class->title }}</option>
+                                        <option value="{{ $class->id }}">
+                                            {{ $class->title + '-' + $class->course->title }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <div class="invalid-feedback" id="class_id"></div>
