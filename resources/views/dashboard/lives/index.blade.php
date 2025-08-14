@@ -136,7 +136,6 @@
                         <div class="row mb-4">
                             <div class="col-6">
                                 <label for="course_id_inp" class="form-label">{{ __('Course') }}</label>
-                                @dd($courses);
 
                                 <select name="course_id" id="course_id_inp" class="form-select" data-control="select2"
                                     data-placeholder="{{ __('Select Course') }}"
@@ -144,7 +143,7 @@
                                     <option value=""></option>
                                     @foreach ($courses as $course)
                                         <option value="{{ $course->id }}">
-                                            {{ $course->title . '-' . ($course->category ? $course->category->name : '') }}
+                                            {{ $course->title . '-' . ($course->category ? $course->category->name_ar : '') }}
                                         </option>
                                     @endforeach
                                 </select>
