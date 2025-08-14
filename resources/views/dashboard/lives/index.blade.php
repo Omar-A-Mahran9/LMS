@@ -428,16 +428,13 @@
             chatToggle.addEventListener('change', toggleChatUrl);
         });
     </script>
-
     <script>
         document.getElementById('embed_url_inp').addEventListener('change', function() {
             let url = this.value.trim();
 
-            // Detect YouTube Live link
             if (url.includes('youtube.com') || url.includes('youtu.be')) {
                 let videoId = null;
 
-                // Handle normal watch/live link
                 let match = url.match(/(?:live\/|v=|youtu\.be\/)([A-Za-z0-9_\-]+)/);
                 if (match) {
                     videoId = match[1];
@@ -447,37 +444,51 @@
                     // Fill Embed URL
                     document.getElementById('embed_url_inp').value =
                         `https://www.youtube.com/embed/${videoId}?autoplay=0`;
-
                     // Fill Chat Embed URL
                     document.getElementById('chat_embed_url_inp').value =
                         `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${location.hostname}`;
+
+                    // Fetch video details
+                    fetchYoutubeData(videoId);
                 }
             }
-
-            // Here you could add detection for Zoom/Twitch, similar logic
         });
-    </script>
-    <script>
+
         function fetchYoutubeData(videoId) {
             const apiKey = "YOUR_YOUTUBE_API_KEY";
             fetch(
-                    `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,liveStreamingDetails,contentDetails&key=${apiKey}`
-                )
+                    `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,liveStreamingDetails,contentDetails&key=${apiKey}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.items.length > 0) {
                         let video = data.items[0];
 
-                        // Example: set start time if live event scheduled
+                        let start = null;
+                        let end = null;
+                        let durationMinutes = null;
+
+                        // Start time
                         if (video.liveStreamingDetails?.scheduledStartTime) {
-                            document.getElementById('start_time_inp').value = video.liveStreamingDetails
-                                .scheduledStartTime.replace('Z', '');
+                            start = new Date(video.liveStreamingDetails.scheduledStartTime);
+                            document.getElementById('start_time_inp').value = start.toISOString().slice(0, 16);
                         }
 
-                        // Example: set duration if available
+                        // End time from YouTube API if provided
+                        if (video.liveStreamingDetails?.scheduledEndTime) {
+                            end = new Date(video.liveStreamingDetails.scheduledEndTime);
+                            document.getElementById('end_time_inp').value = end.toISOString().slice(0, 16);
+                        }
+
+                        // Duration from contentDetails
                         if (video.contentDetails?.duration) {
-                            let durationMinutes = convertISO8601DurationToMinutes(video.contentDetails.duration);
+                            durationMinutes = convertISO8601DurationToMinutes(video.contentDetails.duration);
                             document.getElementById('duration_minutes_inp').value = durationMinutes;
+                        }
+
+                        // If no end time from API, calculate from start + duration
+                        if (!end && start && durationMinutes) {
+                            end = new Date(start.getTime() + durationMinutes * 60000);
+                            document.getElementById('end_time_inp').value = end.toISOString().slice(0, 16);
                         }
                     }
                 });
