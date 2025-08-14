@@ -142,6 +142,7 @@
                                     <option value=""></option>
                                     @foreach ($courses as $course)
                                         <option value="{{ $course->id }}">
+                                            @dd($course->category);
                                             {{ $course->title . '-' . ($course->category ? $course->category->name : '') }}
                                         </option>
                                     @endforeach
