@@ -646,6 +646,46 @@ public function getAllClasses(Request $request)
     );
 }
 
+public function getAllClassesData(Request $request)
+{
+    $perPage    = $request->query('per_page', 10);
+    $categoryId = $request->query('category_id');
+    $courseId   = $request->query('course_id');
+
+    $classes = CourseClass::where('is_active', 1)
+        ->when($categoryId, function ($query) use ($categoryId) {
+            $query->whereHas('course', function ($q) use ($categoryId) {
+                $q->where('category_id', $categoryId);
+            });
+        })
+        ->when($courseId, function ($query) use ($courseId) {
+            $query->where('course_id', $courseId);
+        })
+        ->with('course')
+        ->paginate($perPage);
+
+    return $this->successWithPagination(
+        '',
+        ClassesDetailsResource::collection($classes)->response()->getData(true)
+    );
+}
+public function getAllQuizesData(Request $request)
+{
+    $perPage  = $request->query('per_page', 10);
+    $classId  = $request->query('class_id');
+
+    $quizzes = Quiz::where('is_active', 1)
+        ->when($classId, function ($query) use ($classId) {
+            $query->where('class_id', $classId);
+        })
+        ->with('class.course') // eager load class and its course if needed
+        ->paginate($perPage);
+
+    return $this->successWithPagination(
+        '',
+        QuizDetailsResource::collection($quizzes)->response()->getData(true)
+    );
+}
 
 public function access(Request $request)
 {
