@@ -683,7 +683,7 @@ public function getAllQuizesData(Request $request)
 
     return $this->successWithPagination(
         '',
-        QuizDetailsResource::collection($quizzes)->response()->getData(true)
+        QuizResource::collection($quizzes)->response()->getData(true)
     );
 }
 
