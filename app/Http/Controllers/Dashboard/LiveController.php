@@ -17,8 +17,8 @@ class LiveController extends Controller
         $this->authorize('view_lives');
 
         $courseId = $request->input('course_id');
-        $courses = Course::with('category')->select('id', 'title_en', 'title_ar')->get();
-        $classes=CourseClass::with('course')->select('id', 'title_en', 'title_ar')->get();
+        $courses = Course::with('category')->select('id', 'title_en', 'title_ar', 'category_id')->get();
+        $classes=CourseClass::with('course')->select('id', 'title_en', 'title_ar', 'course_id')->get();
 
         if ($request->ajax()) {
         return  getModelData(model:new Live());
