@@ -142,7 +142,7 @@
                                     <option value=""></option>
                                     @foreach ($courses as $course)
                                         <option value="{{ $course->id }}">
-                                            {{ $course->title + '-' + $course->class->title }}
+                                            {{ $course->title . '-' . $course->class->title }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -157,7 +157,7 @@
                                     <option value=""></option>
                                     @foreach ($classes as $class)
                                         <option value="{{ $class->id }}">
-                                            {{ $class->title + '-' + $class->course->title }}
+                                            {{ $class->title . '-' . $class->course->title }}
                                         </option>
                                     @endforeach
                                 </select>
