@@ -46,6 +46,8 @@ class StoreLiveRequest extends FormRequest
             'password' => 'nullable|string|max:255',
 
             'start_time' => 'required|date',
+            'end_time' => 'required|date',
+
             'duration_minutes' => 'nullable|integer|min:0',
 
             'is_recorded' => 'sometimes|boolean',
