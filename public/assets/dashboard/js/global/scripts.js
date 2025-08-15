@@ -299,22 +299,6 @@ function isFileExists(urlToFile) {
 
 /** End :: System Alerts  **/
 
-let initTinyMc = function (editingInp = false, height = 400) {
-    tinymce.init({
-        selector: ".tinymce",
-        height: "480",
-        menubar: false,
-        toolbar: [
-            "styleselect",
-            "undo redo | cut copy paste | bold italic | link image | alignleft aligncenter alignright alignjustify",
-            "bullist numlist | outdent indent | ltr rtl | blockquote subscript superscript | advlist | autolink | lists charmap | print preview |  code",
-        ],
-        directionality: language, // Set the initial direction to RTL if needed
-        plugins: "advlist autolink link lists charmap print preview code save",
-        save_onsavecallback: function () {},
-    });
-    if (!editingInp) $(".tinymce").val(null);
-};
 
 let deleteElement = (deletedElementName, deletionUrl, callback) => {
     deleteAlert().then(function (result) {
