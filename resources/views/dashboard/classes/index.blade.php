@@ -94,6 +94,8 @@
                         <th>{{ __('Title') }}</th>
                         <th>{{ __('Image') }}</th>
                         <th>{{ __('Course') }}</th>
+                        <th>{{ __('Category') }}</th>
+
                         <th>{{ __('Status') }}</th>
                         <th>{{ __('Created at') }}</th>
                         <th>{{ __('Is Free Preview') }}</th>
