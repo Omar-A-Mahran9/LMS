@@ -998,11 +998,11 @@
 
     <script src="{{ asset('assets/dashboard/plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
 
-    {{-- <script>
+    <script>
         $(document).ready(() => {
             initTinyMc();
         });
-    </script> --}}
+    </script>
     <script>
         $(document).on('click', '.open-question-modal', function() {
             const quizId = $(this).data('quiz-id');
