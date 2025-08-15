@@ -30,10 +30,8 @@ if ($courseId) {
             model: new CourseClass(),
             andsFilters: [['course_id', '=', $courseId]],
             relations: [
-                'course' => [
-                    'id', 'title_ar', 'title_en', 'category_id',
-                    'category' => ['id', 'name_ar', 'name_en']
-                ]
+                'course' => ['id', 'title_ar', 'title_en', 'category_id'],
+                'course.category' => ['id', 'title_ar', 'title_en']
             ]
         )
     );
@@ -42,14 +40,13 @@ if ($courseId) {
         getModelData(
             model: new CourseClass(),
             relations: [
-                'course' => [
-                    'id', 'title_ar', 'title_en', 'category_id',
-                    'category' => ['id', 'name_ar', 'name_en']
-                ]
+                'course' => ['id', 'title_ar', 'title_en', 'category_id'],
+                'course.category' => ['id', 'title_ar', 'title_en']
             ]
         )
     );
 }
+
 
     }
 
