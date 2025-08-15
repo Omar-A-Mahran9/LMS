@@ -40,7 +40,7 @@ public function index(Request $request)
             relations: [
                 'student' => ['id', 'first_name', 'last_name', 'email', 'phone'],
                 'course' => ['id', 'title_ar', 'title_en', 'category_id'],
-                'course.category' => ['id', 'name_ar', 'name_en'] // category relation
+                'course.category' => ['id', 'name_ar', 'name_en','description_ar','description_en'] // category relation
 
             ],
             searchingColumns: [
