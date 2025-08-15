@@ -240,12 +240,12 @@ var KTDatatablesServerSide = (function () {
                 $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
 
-                // tinymce
-                //     .get("description_ar_inp")
-                //     .setContent(data.description_ar);
-                // tinymce
-                //     .get("description_en_inp")
-                //     .setContent(data.description_en);
+                tinymce
+                    .get("description_ar_inp")
+                    .setContent(data.description_ar);
+                tinymce
+                    .get("description_en_inp")
+                    .setContent(data.description_en);
 
                 // Video URL
                 $("#video_url_inp").val(data.video_url);
