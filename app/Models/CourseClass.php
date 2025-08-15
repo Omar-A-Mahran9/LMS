@@ -42,10 +42,18 @@ class CourseClass extends Model
     }
 
 
-    public function course()
-    {
-        return $this->belongsTo(Course::class);
-    }
+ public function category()
+{
+    return $this->hasOneThrough(
+        Category::class,  // Final model you want
+        Course::class,    // Intermediate model
+        'id',             // Foreign key on Course table
+        'id',             // Foreign key on Category table
+        'course_id',      // Local key on current model
+        'category_id'     // Local key on Course model
+    );
+}
+
    public function class()
     {
         return $this->belongsTo(CourseClass::class);
