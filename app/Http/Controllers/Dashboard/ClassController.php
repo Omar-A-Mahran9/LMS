@@ -24,24 +24,33 @@ public function index(Request $request)
 
     // AJAX request
     if ($request->ajax()) {
-        if ($courseId) {
-            // Filter by course_id
-            return response()->json(
-                getModelData(
-                    model: new CourseClass(),
-                    andsFilters: [['course_id', '=', $courseId]],
-                    relations: ['course' => ['id', 'title_ar', 'title_en']]
-                )
-            );
-        } else {
-            // No filter
-            return response()->json(
-                getModelData(
-                    model: new CourseClass(),
-                    relations: ['course' => ['id', 'title_ar', 'title_en']]
-                )
-            );
-        }
+if ($courseId) {
+    return response()->json(
+        getModelData(
+            model: new CourseClass(),
+            andsFilters: [['course_id', '=', $courseId]],
+            relations: [
+                'course' => [
+                    'id', 'title_ar', 'title_en', 'category_id',
+                    'category' => ['id', 'title_ar', 'title_en']
+                ]
+            ]
+        )
+    );
+} else {
+    return response()->json(
+        getModelData(
+            model: new CourseClass(),
+            relations: [
+                'course' => [
+                    'id', 'title_ar', 'title_en', 'category_id',
+                    'category' => ['id', 'title_ar', 'title_en']
+                ]
+            ]
+        )
+    );
+}
+
     }
 
     // Regular page load
