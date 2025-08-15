@@ -100,6 +100,8 @@
                         <th>{{ __('Payment Type') }}</th>
                         <th>{{ __('Status') }}</th>
                         <th>{{ __('Enroll At') }}</th>
+                        <th>{{ __('Category') }}</th>
+
                         <th class="min-w-100px">{{ __('Actions') }}</th>
                     </tr>
                 </thead>

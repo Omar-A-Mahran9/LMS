@@ -16,7 +16,7 @@ public function index(Request $request)
 {
     $this->authorize('view_enrollments');
 
-if ($request->ajax()) {
+    if ($request->ajax()) {
     // Custom anonymous model with override
     $model = new class extends \App\Models\Enrollment {
         public function newQuery()
@@ -39,7 +39,9 @@ if ($request->ajax()) {
             model: $model,
             relations: [
                 'student' => ['id', 'first_name', 'last_name', 'email', 'phone'],
-                'course' => ['id', 'title_ar', 'title_en'],
+                'course' => ['id', 'title_ar', 'title_en', 'category_id'],
+                'course.category' => ['id', 'name_ar', 'name_en'] // category relation
+
             ],
             searchingColumns: [
                 'students.first_name',
@@ -48,10 +50,12 @@ if ($request->ajax()) {
                 'students.phone',
                 'courses.title_ar',
                 'courses.title_en',
+                'categories.name_ar', // allow searching by category name
+                  'categories.name_en',
             ]
         )
     );
-}
+    }
 
 
     $students = Student::get();
