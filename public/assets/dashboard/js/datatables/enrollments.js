@@ -34,7 +34,7 @@ var KTDatatablesServerSide = (function () {
                 { data: "payment_type" }, // payment type
                 { data: "status" }, // status
                 { data: "created_at" }, // enrollment date
-                {  data: "category.name" }, // category
+                {  data: "course.category.name" }, // category
 
                 { data: null }, // actions
             ],
