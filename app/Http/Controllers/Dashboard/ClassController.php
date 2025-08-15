@@ -32,7 +32,7 @@ if ($courseId) {
             relations: [
                 'course' => [
                     'id', 'title_ar', 'title_en', 'category_id',
-                    'category' => ['id', 'title_ar', 'title_en']
+                    'category' => ['id', 'name_ar', 'name_en']
                 ]
             ]
         )
@@ -44,7 +44,7 @@ if ($courseId) {
             relations: [
                 'course' => [
                     'id', 'title_ar', 'title_en', 'category_id',
-                    'category' => ['id', 'title_ar', 'title_en']
+                    'category' => ['id', 'name_ar', 'name_en']
                 ]
             ]
         )
