@@ -299,6 +299,61 @@ function isFileExists(urlToFile) {
 
 /** End :: System Alerts  **/
 
+let initTinyMc = function (editingInp = false, height = 500) {
+    tinymce.init({
+        selector: ".tinymce",
+        height: height,
+        menubar: true, // show full menu bar
+        plugins: [
+            "advlist",
+            "autolink",
+            "link",
+            "image",
+            "lists",
+            "charmap",
+            "print",
+            "preview",
+            "anchor",
+            "searchreplace",
+            "visualblocks",
+            "code",
+            "fullscreen",
+            "insertdatetime",
+            "media",
+            "table",
+            "emoticons",
+            "template",
+            "help",
+            "wordcount",
+            "save",
+            "pagebreak",
+            "nonbreaking",
+            "advcode",
+            "codesample",
+            "directionality",
+        ].join(" "),
+        toolbar: [
+            "undo redo | formatselect | fontselect fontsizeselect | forecolor backcolor | bold italic underline strikethrough",
+            "alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | lineheight",
+            "ltr rtl | link unlink anchor image media table emoticons charmap hr pagebreak",
+            "insertdatetime | codesample code visualblocks fullscreen preview print save",
+            "subscript superscript blockquote removeformat | searchreplace help",
+        ].join(" | "),
+        directionality: language, // RTL/LTR based on variable
+        image_advtab: true,
+        file_picker_types: "file image media",
+        automatic_uploads: true,
+        relative_urls: false,
+        remove_script_host: false,
+        convert_urls: true,
+        branding: false,
+        save_onsavecallback: function () {
+            console.log("Content saved!");
+        },
+    });
+
+    if (!editingInp) $(".tinymce").val(null);
+};
 
 let deleteElement = (deletedElementName, deletionUrl, callback) => {
     deleteAlert().then(function (result) {
