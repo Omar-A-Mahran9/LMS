@@ -40,7 +40,7 @@ var KTDatatablesServerSide = (function () {
                 { data: "created_at" },
                 { data: "is_preview" },
                 { data: "views" },
-                { data: "course.category" },
+                { data: "course.category.name" },
 
                 { data: null },
             ],

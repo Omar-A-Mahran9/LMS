@@ -108,7 +108,7 @@ public function topHeroesByCategory(Request $request)
         }
     }
 
-$topStudents = collect($studentStats)
+    $topStudents = collect($studentStats)
     ->filter(fn($data) => $data['attempts'] > 0 && $data['total_score'] == $data['total_possible'])
     ->sortByDesc(fn($data) => $data['total_score']) // Sort by highest score
 
