@@ -35,7 +35,7 @@ var KTDatatablesServerSide = (function () {
                 { data: "title" },
                 { data: "image" },
                 { data: "course" },
-                // { data: "category" },
+                { data: "course.category" },
 
                 { data: "is_active" },
                 { data: "created_at" },
