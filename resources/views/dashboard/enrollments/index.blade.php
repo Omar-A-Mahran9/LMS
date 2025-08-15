@@ -97,10 +97,11 @@
                         </th>
                         <th>{{ __('Student') }}</th>
                         <th>{{ __('Course') }}</th>
+                        <th>{{ __('Category') }}</th>
+
                         <th>{{ __('Payment Type') }}</th>
                         <th>{{ __('Status') }}</th>
                         <th>{{ __('Enroll At') }}</th>
-                        <th>{{ __('Category') }}</th>
 
                         <th class="min-w-100px">{{ __('Actions') }}</th>
                     </tr>

@@ -31,10 +31,11 @@ var KTDatatablesServerSide = (function () {
                     data: "course_id",
                     name: "courses.title_ar", // يجب أن يكون مطابقًا للـ SQL column بعد عمل join
                 },
+                { data: "course.category.name" }, // category
+
                 { data: "payment_type" }, // payment type
                 { data: "status" }, // status
                 { data: "created_at" }, // enrollment date
-                { data: "course.category.name" }, // category
 
                 { data: null }, // actions
             ],
@@ -64,6 +65,12 @@ var KTDatatablesServerSide = (function () {
                 },
                 {
                     targets: 3,
+                    render: function (data, type, row) {
+                        return row.course?.category?.name ?? "-";
+                    },
+                },
+                {
+                    targets: 4,
                     render: function (data) {
                         return `<span class="badge badge-light-info">${__(
                             data.replace("_", " ")
@@ -71,7 +78,7 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
-                    targets: 4,
+                    targets: 5,
                     orderable: false,
                     render: function (data, type, row) {
                         const statuses = ["pending", "approved", "rejected"];
@@ -110,17 +117,12 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
-                    targets: 5,
+                    targets: 6,
                     render: function (data) {
                         return new Date(data).toLocaleDateString();
                     },
                 },
-                {
-                    targets: 6,
-                    render: function (data, type, row) {
-                        return row.course?.category?.name ?? "-";
-                    },
-                },
+
                 {
                     targets: -1,
                     orderable: false,
