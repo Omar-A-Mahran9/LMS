@@ -35,12 +35,12 @@ var KTDatatablesServerSide = (function () {
                 { data: "title" },
                 { data: "image" },
                 { data: "course" },
+                { data: "course.category.name" },
 
                 { data: "is_active" },
                 { data: "created_at" },
                 { data: "is_preview" },
                 { data: "views" },
-                { data: "course.category.name" },
 
                 { data: null },
             ],
@@ -109,7 +109,7 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
-                    targets: 4, // This is the "Status" column
+                    targets: 5, // This is the "Status" column
                     render: function (data, type, row) {
                         if (row.is_active) {
                             return `
@@ -129,7 +129,7 @@ var KTDatatablesServerSide = (function () {
                 },
 
                 {
-                    targets: 6, // This is the "Status" column
+                    targets: 7, // This is the "Status" column
                     render: function (data, type, row) {
                         if (row.is_preview) {
                             return `

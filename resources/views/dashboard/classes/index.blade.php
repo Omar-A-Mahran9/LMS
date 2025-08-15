@@ -94,12 +94,12 @@
                         <th>{{ __('Title') }}</th>
                         <th>{{ __('Image') }}</th>
                         <th>{{ __('Course') }}</th>
+                        <th>{{ __('Category') }}</th>
 
                         <th>{{ __('Status') }}</th>
                         <th>{{ __('Created at') }}</th>
                         <th>{{ __('Is Free Preview') }}</th>
                         <th>{{ __('views') }}</th>
-                        <th>{{ __('Category') }}</th>
 
                         <th class=" min-w-100px">{{ __('Actions') }}</th>
                     </tr>
