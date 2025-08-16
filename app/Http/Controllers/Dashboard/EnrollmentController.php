@@ -50,8 +50,8 @@ public function index(Request $request)
                 'students.phone',
                 'courses.title_ar',
                 'courses.title_en',
-                'categories.name_ar', // allow searching by category name
-                  'categories.name_en',
+                // 'categories.name_ar', // allow searching by category name
+                //   'categories.name_en',
             ]
         )
     );
