@@ -14,63 +14,35 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-   public function index(Request $request)
+    public function index(Request $request)
     {
         $this->authorize('view_students');
 
-        if ($request->ajax()) {
-            $andsFilters = [];
+        if ($request->ajax())
+        {
+    $andsFilters = [];
 
-            if ($request->filled('filter_combined')) {
-                $value = $request->filter_combined;
+    if ($request->filled('filter_combined')) {
+        $value = $request->filter_combined;
 
-                if (Str::startsWith($value, 'category_')) {
-                    $categoryId = Str::after($value, 'category_');
-                    $andsFilters[] = ['category_id', '=', $categoryId];
-                }
+        if (Str::startsWith($value, 'category_')) {
+            $categoryId = Str::after($value, 'category_');
+            $andsFilters[] = ['category_id', '=', $categoryId];
+        }  
+        // 'all' = no filter applied
+    }
 
-                if (Str::startsWith($value, 'government_')) {
-                    $govId = Str::after($value, 'government_');
-                    $andsFilters[] = ['government_id', '=', $govId];
-                }
-            }
+            $data = getModelData(model: new Student(),
+                    andsFilters: $andsFilters
+);
 
-            // Data for datatable
-            $data = getModelData(model: new Student(), andsFilters: $andsFilters);
-
-            // Build query with filters
-            $query = Student::query();
-            foreach ($andsFilters as $filter) {
-                $query->where(...$filter);
-            }
-
-            // Counts
-            $totalCount = $query->count();
-
-            $categoryCounts = (clone $query)
-                ->select('category_id', DB::raw('COUNT(*) as total'))
-                ->groupBy('category_id')
-                ->pluck('total', 'category_id');
-
-            $governmentCounts = (clone $query)
-                ->select('government_id', DB::raw('COUNT(*) as total'))
-                ->groupBy('government_id')
-                ->pluck('total', 'government_id');
-
-            return response()->json([
-                'data' => $data,
-                'counts' => [
-                    'total'       => $totalCount,
-                    'categories'  => $categoryCounts,
-                    'governments' => $governmentCounts,
-                ]
-            ]);
+            return response()->json($data);
         }
-
         $governments = Government::get();
-        $categories = Category::where('is_publish', 1)->get();
+        $categories = Category::where('is_publish',1)->get();
 
-        return view('dashboard.students.index', compact('governments', 'categories'));
+        return view('dashboard.students.index', compact('governments','categories'));
+
     }
 
     public function store(StoreStudentRequest $request)
