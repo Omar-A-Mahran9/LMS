@@ -18,6 +18,7 @@ class StudentController extends Controller
     {
         $this->authorize('view_students');
 
+        dd($request->filter_combined);
         if ($request->ajax())
         {
     $andsFilters = [];
