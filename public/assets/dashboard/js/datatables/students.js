@@ -24,6 +24,9 @@ var KTDatatablesServerSide = (function () {
             },
             ajax: {
                 url: `/dashboard/${dbTable}`,
+                data: function (d) {
+                    d.filter_combined = $("#filter_combined").val();
+                },
             },
             columns: [
                 { data: "id" },
