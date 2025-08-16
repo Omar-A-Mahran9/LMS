@@ -4,6 +4,10 @@ var datatable;
 // Class definition
 var KTDatatablesServerSide = (function () {
     let dbTable = "students";
+    $("#filter_combined").on("change", function () {
+        $("#kt_datatable").DataTable().ajax.reload();
+    });
+
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
