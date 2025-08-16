@@ -20,21 +20,21 @@ class StudentController extends Controller
 
         if ($request->ajax())
         {
-    $andsFilters = [];
+        $andsFilters = [];
 
-    if ($request->filled('filter_combined')) {
-        $value = $request->filter_combined;
+        if ($request->filled('filter_combined')) {
+            $value = $request->filter_combined;
 
-        if (Str::startsWith($value, 'category_')) {
-            $categoryId = Str::after($value, 'category_');
-            $andsFilters[] = ['category_id', '=', $categoryId];
-        }  
-        // 'all' = no filter applied
-    }
+            if (Str::startsWith($value, 'category_')) {
+                $categoryId = Str::after($value, 'category_');
+                $andsFilters[] = ['category_id', '=', $categoryId];
+            }
+            // 'all' = no filter applied
+        }
 
             $data = getModelData(model: new Student(),
                     andsFilters: $andsFilters
-);
+        );
 
             return response()->json($data);
         }
