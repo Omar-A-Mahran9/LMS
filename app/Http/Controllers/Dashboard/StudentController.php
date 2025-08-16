@@ -18,13 +18,13 @@ class StudentController extends Controller
     {
         $this->authorize('view_students');
 
-        dd($request->filter_combined);
         if ($request->ajax())
         {
     $andsFilters = [];
 
     if ($request->filled('filter_combined')) {
         $value = $request->filter_combined;
+        dd($request->filter_combined);
 
         if (Str::startsWith($value, 'category_')) {
             $categoryId = Str::after($value, 'category_');
