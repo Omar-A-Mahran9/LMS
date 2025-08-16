@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreStudentRequest;
-use App\Http\Requests\Dashboard\UpdateCustomerRequest;
+use Illuminate\Support\Str; // ✅ أضفه هنا
 use App\Http\Requests\Dashboard\UpdateStudentRequest;
 use App\Models\Category;
  use App\Models\Government;
@@ -20,7 +20,26 @@ class StudentController extends Controller
 
         if ($request->ajax())
         {
-            $data = getModelData(model: new Student());
+    $andsFilters = [];
+
+    if ($request->filled('filter_combined')) {
+        $value = $request->filter_combined;
+
+        if (Str::startsWith($value, 'category_')) {
+            $categoryId = Str::after($value, 'category_');
+            $andsFilters[] = ['category_id', '=', $categoryId];
+        } elseif ($value === 'courses_only') {
+            $andsFilters[] = ['category_id', '=', null]; // only courses (no category)
+        } elseif ($value === 'classes_only') {
+            $andsFilters[] = ['category_id', '!=', null]; // only classes (have category)
+        }
+        // 'all' = no filter applied
+    }
+
+            $data = getModelData(model: new Student(),
+                    andsFilters: $andsFilters
+);
+
             return response()->json($data);
         }
         $governments = Government::get();

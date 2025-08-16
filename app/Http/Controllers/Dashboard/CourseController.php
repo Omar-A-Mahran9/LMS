@@ -10,11 +10,9 @@ use App\Models\Admin;
 use App\Models\Category;
 use App\Models\CategorySubCategory;
 use App\Models\Course;
-use App\Models\Enrollment;
-use App\Models\Student;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
+use Illuminate\Http\Request;
+ 
 class CourseController extends Controller
 {
     /**
