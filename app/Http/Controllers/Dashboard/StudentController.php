@@ -24,8 +24,7 @@ class StudentController extends Controller
 
     if ($request->filled('filter_combined')) {
         $value = $request->filter_combined;
-        dd($request->filter_combined);
-
+ 
         if (Str::startsWith($value, 'category_')) {
             $categoryId = Str::after($value, 'category_');
             $andsFilters[] = ['category_id', '=', $categoryId];
