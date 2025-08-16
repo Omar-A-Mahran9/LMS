@@ -40,6 +40,21 @@
                     <input type="text" data-kt-docs-table-filter="search"
                         class="form-control form-control-solid w-250px ps-15"
                         placeholder="{{ __('Search for  students') }}">
+
+                    <div style="min-width: 250px;" class="ms-5">
+                        <select id="filter_combined" class="form-select" data-control="select2"
+                            data-placeholder="{{ __('Filter') }}">
+                            <option value="all">{{ __('All Courses & Classes') }}</option>
+                            <option value="courses_only">{{ __('All Courses') }}</option>
+                            <option value="classes_only">{{ __('All Classes') }}</option>
+                            @foreach ($categories as $category)
+                                <option value="category_{{ $category->id }}">{{ __('Classes: ') . ' ' . $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                    <!--end::Category Filter-->
                 </div>
                 <!--end::Search-->
                 <!--begin::Toolbar-->
