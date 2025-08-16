@@ -7821,7 +7821,7 @@ var KTLayoutSearch = function () {
             searchObject.on('kt.search.process', processs);
 
             // Ajax search handler
-            searchObject.on('kt.search.process', processsAjax);
+            //searchObject.on('kt.search.process', processsAjax);
 
             // Clear handler
             searchObject.on('kt.search.clear', clear);
