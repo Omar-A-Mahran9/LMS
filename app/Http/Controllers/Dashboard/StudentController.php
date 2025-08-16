@@ -24,17 +24,12 @@ class StudentController extends Controller
 
     if ($request->filled('filter_combined')) {
         $value = $request->filter_combined;
- 
+
         if (Str::startsWith($value, 'category_')) {
             $categoryId = Str::after($value, 'category_');
             $andsFilters[] = ['category_id', '=', $categoryId];
-        } elseif ($value === 'courses_only') {
-            $andsFilters[] = ['category_id', '=', null]; // only courses (no category)
-        } elseif ($value === 'classes_only') {
-            $andsFilters[] = ['category_id', '!=', null]; // only classes (have category)
         }
-        // 'all' = no filter applied
-    }
+     }
 
             $data = getModelData(model: new Student(),
                     andsFilters: $andsFilters
