@@ -76,7 +76,7 @@ public function index(Request $request)
 
     $categories = Category::where('is_publish',1)->get();
 
-    return view('dashboard.enrollments.index', compact('students', 'courses','categories'));
+    return view('dashboard.enrollments.index', compact('courses_only','students', 'courses','categories'));
 }
 
 
