@@ -8,6 +8,10 @@ var KTDatatablesServerSide = (function () {
     $("#filter_category").on("change", function () {
         $("#kt_datatable").DataTable().ajax.reload();
     });
+
+    $("#filter_course").on("change", function () {
+        $("#kt_datatable").DataTable().ajax.reload();
+    });
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
             language: language,
