@@ -311,8 +311,9 @@
                 let categoryId = $(this).val();
 
                 // Reset course dropdown
-                $('#filter_classes').html('<option value="all">All Classes</option>');
-                $('#filter_course').html('<option value="all">All Courses</option>');
+                $('#filter_classes').html('<option value="all">{{ __('All Classes') }}</option>');
+                $('#filter_course').html('<option value="all">{{ __('All Courses') }}</option>');
+
 
                 if (categoryId && categoryId !== "all") {
                     // Hide the non-class courses filter
