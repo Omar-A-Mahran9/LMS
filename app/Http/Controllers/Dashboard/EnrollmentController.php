@@ -27,10 +27,12 @@ public function index(Request $request)
         }
 
         // ✅ Course filter
-        if ($request->filled('filter_course') && $request->filter_course !== 'all') {
+        if ($request->filled('filter_classes') && $request->filter_classes !== 'all') {
+            $andsFilters[] = ['courses.id', '=', $request->filter_classes];
+        }
+        if ($request->filled('filter_course') && $request->filter_classes !== 'all') {
             $andsFilters[] = ['courses.id', '=', $request->filter_course];
         }
-
         $model = new class extends Enrollment {
             public function newQuery()
             {
@@ -70,6 +72,8 @@ public function index(Request $request)
 
     $students = Student::all();
     $courses = Course::all();
+    $courses_only = Course::where('is_class', '!=', 1)->get();
+
     $categories = Category::where('is_publish',1)->get();
 
     return view('dashboard.enrollments.index', compact('students', 'courses','categories'));

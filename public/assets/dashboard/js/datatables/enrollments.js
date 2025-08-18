@@ -9,6 +9,9 @@ var KTDatatablesServerSide = (function () {
         $("#kt_datatable").DataTable().ajax.reload();
     });
 
+    $("#filter_classes").on("change", function () {
+        $("#kt_datatable").DataTable().ajax.reload();
+    });
     $("#filter_course").on("change", function () {
         $("#kt_datatable").DataTable().ajax.reload();
     });
@@ -29,6 +32,7 @@ var KTDatatablesServerSide = (function () {
                 url: `/dashboard/${dbTable}`,
                 data: function (d) {
                     d.filter_category = $("#filter_category").val();
+                    d.filter_classes = $("#filter_classes").val();
                     d.filter_course = $("#filter_course").val(); // ✅ send course filter too
                 },
             },

@@ -58,10 +58,23 @@
 
                     <div style="min-width: 250px;" class="ms-5">
                         <!-- Course Filter -->
-                        <select id="filter_course" class="form-select" data-control="select2"
+                        <select id="filter_classes" class="form-select" data-control="select2"
                             data-placeholder="{{ __('Select Course') }}">
                             <option value="all">{{ __('All Courses') }}</option>
                             {{-- Will be filled dynamically --}}
+                        </select>
+                    </div>
+
+                    <div style="min-width: 250px;" class="ms-5" id="course_filter_wrapper">
+                        <!-- Course Filter -->
+                        <select id="filter_course" class="form-select" data-control="select2"
+                            data-placeholder="{{ __('Select Course') }}">
+                            <option value="all">{{ __('All Courses') }}</option>
+                            @foreach ($courses_only as $course)
+                                @if ($course->is_class != 1)
+                                    <option value="{{ $course->id }}">{{ $course->title }}</option>
+                                @endif
+                            @endforeach
                         </select>
                     </div>
 
@@ -298,23 +311,29 @@
                 let categoryId = $(this).val();
 
                 // Reset course dropdown
-                $('#filter_course').html('<option value="all">All Courses</option>');
+                $('#filter_classes').html('<option value="all">All Courses</option>');
 
                 if (categoryId && categoryId !== "all") {
+                    // Hide the non-class courses filter
+                    $('#course_filter_wrapper').hide();
+
                     $.ajax({
                         url: `/dashboard/categories/${categoryId}/courses`,
                         type: 'GET',
                         success: function(data) {
                             $.each(data, function(index, course) {
-                                $('#filter_course').append(
+                                $('#filter_classes').append(
                                     `<option value="${course.id}">${course.title}</option>`
                                 );
                             });
 
                             // Refresh Select2
-                            $('#filter_course').trigger('change');
+                            $('#filter_classes').trigger('change');
                         }
                     });
+                } else {
+                    // Show again if "All Categories" selected
+                    $('#course_filter_wrapper').show();
                 }
             });
         });
