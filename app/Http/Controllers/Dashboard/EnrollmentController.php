@@ -30,7 +30,7 @@ public function index(Request $request)
         if ($request->filled('filter_classes') && $request->filter_classes !== 'all') {
             $andsFilters[] = ['courses.id', '=', $request->filter_classes];
         }
-        if ($request->filled('filter_course') && $request->filter_classes !== 'all') {
+        if ($request->filled('filter_course') && $request->filter_course !== 'all') {
             $andsFilters[] = ['courses.id', '=', $request->filter_course];
         }
         $model = new class extends Enrollment {
