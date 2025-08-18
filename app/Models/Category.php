@@ -15,7 +15,7 @@ class Category extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
-    protected $appends = ['name', 'full_image_path', 'description'];
+    protected $appends = ['name', 'full_image_path' ];
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
@@ -72,10 +72,10 @@ class Category extends Model
         return $this->attributes['name_' . app()->getLocale()];
     }
 
-    public function getDescriptionAttribute()
-    {
-        return $this->attributes['description_' . app()->getLocale()];
-    }
+    // public function getDescriptionAttribute()
+    // {
+    //     return $this->attributes['description_' . app()->getLocale()];
+    // }
 
     public function getFullImagePathAttribute()
     {

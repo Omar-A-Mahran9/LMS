@@ -33,6 +33,24 @@ class Enrollment extends Model
         'category_id'     // Local key on Course model
     );
 }
+
+   public function scopeOnlyClasses($query)
+    {
+        return $query->whereHas('course', function ($q) {
+            $q->where('is_class', 1);
+        });
+    }
+
+    /**
+     * Scope: Filter by category_id inside courses
+     */
+    public function scopeWhereCategory($query, $categoryId)
+    {
+        return $query->whereHas('course', function ($q) use ($categoryId) {
+            $q->where('is_class', 1)
+              ->where('category_id', $categoryId);
+        });
+    }
     public function student()
     {
         return $this->belongsTo(Student::class);

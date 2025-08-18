@@ -12,7 +12,7 @@ use App\Models\CategorySubCategory;
 use App\Models\Course;
 
 use Illuminate\Http\Request;
- 
+
 class CourseController extends Controller
 {
     /**
@@ -64,6 +64,16 @@ public function index(Request $request)
     }
 }
 
+public function getCourses($categoryId)
+{
+    if ($categoryId === 'all') {
+        $courses = Course::all();
+    } else {
+        $courses =Course::where('category_id', $categoryId)->get();
+    }
+
+    return response()->json($courses);
+}
 
 
 public function store(StoreCourseRequest $request)

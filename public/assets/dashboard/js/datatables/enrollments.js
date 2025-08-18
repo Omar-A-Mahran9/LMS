@@ -4,7 +4,10 @@ var datatable;
 // Class definition
 var KTDatatablesServerSide = (function () {
     let dbTable = "enrollments";
-    // Private functions
+    // Private function
+    $("#filter_category").on("change", function () {
+        $("#kt_datatable").DataTable().ajax.reload();
+    });
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
             language: language,
@@ -20,6 +23,10 @@ var KTDatatablesServerSide = (function () {
             },
             ajax: {
                 url: `/dashboard/${dbTable}`,
+                data: function (d) {
+                    d.filter_category = $("#filter_category").val();
+                    d.filter_course = $("#filter_course").val(); // ✅ send course filter too
+                },
             },
             columns: [
                 { data: "id" }, // checkbox

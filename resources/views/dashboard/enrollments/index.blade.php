@@ -44,6 +44,27 @@
                     <input type="text" data-kt-docs-table-filter="search"
                         class="form-control form-control-solid w-250px ps-15"
                         placeholder="{{ __('Search for enrollments') }}">
+
+                    <div style="min-width: 250px;" class="ms-5">
+                        <!-- Category Filter -->
+                        <select id="filter_category" class="form-select" data-control="select2"
+                            data-placeholder="{{ __('Select Category') }}">
+                            <option value="all">{{ __('All Categories') }}</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div style="min-width: 250px;" class="ms-5">
+                        <!-- Course Filter -->
+                        <select id="filter_course" class="form-select" data-control="select2"
+                            data-placeholder="{{ __('Select Course') }}">
+                            <option value="all">{{ __('All Courses') }}</option>
+                            {{-- Will be filled dynamically --}}
+                        </select>
+                    </div>
+
                 </div>
                 <!--end::Search-->
 
@@ -268,6 +289,33 @@
                 $("[name='_method']").remove();
                 $("#crud_form").trigger('reset');
                 $("#crud_form").attr('action', `/dashboard/enrollments`);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#filter_category').on('change', function() {
+                let categoryId = $(this).val();
+
+                // Reset course dropdown
+                $('#filter_course').html('<option value="all">All Courses</option>');
+
+                if (categoryId && categoryId !== "all") {
+                    $.ajax({
+                        url: `/dashboard/categories/${categoryId}/courses`,
+                        type: 'GET',
+                        success: function(data) {
+                            $.each(data, function(index, course) {
+                                $('#filter_course').append(
+                                    `<option value="${course.id}">${course.title}</option>`
+                                );
+                            });
+
+                            // Refresh Select2
+                            $('#filter_course').trigger('change');
+                        }
+                    });
+                }
             });
         });
     </script>

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str; // ✅ أضفه هنا
 
 class EnrollmentController extends Controller
 {
@@ -17,52 +19,62 @@ public function index(Request $request)
     $this->authorize('view_enrollments');
 
     if ($request->ajax()) {
-    // Custom anonymous model with override
-    $model = new class extends \App\Models\Enrollment {
-        public function newQuery()
-        {
-            return parent::newQuery()
-                ->from('course_student as cs')
-                ->join('students', 'students.id', '=', 'cs.student_id')
-                ->join('courses', 'courses.id', '=', 'cs.course_id')
-                ->select('cs.*');
+        $andsFilters = [];
+
+        // ✅ Category filter
+        if ($request->filled('filter_category') && $request->filter_category !== 'all') {
+            $andsFilters[] = ['courses.category_id', '=', $request->filter_category];
         }
 
-        public function getTable()
-        {
-            return 'cs'; // important: for where cs.deleted_at IS NULL
+        // ✅ Course filter
+        if ($request->filled('filter_course') && $request->filter_course !== 'all') {
+            $andsFilters[] = ['courses.id', '=', $request->filter_course];
         }
-    };
 
-    return response()->json(
-        getModelData(
-            model: $model,
-            relations: [
-                'student' => ['id', 'first_name', 'last_name', 'email', 'phone'],
-                'course' => ['id', 'title_ar', 'title_en', 'category_id'],
-                'course.category' => ['id', 'name_ar', 'name_en','description_ar','description_en'] // category relation
+        $model = new class extends Enrollment {
+            public function newQuery()
+            {
+                return parent::newQuery()
+                    ->from('course_student as cs')
+                    ->join('students', 'students.id', '=', 'cs.student_id')
+                    ->join('courses', 'courses.id', '=', 'cs.course_id')
+                    ->select('cs.*');
+            }
 
-            ],
-            searchingColumns: [
-                'students.first_name',
-                'students.last_name',
-                'students.email',
-                'students.phone',
-                'courses.title_ar',
-                'courses.title_en',
-                // 'categories.name_ar', // allow searching by category name
-                //   'categories.name_en',
-            ]
-        )
-    );
+            public function getTable()
+            {
+                return 'cs';
+            }
+        };
+
+        return response()->json(
+            getModelData(
+                model: $model,
+                andsFilters: $andsFilters,
+                relations: [
+                    'student' => ['id', 'first_name', 'last_name', 'email', 'phone'],
+                    'course' => ['id', 'title_ar', 'title_en', 'category_id'],
+                    'course.category' => ['id', 'name_ar', 'name_en'],
+                ],
+                searchingColumns: [
+                    'students.first_name',
+                    'students.last_name',
+                    'students.email',
+                    'students.phone',
+                    'courses.title_ar',
+                    'courses.title_en',
+                ],
+            )
+        );
     }
 
+    $students = Student::all();
+    $courses = Course::all();
+    $categories = Category::where('is_publish',1)->get();
 
-    $students = Student::get();
-    $courses = Course::get();
-
-    return view('dashboard.enrollments.index', compact('students', 'courses'));
+    return view('dashboard.enrollments.index', compact('students', 'courses','categories'));
 }
+
 
 public function getCoursesForStudent($studentId)
 {

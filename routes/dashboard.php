@@ -42,6 +42,7 @@ Route::get('students/{student}/report/pdf', [StudentController::class, 'reportPd
 Route::post('enrollments/toggle-status', [EnrollmentController::class, 'toggleStatus'])
     ->name('enrollments.toggleStatus');
  Route::resource('lives', 'LiveController')->except(['create', 'edit']);
+Route::get('/categories/{id}/courses', [CourseController::class, 'getCourses']);
 
  Route::resource('courses', 'CourseController')->except(['create', 'edit']);
  Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
