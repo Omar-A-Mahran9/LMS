@@ -60,7 +60,7 @@
                         <!-- Course Filter -->
                         <select id="filter_classes" class="form-select" data-control="select2"
                             data-placeholder="{{ __('Select Course') }}">
-                            <option value="all">{{ __('All Courses') }}</option>
+                            <option value="all">{{ __('All Classes') }}</option>
                             {{-- Will be filled dynamically --}}
                         </select>
                     </div>
