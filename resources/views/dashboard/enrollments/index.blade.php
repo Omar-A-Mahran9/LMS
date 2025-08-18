@@ -310,12 +310,9 @@
             $('#filter_category').on('change', function() {
                 let categoryId = $(this).val();
 
-                // Reset all form inputs (except category itself if you want)
-                $('form').find('input[type=text], input[type=number], textarea').val('');
-                $('form').find('select').not('#filter_category').val('all').trigger('change');
-
                 // Reset course dropdown
-                $('#filter_classes').html('<option value="all">All Courses</option>');
+                $('#filter_classes').html('<option value="all">All Classes</option>');
+                $('#filter_course').html('<option value="all">All Courses</option>');
 
                 if (categoryId && categoryId !== "all") {
                     // Hide the non-class courses filter
