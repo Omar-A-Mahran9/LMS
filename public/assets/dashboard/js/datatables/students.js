@@ -4,10 +4,12 @@ var datatable;
 // Class definition
 var KTDatatablesServerSide = (function () {
     let dbTable = "students";
-    $("#filter_combined").on("change", function () {
+    $("#filter_category").on("change", function () {
         $("#kt_datatable").DataTable().ajax.reload();
     });
-
+    $("#filter_enrollment").on("change", function () {
+        $("#kt_datatable").DataTable().ajax.reload();
+    });
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
@@ -25,7 +27,8 @@ var KTDatatablesServerSide = (function () {
             ajax: {
                 url: `/dashboard/${dbTable}`,
                 data: function (d) {
-                    d.filter_combined = $("#filter_combined").val();
+                    d.filter_category = $("#filter_category").val();
+                    d.filter_enrollment = $("#filter_enrollment").val();
                 },
             },
             columns: [

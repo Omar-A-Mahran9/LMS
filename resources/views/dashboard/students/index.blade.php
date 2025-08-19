@@ -38,20 +38,30 @@
                     </span>
                     <!--end::Svg Icon-->
                     <input type="text" data-kt-docs-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-15"
-                        placeholder="{{ __('Search for  students') }}">
+                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Search for students') }}">
 
                     <div style="min-width: 250px;" class="ms-5">
-                        <select id="filter_combined" class="form-select" data-control="select2"
-                            data-placeholder="{{ __('Filter') }}">
+                        <select id="filter_category" name="filter_category" class="form-select" data-control="select2"
+                            data-placeholder="{{ __('Filter by Class') }}">
                             <option value="all">{{ __('All Courses & Classes') }}</option>
-                               @foreach ($categories as $category)
-                                <option value="category_{{ $category->id }}">{{ __('Classes: ') . ' ' . $category->name }}
-                                </option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ __('Classes: ') . ' ' . $category->name }}</option>
                             @endforeach
                         </select>
-
                     </div>
+
+                    <div style="min-width: 250px;" class="ms-5">
+                        <select id="filter_enrollment" name="filter_enrollment" class="form-select" data-control="select2"
+                            data-placeholder="{{ __('Enrollments') }}">
+                            <option value="all">{{ __('Enrollments') }}</option>
+                            <option value="enrolled_any_course">{{ __('Enrolled in any course') }}</option>
+
+                            @foreach ($courses as $course)
+                                <option value="course_{{ $course->id }}">{{ $course->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <!--end::Category Filter-->
                 </div>
                 <!--end::Search-->

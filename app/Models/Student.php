@@ -61,21 +61,7 @@ class Student extends Authenticatable
                 ->withTimestamps();
 }
 
-
-    public function courses()
-    {
-        return $this->belongsToMany(Course::class, 'course_student')
-                    ->withPivot('payment_type', 'status', 'is_active')
-                    ->withTimestamps();
-    }
-    public function books()
-    {
-        return $this->belongsToMany(Course::class, 'book_orders')
-                    ->withPivot('payment_type', 'status')
-                    ->withTimestamps();
-    }
-
-     public function enrolledCourses()
+    public function enrolledCourses()
     {
         return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id')->withTimestamps();
     }
@@ -84,6 +70,21 @@ class Student extends Authenticatable
     {
         return $this->belongsToMany(CourseClass::class, 'class_student', 'student_id', 'class_id')->withTimestamps();
     }
+
+  public function courses()
+{
+    return $this->belongsToMany(Course::class, 'course_student')
+                ->withPivot('payment_type', 'status', 'is_active')
+                ->withTimestamps();
+}
+
+    public function books()
+    {
+        return $this->belongsToMany(Course::class, 'book_orders')
+                    ->withPivot('payment_type', 'status')
+                    ->withTimestamps();
+    }
+
 
     public function watchedVideos()
     {
