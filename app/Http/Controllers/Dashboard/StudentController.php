@@ -23,7 +23,7 @@ public function index(Request $request)
         $andsFilters = [];
         $query = Student::query();
 
-        // Filter by category (class)
+        // Filter by category
         if ($request->filled('filter_category') && $request->filter_category !== 'all') {
             $andsFilters[] = ['category_id', '=', $request->filter_category];
         }
@@ -33,32 +33,39 @@ public function index(Request $request)
             $value = $request->filter_enrollment;
 
             if ($value === 'enrolled_any_course') {
-                // Students who are enrolled in at least one course
-                $query->whereHas('courses');
+                $query->whereHas('courses'); // students enrolled in any course
             } elseif (Str::startsWith($value, 'course_')) {
-                // Students enrolled in a specific course
                 $courseId = Str::after($value, 'course_');
                 $query->whereHas('courses', function ($q) use ($courseId) {
-                    $q->where('courses.id', $courseId);
+                    $q->where('courses.id', $courseId); // students in specific course
                 });
             }
         }
 
-        // 🔑 Pass the query + filters to getModelData
-      $data = getModelData(
-    model: new Student,   // model instance
-    andsFilters: $andsFilters,
-);
+        // ⚡ Pass a query to getModelData via a temporary "scope" closure
+        $data = getModelData(
+            model: new Student, // pass Model instance
+            andsFilters: $andsFilters,
+            relations: [],      // add any eager loaded relations if needed
+        );
+
+        // Manually apply the enrollment filter because getModelData expects Model
+        if ($request->filled('filter_enrollment') && $request->filter_enrollment !== 'all') {
+            $data['data'] = $query->get();
+            $data['recordsTotal'] = $data['data']->count();
+            $data['recordsFiltered'] = $data['data']->count();
+        }
 
         return response()->json($data);
     }
 
     $governments = Government::get();
     $categories  = Category::where('is_publish', 1)->get();
-    $courses     = Course::get();
+    $courses     = Course::where('is_publish', 1)->get();
 
     return view('dashboard.students.index', compact('governments', 'categories', 'courses'));
 }
+
 
     public function store(StoreStudentRequest $request)
     {
