@@ -61,7 +61,7 @@ public function index(Request $request)
 
     $governments = Government::get();
     $categories  = Category::where('is_publish', 1)->get();
-    $courses     = Course::where('is_publish', 1)->get();
+    $courses     = Course::get();
 
     return view('dashboard.students.index', compact('governments', 'categories', 'courses'));
 }
