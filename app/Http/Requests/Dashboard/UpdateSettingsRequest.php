@@ -41,6 +41,7 @@ class UpdateSettingsRequest extends FormRequest
             ],
             "contact" => [
                 'sms_number' => ['required', 'regex:/^[0-9]+$/', 'max:20'],
+                'whatsapp_number' => ['required', 'regex:/^[0-9]+$/', 'max:20'],
 
                 'email' => ['required','email'],
                 'address_ar' => ['required'],

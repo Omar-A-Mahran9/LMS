@@ -179,6 +179,8 @@ public function topHeroesByCategory(Request $request)
                 'label'           => setting('label_about_us' . $suffix),
                 'description'     => setting('description_about_us' . $suffix),
                 'phone_number'       => setting('sms_number'),
+                'phone_number_two'       => setting('whatsapp_number'),
+
                 'email'            => setting('email'),
                 'address'          => $address,
                 'google_map_url' =>  setting('google_map_url'),
