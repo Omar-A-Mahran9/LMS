@@ -23,6 +23,6 @@ class Contact_us extends Model
 
      public function getFullAudioPathAttribute()
     {
-        return asset(getAudioPathFromDirectory($this->reply, 'Contact'));
+        return asset(getAudioPathFromDirectory($this->reply, 'contact'));
     }
 }
