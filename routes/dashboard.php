@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\BookOrderController;
+use App\Http\Controllers\Dashboard\ContactRequestController;
 use App\Http\Controllers\Dashboard\CourseController;
 use App\Http\Controllers\Dashboard\EnrollmentController;
 use App\Http\Controllers\Dashboard\GenerateCodeController;
@@ -43,6 +44,8 @@ Route::post('enrollments/toggle-status', [EnrollmentController::class, 'toggleSt
     ->name('enrollments.toggleStatus');
  Route::resource('lives', 'LiveController')->except(['create', 'edit']);
 Route::get('/categories/{id}/courses', [CourseController::class, 'getCourses']);
+Route::put('contact-us/{contact}/reply', [ContactRequestController::class, 'reply'])->name('contact.reply');
+Route::get('contact-us/{contact}/reply', [ContactRequestController::class, 'showReplyForm'])->name('contact.reply_form');
 
  Route::resource('courses', 'CourseController')->except(['create', 'edit']);
  Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);

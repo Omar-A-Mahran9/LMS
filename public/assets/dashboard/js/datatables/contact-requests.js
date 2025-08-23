@@ -63,7 +63,7 @@ var KTDatatablesServerSide = (function () {
                             <div class="d-flex align-items-center">
                                 <!--begin::Info-->
                                 <div class="d-flex flex-column justify-content-center">
- 
+
                                     <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.email}</a>
                                 </div>
                                 <!--end::Info-->
@@ -145,13 +145,13 @@ var KTDatatablesServerSide = (function () {
                             </a>
                             <!--begin::Menu-->
                             <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
-                         <!--begin::Menu item 
-                              <div class="menu-item px-3">
-                               <a href="javascript:;" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
-                               ${__("تعديل")}
-                               </a>
-                           </div>
-   end::Menu item-->
+   <div class="menu-item px-3">
+                                    <a href="/dashboard/contact-requests/${
+                                        data.id
+                                    }" class="menu-link px-3 show_button" data-kt-docs-table-filter="show_row">
+                                        ${__("Show")}
+                                    </a>
+                                </div>
 
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">

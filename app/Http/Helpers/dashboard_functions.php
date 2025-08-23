@@ -167,6 +167,24 @@ if (!function_exists('getAttachmentPathFromDirectory')) {
     }
 }
 
+if (!function_exists('uploadAudioToDirectory')) {
+
+    function uploadAudioToDirectory($audioFile, $model = '')
+    {
+        $model = Str::plural($model);
+        $model = Str::ucfirst($model);
+
+        $path = "Audio/$model"; // storage/app/public/Audio/ModelName
+
+        // Generate unique audio name
+        $audioName = str_replace(' ', '', 'lms_' . time() . '_' . $audioFile->getClientOriginalName());
+
+        // Store in public disk
+        $audioFile->storeAs($path, $audioName, 'public');
+
+        return $audioName; // save this in DB
+    }
+}
 
 
 if (!function_exists('getAudioPathFromDirectory')) {

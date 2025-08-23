@@ -11,6 +11,7 @@ class Contact_us extends Model
 
     use HasFactory;
     protected $table = 'contact_us';
+    protected $appends=['full_audio_path'];
     protected $guarded = [];
     protected $casts   = ['created_at' => 'date:Y-m-d', 'updated_at' => 'date:Y-m-d'];
 
@@ -18,5 +19,10 @@ class Contact_us extends Model
     public function student()
     {
         return $this->belongsTo(Student::class, 'student_id');
+    }
+
+     public function getFullAudioPathAttribute()
+    {
+        return asset(getAudioPathFromDirectory($this->reply, 'Contact'));
     }
 }

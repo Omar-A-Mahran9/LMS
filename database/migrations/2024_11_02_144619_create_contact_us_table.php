@@ -27,6 +27,9 @@ return new class extends Migration
                   ->onDelete('cascade');
 
             $table->string('message');
+            $table->string('reply')->nullable();
+            $table->boolean('is_replied')->default(false); // free preview toggle
+
             $table->timestamps();
         });
     }
