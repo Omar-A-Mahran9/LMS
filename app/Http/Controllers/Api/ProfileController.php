@@ -356,7 +356,7 @@ public function studentStatistics()
 
 public function myQuestion()
 {
-    $studentId = auth('student')->id(); // using student guard
+    $studentId = auth('api')->id(); // using student guard
 
     $questions = Contact_us::with('student')
         ->where('student_id', $studentId)
