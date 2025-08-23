@@ -361,11 +361,27 @@ public function myQuestion()
     $questions = Contact_us::with('student')
         ->where('student_id', $studentId)
         ->latest()
-        ->get();
+        ->get()
+        ->map(function ($q) {
+            return [
+                'id'          => $q->id,
+                'message'     => $q->message,
+                'reply'       => $q->reply && str_ends_with($q->reply, '.mp3')
+                                    ? url('storage/replies/' . $q->reply)
+                                    : $q->reply,
+                'is_audio'    => $q->reply && str_ends_with($q->reply, '.mp3'),
+                'is_replied'  => !empty($q->reply),
+                'created_at'  => $q->created_at->format('Y-m-d H:i'),
+                'student'     => [
+                    'id'    => $q->student->id,
+                    'name'  => $q->student->name,
+                    'email' => $q->student->email,
+                ],
+            ];
+        });
 
-    return $this->success("",
-         $questions,
-    );
+    return $this->success("", $questions);
 }
+
 
 }
