@@ -239,13 +239,16 @@ var KTDatatablesServerSide = (function () {
                 // Titles
                 $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
-
-                tinymce
-                    .get("description_ar_inp")
-                    .setContent(data.description_ar);
-                tinymce
-                    .get("description_en_inp")
-                    .setContent(data.description_en);
+                if (tinymce.get("description_ar_inp")) {
+                    tinymce
+                        .get("description_ar_inp")
+                        .setContent(data.description_ar || "");
+                }
+                if (tinymce.get("description_en_inp")) {
+                    tinymce
+                        .get("description_en_inp")
+                        .setContent(data.description_en || "");
+                }
 
                 // Video URL
                 $("#video_url_inp").val(data.video_url);
