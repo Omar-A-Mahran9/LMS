@@ -14,7 +14,7 @@ public function store(StoreContact_usRequest $request)
 {
     $data = $request->validated();
 
-    if (auth('student')->check()) {
+    if (auth('api')->check()) {
         $data['student_id'] = auth('student')->id();
     }
 
