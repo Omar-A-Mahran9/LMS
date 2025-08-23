@@ -24,6 +24,9 @@ class StoreContact_usRequest extends FormRequest
     {
           if (auth('api')->check()) {
         return [
+             'name' => ['required'],
+            'phone' => ['required', new PhoneNumber()],
+            'email' => ['nullable', 'string', 'email:rfc,dns'],
             'category_id' => ['required', 'numeric', 'exists:categories,id'],
             'message' => ['required'],
         ];
