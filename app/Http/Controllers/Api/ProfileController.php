@@ -367,7 +367,7 @@ public function myQuestion()
                 'id'          => $q->id,
                 'message'     => $q->message,
                 'reply'       => $q->reply && str_ends_with($q->reply, '.mp3')
-                                    ? $this->full_audio_path
+                                    ? $q->full_audio_path
                                     : $q->reply,
                 'is_audio'    => $q->reply && str_ends_with($q->reply, '.mp3'),
                 'is_replied'  => !empty($q->reply),
