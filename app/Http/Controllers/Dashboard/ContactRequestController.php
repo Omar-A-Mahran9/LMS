@@ -77,7 +77,9 @@ public function reply(Request $request, $id)
         ]);
     }
 
-
+    return redirect()
+        ->route('dashboard.contact-requests.show', $contact->id)
+        ->with('success', 'Reply sent successfully.');
 }
 
 
