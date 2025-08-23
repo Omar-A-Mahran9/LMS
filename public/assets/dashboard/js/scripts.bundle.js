@@ -3,7 +3,7 @@
 //
 
 // Init components
-var KTComponents = function () {
+var KTComponents = (function () {
     // Public methods
     return {
         init: function () {
@@ -18,9 +18,9 @@ var KTComponents = function () {
             KTDialer.init();
             KTImageInput.init();
             KTPasswordMeter.init();
-        }
-    }
-}();
+        },
+    };
+})();
 
 // On document ready
 if (document.readyState === "loading") {
@@ -37,13 +37,13 @@ window.addEventListener("load", function () {
 });
 
 // Declare KTApp for Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     window.KTComponents = module.exports = KTComponents;
 }
-"use strict";
+("use strict");
 
 // Class definition
-var KTApp = function () {
+var KTApp = (function () {
     var initialized = false;
     var select2FocusFixInitialized = false;
     var countUpInitialized = false;
@@ -56,28 +56,31 @@ var KTApp = function () {
         var delay = {};
 
         // Handle delay options
-        if (el.hasAttribute('data-bs-delay-hide')) {
-            delay['hide'] = el.getAttribute('data-bs-delay-hide');
+        if (el.hasAttribute("data-bs-delay-hide")) {
+            delay["hide"] = el.getAttribute("data-bs-delay-hide");
         }
 
-        if (el.hasAttribute('data-bs-delay-show')) {
-            delay['show'] = el.getAttribute('data-bs-delay-show');
+        if (el.hasAttribute("data-bs-delay-show")) {
+            delay["show"] = el.getAttribute("data-bs-delay-show");
         }
 
         if (delay) {
-            options['delay'] = delay;
+            options["delay"] = delay;
         }
 
         // Check dismiss options
-        if (el.hasAttribute('data-bs-dismiss') && el.getAttribute('data-bs-dismiss') == 'click') {
-            options['dismiss'] = 'click';
+        if (
+            el.hasAttribute("data-bs-dismiss") &&
+            el.getAttribute("data-bs-dismiss") == "click"
+        ) {
+            options["dismiss"] = "click";
         }
 
         // Initialize popover
         var tp = new bootstrap.Tooltip(el, options);
 
         // Handle dismiss
-        if (options['dismiss'] && options['dismiss'] === 'click') {
+        if (options["dismiss"] && options["dismiss"] === "click") {
             // Hide popover on element click
             el.addEventListener("click", function (e) {
                 tp.hide();
@@ -87,15 +90,17 @@ var KTApp = function () {
         el.setAttribute("data-kt-initialized", "1");
 
         return tp;
-    }
+    };
 
     var createBootstrapTooltips = function () {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipTriggerList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
 
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             createBootstrapTooltip(tooltipTriggerEl, {});
         });
-    }
+    };
 
     var createBootstrapPopover = function (el, options) {
         if (el.getAttribute("data-kt-initialized") === "1") {
@@ -105,62 +110,69 @@ var KTApp = function () {
         var delay = {};
 
         // Handle delay options
-        if (el.hasAttribute('data-bs-delay-hide')) {
-            delay['hide'] = el.getAttribute('data-bs-delay-hide');
+        if (el.hasAttribute("data-bs-delay-hide")) {
+            delay["hide"] = el.getAttribute("data-bs-delay-hide");
         }
 
-        if (el.hasAttribute('data-bs-delay-show')) {
-            delay['show'] = el.getAttribute('data-bs-delay-show');
+        if (el.hasAttribute("data-bs-delay-show")) {
+            delay["show"] = el.getAttribute("data-bs-delay-show");
         }
 
         if (delay) {
-            options['delay'] = delay;
+            options["delay"] = delay;
         }
 
         // Handle dismiss option
-        if (el.getAttribute('data-bs-dismiss') == 'true') {
-            options['dismiss'] = true;
+        if (el.getAttribute("data-bs-dismiss") == "true") {
+            options["dismiss"] = true;
         }
 
-        if (options['dismiss'] === true) {
-            options['template'] = '<div class="popover" role="tooltip"><div class="popover-arrow"></div><span class="popover-dismiss btn btn-icon"></span><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+        if (options["dismiss"] === true) {
+            options["template"] =
+                '<div class="popover" role="tooltip"><div class="popover-arrow"></div><span class="popover-dismiss btn btn-icon"></span><h3 class="popover-header"></h3><div class="popover-body"></div></div>';
         }
 
         // Initialize popover
         var popover = new bootstrap.Popover(el, options);
 
         // Handle dismiss click
-        if (options['dismiss'] === true) {
+        if (options["dismiss"] === true) {
             var dismissHandler = function (e) {
                 popover.hide();
-            }
+            };
 
-            el.addEventListener('shown.bs.popover', function () {
-                var dismissEl = document.getElementById(el.getAttribute('aria-describedby'));
-                dismissEl.addEventListener('click', dismissHandler);
+            el.addEventListener("shown.bs.popover", function () {
+                var dismissEl = document.getElementById(
+                    el.getAttribute("aria-describedby")
+                );
+                dismissEl.addEventListener("click", dismissHandler);
             });
 
-            el.addEventListener('hide.bs.popover', function () {
-                var dismissEl = document.getElementById(el.getAttribute('aria-describedby'));
-                dismissEl.removeEventListener('click', dismissHandler);
+            el.addEventListener("hide.bs.popover", function () {
+                var dismissEl = document.getElementById(
+                    el.getAttribute("aria-describedby")
+                );
+                dismissEl.removeEventListener("click", dismissHandler);
             });
         }
 
         el.setAttribute("data-kt-initialized", "1");
 
         return popover;
-    }
+    };
 
     var createBootstrapPopovers = function () {
-        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        var popoverTriggerList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="popover"]')
+        );
 
         var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
             createBootstrapPopover(popoverTriggerEl, {});
         });
-    }
+    };
 
     var createBootstrapToasts = function () {
-        var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        var toastElList = [].slice.call(document.querySelectorAll(".toast"));
         var toastList = toastElList.map(function (toastEl) {
             if (toastEl.getAttribute("data-kt-initialized") === "1") {
                 return;
@@ -168,47 +180,53 @@ var KTApp = function () {
 
             toastEl.setAttribute("data-kt-initialized", "1");
 
-            return new bootstrap.Toast(toastEl, {})
+            return new bootstrap.Toast(toastEl, {});
         });
-    }
+    };
 
     var createButtons = function () {
-        var buttonsGroup = [].slice.call(document.querySelectorAll('[data-kt-buttons="true"]'));
+        var buttonsGroup = [].slice.call(
+            document.querySelectorAll('[data-kt-buttons="true"]')
+        );
 
         buttonsGroup.map(function (group) {
             if (group.getAttribute("data-kt-initialized") === "1") {
                 return;
             }
 
-            var selector = group.hasAttribute('data-kt-buttons-target') ? group.getAttribute('data-kt-buttons-target') : '.btn';
+            var selector = group.hasAttribute("data-kt-buttons-target")
+                ? group.getAttribute("data-kt-buttons-target")
+                : ".btn";
             var activeButtons = [].slice.call(group.querySelectorAll(selector));
 
             // Toggle Handler
-            KTUtil.on(group, selector, 'click', function (e) {
+            KTUtil.on(group, selector, "click", function (e) {
                 activeButtons.map(function (button) {
-                    button.classList.remove('active');
+                    button.classList.remove("active");
                 });
 
-                this.classList.add('active');
+                this.classList.add("active");
             });
 
             group.setAttribute("data-kt-initialized", "1");
         });
-    }
+    };
 
     var createDateRangePickers = function () {
         // Check if jQuery included
-        if (typeof jQuery == 'undefined') {
+        if (typeof jQuery == "undefined") {
             return;
         }
 
         // Check if daterangepicker included
-        if (typeof $.fn.daterangepicker === 'undefined') {
+        if (typeof $.fn.daterangepicker === "undefined") {
             return;
         }
 
-        var elements = [].slice.call(document.querySelectorAll('[data-kt-daterangepicker="true"]'));
-        var start = moment().subtract(29, 'days');
+        var elements = [].slice.call(
+            document.querySelectorAll('[data-kt-daterangepicker="true"]')
+        );
+        var start = moment().subtract(29, "days");
         var end = moment();
 
         elements.map(function (element) {
@@ -216,59 +234,85 @@ var KTApp = function () {
                 return;
             }
 
-            var display = element.querySelector('div');
-            var attrOpens = element.hasAttribute('data-kt-daterangepicker-opens') ? element.getAttribute('data-kt-daterangepicker-opens') : 'left';
-            var range = element.getAttribute('data-kt-daterangepicker-range');
+            var display = element.querySelector("div");
+            var attrOpens = element.hasAttribute(
+                "data-kt-daterangepicker-opens"
+            )
+                ? element.getAttribute("data-kt-daterangepicker-opens")
+                : "left";
+            var range = element.getAttribute("data-kt-daterangepicker-range");
 
             var cb = function (start, end) {
                 var current = moment();
 
                 if (display) {
-                    if (current.isSame(start, "day") && current.isSame(end, "day")) {
-                        display.innerHTML = start.format('D MMM YYYY');
+                    if (
+                        current.isSame(start, "day") &&
+                        current.isSame(end, "day")
+                    ) {
+                        display.innerHTML = start.format("D MMM YYYY");
                     } else {
-                        display.innerHTML = start.format('D MMM YYYY') + ' - ' + end.format('D MMM YYYY');
+                        display.innerHTML =
+                            start.format("D MMM YYYY") +
+                            " - " +
+                            end.format("D MMM YYYY");
                     }
                 }
-            }
+            };
 
             if (range === "today") {
                 start = moment();
                 end = moment();
             }
 
-            $(element).daterangepicker({
-                startDate: start,
-                endDate: end,
-                opens: attrOpens,
-                ranges: {
-                    // 'Today': [moment(), moment()],
-                    // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            }, cb);
+            $(element).daterangepicker(
+                {
+                    startDate: start,
+                    endDate: end,
+                    opens: attrOpens,
+                    ranges: {
+                        // 'Today': [moment(), moment()],
+                        // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        "Last 7 Days": [moment().subtract(6, "days"), moment()],
+                        "Last 30 Days": [
+                            moment().subtract(29, "days"),
+                            moment(),
+                        ],
+                        "This Month": [
+                            moment().startOf("month"),
+                            moment().endOf("month"),
+                        ],
+                        "Last Month": [
+                            moment().subtract(1, "month").startOf("month"),
+                            moment().subtract(1, "month").endOf("month"),
+                        ],
+                    },
+                },
+                cb
+            );
 
             cb(start, end);
 
             element.setAttribute("data-kt-initialized", "1");
         });
-    }
+    };
 
     var createSelect2 = function () {
         // Check if jQuery included
-        if (typeof jQuery == 'undefined') {
+        if (typeof jQuery == "undefined") {
             return;
         }
 
         // Check if select2 included
-        if (typeof $.fn.select2 === 'undefined') {
+        if (typeof $.fn.select2 === "undefined") {
             return;
         }
 
-        var elements = [].slice.call(document.querySelectorAll('[data-control="select2"], [data-kt-select2="true"]'));
+        var elements = [].slice.call(
+            document.querySelectorAll(
+                '[data-control="select2"], [data-kt-select2="true"]'
+            )
+        );
 
         elements.map(function (element) {
             if (element.getAttribute("data-kt-initialized") === "1") {
@@ -276,30 +320,48 @@ var KTApp = function () {
             }
 
             var options = {
-                dir: document.body.getAttribute('direction')
+                dir: document.body.getAttribute("direction"),
             };
 
-            if (element.getAttribute('data-hide-search') == 'true') {
+            // Hide search if requested
+            if (element.getAttribute("data-hide-search") == "true") {
                 options.minimumResultsForSearch = Infinity;
+            }
+
+            // 🔑 Fix: if inside modal, attach dropdown there
+            var modalParent = element.closest(".modal");
+            if (modalParent) {
+                options.dropdownParent = $(modalParent);
             }
 
             $(element).select2(options);
 
             // Handle Select2's KTMenu parent case
-            if (element.hasAttribute('data-dropdown-parent') && element.hasAttribute('multiple')) {
-                var parentEl = document.querySelector(element.getAttribute('data-dropdown-parent'));
+            if (
+                element.hasAttribute("data-dropdown-parent") &&
+                element.hasAttribute("multiple")
+            ) {
+                var parentEl = document.querySelector(
+                    element.getAttribute("data-dropdown-parent")
+                );
 
                 if (parentEl && parentEl.hasAttribute("data-kt-menu")) {
                     var menu = new KTMenu(parentEl);
 
                     if (menu) {
-                        $(element).on('select2:unselect', function (e) {
+                        $(element).on("select2:unselect", function (e) {
                             element.setAttribute("data-multiple-unselect", "1");
                         });
 
                         menu.on("kt.menu.dropdown.hide", function (item) {
-                            if (element.getAttribute("data-multiple-unselect") === "1") {
-                                element.removeAttribute("data-multiple-unselect");
+                            if (
+                                element.getAttribute(
+                                    "data-multiple-unselect"
+                                ) === "1"
+                            ) {
+                                element.removeAttribute(
+                                    "data-multiple-unselect"
+                                );
                                 return false;
                             }
                         });
@@ -309,14 +371,16 @@ var KTApp = function () {
 
             element.setAttribute("data-kt-initialized", "1");
         });
-    }
+    };
 
     var createAutosize = function () {
-        if (typeof autosize === 'undefined') {
+        if (typeof autosize === "undefined") {
             return;
         }
 
-        var inputs = [].slice.call(document.querySelectorAll('[data-kt-autosize="true"]'));
+        var inputs = [].slice.call(
+            document.querySelectorAll('[data-kt-autosize="true"]')
+        );
 
         inputs.map(function (input) {
             if (input.getAttribute("data-kt-initialized") === "1") {
@@ -327,14 +391,16 @@ var KTApp = function () {
 
             input.setAttribute("data-kt-initialized", "1");
         });
-    }
+    };
 
     var createCountUp = function () {
-        if (typeof countUp === 'undefined') {
+        if (typeof countUp === "undefined") {
             return;
         }
 
-        var elements = [].slice.call(document.querySelectorAll('[data-kt-countup="true"]:not(.counted)'));
+        var elements = [].slice.call(
+            document.querySelectorAll('[data-kt-countup="true"]:not(.counted)')
+        );
 
         elements.map(function (element) {
             if (KTUtil.isInViewport(element) && KTUtil.visible(element)) {
@@ -344,46 +410,58 @@ var KTApp = function () {
 
                 var options = {};
 
-                var value = element.getAttribute('data-kt-countup-value');
+                var value = element.getAttribute("data-kt-countup-value");
                 value = parseFloat(value.replace(/,/g, ""));
 
-                if (element.hasAttribute('data-kt-countup-start-val')) {
-                    options.startVal = parseFloat(element.getAttribute('data-kt-countup-start-val'));
+                if (element.hasAttribute("data-kt-countup-start-val")) {
+                    options.startVal = parseFloat(
+                        element.getAttribute("data-kt-countup-start-val")
+                    );
                 }
 
-                if (element.hasAttribute('data-kt-countup-duration')) {
-                    options.duration = parseInt(element.getAttribute('data-kt-countup-duration'));
+                if (element.hasAttribute("data-kt-countup-duration")) {
+                    options.duration = parseInt(
+                        element.getAttribute("data-kt-countup-duration")
+                    );
                 }
 
-                if (element.hasAttribute('data-kt-countup-decimal-places')) {
-                    options.decimalPlaces = parseInt(element.getAttribute('data-kt-countup-decimal-places'));
+                if (element.hasAttribute("data-kt-countup-decimal-places")) {
+                    options.decimalPlaces = parseInt(
+                        element.getAttribute("data-kt-countup-decimal-places")
+                    );
                 }
 
-                if (element.hasAttribute('data-kt-countup-prefix')) {
-                    options.prefix = element.getAttribute('data-kt-countup-prefix');
+                if (element.hasAttribute("data-kt-countup-prefix")) {
+                    options.prefix = element.getAttribute(
+                        "data-kt-countup-prefix"
+                    );
                 }
 
-                if (element.hasAttribute('data-kt-countup-separator')) {
-                    options.separator = element.getAttribute('data-kt-countup-separator');
+                if (element.hasAttribute("data-kt-countup-separator")) {
+                    options.separator = element.getAttribute(
+                        "data-kt-countup-separator"
+                    );
                 }
 
-                if (element.hasAttribute('data-kt-countup-suffix')) {
-                    options.suffix = element.getAttribute('data-kt-countup-suffix');
+                if (element.hasAttribute("data-kt-countup-suffix")) {
+                    options.suffix = element.getAttribute(
+                        "data-kt-countup-suffix"
+                    );
                 }
 
                 var count = new countUp.CountUp(element, value, options);
 
                 count.start();
 
-                element.classList.add('counted');
+                element.classList.add("counted");
 
                 element.setAttribute("data-kt-initialized", "1");
             }
         });
-    }
+    };
 
     var createCountUpTabs = function () {
-        if (typeof countUp === 'undefined') {
+        if (typeof countUp === "undefined") {
             return;
         }
 
@@ -392,31 +470,38 @@ var KTApp = function () {
             createCountUp();
 
             // Window scroll event handler
-            window.addEventListener('scroll', createCountUp);
+            window.addEventListener("scroll", createCountUp);
         }
 
         // Tabs shown event handler
-        var tabs = [].slice.call(document.querySelectorAll('[data-kt-countup-tabs="true"][data-bs-toggle="tab"]'));
+        var tabs = [].slice.call(
+            document.querySelectorAll(
+                '[data-kt-countup-tabs="true"][data-bs-toggle="tab"]'
+            )
+        );
         tabs.map(function (tab) {
             if (tab.getAttribute("data-kt-initialized") === "1") {
                 return;
             }
 
-            tab.addEventListener('shown.bs.tab', createCountUp);
+            tab.addEventListener("shown.bs.tab", createCountUp);
 
             tab.setAttribute("data-kt-initialized", "1");
         });
 
         countUpInitialized = true;
-    }
+    };
 
     var createTinySliders = function () {
-        if (typeof tns === 'undefined') {
+        if (typeof tns === "undefined") {
             return;
         }
 
         // Sliders
-        const elements = Array.prototype.slice.call(document.querySelectorAll('[data-tns="true"]'), 0);
+        const elements = Array.prototype.slice.call(
+            document.querySelectorAll('[data-tns="true"]'),
+            0
+        );
 
         if (!elements && elements.length === 0) {
             return;
@@ -431,7 +516,7 @@ var KTApp = function () {
 
             el.setAttribute("data-kt-initialized", "1");
         });
-    }
+    };
 
     var initTinySlider = function (el) {
         if (!el) {
@@ -442,10 +527,10 @@ var KTApp = function () {
 
         // Convert string boolean
         const checkBool = function (val) {
-            if (val === 'true') {
+            if (val === "true") {
                 return true;
             }
-            if (val === 'false') {
+            if (val === "false") {
                 return false;
             }
             return val;
@@ -454,50 +539,62 @@ var KTApp = function () {
         // get extra options via data attributes
         el.getAttributeNames().forEach(function (attrName) {
             // more options; https://github.com/ganlanyuan/tiny-slider#options
-            if ((/^data-tns-.*/g).test(attrName)) {
-                let optionName = attrName.replace('data-tns-', '').toLowerCase().replace(/(?:[\s-])\w/g, function (match) {
-                    return match.replace('-', '').toUpperCase();
-                });
-
-                if (attrName === 'data-tns-responsive') {
-                    // fix string with a valid json
-                    const jsonStr = el.getAttribute(attrName).replace(/(\w+:)|(\w+ :)/g, function (matched) {
-                        return '"' + matched.substring(0, matched.length - 1) + '":';
+            if (/^data-tns-.*/g.test(attrName)) {
+                let optionName = attrName
+                    .replace("data-tns-", "")
+                    .toLowerCase()
+                    .replace(/(?:[\s-])\w/g, function (match) {
+                        return match.replace("-", "").toUpperCase();
                     });
+
+                if (attrName === "data-tns-responsive") {
+                    // fix string with a valid json
+                    const jsonStr = el
+                        .getAttribute(attrName)
+                        .replace(/(\w+:)|(\w+ :)/g, function (matched) {
+                            return (
+                                '"' +
+                                matched.substring(0, matched.length - 1) +
+                                '":'
+                            );
+                        });
                     try {
                         // convert json string to object
                         tnsOptions[optionName] = JSON.parse(jsonStr);
-                    }
-                    catch (e) {
-                    }
-                }
-                else {
-                    tnsOptions[optionName] = checkBool(el.getAttribute(attrName));
+                    } catch (e) {}
+                } else {
+                    tnsOptions[optionName] = checkBool(
+                        el.getAttribute(attrName)
+                    );
                 }
             }
         });
 
-        const opt = Object.assign({}, {
-            container: el,
-            slideBy: 'page',
-            autoplay: true,
-            center: true,
-            autoplayButtonOutput: false,
-        }, tnsOptions);
+        const opt = Object.assign(
+            {},
+            {
+                container: el,
+                slideBy: "page",
+                autoplay: true,
+                center: true,
+                autoplayButtonOutput: false,
+            },
+            tnsOptions
+        );
 
-        if (el.closest('.tns')) {
-            KTUtil.addClass(el.closest('.tns'), 'tns-initiazlied');
+        if (el.closest(".tns")) {
+            KTUtil.addClass(el.closest(".tns"), "tns-initiazlied");
         }
 
         return tns(opt);
-    }
+    };
 
     var initSmoothScroll = function () {
         if (initialized === true) {
             return;
         }
 
-        if (typeof SmoothScroll === 'undefined') {
+        if (typeof SmoothScroll === "undefined") {
             return;
         }
 
@@ -509,56 +606,70 @@ var KTApp = function () {
                 // This example is a function, but you could do something as simple as `offset: 25`
 
                 // An example returning different values based on whether the clicked link was in the header nav or not
-                if (anchor.hasAttribute('data-kt-scroll-offset')) {
-                    var val = KTUtil.getResponsiveValue(anchor.getAttribute('data-kt-scroll-offset'));
+                if (anchor.hasAttribute("data-kt-scroll-offset")) {
+                    var val = KTUtil.getResponsiveValue(
+                        anchor.getAttribute("data-kt-scroll-offset")
+                    );
 
                     return val;
                 } else {
                     return 0;
                 }
-            }
+            },
         });
-    }
+    };
 
     var initCard = function () {
         // Toggle Handler
-        KTUtil.on(document.body, '[data-kt-card-action="remove"]', 'click', function (e) {
-            e.preventDefault();
+        KTUtil.on(
+            document.body,
+            '[data-kt-card-action="remove"]',
+            "click",
+            function (e) {
+                e.preventDefault();
 
-            const card = this.closest('.card');
+                const card = this.closest(".card");
 
-            if (!card) {
-                return;
+                if (!card) {
+                    return;
+                }
+
+                const confirmMessage = this.getAttribute(
+                    "data-kt-card-confirm-message"
+                );
+                const confirm =
+                    this.getAttribute("data-kt-card-confirm") === "true";
+
+                if (confirm) {
+                    // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
+                    Swal.fire({
+                        text: confirmMessage
+                            ? confirmMessage
+                            : "Are you sure to remove ?",
+                        icon: "warning",
+                        buttonsStyling: false,
+                        confirmButtonText: "Confirm",
+                        denyButtonText: "Cancel",
+                        customClass: {
+                            confirmButton: "btn btn-primary",
+                            denyButton: "btn btn-danger",
+                        },
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            card.remove();
+                        }
+                    });
+                } else {
+                    card.remove();
+                }
             }
-
-            const confirmMessage = this.getAttribute("data-kt-card-confirm-message");
-            const confirm = this.getAttribute("data-kt-card-confirm") === "true";
-
-            if (confirm) {
-                // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
-                Swal.fire({
-                    text: confirmMessage ? confirmMessage : "Are you sure to remove ?",
-                    icon: "warning",
-                    buttonsStyling: false,
-                    confirmButtonText: "Confirm",
-                    denyButtonText: "Cancel",
-                    customClass: {
-                        confirmButton: "btn btn-primary",
-                        denyButton: "btn btn-danger"
-                    }
-                }).then(function (result) {
-                    if (result.isConfirmed) {
-                        card.remove();
-                    }
-                });
-            } else {
-                card.remove();
-            }
-        });
-    }
+        );
+    };
 
     var initModal = function () {
-        var elements = Array.prototype.slice.call(document.querySelectorAll("[data-bs-stacked-modal]"));
+        var elements = Array.prototype.slice.call(
+            document.querySelectorAll("[data-bs-stacked-modal]")
+        );
 
         if (elements && elements.length > 0) {
             elements.forEach((element) => {
@@ -571,16 +682,20 @@ var KTApp = function () {
                 element.addEventListener("click", function (e) {
                     e.preventDefault();
 
-                    const modalEl = document.querySelector(this.getAttribute("data-bs-stacked-modal"));
+                    const modalEl = document.querySelector(
+                        this.getAttribute("data-bs-stacked-modal")
+                    );
 
                     if (modalEl) {
-                        const modal = new bootstrap.Modal(modalEl, { backdrop: false });
+                        const modal = new bootstrap.Modal(modalEl, {
+                            backdrop: false,
+                        });
                         modal.show();
                     }
                 });
             });
         }
-    }
+    };
 
     var initCheck = function () {
         if (initialized === true) {
@@ -588,79 +703,98 @@ var KTApp = function () {
         }
 
         // Toggle Handler
-        KTUtil.on(document.body, '[data-kt-check="true"]', 'change', function (e) {
-            var check = this;
-            var targets = document.querySelectorAll(check.getAttribute('data-kt-check-target'));
+        KTUtil.on(
+            document.body,
+            '[data-kt-check="true"]',
+            "change",
+            function (e) {
+                var check = this;
+                var targets = document.querySelectorAll(
+                    check.getAttribute("data-kt-check-target")
+                );
 
-            KTUtil.each(targets, function (target) {
-                if (target.type == 'checkbox') {
-                    target.checked = check.checked;
-                } else {
-                    target.classList.toggle('active');
-                }
-            });
-        });
-    }
+                KTUtil.each(targets, function (target) {
+                    if (target.type == "checkbox") {
+                        target.checked = check.checked;
+                    } else {
+                        target.classList.toggle("active");
+                    }
+                });
+            }
+        );
+    };
 
     var initBootstrapCollapse = function () {
         if (initialized === true) {
             return;
         }
 
-        KTUtil.on(document.body, '.collapsible[data-bs-toggle="collapse"]', 'click', function (e) {
-            if (this.classList.contains('collapsed')) {
-                this.classList.remove('active');
-                this.blur();
-            } else {
-                this.classList.add('active');
-            }
+        KTUtil.on(
+            document.body,
+            '.collapsible[data-bs-toggle="collapse"]',
+            "click",
+            function (e) {
+                if (this.classList.contains("collapsed")) {
+                    this.classList.remove("active");
+                    this.blur();
+                } else {
+                    this.classList.add("active");
+                }
 
-            if (this.hasAttribute('data-kt-toggle-text')) {
-                var text = this.getAttribute('data-kt-toggle-text');
-                var target = this.querySelector('[data-kt-toggle-text-target="true"]');
-                var target = target ? target : this;
+                if (this.hasAttribute("data-kt-toggle-text")) {
+                    var text = this.getAttribute("data-kt-toggle-text");
+                    var target = this.querySelector(
+                        '[data-kt-toggle-text-target="true"]'
+                    );
+                    var target = target ? target : this;
 
-                this.setAttribute('data-kt-toggle-text', target.innerText);
-                target.innerText = text;
+                    this.setAttribute("data-kt-toggle-text", target.innerText);
+                    target.innerText = text;
+                }
             }
-        });
-    }
+        );
+    };
 
     var initBootstrapRotate = function () {
         if (initialized === true) {
             return;
         }
 
-        KTUtil.on(document.body, '[data-kt-rotate="true"]', 'click', function (e) {
-            if (this.classList.contains('active')) {
-                this.classList.remove('active');
-                this.blur();
-            } else {
-                this.classList.add('active');
+        KTUtil.on(
+            document.body,
+            '[data-kt-rotate="true"]',
+            "click",
+            function (e) {
+                if (this.classList.contains("active")) {
+                    this.classList.remove("active");
+                    this.blur();
+                } else {
+                    this.classList.add("active");
+                }
             }
-        });
-    }
+        );
+    };
 
     var initLozad = function () {
         // Check if lozad included
-        if (typeof lozad === 'undefined') {
+        if (typeof lozad === "undefined") {
             return;
         }
 
         const observer = lozad(); // lazy loads elements with default selector as '.lozad'
         observer.observe();
-    }
+    };
 
     var showPageLoading = function () {
-        document.body.classList.add('page-loading');
-        document.body.setAttribute('data-kt-app-page-loading', "on");
-    }
+        document.body.classList.add("page-loading");
+        document.body.setAttribute("data-kt-app-page-loading", "on");
+    };
 
     var hidePageLoading = function () {
         // CSS3 Transitions only after page load(.page-loading or .app-page-loading class added to body tag and remove with JS on page load)
-        document.body.classList.remove('page-loading');
-        document.body.removeAttribute('data-kt-app-page-loading');
-    }
+        document.body.classList.remove("page-loading");
+        document.body.removeAttribute("data-kt-app-page-loading");
+    };
 
     return {
         init: function () {
@@ -719,15 +853,15 @@ var KTApp = function () {
 
         createBootstrapTooltip: function (el, options) {
             return createBootstrapTooltip(el, options);
-        }
+        },
     };
-}();
+})();
 
 // Declare KTApp for Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTApp;
 }
-"use strict";
+("use strict");
 
 // Class definition
 var KTBlockUI = function (element, options) {
@@ -743,9 +877,9 @@ var KTBlockUI = function (element, options) {
     // Default options
     var defaultOptions = {
         zIndex: false,
-        overlayClass: '',
-        overflow: 'hidden',
-        message: '<span class="spinner-border text-primary"></span>'
+        overlayClass: "",
+        overflow: "hidden",
+        message: '<span class="spinner-border text-primary"></span>',
     };
 
     ////////////////////////////
@@ -753,12 +887,12 @@ var KTBlockUI = function (element, options) {
     ////////////////////////////
 
     var _construct = function () {
-        if (KTUtil.data(element).has('blockui')) {
-            the = KTUtil.data(element).get('blockui');
+        if (KTUtil.data(element).has("blockui")) {
+            the = KTUtil.data(element).get("blockui");
         } else {
             _init();
         }
-    }
+    };
 
     var _init = function () {
         // Variables
@@ -770,66 +904,79 @@ var KTBlockUI = function (element, options) {
         the.overflowChanged = false;
 
         // Bind Instance
-        KTUtil.data(the.element).set('blockui', the);
-    }
+        KTUtil.data(the.element).set("blockui", the);
+    };
 
     var _block = function () {
-        if (KTEventHandler.trigger(the.element, 'kt.blockui.block', the) === false) {
+        if (
+            KTEventHandler.trigger(the.element, "kt.blockui.block", the) ===
+            false
+        ) {
             return;
         }
 
-        var isPage = (the.element.tagName === 'BODY');
+        var isPage = the.element.tagName === "BODY";
 
-        var position = KTUtil.css(the.element, 'position');
-        var overflow = KTUtil.css(the.element, 'overflow');
+        var position = KTUtil.css(the.element, "position");
+        var overflow = KTUtil.css(the.element, "overflow");
         var zIndex = isPage ? 10000 : 1;
 
         if (the.options.zIndex > 0) {
             zIndex = the.options.zIndex;
         } else {
-            if (KTUtil.css(the.element, 'z-index') != 'auto') {
-                zIndex = KTUtil.css(the.element, 'z-index');
+            if (KTUtil.css(the.element, "z-index") != "auto") {
+                zIndex = KTUtil.css(the.element, "z-index");
             }
         }
 
-        the.element.classList.add('blockui');
+        the.element.classList.add("blockui");
 
-        if (position === "absolute" || position === "relative" || position === "fixed") {
-            KTUtil.css(the.element, 'position', 'relative');
+        if (
+            position === "absolute" ||
+            position === "relative" ||
+            position === "fixed"
+        ) {
+            KTUtil.css(the.element, "position", "relative");
             the.positionChanged = true;
         }
 
-        if (the.options.overflow === 'hidden' && overflow === 'visible') {
-            KTUtil.css(the.element, 'overflow', 'hidden');
+        if (the.options.overflow === "hidden" && overflow === "visible") {
+            KTUtil.css(the.element, "overflow", "hidden");
             the.overflowChanged = true;
         }
 
-        the.overlayElement = document.createElement('DIV');
-        the.overlayElement.setAttribute('class', 'blockui-overlay ' + the.options.overlayClass);
+        the.overlayElement = document.createElement("DIV");
+        the.overlayElement.setAttribute(
+            "class",
+            "blockui-overlay " + the.options.overlayClass
+        );
 
         the.overlayElement.innerHTML = the.options.message;
 
-        KTUtil.css(the.overlayElement, 'z-index', zIndex);
+        KTUtil.css(the.overlayElement, "z-index", zIndex);
 
         the.element.append(the.overlayElement);
         the.blocked = true;
 
-        KTEventHandler.trigger(the.element, 'kt.blockui.after.blocked', the)
-    }
+        KTEventHandler.trigger(the.element, "kt.blockui.after.blocked", the);
+    };
 
     var _release = function () {
-        if (KTEventHandler.trigger(the.element, 'kt.blockui.release', the) === false) {
+        if (
+            KTEventHandler.trigger(the.element, "kt.blockui.release", the) ===
+            false
+        ) {
             return;
         }
 
-        the.element.classList.add('blockui');
+        the.element.classList.add("blockui");
 
         if (the.positionChanged) {
-            KTUtil.css(the.element, 'position', '');
+            KTUtil.css(the.element, "position", "");
         }
 
         if (the.overflowChanged) {
-            KTUtil.css(the.element, 'overflow', '');
+            KTUtil.css(the.element, "overflow", "");
         }
 
         if (the.overlayElement) {
@@ -838,16 +985,16 @@ var KTBlockUI = function (element, options) {
 
         the.blocked = false;
 
-        KTEventHandler.trigger(the.element, 'kt.blockui.released', the);
-    }
+        KTEventHandler.trigger(the.element, "kt.blockui.released", the);
+    };
 
     var _isBlocked = function () {
         return the.blocked;
-    }
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('blockui');
-    }
+        KTUtil.data(the.element).remove("blockui");
+    };
 
     // Construct class
     _construct();
@@ -859,63 +1006,67 @@ var KTBlockUI = function (element, options) {
     // Plugin API
     the.block = function () {
         _block();
-    }
+    };
 
     the.release = function () {
         _release();
-    }
+    };
 
     the.isBlocked = function () {
         return _isBlocked();
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 
     // Event API
     the.on = function (name, handler) {
         return KTEventHandler.on(the.element, name, handler);
-    }
+    };
 
     the.one = function (name, handler) {
         return KTEventHandler.one(the.element, name, handler);
-    }
+    };
 
     the.off = function (name, handlerId) {
         return KTEventHandler.off(the.element, name, handlerId);
-    }
+    };
 
     the.trigger = function (name, event) {
         return KTEventHandler.trigger(the.element, name, event, the, event);
-    }
+    };
 };
 
 // Static methods
 KTBlockUI.getInstance = function (element) {
-    if (element !== null && KTUtil.data(element).has('blockui')) {
-        return KTUtil.data(element).get('blockui');
+    if (element !== null && KTUtil.data(element).has("blockui")) {
+        return KTUtil.data(element).get("blockui");
     } else {
         return null;
     }
-}
+};
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTBlockUI;
 }
-"use strict";
+("use strict");
 // DOCS: https://javascript.info/cookie
 
 // Class definition
-var KTCookie = function () {
+var KTCookie = (function () {
     return {
         // returns the cookie with the given name,
         // or undefined if not found
         get: function (name) {
-            var matches = document.cookie.match(new RegExp(
-                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-            ));
+            var matches = document.cookie.match(
+                new RegExp(
+                    "(?:^|; )" +
+                        name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+                        "=([^;]*)"
+                )
+            );
 
             return matches ? decodeURIComponent(matches[1]) : null;
         },
@@ -927,15 +1078,20 @@ var KTCookie = function () {
                 options = {};
             }
 
-            options = Object.assign({}, {
-                path: '/'
-            }, options);
+            options = Object.assign(
+                {},
+                {
+                    path: "/",
+                },
+                options
+            );
 
             if (options.expires instanceof Date) {
                 options.expires = options.expires.toUTCString();
             }
 
-            var updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+            var updatedCookie =
+                encodeURIComponent(name) + "=" + encodeURIComponent(value);
 
             for (var optionKey in options) {
                 if (options.hasOwnProperty(optionKey) === false) {
@@ -956,18 +1112,18 @@ var KTCookie = function () {
         // To remove a cookie, we can call it with a negative expiration date:
         remove: function (name) {
             this.set(name, "", {
-                'max-age': -1
+                "max-age": -1,
             });
-        }
-    }
-}();
+        },
+    };
+})();
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTCookie;
 }
 
-"use strict";
+("use strict");
 
 // Class definition
 var KTDialer = function (element, options) {
@@ -987,7 +1143,7 @@ var KTDialer = function (element, options) {
         step: 1,
         decimals: 0,
         prefix: "",
-        suffix: ""
+        suffix: "",
     };
 
     ////////////////////////////
@@ -996,12 +1152,12 @@ var KTDialer = function (element, options) {
 
     // Constructor
     var _construct = function () {
-        if (KTUtil.data(element).has('dialer') === true) {
-            the = KTUtil.data(element).get('dialer');
+        if (KTUtil.data(element).has("dialer") === true) {
+            the = KTUtil.data(element).get("dialer");
         } else {
             _init();
         }
-    }
+    };
 
     // Initialize
     var _init = function () {
@@ -1010,36 +1166,40 @@ var KTDialer = function (element, options) {
 
         // Elements
         the.element = element;
-        the.incElement = the.element.querySelector('[data-kt-dialer-control="increase"]');
-        the.decElement = the.element.querySelector('[data-kt-dialer-control="decrease"]');
-        the.inputElement = the.element.querySelector('input[type]');
+        the.incElement = the.element.querySelector(
+            '[data-kt-dialer-control="increase"]'
+        );
+        the.decElement = the.element.querySelector(
+            '[data-kt-dialer-control="decrease"]'
+        );
+        the.inputElement = the.element.querySelector("input[type]");
 
         // Set Values
-        if (_getOption('decimals')) {
-            the.options.decimals = parseInt(_getOption('decimals'));
+        if (_getOption("decimals")) {
+            the.options.decimals = parseInt(_getOption("decimals"));
         }
 
-        if (_getOption('prefix')) {
-            the.options.prefix = _getOption('prefix');
+        if (_getOption("prefix")) {
+            the.options.prefix = _getOption("prefix");
         }
 
-        if (_getOption('suffix')) {
-            the.options.suffix = _getOption('suffix');
+        if (_getOption("suffix")) {
+            the.options.suffix = _getOption("suffix");
         }
 
-        if (_getOption('step')) {
-            the.options.step = parseFloat(_getOption('step'));
+        if (_getOption("step")) {
+            the.options.step = parseFloat(_getOption("step"));
         }
 
-        if (_getOption('min')) {
-            the.options.min = parseFloat(_getOption('min'));
+        if (_getOption("min")) {
+            the.options.min = parseFloat(_getOption("min"));
         }
 
-        if (_getOption('max')) {
-            the.options.max = parseFloat(_getOption('max'));
+        if (_getOption("max")) {
+            the.options.max = parseFloat(_getOption("max"));
         }
 
-        the.value = parseFloat(the.inputElement.value.replace(/[^\d.]/g, ''));
+        the.value = parseFloat(the.inputElement.value.replace(/[^\d.]/g, ""));
 
         _setValue();
 
@@ -1047,62 +1207,62 @@ var KTDialer = function (element, options) {
         _handlers();
 
         // Bind Instance
-        KTUtil.data(the.element).set('dialer', the);
-    }
+        KTUtil.data(the.element).set("dialer", the);
+    };
 
     // Handlers
     var _handlers = function () {
-        KTUtil.addEvent(the.incElement, 'click', function (e) {
+        KTUtil.addEvent(the.incElement, "click", function (e) {
             e.preventDefault();
 
             _increase();
         });
 
-        KTUtil.addEvent(the.decElement, 'click', function (e) {
+        KTUtil.addEvent(the.decElement, "click", function (e) {
             e.preventDefault();
 
             _decrease();
         });
 
-        KTUtil.addEvent(the.inputElement, 'input', function (e) {
+        KTUtil.addEvent(the.inputElement, "input", function (e) {
             e.preventDefault();
 
             _setValue();
         });
-    }
+    };
 
     // Event handlers
     var _increase = function () {
         // Trigger "after.dialer" event
-        KTEventHandler.trigger(the.element, 'kt.dialer.increase', the);
+        KTEventHandler.trigger(the.element, "kt.dialer.increase", the);
 
         the.inputElement.value = the.value + the.options.step;
         _setValue();
 
         // Trigger "before.dialer" event
-        KTEventHandler.trigger(the.element, 'kt.dialer.increased', the);
+        KTEventHandler.trigger(the.element, "kt.dialer.increased", the);
 
         return the;
-    }
+    };
 
     var _decrease = function () {
         // Trigger "after.dialer" event
-        KTEventHandler.trigger(the.element, 'kt.dialer.decrease', the);
+        KTEventHandler.trigger(the.element, "kt.dialer.decrease", the);
 
         the.inputElement.value = the.value - the.options.step;
 
         _setValue();
 
         // Trigger "before.dialer" event
-        KTEventHandler.trigger(the.element, 'kt.dialer.decreased', the);
+        KTEventHandler.trigger(the.element, "kt.dialer.decreased", the);
 
         return the;
-    }
+    };
 
     // Set Input Value
     var _setValue = function (value) {
         // Trigger "after.dialer" event
-        KTEventHandler.trigger(the.element, 'kt.dialer.change', the);
+        KTEventHandler.trigger(the.element, "kt.dialer.change", the);
 
         if (value !== undefined) {
             the.value = value;
@@ -1121,18 +1281,18 @@ var KTDialer = function (element, options) {
         the.inputElement.value = _format(the.value);
 
         // Trigger input change event
-        the.inputElement.dispatchEvent(new Event('change'));
+        the.inputElement.dispatchEvent(new Event("change"));
 
         // Trigger "after.dialer" event
-        KTEventHandler.trigger(the.element, 'kt.dialer.changed', the);
-    }
+        KTEventHandler.trigger(the.element, "kt.dialer.changed", the);
+    };
 
     var _parse = function (val) {
         val = val
-            .replace(/[^0-9.-]/g, '')       // remove chars except number, hyphen, point.
-            .replace(/(\..*)\./g, '$1')     // remove multiple points.
-            .replace(/(?!^)-/g, '')         // remove middle hyphen.
-            .replace(/^0+(\d)/gm, '$1');    // remove multiple leading zeros. <-- I added this.
+            .replace(/[^0-9.-]/g, "") // remove chars except number, hyphen, point.
+            .replace(/(\..*)\./g, "$1") // remove multiple points.
+            .replace(/(?!^)-/g, "") // remove middle hyphen.
+            .replace(/^0+(\d)/gm, "$1"); // remove multiple leading zeros. <-- I added this.
 
         val = parseFloat(val);
 
@@ -1141,28 +1301,32 @@ var KTDialer = function (element, options) {
         }
 
         return val;
-    }
+    };
 
     // Format
     var _format = function (val) {
-        return the.options.prefix + parseFloat(val).toFixed(the.options.decimals) + the.options.suffix;
-    }
+        return (
+            the.options.prefix +
+            parseFloat(val).toFixed(the.options.decimals) +
+            the.options.suffix
+        );
+    };
 
     // Get option
     var _getOption = function (name) {
-        if (the.element.hasAttribute('data-kt-dialer-' + name) === true) {
-            var attr = the.element.getAttribute('data-kt-dialer-' + name);
+        if (the.element.hasAttribute("data-kt-dialer-" + name) === true) {
+            var attr = the.element.getAttribute("data-kt-dialer-" + name);
             var value = attr;
 
             return value;
         } else {
             return null;
         }
-    }
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('dialer');
-    }
+        KTUtil.data(the.element).remove("dialer");
+    };
 
     // Construct class
     _construct();
@@ -1174,66 +1338,66 @@ var KTDialer = function (element, options) {
     // Plugin API
     the.setMinValue = function (value) {
         the.options.min = value;
-    }
+    };
 
     the.setMaxValue = function (value) {
         the.options.max = value;
-    }
+    };
 
     the.setValue = function (value) {
         _setValue(value);
-    }
+    };
 
     the.getValue = function () {
         return the.inputElement.value;
-    }
+    };
 
     the.update = function () {
         _setValue();
-    }
+    };
 
     the.increase = function () {
         return _increase();
-    }
+    };
 
     the.decrease = function () {
         return _decrease();
-    }
+    };
 
     the.getElement = function () {
         return the.element;
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 
     // Event API
     the.on = function (name, handler) {
         return KTEventHandler.on(the.element, name, handler);
-    }
+    };
 
     the.one = function (name, handler) {
         return KTEventHandler.one(the.element, name, handler);
-    }
+    };
 
     the.off = function (name, handlerId) {
         return KTEventHandler.off(the.element, name, handlerId);
-    }
+    };
 
     the.trigger = function (name, event) {
         return KTEventHandler.trigger(the.element, name, event, the, event);
-    }
+    };
 };
 
 // Static methods
 KTDialer.getInstance = function (element) {
-    if (element !== null && KTUtil.data(element).has('dialer')) {
-        return KTUtil.data(element).get('dialer');
+    if (element !== null && KTUtil.data(element).has("dialer")) {
+        return KTUtil.data(element).get("dialer");
     } else {
         return null;
     }
-}
+};
 
 // Create instances
 KTDialer.createInstances = function (selector = '[data-kt-dialer="true"]') {
@@ -1245,7 +1409,7 @@ KTDialer.createInstances = function (selector = '[data-kt-dialer="true"]') {
             new KTDialer(elements[i]);
         }
     }
-}
+};
 
 // Global initialization
 KTDialer.init = function () {
@@ -1253,10 +1417,10 @@ KTDialer.init = function () {
 };
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTDialer;
 }
-"use strict";
+("use strict");
 
 var KTDrawerHandlersInitialized = false;
 
@@ -1274,9 +1438,9 @@ var KTDrawer = function (element, options) {
     // Default options
     var defaultOptions = {
         overlay: true,
-        direction: 'end',
-        baseClass: 'drawer',
-        overlayClass: 'drawer-overlay'
+        direction: "end",
+        baseClass: "drawer",
+        overlayClass: "drawer-overlay",
     };
 
     ////////////////////////////
@@ -1284,26 +1448,26 @@ var KTDrawer = function (element, options) {
     ////////////////////////////
 
     var _construct = function () {
-        if (KTUtil.data(element).has('drawer')) {
-            the = KTUtil.data(element).get('drawer');
+        if (KTUtil.data(element).has("drawer")) {
+            the = KTUtil.data(element).get("drawer");
         } else {
             _init();
         }
-    }
+    };
 
     var _init = function () {
         // Variables
         the.options = KTUtil.deepExtend({}, defaultOptions, options);
-        the.uid = KTUtil.getUniqueId('drawer');
+        the.uid = KTUtil.getUniqueId("drawer");
         the.element = element;
         the.overlayElement = null;
-        the.name = the.element.getAttribute('data-kt-drawer-name');
+        the.name = the.element.getAttribute("data-kt-drawer-name");
         the.shown = false;
         the.lastWidth;
         the.toggleElement = null;
 
         // Set initialized
-        the.element.setAttribute('data-kt-drawer', 'true');
+        the.element.setAttribute("data-kt-drawer", "true");
 
         // Event Handlers
         _handlers();
@@ -1312,15 +1476,15 @@ var KTDrawer = function (element, options) {
         _update();
 
         // Bind Instance
-        KTUtil.data(the.element).set('drawer', the);
-    }
+        KTUtil.data(the.element).set("drawer", the);
+    };
 
     var _handlers = function () {
-        var togglers = _getOption('toggle');
-        var closers = _getOption('close');
+        var togglers = _getOption("toggle");
+        var closers = _getOption("close");
 
         if (togglers !== null && togglers.length > 0) {
-            KTUtil.on(document.body, togglers, 'click', function (e) {
+            KTUtil.on(document.body, togglers, "click", function (e) {
                 e.preventDefault();
 
                 the.toggleElement = this;
@@ -1329,17 +1493,20 @@ var KTDrawer = function (element, options) {
         }
 
         if (closers !== null && closers.length > 0) {
-            KTUtil.on(document.body, closers, 'click', function (e) {
+            KTUtil.on(document.body, closers, "click", function (e) {
                 e.preventDefault();
 
                 the.closeElement = this;
                 _hide();
             });
         }
-    }
+    };
 
     var _toggle = function () {
-        if (KTEventHandler.trigger(the.element, 'kt.drawer.toggle', the) === false) {
+        if (
+            KTEventHandler.trigger(the.element, "kt.drawer.toggle", the) ===
+            false
+        ) {
             return;
         }
 
@@ -1349,11 +1516,13 @@ var KTDrawer = function (element, options) {
             _show();
         }
 
-        KTEventHandler.trigger(the.element, 'kt.drawer.toggled', the);
-    }
+        KTEventHandler.trigger(the.element, "kt.drawer.toggled", the);
+    };
 
     var _hide = function () {
-        if (KTEventHandler.trigger(the.element, 'kt.drawer.hide', the) === false) {
+        if (
+            KTEventHandler.trigger(the.element, "kt.drawer.hide", the) === false
+        ) {
             return;
         }
 
@@ -1361,153 +1530,172 @@ var KTDrawer = function (element, options) {
 
         _deleteOverlay();
 
-        document.body.removeAttribute('data-kt-drawer-' + the.name, 'on');
-        document.body.removeAttribute('data-kt-drawer');
+        document.body.removeAttribute("data-kt-drawer-" + the.name, "on");
+        document.body.removeAttribute("data-kt-drawer");
 
-        KTUtil.removeClass(the.element, the.options.baseClass + '-on');
+        KTUtil.removeClass(the.element, the.options.baseClass + "-on");
 
         if (the.toggleElement !== null) {
-            KTUtil.removeClass(the.toggleElement, 'active');
+            KTUtil.removeClass(the.toggleElement, "active");
         }
 
-        KTEventHandler.trigger(the.element, 'kt.drawer.after.hidden', the) === false
-    }
+        KTEventHandler.trigger(the.element, "kt.drawer.after.hidden", the) ===
+            false;
+    };
 
     var _show = function () {
-        if (KTEventHandler.trigger(the.element, 'kt.drawer.show', the) === false) {
+        if (
+            KTEventHandler.trigger(the.element, "kt.drawer.show", the) === false
+        ) {
             return;
         }
 
         the.shown = true;
 
         _createOverlay();
-        document.body.setAttribute('data-kt-drawer-' + the.name, 'on');
-        document.body.setAttribute('data-kt-drawer', 'on');
+        document.body.setAttribute("data-kt-drawer-" + the.name, "on");
+        document.body.setAttribute("data-kt-drawer", "on");
 
-        KTUtil.addClass(the.element, the.options.baseClass + '-on');
+        KTUtil.addClass(the.element, the.options.baseClass + "-on");
 
         if (the.toggleElement !== null) {
-            KTUtil.addClass(the.toggleElement, 'active');
+            KTUtil.addClass(the.toggleElement, "active");
         }
 
-        KTEventHandler.trigger(the.element, 'kt.drawer.shown', the);
-    }
+        KTEventHandler.trigger(the.element, "kt.drawer.shown", the);
+    };
 
     var _update = function () {
         var width = _getWidth();
-        var direction = _getOption('direction');
+        var direction = _getOption("direction");
 
-        var top = _getOption('top');
-        var bottom = _getOption('bottom');
-        var start = _getOption('start');
-        var end = _getOption('end');
+        var top = _getOption("top");
+        var bottom = _getOption("bottom");
+        var start = _getOption("start");
+        var end = _getOption("end");
 
         // Reset state
-        if (KTUtil.hasClass(the.element, the.options.baseClass + '-on') === true && String(document.body.getAttribute('data-kt-drawer-' + the.name + '-')) === 'on') {
+        if (
+            KTUtil.hasClass(the.element, the.options.baseClass + "-on") ===
+                true &&
+            String(
+                document.body.getAttribute("data-kt-drawer-" + the.name + "-")
+            ) === "on"
+        ) {
             the.shown = true;
         } else {
             the.shown = false;
         }
 
         // Activate/deactivate
-        if (_getOption('activate') === true) {
+        if (_getOption("activate") === true) {
             KTUtil.addClass(the.element, the.options.baseClass);
-            KTUtil.addClass(the.element, the.options.baseClass + '-' + direction);
+            KTUtil.addClass(
+                the.element,
+                the.options.baseClass + "-" + direction
+            );
 
-            KTUtil.css(the.element, 'width', width, true);
+            KTUtil.css(the.element, "width", width, true);
             the.lastWidth = width;
 
             if (top) {
-                KTUtil.css(the.element, 'top', top);
+                KTUtil.css(the.element, "top", top);
             }
 
             if (bottom) {
-                KTUtil.css(the.element, 'bottom', bottom);
+                KTUtil.css(the.element, "bottom", bottom);
             }
 
             if (start) {
                 if (KTUtil.isRTL()) {
-                    KTUtil.css(the.element, 'right', start);
+                    KTUtil.css(the.element, "right", start);
                 } else {
-                    KTUtil.css(the.element, 'left', start);
+                    KTUtil.css(the.element, "left", start);
                 }
             }
 
             if (end) {
                 if (KTUtil.isRTL()) {
-                    KTUtil.css(the.element, 'left', end);
+                    KTUtil.css(the.element, "left", end);
                 } else {
-                    KTUtil.css(the.element, 'right', end);
+                    KTUtil.css(the.element, "right", end);
                 }
             }
         } else {
             KTUtil.removeClass(the.element, the.options.baseClass);
-            KTUtil.removeClass(the.element, the.options.baseClass + '-' + direction);
+            KTUtil.removeClass(
+                the.element,
+                the.options.baseClass + "-" + direction
+            );
 
-            KTUtil.css(the.element, 'width', '');
+            KTUtil.css(the.element, "width", "");
 
             if (top) {
-                KTUtil.css(the.element, 'top', '');
+                KTUtil.css(the.element, "top", "");
             }
 
             if (bottom) {
-                KTUtil.css(the.element, 'bottom', '');
+                KTUtil.css(the.element, "bottom", "");
             }
 
             if (start) {
                 if (KTUtil.isRTL()) {
-                    KTUtil.css(the.element, 'right', '');
+                    KTUtil.css(the.element, "right", "");
                 } else {
-                    KTUtil.css(the.element, 'left', '');
+                    KTUtil.css(the.element, "left", "");
                 }
             }
 
             if (end) {
                 if (KTUtil.isRTL()) {
-                    KTUtil.css(the.element, 'left', '');
+                    KTUtil.css(the.element, "left", "");
                 } else {
-                    KTUtil.css(the.element, 'right', '');
+                    KTUtil.css(the.element, "right", "");
                 }
             }
 
             _hide();
         }
-    }
+    };
 
     var _createOverlay = function () {
-        if (_getOption('overlay') === true) {
-            the.overlayElement = document.createElement('DIV');
+        if (_getOption("overlay") === true) {
+            the.overlayElement = document.createElement("DIV");
 
-            KTUtil.css(the.overlayElement, 'z-index', KTUtil.css(the.element, 'z-index') - 1); // update
+            KTUtil.css(
+                the.overlayElement,
+                "z-index",
+                KTUtil.css(the.element, "z-index") - 1
+            ); // update
 
             document.body.append(the.overlayElement);
 
-            KTUtil.addClass(the.overlayElement, _getOption('overlay-class'));
+            KTUtil.addClass(the.overlayElement, _getOption("overlay-class"));
 
-            KTUtil.addEvent(the.overlayElement, 'click', function (e) {
+            KTUtil.addEvent(the.overlayElement, "click", function (e) {
                 e.preventDefault();
 
-                if (_getOption('permanent') !== true) {
+                if (_getOption("permanent") !== true) {
                     _hide();
                 }
             });
         }
-    }
+    };
 
     var _deleteOverlay = function () {
         if (the.overlayElement !== null) {
             KTUtil.remove(the.overlayElement);
         }
-    }
+    };
 
     var _getOption = function (name) {
-        if (the.element.hasAttribute('data-kt-drawer-' + name) === true) {
-            var attr = the.element.getAttribute('data-kt-drawer-' + name);
+        if (the.element.hasAttribute("data-kt-drawer-" + name) === true) {
+            var attr = the.element.getAttribute("data-kt-drawer-" + name);
             var value = KTUtil.getResponsiveValue(attr);
 
-            if (value !== null && String(value) === 'true') {
+            if (value !== null && String(value) === "true") {
                 value = true;
-            } else if (value !== null && String(value) === 'false') {
+            } else if (value !== null && String(value) === "false") {
                 value = false;
             }
 
@@ -1521,21 +1709,21 @@ var KTDrawer = function (element, options) {
                 return null;
             }
         }
-    }
+    };
 
     var _getWidth = function () {
-        var width = _getOption('width');
+        var width = _getOption("width");
 
-        if (width === 'auto') {
-            width = KTUtil.css(the.element, 'width');
+        if (width === "auto") {
+            width = KTUtil.css(the.element, "width");
         }
 
         return width;
-    }
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('drawer');
-    }
+        KTUtil.data(the.element).remove("drawer");
+    };
 
     // Construct class
     _construct();
@@ -1547,61 +1735,64 @@ var KTDrawer = function (element, options) {
     // Plugin API
     the.toggle = function () {
         return _toggle();
-    }
+    };
 
     the.show = function () {
         return _show();
-    }
+    };
 
     the.hide = function () {
         return _hide();
-    }
+    };
 
     the.isShown = function () {
         return the.shown;
-    }
+    };
 
     the.update = function () {
         _update();
-    }
+    };
 
     the.goElement = function () {
         return the.element;
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 
     // Event API
     the.on = function (name, handler) {
         return KTEventHandler.on(the.element, name, handler);
-    }
+    };
 
     the.one = function (name, handler) {
         return KTEventHandler.one(the.element, name, handler);
-    }
+    };
 
     the.off = function (name, handlerId) {
         return KTEventHandler.off(the.element, name, handlerId);
-    }
+    };
 
     the.trigger = function (name, event) {
         return KTEventHandler.trigger(the.element, name, event, the, event);
-    }
+    };
 };
 
 // Static methods
 KTDrawer.getInstance = function (element) {
-    if (element !== null && KTUtil.data(element).has('drawer')) {
-        return KTUtil.data(element).get('drawer');
+    if (element !== null && KTUtil.data(element).has("drawer")) {
+        return KTUtil.data(element).get("drawer");
     } else {
         return null;
     }
-}
+};
 
 // Hide all drawers and skip one if provided
-KTDrawer.hideAll = function (skip = null, selector = '[data-kt-drawer="true"]') {
+KTDrawer.hideAll = function (
+    skip = null,
+    selector = '[data-kt-drawer="true"]'
+) {
     var items = document.querySelectorAll(selector);
 
     if (items && items.length > 0) {
@@ -1622,7 +1813,7 @@ KTDrawer.hideAll = function (skip = null, selector = '[data-kt-drawer="true"]') 
             }
         }
     }
-}
+};
 
 // Update all drawers
 KTDrawer.updateAll = function (selector = '[data-kt-drawer="true"]') {
@@ -1637,7 +1828,7 @@ KTDrawer.updateAll = function (selector = '[data-kt-drawer="true"]') {
             }
         }
     }
-}
+};
 
 // Create instances
 KTDrawer.createInstances = function (selector = '[data-kt-drawer="true"]') {
@@ -1649,30 +1840,43 @@ KTDrawer.createInstances = function (selector = '[data-kt-drawer="true"]') {
             new KTDrawer(elements[i]);
         }
     }
-}
+};
 
 // Toggle instances
 KTDrawer.handleShow = function () {
     // External drawer toggle handler
-    KTUtil.on(document.body, '[data-kt-drawer-show="true"][data-kt-drawer-target]', 'click', function (e) {
-        e.preventDefault();
+    KTUtil.on(
+        document.body,
+        '[data-kt-drawer-show="true"][data-kt-drawer-target]',
+        "click",
+        function (e) {
+            e.preventDefault();
 
-        var element = document.querySelector(this.getAttribute('data-kt-drawer-target'));
+            var element = document.querySelector(
+                this.getAttribute("data-kt-drawer-target")
+            );
 
-        if (element) {
-            KTDrawer.getInstance(element).show();
+            if (element) {
+                KTDrawer.getInstance(element).show();
+            }
         }
-    });
-}
+    );
+};
 
 // Handle escape key press
 KTDrawer.handleEscapeKey = function () {
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
             //if esc key was not pressed in combination with ctrl or alt or shift
-            const isNotCombinedKey = !(event.ctrlKey || event.altKey || event.shiftKey);
+            const isNotCombinedKey = !(
+                event.ctrlKey ||
+                event.altKey ||
+                event.shiftKey
+            );
             if (isNotCombinedKey) {
-                var elements = document.querySelectorAll('.drawer-on[data-kt-drawer="true"]:not([data-kt-drawer-escape="false"])');
+                var elements = document.querySelectorAll(
+                    '.drawer-on[data-kt-drawer="true"]:not([data-kt-drawer-escape="false"])'
+                );
                 var drawer;
 
                 if (elements && elements.length > 0) {
@@ -1686,44 +1890,55 @@ KTDrawer.handleEscapeKey = function () {
             }
         }
     });
-}
+};
 
 // Dismiss instances
 KTDrawer.handleDismiss = function () {
     // External drawer toggle handler
-    KTUtil.on(document.body, '[data-kt-drawer-dismiss="true"]', 'click', function (e) {
-        var element = this.closest('[data-kt-drawer="true"]');
+    KTUtil.on(
+        document.body,
+        '[data-kt-drawer-dismiss="true"]',
+        "click",
+        function (e) {
+            var element = this.closest('[data-kt-drawer="true"]');
 
-        if (element) {
-            var drawer = KTDrawer.getInstance(element);
-            if (drawer.isShown()) {
-                drawer.hide();
+            if (element) {
+                var drawer = KTDrawer.getInstance(element);
+                if (drawer.isShown()) {
+                    drawer.hide();
+                }
             }
         }
-    });
-}
+    );
+};
 
 // Handle resize
 KTDrawer.handleResize = function () {
     // Window resize Handling
-    window.addEventListener('resize', function () {
+    window.addEventListener("resize", function () {
         var timer;
 
-        KTUtil.throttle(timer, function () {
-            // Locate and update drawer instances on window resize
-            var elements = document.querySelectorAll('[data-kt-drawer="true"]');
+        KTUtil.throttle(
+            timer,
+            function () {
+                // Locate and update drawer instances on window resize
+                var elements = document.querySelectorAll(
+                    '[data-kt-drawer="true"]'
+                );
 
-            if (elements && elements.length > 0) {
-                for (var i = 0, len = elements.length; i < len; i++) {
-                    var drawer = KTDrawer.getInstance(elements[i]);
-                    if (drawer) {
-                        drawer.update();
+                if (elements && elements.length > 0) {
+                    for (var i = 0, len = elements.length; i < len; i++) {
+                        var drawer = KTDrawer.getInstance(elements[i]);
+                        if (drawer) {
+                            drawer.update();
+                        }
                     }
                 }
-            }
-        }, 200);
+            },
+            200
+        );
     });
-}
+};
 
 // Global initialization
 KTDrawer.init = function () {
@@ -1740,13 +1955,13 @@ KTDrawer.init = function () {
 };
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTDrawer;
 }
-"use strict";
+("use strict");
 
 // Class definition
-var KTEventHandler = function () {
+var KTEventHandler = (function () {
     ////////////////////////////
     // ** Private Variables  ** //
     ////////////////////////////
@@ -1775,7 +1990,10 @@ var KTEventHandler = function () {
                             if (handler.fired == false) {
                                 _handlers[name][handlerId].fired = true;
 
-                                eventValue = handler.callback.call(this, target);
+                                eventValue = handler.callback.call(
+                                    this,
+                                    target
+                                );
                             }
                         } else {
                             eventValue = handler.callback.call(this, target);
@@ -1790,10 +2008,10 @@ var KTEventHandler = function () {
         }
 
         return returnValue;
-    }
+    };
 
     var _addEvent = function (element, name, callback, one) {
-        var handlerId = KTUtil.getUniqueId('event');
+        var handlerId = KTUtil.getUniqueId("event");
         var handlerIds = KTUtil.data(element).get(name);
 
         if (!handlerIds) {
@@ -1812,11 +2030,11 @@ var KTEventHandler = function () {
             name: name,
             callback: callback,
             one: one,
-            fired: false
+            fired: false,
         };
 
         return handlerId;
-    }
+    };
 
     var _removeEvent = function (element, name, handlerId) {
         var handlerIds = KTUtil.data(element).get(name);
@@ -1830,7 +2048,7 @@ var KTEventHandler = function () {
         if (_handlers[name] && _handlers[name][handlerId]) {
             delete _handlers[name][handlerId];
         }
-    }
+    };
 
     ////////////////////////////
     // ** Public Methods  ** //
@@ -1856,16 +2074,16 @@ var KTEventHandler = function () {
             for (var b in _handlers) {
                 if (_handlers.hasOwnProperty(b)) console.log(b);
             }
-        }
-    }
-}();
+        },
+    };
+})();
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTEventHandler;
 }
 
-"use strict";
+("use strict");
 
 // Class definition
 var KTFeedback = function (options) {
@@ -1876,10 +2094,10 @@ var KTFeedback = function (options) {
 
     // Default options
     var defaultOptions = {
-        'width': 100,
-        'placement': 'top-center',
-        'content': '',
-        'type': 'popup'
+        width: 100,
+        placement: "top-center",
+        content: "",
+        type: "popup",
     };
 
     ////////////////////////////
@@ -1888,12 +2106,12 @@ var KTFeedback = function (options) {
 
     var _construct = function () {
         _init();
-    }
+    };
 
     var _init = function () {
         // Variables
         the.options = KTUtil.deepExtend({}, defaultOptions, options);
-        the.uid = KTUtil.getUniqueId('feedback');
+        the.uid = KTUtil.getUniqueId("feedback");
         the.element;
         the.shown = false;
 
@@ -1901,82 +2119,88 @@ var KTFeedback = function (options) {
         _handlers();
 
         // Bind Instance
-        KTUtil.data(the.element).set('feedback', the);
-    }
+        KTUtil.data(the.element).set("feedback", the);
+    };
 
     var _handlers = function () {
-        KTUtil.addEvent(the.element, 'click', function (e) {
+        KTUtil.addEvent(the.element, "click", function (e) {
             e.preventDefault();
 
             _go();
         });
-    }
+    };
 
     var _show = function () {
-        if (KTEventHandler.trigger(the.element, 'kt.feedback.show', the) === false) {
+        if (
+            KTEventHandler.trigger(the.element, "kt.feedback.show", the) ===
+            false
+        ) {
             return;
         }
 
-        if (the.options.type === 'popup') {
+        if (the.options.type === "popup") {
             _showPopup();
         }
 
-        KTEventHandler.trigger(the.element, 'kt.feedback.shown', the);
+        KTEventHandler.trigger(the.element, "kt.feedback.shown", the);
 
         return the;
-    }
+    };
 
     var _hide = function () {
-        if (KTEventHandler.trigger(the.element, 'kt.feedback.hide', the) === false) {
+        if (
+            KTEventHandler.trigger(the.element, "kt.feedback.hide", the) ===
+            false
+        ) {
             return;
         }
 
-        if (the.options.type === 'popup') {
+        if (the.options.type === "popup") {
             _hidePopup();
         }
 
         the.shown = false;
 
-        KTEventHandler.trigger(the.element, 'kt.feedback.hidden', the);
+        KTEventHandler.trigger(the.element, "kt.feedback.hidden", the);
 
         return the;
-    }
+    };
 
     var _showPopup = function () {
         the.element = document.createElement("DIV");
 
-        KTUtil.addClass(the.element, 'feedback feedback-popup');
+        KTUtil.addClass(the.element, "feedback feedback-popup");
         KTUtil.setHTML(the.element, the.options.content);
 
-        if (the.options.placement == 'top-center') {
+        if (the.options.placement == "top-center") {
             _setPopupTopCenterPosition();
         }
 
         document.body.appendChild(the.element);
 
-        KTUtil.addClass(the.element, 'feedback-shown');
+        KTUtil.addClass(the.element, "feedback-shown");
 
         the.shown = true;
-    }
+    };
 
     var _setPopupTopCenterPosition = function () {
         var width = KTUtil.getResponsiveValue(the.options.width);
-        var height = KTUtil.css(the.element, 'height');
+        var height = KTUtil.css(the.element, "height");
 
-        KTUtil.addClass(the.element, 'feedback-top-center');
+        KTUtil.addClass(the.element, "feedback-top-center");
 
-        KTUtil.css(the.element, 'width', width);
-        KTUtil.css(the.element, 'left', '50%');
-        KTUtil.css(the.element, 'top', '-' + height);
-    }
+        KTUtil.css(the.element, "width", width);
+        KTUtil.css(the.element, "left", "50%");
+        KTUtil.css(the.element, "top", "-" + height);
+    };
 
     var _hidePopup = function () {
         the.element.remove();
-    }
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('feedback');
-    }
+        KTUtil.data(the.element).remove("feedback");
+    };
 
     // Construct class
     _construct();
@@ -1988,48 +2212,48 @@ var KTFeedback = function (options) {
     // Plugin API
     the.show = function () {
         return _show();
-    }
+    };
 
     the.hide = function () {
         return _hide();
-    }
+    };
 
     the.isShown = function () {
         return the.shown;
-    }
+    };
 
     the.getElement = function () {
         return the.element;
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 
     // Event API
     the.on = function (name, handler) {
         return KTEventHandler.on(the.element, name, handler);
-    }
+    };
 
     the.one = function (name, handler) {
         return KTEventHandler.one(the.element, name, handler);
-    }
+    };
 
     the.off = function (name, handlerId) {
         return KTEventHandler.off(the.element, name, handlerId);
-    }
+    };
 
     the.trigger = function (name, event) {
         return KTEventHandler.trigger(the.element, name, event, the, event);
-    }
+    };
 };
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTFeedback;
 }
 
-"use strict";
+("use strict");
 
 // Class definition
 var KTImageInput = function (element, options) {
@@ -2043,95 +2267,116 @@ var KTImageInput = function (element, options) {
     }
 
     // Default Options
-    var defaultOptions = {
-
-    };
+    var defaultOptions = {};
 
     ////////////////////////////
     // ** Private Methods  ** //
     ////////////////////////////
 
     var _construct = function () {
-        if (KTUtil.data(element).has('image-input') === true) {
-            the = KTUtil.data(element).get('image-input');
+        if (KTUtil.data(element).has("image-input") === true) {
+            the = KTUtil.data(element).get("image-input");
         } else {
             _init();
         }
-    }
+    };
 
     var _init = function () {
         // Variables
         the.options = KTUtil.deepExtend({}, defaultOptions, options);
-        the.uid = KTUtil.getUniqueId('image-input');
+        the.uid = KTUtil.getUniqueId("image-input");
 
         // Elements
         the.element = element;
         the.inputElement = KTUtil.find(element, 'input[type="file"]');
-        the.wrapperElement = KTUtil.find(element, '.image-input-wrapper');
-        the.cancelElement = KTUtil.find(element, '[data-kt-image-input-action="cancel"]');
-        the.removeElement = KTUtil.find(element, '[data-kt-image-input-action="remove"]');
+        the.wrapperElement = KTUtil.find(element, ".image-input-wrapper");
+        the.cancelElement = KTUtil.find(
+            element,
+            '[data-kt-image-input-action="cancel"]'
+        );
+        the.removeElement = KTUtil.find(
+            element,
+            '[data-kt-image-input-action="remove"]'
+        );
         the.hiddenElement = KTUtil.find(element, 'input[type="hidden"]');
-        the.src = KTUtil.css(the.wrapperElement, 'backgroundImage');
+        the.src = KTUtil.css(the.wrapperElement, "backgroundImage");
 
         // Set initialized
-        the.element.setAttribute('data-kt-image-input', 'true');
+        the.element.setAttribute("data-kt-image-input", "true");
 
         // Event Handlers
         _handlers();
 
         // Bind Instance
-        KTUtil.data(the.element).set('image-input', the);
-    }
+        KTUtil.data(the.element).set("image-input", the);
+    };
 
     // Init Event Handlers
     var _handlers = function () {
-        KTUtil.addEvent(the.inputElement, 'change', _change);
-        KTUtil.addEvent(the.cancelElement, 'click', _cancel);
-        KTUtil.addEvent(the.removeElement, 'click', _remove);
-    }
+        KTUtil.addEvent(the.inputElement, "change", _change);
+        KTUtil.addEvent(the.cancelElement, "click", _cancel);
+        KTUtil.addEvent(the.removeElement, "click", _remove);
+    };
 
     // Event Handlers
     var _change = function (e) {
         e.preventDefault();
 
-        if (the.inputElement !== null && the.inputElement.files && the.inputElement.files[0]) {
+        if (
+            the.inputElement !== null &&
+            the.inputElement.files &&
+            the.inputElement.files[0]
+        ) {
             // Fire change event
-            if (KTEventHandler.trigger(the.element, 'kt.imageinput.change', the) === false) {
+            if (
+                KTEventHandler.trigger(
+                    the.element,
+                    "kt.imageinput.change",
+                    the
+                ) === false
+            ) {
                 return;
             }
 
             var reader = new FileReader();
 
             reader.onload = function (e) {
-                KTUtil.css(the.wrapperElement, 'background-image', 'url(' + e.target.result + ')');
-            }
+                KTUtil.css(
+                    the.wrapperElement,
+                    "background-image",
+                    "url(" + e.target.result + ")"
+                );
+            };
 
             reader.readAsDataURL(the.inputElement.files[0]);
 
-            the.element.classList.add('image-input-changed');
-            the.element.classList.remove('image-input-empty');
+            the.element.classList.add("image-input-changed");
+            the.element.classList.remove("image-input-empty");
 
             // Fire removed event
-            KTEventHandler.trigger(the.element, 'kt.imageinput.changed', the);
+            KTEventHandler.trigger(the.element, "kt.imageinput.changed", the);
         }
-    }
+    };
 
     var _cancel = function (e) {
         e.preventDefault();
 
         // Fire cancel event
-        if (KTEventHandler.trigger(the.element, 'kt.imageinput.cancel', the) === false) {
+        if (
+            KTEventHandler.trigger(the.element, "kt.imageinput.cancel", the) ===
+            false
+        ) {
             return;
         }
 
-        the.element.classList.remove('image-input-changed');
-        the.element.classList.remove('image-input-empty');
+        the.element.classList.remove("image-input-changed");
+        the.element.classList.remove("image-input-empty");
 
-        if (the.src === 'none') {
-            KTUtil.css(the.wrapperElement, 'background-image', '');
-            the.element.classList.add('image-input-empty');
+        if (the.src === "none") {
+            KTUtil.css(the.wrapperElement, "background-image", "");
+            the.element.classList.add("image-input-empty");
         } else {
-            KTUtil.css(the.wrapperElement, 'background-image', the.src);
+            KTUtil.css(the.wrapperElement, "background-image", the.src);
         }
 
         the.inputElement.value = "";
@@ -2141,21 +2386,24 @@ var KTImageInput = function (element, options) {
         }
 
         // Fire canceled event
-        KTEventHandler.trigger(the.element, 'kt.imageinput.canceled', the);
-    }
+        KTEventHandler.trigger(the.element, "kt.imageinput.canceled", the);
+    };
 
     var _remove = function (e) {
         e.preventDefault();
 
         // Fire remove event
-        if (KTEventHandler.trigger(the.element, 'kt.imageinput.remove', the) === false) {
+        if (
+            KTEventHandler.trigger(the.element, "kt.imageinput.remove", the) ===
+            false
+        ) {
             return;
         }
 
-        the.element.classList.remove('image-input-changed');
-        the.element.classList.add('image-input-empty');
+        the.element.classList.remove("image-input-changed");
+        the.element.classList.add("image-input-empty");
 
-        KTUtil.css(the.wrapperElement, 'background-image', "none");
+        KTUtil.css(the.wrapperElement, "background-image", "none");
         the.inputElement.value = "";
 
         if (the.hiddenElement !== null) {
@@ -2163,12 +2411,12 @@ var KTImageInput = function (element, options) {
         }
 
         // Fire removed event
-        KTEventHandler.trigger(the.element, 'kt.imageinput.removed', the);
-    }
+        KTEventHandler.trigger(the.element, "kt.imageinput.removed", the);
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('image-input');
-    }
+        KTUtil.data(the.element).remove("image-input");
+    };
 
     // Construct Class
     _construct();
@@ -2180,45 +2428,45 @@ var KTImageInput = function (element, options) {
     // Plugin API
     the.getInputElement = function () {
         return the.inputElement;
-    }
+    };
 
     the.getElement = function () {
         return the.element;
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 
     // Event API
     the.on = function (name, handler) {
         return KTEventHandler.on(the.element, name, handler);
-    }
+    };
 
     the.one = function (name, handler) {
         return KTEventHandler.one(the.element, name, handler);
-    }
+    };
 
     the.off = function (name, handlerId) {
         return KTEventHandler.off(the.element, name, handlerId);
-    }
+    };
 
     the.trigger = function (name, event) {
         return KTEventHandler.trigger(the.element, name, event, the, event);
-    }
+    };
 };
 
 // Static methods
 KTImageInput.getInstance = function (element) {
-    if (element !== null && KTUtil.data(element).has('image-input')) {
-        return KTUtil.data(element).get('image-input');
+    if (element !== null && KTUtil.data(element).has("image-input")) {
+        return KTUtil.data(element).get("image-input");
     } else {
         return null;
     }
-}
+};
 
 // Create instances
-KTImageInput.createInstances = function (selector = '[data-kt-image-input]') {
+KTImageInput.createInstances = function (selector = "[data-kt-image-input]") {
     // Initialize Menus
     var elements = document.querySelectorAll(selector);
 
@@ -2227,7 +2475,7 @@ KTImageInput.createInstances = function (selector = '[data-kt-image-input]') {
             new KTImageInput(elements[i]);
         }
     }
-}
+};
 
 // Global initialization
 KTImageInput.init = function () {
@@ -2235,11 +2483,11 @@ KTImageInput.init = function () {
 };
 
 // Webpack Support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTImageInput;
 }
 
-"use strict";
+("use strict");
 
 var KTMenuHandlersInitialized = false;
 
@@ -2258,13 +2506,13 @@ var KTMenu = function (element, options) {
     var defaultOptions = {
         dropdown: {
             hoverTimeout: 200,
-            zindex: 107
+            zindex: 107,
         },
 
         accordion: {
             slideSpeed: 250,
-            expand: false
-        }
+            expand: false,
+        },
     };
 
     ////////////////////////////
@@ -2272,32 +2520,32 @@ var KTMenu = function (element, options) {
     ////////////////////////////
 
     var _construct = function () {
-        if (KTUtil.data(element).has('menu') === true) {
-            the = KTUtil.data(element).get('menu');
+        if (KTUtil.data(element).has("menu") === true) {
+            the = KTUtil.data(element).get("menu");
         } else {
             _init();
         }
-    }
+    };
 
     var _init = function () {
         the.options = KTUtil.deepExtend({}, defaultOptions, options);
-        the.uid = KTUtil.getUniqueId('menu');
+        the.uid = KTUtil.getUniqueId("menu");
         the.element = element;
         the.triggerElement;
         the.disabled = false;
 
         // Set initialized
-        the.element.setAttribute('data-kt-menu', 'true');
+        the.element.setAttribute("data-kt-menu", "true");
 
         _setTriggerElement();
         _update();
 
-        KTUtil.data(the.element).set('menu', the);
-    }
+        KTUtil.data(the.element).set("menu", the);
+    };
 
-    var _destroy = function () {  // todo
-
-    }
+    var _destroy = function () {
+        // todo
+    };
 
     // Event Handlers
     // Toggle handler
@@ -2310,16 +2558,16 @@ var KTMenu = function (element, options) {
 
         var item = _getItemElement(element);
 
-        if (_getOptionFromElementAttribute(item, 'trigger') !== 'click') {
+        if (_getOptionFromElementAttribute(item, "trigger") !== "click") {
             return;
         }
 
-        if (_getOptionFromElementAttribute(item, 'toggle') === false) {
+        if (_getOptionFromElementAttribute(item, "toggle") === false) {
             _show(item);
         } else {
             _toggle(item);
         }
-    }
+    };
 
     // Link handler
     var _link = function (element, e) {
@@ -2327,34 +2575,43 @@ var KTMenu = function (element, options) {
             return;
         }
 
-        if (KTEventHandler.trigger(the.element, 'kt.menu.link.click', element) === false) {
+        if (
+            KTEventHandler.trigger(
+                the.element,
+                "kt.menu.link.click",
+                element
+            ) === false
+        ) {
             return;
         }
 
         // Dismiss all shown dropdowns
         KTMenu.hideDropdowns();
 
-        KTEventHandler.trigger(the.element, 'kt.menu.link.clicked', element);
-    }
+        KTEventHandler.trigger(the.element, "kt.menu.link.clicked", element);
+    };
 
     // Dismiss handler
     var _dismiss = function (element, e) {
         var item = _getItemElement(element);
         var items = _getItemChildElements(item);
 
-        if (item !== null && _getItemSubType(item) === 'dropdown') {
+        if (item !== null && _getItemSubType(item) === "dropdown") {
             _hide(item); // hide items dropdown
             // Hide all child elements as well
 
             if (items.length > 0) {
                 for (var i = 0, len = items.length; i < len; i++) {
-                    if (items[i] !== null && _getItemSubType(items[i]) === 'dropdown') {
+                    if (
+                        items[i] !== null &&
+                        _getItemSubType(items[i]) === "dropdown"
+                    ) {
                         _hide(tems[i]);
                     }
                 }
             }
         }
-    }
+    };
 
     // Mouseover handle
     var _mouseover = function (element, e) {
@@ -2368,18 +2625,18 @@ var KTMenu = function (element, options) {
             return;
         }
 
-        if (_getOptionFromElementAttribute(item, 'trigger') !== 'hover') {
+        if (_getOptionFromElementAttribute(item, "trigger") !== "hover") {
             return;
         }
 
-        if (KTUtil.data(item).get('hover') === '1') {
-            clearTimeout(KTUtil.data(item).get('timeout'));
-            KTUtil.data(item).remove('hover');
-            KTUtil.data(item).remove('timeout');
+        if (KTUtil.data(item).get("hover") === "1") {
+            clearTimeout(KTUtil.data(item).get("timeout"));
+            KTUtil.data(item).remove("hover");
+            KTUtil.data(item).remove("timeout");
         }
 
         _show(item);
-    }
+    };
 
     // Mouseout handle
     var _mouseout = function (element, e) {
@@ -2393,19 +2650,19 @@ var KTMenu = function (element, options) {
             return;
         }
 
-        if (_getOptionFromElementAttribute(item, 'trigger') !== 'hover') {
+        if (_getOptionFromElementAttribute(item, "trigger") !== "hover") {
             return;
         }
 
         var timeout = setTimeout(function () {
-            if (KTUtil.data(item).get('hover') === '1') {
+            if (KTUtil.data(item).get("hover") === "1") {
                 _hide(item);
             }
         }, the.options.dropdown.hoverTimeout);
 
-        KTUtil.data(item).set('hover', '1');
-        KTUtil.data(item).set('timeout', timeout);
-    }
+        KTUtil.data(item).set("hover", "1");
+        KTUtil.data(item).set("timeout", timeout);
+    };
 
     // Toggle item sub
     var _toggle = function (item) {
@@ -2418,7 +2675,7 @@ var KTMenu = function (element, options) {
         } else {
             _show(item);
         }
-    }
+    };
 
     // Show item sub
     var _show = function (item) {
@@ -2430,15 +2687,15 @@ var KTMenu = function (element, options) {
             return;
         }
 
-        if (_getItemSubType(item) === 'dropdown') {
+        if (_getItemSubType(item) === "dropdown") {
             _showDropdown(item); // // show current dropdown
-        } else if (_getItemSubType(item) === 'accordion') {
+        } else if (_getItemSubType(item) === "accordion") {
             _showAccordion(item);
         }
 
         // Remember last submenu type
-        KTUtil.data(item).set('type', _getItemSubType(item));  // updated
-    }
+        KTUtil.data(item).set("type", _getItemSubType(item)); // updated
+    };
 
     // Hide item sub
     var _hide = function (item) {
@@ -2450,12 +2707,12 @@ var KTMenu = function (element, options) {
             return;
         }
 
-        if (_getItemSubType(item) === 'dropdown') {
+        if (_getItemSubType(item) === "dropdown") {
             _hideDropdown(item);
-        } else if (_getItemSubType(item) === 'accordion') {
+        } else if (_getItemSubType(item) === "accordion") {
             _hideAccordion(item);
         }
-    }
+    };
 
     // Reset item state classes if item sub type changed
     var _reset = function (item) {
@@ -2466,89 +2723,111 @@ var KTMenu = function (element, options) {
         var sub = _getItemSubElement(item);
 
         // Reset sub state if sub type is changed during the window resize
-        if (KTUtil.data(item).has('type') && KTUtil.data(item).get('type') !== _getItemSubType(item)) {  // updated
-            KTUtil.removeClass(item, 'hover');
-            KTUtil.removeClass(item, 'show');
-            KTUtil.removeClass(sub, 'show');
-        }  // updated
-    }
+        if (
+            KTUtil.data(item).has("type") &&
+            KTUtil.data(item).get("type") !== _getItemSubType(item)
+        ) {
+            // updated
+            KTUtil.removeClass(item, "hover");
+            KTUtil.removeClass(item, "show");
+            KTUtil.removeClass(sub, "show");
+        } // updated
+    };
 
     // Update all item state classes if item sub type changed
     var _update = function () {
-        var items = the.element.querySelectorAll('.menu-item[data-kt-menu-trigger]');
+        var items = the.element.querySelectorAll(
+            ".menu-item[data-kt-menu-trigger]"
+        );
 
         if (items && items.length > 0) {
             for (var i = 0, len = items.length; i < len; i++) {
                 _reset(items[i]);
             }
         }
-    }
+    };
 
     // Set external trigger element
     var _setTriggerElement = function () {
-        var target = document.querySelector('[data-kt-menu-target="#' + the.element.getAttribute('id') + '"]');
+        var target = document.querySelector(
+            '[data-kt-menu-target="#' + the.element.getAttribute("id") + '"]'
+        );
 
         if (target !== null) {
             the.triggerElement = target;
-        } else if (the.element.closest('[data-kt-menu-trigger]')) {
-            the.triggerElement = the.element.closest('[data-kt-menu-trigger]');
-        } else if (the.element.parentNode && KTUtil.child(the.element.parentNode, '[data-kt-menu-trigger]')) {
-            the.triggerElement = KTUtil.child(the.element.parentNode, '[data-kt-menu-trigger]');
+        } else if (the.element.closest("[data-kt-menu-trigger]")) {
+            the.triggerElement = the.element.closest("[data-kt-menu-trigger]");
+        } else if (
+            the.element.parentNode &&
+            KTUtil.child(the.element.parentNode, "[data-kt-menu-trigger]")
+        ) {
+            the.triggerElement = KTUtil.child(
+                the.element.parentNode,
+                "[data-kt-menu-trigger]"
+            );
         }
 
         if (the.triggerElement) {
-            KTUtil.data(the.triggerElement).set('menu', the);
+            KTUtil.data(the.triggerElement).set("menu", the);
         }
-    }
+    };
 
     // Test if menu has external trigger element
     var _isTriggerElement = function (item) {
-        return (the.triggerElement === item) ? true : false;
-    }
+        return the.triggerElement === item ? true : false;
+    };
 
     // Test if item's sub is shown
     var _isItemSubShown = function (item) {
         var sub = _getItemSubElement(item);
 
         if (sub !== null) {
-            if (_getItemSubType(item) === 'dropdown') {
-                if (KTUtil.hasClass(sub, 'show') === true && sub.hasAttribute('data-popper-placement') === true) {
+            if (_getItemSubType(item) === "dropdown") {
+                if (
+                    KTUtil.hasClass(sub, "show") === true &&
+                    sub.hasAttribute("data-popper-placement") === true
+                ) {
                     return true;
                 } else {
                     return false;
                 }
             } else {
-                return KTUtil.hasClass(item, 'show');
+                return KTUtil.hasClass(item, "show");
             }
         } else {
             return false;
         }
-    }
+    };
 
     // Test if item dropdown is permanent
     var _isItemDropdownPermanent = function (item) {
-        return _getOptionFromElementAttribute(item, 'permanent') === true ? true : false;
-    }
+        return _getOptionFromElementAttribute(item, "permanent") === true
+            ? true
+            : false;
+    };
 
     // Test if item's parent is shown
     var _isItemParentShown = function (item) {
-        return KTUtil.parents(item, '.menu-item.show').length > 0;
-    }
+        return KTUtil.parents(item, ".menu-item.show").length > 0;
+    };
 
     // Test of it is item sub element
     var _isItemSubElement = function (item) {
-        return KTUtil.hasClass(item, 'menu-sub');
-    }
+        return KTUtil.hasClass(item, "menu-sub");
+    };
 
     // Test if item has sub
     var _hasItemSub = function (item) {
-        return (KTUtil.hasClass(item, 'menu-item') && item.hasAttribute('data-kt-menu-trigger'));
-    }
+        return (
+            KTUtil.hasClass(item, "menu-item") &&
+            item.hasAttribute("data-kt-menu-trigger")
+        );
+    };
 
     // Get link element
     var _getItemLinkElement = function (item) {
-        return KTUtil.child(item, '.menu-link');
-    }
+        return KTUtil.child(item, ".menu-link");
+    };
 
     // Get toggle element
     var _getItemToggleElement = function (item) {
@@ -2557,31 +2836,32 @@ var KTMenu = function (element, options) {
         } else {
             return _getItemLinkElement(item);
         }
-    }
+    };
 
     // Get item sub element
     var _getItemSubElement = function (item) {
         if (_isTriggerElement(item) === true) {
             return the.element;
-        } if (item.classList.contains('menu-sub') === true) {
-            return item;
-        } else if (KTUtil.data(item).has('sub')) {
-            return KTUtil.data(item).get('sub');
-        } else {
-            return KTUtil.child(item, '.menu-sub');
         }
-    }
+        if (item.classList.contains("menu-sub") === true) {
+            return item;
+        } else if (KTUtil.data(item).has("sub")) {
+            return KTUtil.data(item).get("sub");
+        } else {
+            return KTUtil.child(item, ".menu-sub");
+        }
+    };
 
     // Get item sub type
     var _getItemSubType = function (element) {
         var sub = _getItemSubElement(element);
 
-        if (sub && parseInt(KTUtil.css(sub, 'z-index')) > 0) {
+        if (sub && parseInt(KTUtil.css(sub, "z-index")) > 0) {
             return "dropdown";
         } else {
             return "accordion";
         }
-    }
+    };
 
     // Get item element
     var _getItemElement = function (element) {
@@ -2593,43 +2873,46 @@ var KTMenu = function (element, options) {
         }
 
         // Element has item toggler attribute
-        if (element.hasAttribute('data-kt-menu-trigger')) {
+        if (element.hasAttribute("data-kt-menu-trigger")) {
             return element;
         }
 
         // Element has item DOM reference in it's data storage
-        if (KTUtil.data(element).has('item')) {
-            return KTUtil.data(element).get('item');
+        if (KTUtil.data(element).has("item")) {
+            return KTUtil.data(element).get("item");
         }
 
         // Item is parent of element
-        if ((item = element.closest('.menu-item'))) {
+        if ((item = element.closest(".menu-item"))) {
             return item;
         }
 
         // Element's parent has item DOM reference in it's data storage
-        if ((sub = element.closest('.menu-sub'))) {
-            if (KTUtil.data(sub).has('item') === true) {
-                return KTUtil.data(sub).get('item')
+        if ((sub = element.closest(".menu-sub"))) {
+            if (KTUtil.data(sub).has("item") === true) {
+                return KTUtil.data(sub).get("item");
             }
         }
-    }
+    };
 
     // Get item parent element
     var _getItemParentElement = function (item) {
-        var sub = item.closest('.menu-sub');
+        var sub = item.closest(".menu-sub");
         var parentItem;
 
-        if (sub && KTUtil.data(sub).has('item')) {
-            return KTUtil.data(sub).get('item');
+        if (sub && KTUtil.data(sub).has("item")) {
+            return KTUtil.data(sub).get("item");
         }
 
-        if (sub && (parentItem = sub.closest('.menu-item[data-kt-menu-trigger]'))) {
+        if (
+            sub &&
+            (parentItem = sub.closest(".menu-item[data-kt-menu-trigger]"))
+        ) {
             return parentItem;
         }
 
         return null;
-    }
+    };
 
     // Get item parent elements
     var _getItemParentElements = function (item) {
@@ -2653,20 +2936,22 @@ var KTMenu = function (element, options) {
         }
 
         return parents;
-    }
+    };
 
     // Get item child element
     var _getItemChildElement = function (item) {
         var selector = item;
         var element;
 
-        if (KTUtil.data(item).get('sub')) {
-            selector = KTUtil.data(item).get('sub');
+        if (KTUtil.data(item).get("sub")) {
+            selector = KTUtil.data(item).get("sub");
         }
 
         if (selector !== null) {
             //element = selector.querySelector('.show.menu-item[data-kt-menu-trigger]');
-            element = selector.querySelector('.menu-item[data-kt-menu-trigger]');
+            element = selector.querySelector(
+                ".menu-item[data-kt-menu-trigger]"
+            );
 
             if (element) {
                 return element;
@@ -2676,7 +2961,7 @@ var KTMenu = function (element, options) {
         } else {
             return null;
         }
-    }
+    };
 
     // Get item child elements
     var _getItemChildElements = function (item) {
@@ -2696,12 +2981,18 @@ var KTMenu = function (element, options) {
         } while (child !== null && i < 20);
 
         return children;
-    }
+    };
 
     // Show item dropdown
     var _showDropdown = function (item) {
         // Handle dropdown show event
-        if (KTEventHandler.trigger(the.element, 'kt.menu.dropdown.show', item) === false) {
+        if (
+            KTEventHandler.trigger(
+                the.element,
+                "kt.menu.dropdown.show",
+                item
+            ) === false
+        ) {
             return;
         }
 
@@ -2711,8 +3002,8 @@ var KTMenu = function (element, options) {
         var toggle = _isTriggerElement(item) ? item : _getItemLinkElement(item);
         var sub = _getItemSubElement(item);
 
-        var width = _getOptionFromElementAttribute(item, 'width');
-        var height = _getOptionFromElementAttribute(item, 'height');
+        var width = _getOptionFromElementAttribute(item, "width");
+        var height = _getOptionFromElementAttribute(item, "height");
 
         var zindex = the.options.dropdown.zindex; // update
         var parentZindex = KTUtil.getHighestZindex(item); // update
@@ -2723,86 +3014,92 @@ var KTMenu = function (element, options) {
         }
 
         if (zindex > 0) {
-            KTUtil.css(sub, 'z-index', zindex);
+            KTUtil.css(sub, "z-index", zindex);
         }
 
         if (width !== null) {
-            KTUtil.css(sub, 'width', width);
+            KTUtil.css(sub, "width", width);
         }
 
         if (height !== null) {
-            KTUtil.css(sub, 'height', height);
+            KTUtil.css(sub, "height", height);
         }
 
-        KTUtil.css(sub, 'display', '');
-        KTUtil.css(sub, 'overflow', '');
+        KTUtil.css(sub, "display", "");
+        KTUtil.css(sub, "overflow", "");
 
         // Init popper(new)
         _initDropdownPopper(item, sub);
 
-        KTUtil.addClass(item, 'show');
-        KTUtil.addClass(item, 'menu-dropdown');
-        KTUtil.addClass(sub, 'show');
+        KTUtil.addClass(item, "show");
+        KTUtil.addClass(item, "menu-dropdown");
+        KTUtil.addClass(sub, "show");
 
         // Append the sub the the root of the menu
-        if (_getOptionFromElementAttribute(item, 'overflow') === true) {
+        if (_getOptionFromElementAttribute(item, "overflow") === true) {
             document.body.appendChild(sub);
-            KTUtil.data(item).set('sub', sub);
-            KTUtil.data(sub).set('item', item);
-            KTUtil.data(sub).set('menu', the);
+            KTUtil.data(item).set("sub", sub);
+            KTUtil.data(sub).set("item", item);
+            KTUtil.data(sub).set("menu", the);
         } else {
-            KTUtil.data(sub).set('item', item);
+            KTUtil.data(sub).set("item", item);
         }
 
         // Handle dropdown shown event
-        KTEventHandler.trigger(the.element, 'kt.menu.dropdown.shown', item);
-    }
+        KTEventHandler.trigger(the.element, "kt.menu.dropdown.shown", item);
+    };
 
     // Hide item dropdown
     var _hideDropdown = function (item) {
         // Handle dropdown hide event
-        if (KTEventHandler.trigger(the.element, 'kt.menu.dropdown.hide', item) === false) {
+        if (
+            KTEventHandler.trigger(
+                the.element,
+                "kt.menu.dropdown.hide",
+                item
+            ) === false
+        ) {
             return;
         }
 
         var sub = _getItemSubElement(item);
 
-        KTUtil.css(sub, 'z-index', '');
-        KTUtil.css(sub, 'width', '');
-        KTUtil.css(sub, 'height', '');
+        KTUtil.css(sub, "z-index", "");
+        KTUtil.css(sub, "width", "");
+        KTUtil.css(sub, "height", "");
 
-        KTUtil.removeClass(item, 'show');
-        KTUtil.removeClass(item, 'menu-dropdown');
-        KTUtil.removeClass(sub, 'show');
+        KTUtil.removeClass(item, "show");
+        KTUtil.removeClass(item, "menu-dropdown");
+        KTUtil.removeClass(sub, "show");
 
         // Append the sub back to it's parent
-        if (_getOptionFromElementAttribute(item, 'overflow') === true) {
-            if (item.classList.contains('menu-item')) {
+        if (_getOptionFromElementAttribute(item, "overflow") === true) {
+            if (item.classList.contains("menu-item")) {
                 item.appendChild(sub);
             } else {
                 KTUtil.insertAfter(the.element, item);
             }
 
-            KTUtil.data(item).remove('sub');
-            KTUtil.data(sub).remove('item');
-            KTUtil.data(sub).remove('menu');
+            KTUtil.data(item).remove("sub");
+            KTUtil.data(sub).remove("item");
+            KTUtil.data(sub).remove("menu");
         }
 
         // Destroy popper(new)
         _destroyDropdownPopper(item);
 
         // Handle dropdown hidden event
-        KTEventHandler.trigger(the.element, 'kt.menu.dropdown.hidden', item);
-    }
+        KTEventHandler.trigger(the.element, "kt.menu.dropdown.hidden", item);
+    };
 
     // Init dropdown popper(new)
     var _initDropdownPopper = function (item, sub) {
         // Setup popper instance
         var reference;
-        var attach = _getOptionFromElementAttribute(item, 'attach');
+        var attach = _getOptionFromElementAttribute(item, "attach");
 
         if (attach) {
-            if (attach === 'parent') {
+            if (attach === "parent") {
                 reference = item.parentNode;
             } else {
                 reference = document.querySelector(attach);
@@ -2811,28 +3108,32 @@ var KTMenu = function (element, options) {
             reference = item;
         }
 
-        var popper = Popper.createPopper(reference, sub, _getDropdownPopperConfig(item));
-        KTUtil.data(item).set('popper', popper);
-    }
+        var popper = Popper.createPopper(
+            reference,
+            sub,
+            _getDropdownPopperConfig(item)
+        );
+        KTUtil.data(item).set("popper", popper);
+    };
 
     // Destroy dropdown popper(new)
     var _destroyDropdownPopper = function (item) {
-        if (KTUtil.data(item).has('popper') === true) {
-            KTUtil.data(item).get('popper').destroy();
-            KTUtil.data(item).remove('popper');
+        if (KTUtil.data(item).has("popper") === true) {
+            KTUtil.data(item).get("popper").destroy();
+            KTUtil.data(item).remove("popper");
         }
-    }
+    };
 
     // Prepare popper config for dropdown(see: https://popper.js.org/docs/v2/)
     var _getDropdownPopperConfig = function (item) {
         // Placement
-        var placement = _getOptionFromElementAttribute(item, 'placement');
+        var placement = _getOptionFromElementAttribute(item, "placement");
         if (!placement) {
-            placement = 'right';
+            placement = "right";
         }
 
         // Offset
-        var offsetValue = _getOptionFromElementAttribute(item, 'offset');
+        var offsetValue = _getOptionFromElementAttribute(item, "offset");
         var offset = offsetValue ? offsetValue.split(",") : [];
 
         if (offset.length === 2) {
@@ -2841,48 +3142,66 @@ var KTMenu = function (element, options) {
         }
 
         // Strategy
-        var strategy = _getOptionFromElementAttribute(item, 'overflow') === true ? 'absolute' : 'fixed';
+        var strategy =
+            _getOptionFromElementAttribute(item, "overflow") === true
+                ? "absolute"
+                : "fixed";
 
-        var altAxis = _getOptionFromElementAttribute(item, 'flip') !== false ? true : false;
+        var altAxis =
+            _getOptionFromElementAttribute(item, "flip") !== false
+                ? true
+                : false;
 
         var popperConfig = {
             placement: placement,
             strategy: strategy,
-            modifiers: [{
-                name: 'offset',
-                options: {
-                    offset: offset
-                }
-            }, {
-                name: 'preventOverflow',
-                options: {
-                    altAxis: altAxis
-                }
-            }, {
-                name: 'flip',
-                options: {
-                    flipVariations: false
-                }
-            }]
+            modifiers: [
+                {
+                    name: "offset",
+                    options: {
+                        offset: offset,
+                    },
+                },
+                {
+                    name: "preventOverflow",
+                    options: {
+                        altAxis: altAxis,
+                    },
+                },
+                {
+                    name: "flip",
+                    options: {
+                        flipVariations: false,
+                    },
+                },
+            ],
         };
 
         return popperConfig;
-    }
+    };
 
     // Show item accordion
     var _showAccordion = function (item) {
-        if (KTEventHandler.trigger(the.element, 'kt.menu.accordion.show', item) === false) {
+        if (
+            KTEventHandler.trigger(
+                the.element,
+                "kt.menu.accordion.show",
+                item
+            ) === false
+        ) {
             return;
         }
 
         var sub = _getItemSubElement(item);
         var expand = the.options.accordion.expand;
 
-        if (_getOptionFromElementAttribute(item, 'expand') === true) {
+        if (_getOptionFromElementAttribute(item, "expand") === true) {
             expand = true;
-        } else if (_getOptionFromElementAttribute(item, 'expand') === false) {
+        } else if (_getOptionFromElementAttribute(item, "expand") === false) {
             expand = false;
-        } else if (_getOptionFromElementAttribute(the.element, 'expand') === true) {
+        } else if (
+            _getOptionFromElementAttribute(the.element, "expand") === true
+        ) {
             expand = true;
         }
 
@@ -2890,43 +3209,57 @@ var KTMenu = function (element, options) {
             _hideAccordions(item);
         }
 
-        if (KTUtil.data(item).has('popper') === true) {
+        if (KTUtil.data(item).has("popper") === true) {
             _hideDropdown(item);
         }
 
-        KTUtil.addClass(item, 'hover');
+        KTUtil.addClass(item, "hover");
 
-        KTUtil.addClass(item, 'showing');
+        KTUtil.addClass(item, "showing");
 
         KTUtil.slideDown(sub, the.options.accordion.slideSpeed, function () {
-            KTUtil.removeClass(item, 'showing');
-            KTUtil.addClass(item, 'show');
-            KTUtil.addClass(sub, 'show');
+            KTUtil.removeClass(item, "showing");
+            KTUtil.addClass(item, "show");
+            KTUtil.addClass(sub, "show");
 
-            KTEventHandler.trigger(the.element, 'kt.menu.accordion.shown', item);
+            KTEventHandler.trigger(
+                the.element,
+                "kt.menu.accordion.shown",
+                item
+            );
         });
-    }
+    };
 
     // Hide item accordion
     var _hideAccordion = function (item) {
-        if (KTEventHandler.trigger(the.element, 'kt.menu.accordion.hide', item) === false) {
+        if (
+            KTEventHandler.trigger(
+                the.element,
+                "kt.menu.accordion.hide",
+                item
+            ) === false
+        ) {
             return;
         }
 
         var sub = _getItemSubElement(item);
 
-        KTUtil.addClass(item, 'hiding');
+        KTUtil.addClass(item, "hiding");
 
         KTUtil.slideUp(sub, the.options.accordion.slideSpeed, function () {
-            KTUtil.removeClass(item, 'hiding');
-            KTUtil.removeClass(item, 'show');
-            KTUtil.removeClass(sub, 'show');
+            KTUtil.removeClass(item, "hiding");
+            KTUtil.removeClass(item, "show");
+            KTUtil.removeClass(sub, "show");
 
-            KTUtil.removeClass(item, 'hover'); // update
+            KTUtil.removeClass(item, "hover"); // update
 
-            KTEventHandler.trigger(the.element, 'kt.menu.accordion.hidden', item);
+            KTEventHandler.trigger(
+                the.element,
+                "kt.menu.accordion.hidden",
+                item
+            );
         });
-    }
+    };
 
     var _setActiveLink = function (link) {
         var item = _getItemElement(link);
@@ -2936,10 +3269,14 @@ var KTMenu = function (element, options) {
         }
 
         var parentItems = _getItemParentElements(item);
-        var parentTabPane = link.closest('.tab-pane');
+        var parentTabPane = link.closest(".tab-pane");
 
-        var activeLinks = [].slice.call(the.element.querySelectorAll('.menu-link.active'));
-        var activeParentItems = [].slice.call(the.element.querySelectorAll('.menu-item.here, .menu-item.show'));
+        var activeLinks = [].slice.call(
+            the.element.querySelectorAll(".menu-link.active")
+        );
+        var activeParentItems = [].slice.call(
+            the.element.querySelectorAll(".menu-item.here, .menu-item.show")
+        );
 
         if (_getItemSubType(item) === "accordion") {
             _showAccordion(item);
@@ -2972,7 +3309,9 @@ var KTMenu = function (element, options) {
 
         // Handle tab
         if (parentTabPane && bootstrap.Tab) {
-            var tabEl = the.element.querySelector('[data-bs-target="#' + parentTabPane.getAttribute("id") + '"]');
+            var tabEl = the.element.querySelector(
+                '[data-bs-target="#' + parentTabPane.getAttribute("id") + '"]'
+            );
             var tab = new bootstrap.Tab(tabEl);
 
             if (tab) {
@@ -2981,56 +3320,66 @@ var KTMenu = function (element, options) {
         }
 
         link.classList.add("active");
-    }
+    };
 
     var _getLinkByAttribute = function (value, name = "href") {
-        var link = the.element.querySelector('.menu-link[' + name + '="' + value + '"]');
+        var link = the.element.querySelector(
+            ".menu-link[" + name + '="' + value + '"]'
+        );
 
         if (link) {
             return link;
         } else {
             null;
         }
-    }
+    };
 
     // Hide all shown accordions of item
     var _hideAccordions = function (item) {
-        var itemsToHide = KTUtil.findAll(the.element, '.show[data-kt-menu-trigger]');
+        var itemsToHide = KTUtil.findAll(
+            the.element,
+            ".show[data-kt-menu-trigger]"
+        );
         var itemToHide;
 
         if (itemsToHide && itemsToHide.length > 0) {
             for (var i = 0, len = itemsToHide.length; i < len; i++) {
                 itemToHide = itemsToHide[i];
 
-                if (_getItemSubType(itemToHide) === 'accordion' && itemToHide !== item && item.contains(itemToHide) === false && itemToHide.contains(item) === false) {
+                if (
+                    _getItemSubType(itemToHide) === "accordion" &&
+                    itemToHide !== item &&
+                    item.contains(itemToHide) === false &&
+                    itemToHide.contains(item) === false
+                ) {
                     _hideAccordion(itemToHide);
                 }
             }
         }
-    }
+    };
 
     // Get item option(through html attributes)
     var _getOptionFromElementAttribute = function (item, name) {
         var attr;
         var value = null;
 
-        if (item && item.hasAttribute('data-kt-menu-' + name)) {
-            attr = item.getAttribute('data-kt-menu-' + name);
+        if (item && item.hasAttribute("data-kt-menu-" + name)) {
+            attr = item.getAttribute("data-kt-menu-" + name);
             value = KTUtil.getResponsiveValue(attr);
 
-            if (value !== null && String(value) === 'true') {
+            if (value !== null && String(value) === "true") {
                 value = true;
-            } else if (value !== null && String(value) === 'false') {
+            } else if (value !== null && String(value) === "false") {
                 value = false;
             }
         }
 
         return value;
-    }
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('menu');
-    }
+        KTUtil.data(the.element).remove("menu");
+    };
 
     // Construct Class
     _construct();
@@ -3042,126 +3391,126 @@ var KTMenu = function (element, options) {
     // Event Handlers
     the.click = function (element, e) {
         return _click(element, e);
-    }
+    };
 
     the.link = function (element, e) {
         return _link(element, e);
-    }
+    };
 
     the.dismiss = function (element, e) {
         return _dismiss(element, e);
-    }
+    };
 
     the.mouseover = function (element, e) {
         return _mouseover(element, e);
-    }
+    };
 
     the.mouseout = function (element, e) {
         return _mouseout(element, e);
-    }
+    };
 
     // General Methods
     the.getItemTriggerType = function (item) {
-        return _getOptionFromElementAttribute(item, 'trigger');
-    }
+        return _getOptionFromElementAttribute(item, "trigger");
+    };
 
     the.getItemSubType = function (element) {
         return _getItemSubType(element);
-    }
+    };
 
     the.show = function (item) {
         return _show(item);
-    }
+    };
 
     the.hide = function (item) {
         return _hide(item);
-    }
+    };
 
     the.toggle = function (item) {
         return _toggle(item);
-    }
+    };
 
     the.reset = function (item) {
         return _reset(item);
-    }
+    };
 
     the.update = function () {
         return _update();
-    }
+    };
 
     the.getElement = function () {
         return the.element;
-    }
+    };
 
     the.setActiveLink = function (link) {
         return _setActiveLink(link);
-    }
+    };
 
     the.getLinkByAttribute = function (value, name = "href") {
         return _getLinkByAttribute(value, name);
-    }
+    };
 
     the.getItemLinkElement = function (item) {
         return _getItemLinkElement(item);
-    }
+    };
 
     the.getItemToggleElement = function (item) {
         return _getItemToggleElement(item);
-    }
+    };
 
     the.getItemSubElement = function (item) {
         return _getItemSubElement(item);
-    }
+    };
 
     the.getItemParentElements = function (item) {
         return _getItemParentElements(item);
-    }
+    };
 
     the.isItemSubShown = function (item) {
         return _isItemSubShown(item);
-    }
+    };
 
     the.isItemParentShown = function (item) {
         return _isItemParentShown(item);
-    }
+    };
 
     the.getTriggerElement = function () {
         return the.triggerElement;
-    }
+    };
 
     the.isItemDropdownPermanent = function (item) {
         return _isItemDropdownPermanent(item);
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 
     the.disable = function () {
         the.disabled = true;
-    }
+    };
 
     the.enable = function () {
         the.disabled = false;
-    }
+    };
 
     // Accordion Mode Methods
     the.hideAccordions = function (item) {
         return _hideAccordions(item);
-    }
+    };
 
     // Event API
     the.on = function (name, handler) {
         return KTEventHandler.on(the.element, name, handler);
-    }
+    };
 
     the.one = function (name, handler) {
         return KTEventHandler.one(the.element, name, handler);
-    }
+    };
 
     the.off = function (name, handlerId) {
         return KTEventHandler.off(the.element, name, handlerId);
-    }
+    };
 };
 
 // Get KTMenu instance by element
@@ -3174,41 +3523,47 @@ KTMenu.getInstance = function (element) {
     }
 
     // Element has menu DOM reference in it's DATA storage
-    if (KTUtil.data(element).has('menu')) {
-        return KTUtil.data(element).get('menu');
+    if (KTUtil.data(element).has("menu")) {
+        return KTUtil.data(element).get("menu");
     }
 
     // Element has .menu parent
-    if (menu = element.closest('.menu')) {
-        if (KTUtil.data(menu).has('menu')) {
-            return KTUtil.data(menu).get('menu');
+    if ((menu = element.closest(".menu"))) {
+        if (KTUtil.data(menu).has("menu")) {
+            return KTUtil.data(menu).get("menu");
         }
     }
 
     // Element has a parent with DOM reference to .menu in it's DATA storage
-    if (KTUtil.hasClass(element, 'menu-link')) {
-        var sub = element.closest('.menu-sub');
+    if (KTUtil.hasClass(element, "menu-link")) {
+        var sub = element.closest(".menu-sub");
 
-        if (KTUtil.data(sub).has('menu')) {
-            return KTUtil.data(sub).get('menu');
+        if (KTUtil.data(sub).has("menu")) {
+            return KTUtil.data(sub).get("menu");
         }
     }
 
     return null;
-}
+};
 
 // Hide all dropdowns and skip one if provided
 KTMenu.hideDropdowns = function (skip) {
-    var items = document.querySelectorAll('.show.menu-dropdown[data-kt-menu-trigger]');
+    var items = document.querySelectorAll(
+        ".show.menu-dropdown[data-kt-menu-trigger]"
+    );
 
     if (items && items.length > 0) {
         for (var i = 0, len = items.length; i < len; i++) {
             var item = items[i];
             var menu = KTMenu.getInstance(item);
 
-            if (menu && menu.getItemSubType(item) === 'dropdown') {
+            if (menu && menu.getItemSubType(item) === "dropdown") {
                 if (skip) {
-                    if (menu.getItemSubElement(item).contains(skip) === false && item.contains(skip) === false && item !== skip) {
+                    if (
+                        menu.getItemSubElement(item).contains(skip) === false &&
+                        item.contains(skip) === false &&
+                        item !== skip
+                    ) {
                         menu.hide(item);
                     }
                 } else {
@@ -3217,28 +3572,32 @@ KTMenu.hideDropdowns = function (skip) {
             }
         }
     }
-}
+};
 
 // Update all dropdowns popover instances
 KTMenu.updateDropdowns = function () {
-    var items = document.querySelectorAll('.show.menu-dropdown[data-kt-menu-trigger]');
+    var items = document.querySelectorAll(
+        ".show.menu-dropdown[data-kt-menu-trigger]"
+    );
 
     if (items && items.length > 0) {
         for (var i = 0, len = items.length; i < len; i++) {
             var item = items[i];
 
-            if (KTUtil.data(item).has('popper')) {
-                KTUtil.data(item).get('popper').forceUpdate();
+            if (KTUtil.data(item).has("popper")) {
+                KTUtil.data(item).get("popper").forceUpdate();
             }
         }
     }
-}
+};
 
 // Global handlers
 KTMenu.initHandlers = function () {
     // Dropdown handler
     document.addEventListener("click", function (e) {
-        var items = document.querySelectorAll('.show.menu-dropdown[data-kt-menu-trigger]:not([data-kt-menu-static="true"])');
+        var items = document.querySelectorAll(
+            '.show.menu-dropdown[data-kt-menu-trigger]:not([data-kt-menu-static="true"])'
+        );
         var menu;
         var item;
         var sub;
@@ -3249,7 +3608,7 @@ KTMenu.initHandlers = function () {
                 item = items[i];
                 menuObj = KTMenu.getInstance(item);
 
-                if (menuObj && menuObj.getItemSubType(item) === 'dropdown') {
+                if (menuObj && menuObj.getItemSubType(item) === "dropdown") {
                     menu = menuObj.getElement();
                     sub = menuObj.getItemSubElement(item);
 
@@ -3268,70 +3627,101 @@ KTMenu.initHandlers = function () {
     });
 
     // Sub toggle handler(updated)
-    KTUtil.on(document.body, '.menu-item[data-kt-menu-trigger] > .menu-link, [data-kt-menu-trigger]:not(.menu-item):not([data-kt-menu-trigger="auto"])', 'click', function (e) {
-        var menu = KTMenu.getInstance(this);
+    KTUtil.on(
+        document.body,
+        '.menu-item[data-kt-menu-trigger] > .menu-link, [data-kt-menu-trigger]:not(.menu-item):not([data-kt-menu-trigger="auto"])',
+        "click",
+        function (e) {
+            var menu = KTMenu.getInstance(this);
 
-        if (menu !== null) {
-            return menu.click(this, e);
+            if (menu !== null) {
+                return menu.click(this, e);
+            }
         }
-    });
+    );
 
     // Link handler
-    KTUtil.on(document.body, '.menu-item:not([data-kt-menu-trigger]) > .menu-link', 'click', function (e) {
-        var menu = KTMenu.getInstance(this);
+    KTUtil.on(
+        document.body,
+        ".menu-item:not([data-kt-menu-trigger]) > .menu-link",
+        "click",
+        function (e) {
+            var menu = KTMenu.getInstance(this);
 
-        if (menu !== null) {
-            return menu.link(this, e);
+            if (menu !== null) {
+                return menu.link(this, e);
+            }
         }
-    });
+    );
 
     // Dismiss handler
-    KTUtil.on(document.body, '[data-kt-menu-dismiss="true"]', 'click', function (e) {
-        var menu = KTMenu.getInstance(this);
+    KTUtil.on(
+        document.body,
+        '[data-kt-menu-dismiss="true"]',
+        "click",
+        function (e) {
+            var menu = KTMenu.getInstance(this);
 
-        if (menu !== null) {
-            return menu.dismiss(this, e);
+            if (menu !== null) {
+                return menu.dismiss(this, e);
+            }
         }
-    });
+    );
 
     // Mouseover handler
-    KTUtil.on(document.body, '[data-kt-menu-trigger], .menu-sub', 'mouseover', function (e) {
-        var menu = KTMenu.getInstance(this);
+    KTUtil.on(
+        document.body,
+        "[data-kt-menu-trigger], .menu-sub",
+        "mouseover",
+        function (e) {
+            var menu = KTMenu.getInstance(this);
 
-        if (menu !== null && menu.getItemSubType(this) === 'dropdown') {
-            return menu.mouseover(this, e);
+            if (menu !== null && menu.getItemSubType(this) === "dropdown") {
+                return menu.mouseover(this, e);
+            }
         }
-    });
+    );
 
     // Mouseout handler
-    KTUtil.on(document.body, '[data-kt-menu-trigger], .menu-sub', 'mouseout', function (e) {
-        var menu = KTMenu.getInstance(this);
+    KTUtil.on(
+        document.body,
+        "[data-kt-menu-trigger], .menu-sub",
+        "mouseout",
+        function (e) {
+            var menu = KTMenu.getInstance(this);
 
-        if (menu !== null && menu.getItemSubType(this) === 'dropdown') {
-            return menu.mouseout(this, e);
+            if (menu !== null && menu.getItemSubType(this) === "dropdown") {
+                return menu.mouseout(this, e);
+            }
         }
-    });
+    );
 
     // Resize handler
-    window.addEventListener('resize', function () {
+    window.addEventListener("resize", function () {
         var menu;
         var timer;
 
-        KTUtil.throttle(timer, function () {
-            // Locate and update Offcanvas instances on window resize
-            var elements = document.querySelectorAll('[data-kt-menu="true"]');
+        KTUtil.throttle(
+            timer,
+            function () {
+                // Locate and update Offcanvas instances on window resize
+                var elements = document.querySelectorAll(
+                    '[data-kt-menu="true"]'
+                );
 
-            if (elements && elements.length > 0) {
-                for (var i = 0, len = elements.length; i < len; i++) {
-                    menu = KTMenu.getInstance(elements[i]);
-                    if (menu) {
-                        menu.update();
+                if (elements && elements.length > 0) {
+                    for (var i = 0, len = elements.length; i < len; i++) {
+                        menu = KTMenu.getInstance(elements[i]);
+                        if (menu) {
+                            menu.update();
+                        }
                     }
                 }
-            }
-        }, 200);
+            },
+            200
+        );
     });
-}
+};
 
 // Render menus by url
 KTMenu.updateByLinkAttribute = function (value, name = "href") {
@@ -3350,7 +3740,7 @@ KTMenu.updateByLinkAttribute = function (value, name = "href") {
             }
         }
     }
-}
+};
 
 // Global instances
 KTMenu.createInstances = function (selector = '[data-kt-menu="true"]') {
@@ -3361,7 +3751,7 @@ KTMenu.createInstances = function (selector = '[data-kt-menu="true"]') {
             new KTMenu(elements[i]);
         }
     }
-}
+};
 
 // Global initialization
 KTMenu.init = function () {
@@ -3375,11 +3765,11 @@ KTMenu.init = function () {
 };
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTMenu;
 }
 
-"use strict";
+("use strict");
 
 // Class definition
 var KTPasswordMeter = function (element, options) {
@@ -3399,7 +3789,7 @@ var KTPasswordMeter = function (element, options) {
         checkLowercase: true,
         checkDigit: true,
         checkChar: true,
-        scoreHighlightClass: 'active'
+        scoreHighlightClass: "active",
     };
 
     ////////////////////////////
@@ -3408,12 +3798,12 @@ var KTPasswordMeter = function (element, options) {
 
     // Constructor
     var _construct = function () {
-        if (KTUtil.data(element).has('password-meter') === true) {
-            the = KTUtil.data(element).get('password-meter');
+        if (KTUtil.data(element).has("password-meter") === true) {
+            the = KTUtil.data(element).get("password-meter");
         } else {
             _init();
         }
-    }
+    };
 
     // Initialize
     var _init = function () {
@@ -3424,34 +3814,38 @@ var KTPasswordMeter = function (element, options) {
 
         // Elements
         the.element = element;
-        the.inputElement = the.element.querySelector('input[type]');
-        the.visibilityElement = the.element.querySelector('[data-kt-password-meter-control="visibility"]');
-        the.highlightElement = the.element.querySelector('[data-kt-password-meter-control="highlight"]');
+        the.inputElement = the.element.querySelector("input[type]");
+        the.visibilityElement = the.element.querySelector(
+            '[data-kt-password-meter-control="visibility"]'
+        );
+        the.highlightElement = the.element.querySelector(
+            '[data-kt-password-meter-control="highlight"]'
+        );
 
         // Set initialized
-        the.element.setAttribute('data-kt-password-meter', 'true');
+        the.element.setAttribute("data-kt-password-meter", "true");
 
         // Event Handlers
         _handlers();
 
         // Bind Instance
-        KTUtil.data(the.element).set('password-meter', the);
-    }
+        KTUtil.data(the.element).set("password-meter", the);
+    };
 
     // Handlers
     var _handlers = function () {
         if (the.highlightElement) {
-            the.inputElement.addEventListener('input', function () {
+            the.inputElement.addEventListener("input", function () {
                 _check();
             });
         }
 
         if (the.visibilityElement) {
-            the.visibilityElement.addEventListener('click', function () {
+            the.visibilityElement.addEventListener("click", function () {
                 _visibility();
             });
         }
-    }
+    };
 
     // Event handlers
     var _check = function () {
@@ -3481,27 +3875,29 @@ var KTPasswordMeter = function (element, options) {
         the.score = score;
 
         _highlight();
-    }
+    };
 
     var _checkLength = function () {
-        return the.inputElement.value.length >= the.options.minLength;  // 20 score
-    }
+        return the.inputElement.value.length >= the.options.minLength; // 20 score
+    };
 
     var _checkLowercase = function () {
-        return /[a-z]/.test(the.inputElement.value);  // 20 score
-    }
+        return /[a-z]/.test(the.inputElement.value); // 20 score
+    };
 
     var _checkUppercase = function () {
-        return /[A-Z]/.test(the.inputElement.value);  // 20 score
-    }
+        return /[A-Z]/.test(the.inputElement.value); // 20 score
+    };
 
     var _checkDigit = function () {
-        return /[0-9]/.test(the.inputElement.value);  // 20 score
-    }
+        return /[0-9]/.test(the.inputElement.value); // 20 score
+    };
 
     var _checkChar = function () {
-        return /[~`!#@$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(the.inputElement.value);  // 20 score
-    }
+        return /[~`!#@$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(
+            the.inputElement.value
+        ); // 20 score
+    };
 
     var _getCheckScore = function () {
         var count = 1;
@@ -3525,10 +3921,10 @@ var KTPasswordMeter = function (element, options) {
         the.checkSteps = count;
 
         return 100 / the.checkSteps;
-    }
+    };
 
     var _highlight = function () {
-        var items = [].slice.call(the.highlightElement.querySelectorAll('div'));
+        var items = [].slice.call(the.highlightElement.querySelectorAll("div"));
         var total = items.length;
         var index = 0;
         var checkScore = _getCheckScore();
@@ -3537,44 +3933,49 @@ var KTPasswordMeter = function (element, options) {
         items.map(function (item) {
             index++;
 
-            if ((checkScore * index * (the.checkSteps / total)) <= score) {
-                item.classList.add('active');
+            if (checkScore * index * (the.checkSteps / total) <= score) {
+                item.classList.add("active");
             } else {
-                item.classList.remove('active');
+                item.classList.remove("active");
             }
         });
-    }
+    };
 
     var _visibility = function () {
-        var visibleIcon = the.visibilityElement.querySelector(':scope > i:not(.d-none)');
-        var hiddenIcon = the.visibilityElement.querySelector(':scope > i.d-none');
+        var visibleIcon = the.visibilityElement.querySelector(
+            ":scope > i:not(.d-none)"
+        );
+        var hiddenIcon =
+            the.visibilityElement.querySelector(":scope > i.d-none");
 
-        if (the.inputElement.getAttribute('type').toLowerCase() === 'password') {
-            the.inputElement.setAttribute('type', 'text');
+        if (
+            the.inputElement.getAttribute("type").toLowerCase() === "password"
+        ) {
+            the.inputElement.setAttribute("type", "text");
         } else {
-            the.inputElement.setAttribute('type', 'password');
+            the.inputElement.setAttribute("type", "password");
         }
 
-        visibleIcon.classList.add('d-none');
-        hiddenIcon.classList.remove('d-none');
+        visibleIcon.classList.add("d-none");
+        hiddenIcon.classList.remove("d-none");
 
         the.inputElement.focus();
-    }
+    };
 
     var _reset = function () {
         the.score = 0;
 
         _highlight();
-    }
+    };
 
     // Gets current password score
     var _getScore = function () {
         return the.score;
-    }
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('password-meter');
-    }
+        KTUtil.data(the.element).remove("password-meter");
+    };
 
     // Construct class
     _construct();
@@ -3586,32 +3987,34 @@ var KTPasswordMeter = function (element, options) {
     // Plugin API
     the.check = function () {
         return _check();
-    }
+    };
 
     the.getScore = function () {
         return _getScore();
-    }
+    };
 
     the.reset = function () {
         return _reset();
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 };
 
 // Static methods
 KTPasswordMeter.getInstance = function (element) {
-    if (element !== null && KTUtil.data(element).has('password-meter')) {
-        return KTUtil.data(element).get('password-meter');
+    if (element !== null && KTUtil.data(element).has("password-meter")) {
+        return KTUtil.data(element).get("password-meter");
     } else {
         return null;
     }
-}
+};
 
 // Create instances
-KTPasswordMeter.createInstances = function (selector = '[data-kt-password-meter]') {
+KTPasswordMeter.createInstances = function (
+    selector = "[data-kt-password-meter]"
+) {
     // Get instances
     var elements = document.body.querySelectorAll(selector);
 
@@ -3621,7 +4024,7 @@ KTPasswordMeter.createInstances = function (selector = '[data-kt-password-meter]
             new KTPasswordMeter(elements[i]);
         }
     }
-}
+};
 
 // Global initialization
 KTPasswordMeter.init = function () {
@@ -3629,10 +4032,10 @@ KTPasswordMeter.init = function () {
 };
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTPasswordMeter;
 }
-"use strict";
+("use strict");
 
 var KTScrollHandlersInitialized = false;
 
@@ -3649,7 +4052,7 @@ var KTScroll = function (element, options) {
 
     // Default options
     var defaultOptions = {
-        saveState: true
+        saveState: true,
     };
 
     ////////////////////////////
@@ -3657,12 +4060,12 @@ var KTScroll = function (element, options) {
     ////////////////////////////
 
     var _construct = function () {
-        if (KTUtil.data(element).has('scroll')) {
-            the = KTUtil.data(element).get('scroll');
+        if (KTUtil.data(element).has("scroll")) {
+            the = KTUtil.data(element).get("scroll");
         } else {
             _init();
         }
-    }
+    };
 
     var _init = function () {
         // Variables
@@ -3670,17 +4073,17 @@ var KTScroll = function (element, options) {
 
         // Elements
         the.element = element;
-        the.id = the.element.getAttribute('id');
+        the.id = the.element.getAttribute("id");
 
         // Set initialized
-        the.element.setAttribute('data-kt-scroll', 'true');
+        the.element.setAttribute("data-kt-scroll", "true");
 
         // Update
         _update();
 
         // Bind Instance
-        KTUtil.data(the.element).set('scroll', the);
-    }
+        KTUtil.data(the.element).set("scroll", the);
+    };
 
     var _setupHeight = function () {
         var heightType = _getHeightType();
@@ -3690,67 +4093,74 @@ var KTScroll = function (element, options) {
         if (height !== null && height.length > 0) {
             KTUtil.css(the.element, heightType, height);
         } else {
-            KTUtil.css(the.element, heightType, '');
+            KTUtil.css(the.element, heightType, "");
         }
-    }
+    };
 
     var _setupState = function () {
         var namespace = _getStorageNamespace();
 
-        if (_getOption('save-state') === true && the.id) {
-            if (localStorage.getItem(namespace + the.id + 'st')) {
-                var pos = parseInt(localStorage.getItem(namespace + the.id + 'st'));
+        if (_getOption("save-state") === true && the.id) {
+            if (localStorage.getItem(namespace + the.id + "st")) {
+                var pos = parseInt(
+                    localStorage.getItem(namespace + the.id + "st")
+                );
 
                 if (pos > 0) {
                     the.element.scroll({
                         top: pos,
-                        behavior: 'instant'
+                        behavior: "instant",
                     });
                 }
             }
         }
-    }
+    };
 
     var _getStorageNamespace = function (postfix) {
-        return document.body.hasAttribute("data-kt-name") ? document.body.getAttribute("data-kt-name") + "_" : "";
-    }
+        return document.body.hasAttribute("data-kt-name")
+            ? document.body.getAttribute("data-kt-name") + "_"
+            : "";
+    };
 
     var _setupScrollHandler = function () {
-        if (_getOption('save-state') === true && the.id) {
-            the.element.addEventListener('scroll', _scrollHandler);
+        if (_getOption("save-state") === true && the.id) {
+            the.element.addEventListener("scroll", _scrollHandler);
         } else {
-            the.element.removeEventListener('scroll', _scrollHandler);
+            the.element.removeEventListener("scroll", _scrollHandler);
         }
-    }
+    };
 
     var _destroyScrollHandler = function () {
-        the.element.removeEventListener('scroll', _scrollHandler);
-    }
+        the.element.removeEventListener("scroll", _scrollHandler);
+    };
 
     var _resetHeight = function () {
-        KTUtil.css(the.element, _getHeightType(), '');
-    }
+        KTUtil.css(the.element, _getHeightType(), "");
+    };
 
     var _scrollHandler = function () {
         var namespace = _getStorageNamespace();
-        localStorage.setItem(namespace + the.id + 'st', the.element.scrollTop);
-    }
+        localStorage.setItem(namespace + the.id + "st", the.element.scrollTop);
+    };
 
     var _update = function () {
         // Activate/deactivate
-        if (_getOption('activate') === true || the.element.hasAttribute('data-kt-scroll-activate') === false) {
+        if (
+            _getOption("activate") === true ||
+            the.element.hasAttribute("data-kt-scroll-activate") === false
+        ) {
             _setupHeight();
             _setupStretchHeight();
             _setupScrollHandler();
             _setupState();
         } else {
-            _resetHeight()
+            _resetHeight();
             _destroyScrollHandler();
         }
-    }
+    };
 
     var _setupStretchHeight = function () {
-        var stretch = _getOption('stretch');
+        var stretch = _getOption("stretch");
 
         // Stretch
         if (stretch !== null) {
@@ -3759,34 +4169,45 @@ var KTScroll = function (element, options) {
             if (elements && elements.length == 2) {
                 var element1 = elements[0];
                 var element2 = elements[1];
-                var diff = _getElementHeight(element2) - _getElementHeight(element1);
+                var diff =
+                    _getElementHeight(element2) - _getElementHeight(element1);
 
                 if (diff > 0) {
-                    var height = parseInt(KTUtil.css(the.element, _getHeightType())) + diff;
+                    var height =
+                        parseInt(KTUtil.css(the.element, _getHeightType())) +
+                        diff;
 
-                    KTUtil.css(the.element, _getHeightType(), String(height) + 'px');
+                    KTUtil.css(
+                        the.element,
+                        _getHeightType(),
+                        String(height) + "px"
+                    );
                 }
             }
         }
-    }
+    };
 
     var _getHeight = function () {
         var height = _getOption(_getHeightType());
 
         if (height instanceof Function) {
             return height.call();
-        } else if (height !== null && typeof height === 'string' && height.toLowerCase() === 'auto') {
+        } else if (
+            height !== null &&
+            typeof height === "string" &&
+            height.toLowerCase() === "auto"
+        ) {
             return _getAutoHeight();
         } else {
             return height;
         }
-    }
+    };
 
     var _getAutoHeight = function () {
         var height = KTUtil.getViewPort().height;
-        var dependencies = _getOption('dependencies');
-        var wrappers = _getOption('wrappers');
-        var offset = _getOption('offset');
+        var dependencies = _getOption("dependencies");
+        var wrappers = _getOption("wrappers");
+        var offset = _getOption("offset");
 
         // Spacings
         height = height - _getElementSpacing(the.element);
@@ -3823,63 +4244,65 @@ var KTScroll = function (element, options) {
         }
 
         // Custom offset
-        if (offset !== null && typeof offset !== 'object') {
+        if (offset !== null && typeof offset !== "object") {
             height = height - parseInt(offset);
         }
 
-        return String(height) + 'px';
-    }
+        return String(height) + "px";
+    };
 
     var _getElementHeight = function (element) {
         var height = 0;
 
         if (element !== null) {
-            height = height + parseInt(KTUtil.css(element, 'height'));
-            height = height + parseInt(KTUtil.css(element, 'margin-top'));
-            height = height + parseInt(KTUtil.css(element, 'margin-bottom'));
+            height = height + parseInt(KTUtil.css(element, "height"));
+            height = height + parseInt(KTUtil.css(element, "margin-top"));
+            height = height + parseInt(KTUtil.css(element, "margin-bottom"));
 
-            if (KTUtil.css(element, 'border-top')) {
-                height = height + parseInt(KTUtil.css(element, 'border-top'));
+            if (KTUtil.css(element, "border-top")) {
+                height = height + parseInt(KTUtil.css(element, "border-top"));
             }
 
-            if (KTUtil.css(element, 'border-bottom')) {
-                height = height + parseInt(KTUtil.css(element, 'border-bottom'));
+            if (KTUtil.css(element, "border-bottom")) {
+                height =
+                    height + parseInt(KTUtil.css(element, "border-bottom"));
             }
         }
 
         return height;
-    }
+    };
 
     var _getElementSpacing = function (element) {
         var spacing = 0;
 
         if (element !== null) {
-            spacing = spacing + parseInt(KTUtil.css(element, 'margin-top'));
-            spacing = spacing + parseInt(KTUtil.css(element, 'margin-bottom'));
-            spacing = spacing + parseInt(KTUtil.css(element, 'padding-top'));
-            spacing = spacing + parseInt(KTUtil.css(element, 'padding-bottom'));
+            spacing = spacing + parseInt(KTUtil.css(element, "margin-top"));
+            spacing = spacing + parseInt(KTUtil.css(element, "margin-bottom"));
+            spacing = spacing + parseInt(KTUtil.css(element, "padding-top"));
+            spacing = spacing + parseInt(KTUtil.css(element, "padding-bottom"));
 
-            if (KTUtil.css(element, 'border-top')) {
-                spacing = spacing + parseInt(KTUtil.css(element, 'border-top'));
+            if (KTUtil.css(element, "border-top")) {
+                spacing = spacing + parseInt(KTUtil.css(element, "border-top"));
             }
 
-            if (KTUtil.css(element, 'border-bottom')) {
-                spacing = spacing + parseInt(KTUtil.css(element, 'border-bottom'));
+            if (KTUtil.css(element, "border-bottom")) {
+                spacing =
+                    spacing + parseInt(KTUtil.css(element, "border-bottom"));
             }
         }
 
         return spacing;
-    }
+    };
 
     var _getOption = function (name) {
-        if (the.element.hasAttribute('data-kt-scroll-' + name) === true) {
-            var attr = the.element.getAttribute('data-kt-scroll-' + name);
+        if (the.element.hasAttribute("data-kt-scroll-" + name) === true) {
+            var attr = the.element.getAttribute("data-kt-scroll-" + name);
 
             var value = KTUtil.getResponsiveValue(attr);
 
-            if (value !== null && String(value) === 'true') {
+            if (value !== null && String(value) === "true") {
                 value = true;
-            } else if (value !== null && String(value) === 'false') {
+            } else if (value !== null && String(value) === "false") {
                 value = false;
             }
 
@@ -3893,21 +4316,23 @@ var KTScroll = function (element, options) {
                 return null;
             }
         }
-    }
+    };
 
     var _getHeightType = function () {
-        if (_getOption('height')) {
-            return 'height';
-        } if (_getOption('min-height')) {
-            return 'min-height';
-        } if (_getOption('max-height')) {
-            return 'max-height';
+        if (_getOption("height")) {
+            return "height";
         }
-    }
+        if (_getOption("min-height")) {
+            return "min-height";
+        }
+        if (_getOption("max-height")) {
+            return "max-height";
+        }
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('scroll');
-    }
+        KTUtil.data(the.element).remove("scroll");
+    };
 
     // Construct Class
     _construct();
@@ -3918,29 +4343,29 @@ var KTScroll = function (element, options) {
 
     the.update = function () {
         return _update();
-    }
+    };
 
     the.getHeight = function () {
         return _getHeight();
-    }
+    };
 
     the.getElement = function () {
         return the.element;
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 };
 
 // Static methods
 KTScroll.getInstance = function (element) {
-    if (element !== null && KTUtil.data(element).has('scroll')) {
-        return KTUtil.data(element).get('scroll');
+    if (element !== null && KTUtil.data(element).has("scroll")) {
+        return KTUtil.data(element).get("scroll");
     } else {
         return null;
     }
-}
+};
 
 // Create instances
 KTScroll.createInstances = function (selector = '[data-kt-scroll="true"]') {
@@ -3952,28 +4377,34 @@ KTScroll.createInstances = function (selector = '[data-kt-scroll="true"]') {
             new KTScroll(elements[i]);
         }
     }
-}
+};
 
 // Window resize handling
 KTScroll.handleResize = function () {
-    window.addEventListener('resize', function () {
+    window.addEventListener("resize", function () {
         var timer;
 
-        KTUtil.throttle(timer, function () {
-            // Locate and update Offcanvas instances on window resize
-            var elements = document.body.querySelectorAll('[data-kt-scroll="true"]');
+        KTUtil.throttle(
+            timer,
+            function () {
+                // Locate and update Offcanvas instances on window resize
+                var elements = document.body.querySelectorAll(
+                    '[data-kt-scroll="true"]'
+                );
 
-            if (elements && elements.length > 0) {
-                for (var i = 0, len = elements.length; i < len; i++) {
-                    var scroll = KTScroll.getInstance(elements[i]);
-                    if (scroll) {
-                        scroll.update();
+                if (elements && elements.length > 0) {
+                    for (var i = 0, len = elements.length; i < len; i++) {
+                        var scroll = KTScroll.getInstance(elements[i]);
+                        if (scroll) {
+                            scroll.update();
+                        }
                     }
                 }
-            }
-        }, 200);
+            },
+            200
+        );
     });
-}
+};
 
 // Global initialization
 KTScroll.init = function () {
@@ -3987,11 +4418,11 @@ KTScroll.init = function () {
 };
 
 // Webpack Support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTScroll;
 }
 
-"use strict";
+("use strict");
 
 // Class definition
 var KTScrolltop = function (element, options) {
@@ -4007,7 +4438,7 @@ var KTScrolltop = function (element, options) {
     // Default options
     var defaultOptions = {
         offset: 300,
-        speed: 600
+        speed: 600,
     };
 
     ////////////////////////////
@@ -4015,76 +4446,80 @@ var KTScrolltop = function (element, options) {
     ////////////////////////////
 
     var _construct = function () {
-        if (KTUtil.data(element).has('scrolltop')) {
-            the = KTUtil.data(element).get('scrolltop');
+        if (KTUtil.data(element).has("scrolltop")) {
+            the = KTUtil.data(element).get("scrolltop");
         } else {
             _init();
         }
-    }
+    };
 
     var _init = function () {
         // Variables
         the.options = KTUtil.deepExtend({}, defaultOptions, options);
-        the.uid = KTUtil.getUniqueId('scrolltop');
+        the.uid = KTUtil.getUniqueId("scrolltop");
         the.element = element;
 
         // Set initialized
-        the.element.setAttribute('data-kt-scrolltop', 'true');
+        the.element.setAttribute("data-kt-scrolltop", "true");
 
         // Event Handlers
         _handlers();
 
         // Bind Instance
-        KTUtil.data(the.element).set('scrolltop', the);
-    }
+        KTUtil.data(the.element).set("scrolltop", the);
+    };
 
     var _handlers = function () {
         var timer;
 
-        window.addEventListener('scroll', function () {
-            KTUtil.throttle(timer, function () {
-                _scroll();
-            }, 200);
+        window.addEventListener("scroll", function () {
+            KTUtil.throttle(
+                timer,
+                function () {
+                    _scroll();
+                },
+                200
+            );
         });
 
-        KTUtil.addEvent(the.element, 'click', function (e) {
+        KTUtil.addEvent(the.element, "click", function (e) {
             e.preventDefault();
 
             _go();
         });
-    }
+    };
 
     var _scroll = function () {
-        var offset = parseInt(_getOption('offset'));
+        var offset = parseInt(_getOption("offset"));
 
         var pos = KTUtil.getScrollTop(); // current vertical position
 
         if (pos > offset) {
-            if (document.body.hasAttribute('data-kt-scrolltop') === false) {
-                document.body.setAttribute('data-kt-scrolltop', 'on');
+            if (document.body.hasAttribute("data-kt-scrolltop") === false) {
+                document.body.setAttribute("data-kt-scrolltop", "on");
             }
         } else {
-            if (document.body.hasAttribute('data-kt-scrolltop') === true) {
-                document.body.removeAttribute('data-kt-scrolltop');
+            if (document.body.hasAttribute("data-kt-scrolltop") === true) {
+                document.body.removeAttribute("data-kt-scrolltop");
             }
         }
-    }
+    };
 
     var _go = function () {
-        var speed = parseInt(_getOption('speed'));
+        var speed = parseInt(_getOption("speed"));
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: "smooth" });
         //KTUtil.scrollTop(0, speed);
-    }
+    };
 
     var _getOption = function (name) {
-        if (the.element.hasAttribute('data-kt-scrolltop-' + name) === true) {
-            var attr = the.element.getAttribute('data-kt-scrolltop-' + name);
+        if (the.element.hasAttribute("data-kt-scrolltop-" + name) === true) {
+            var attr = the.element.getAttribute("data-kt-scrolltop-" + name);
             var value = KTUtil.getResponsiveValue(attr);
 
-            if (value !== null && String(value) === 'true') {
+            if (value !== null && String(value) === "true") {
                 value = true;
-            } else if (value !== null && String(value) === 'false') {
+            } else if (value !== null && String(value) === "false") {
                 value = false;
             }
 
@@ -4098,11 +4533,11 @@ var KTScrolltop = function (element, options) {
                 return null;
             }
         }
-    }
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('scrolltop');
-    }
+        KTUtil.data(the.element).remove("scrolltop");
+    };
 
     // Construct class
     _construct();
@@ -4114,28 +4549,30 @@ var KTScrolltop = function (element, options) {
     // Plugin API
     the.go = function () {
         return _go();
-    }
+    };
 
     the.getElement = function () {
         return the.element;
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 };
 
 // Static methods
 KTScrolltop.getInstance = function (element) {
-    if (element && KTUtil.data(element).has('scrolltop')) {
-        return KTUtil.data(element).get('scrolltop');
+    if (element && KTUtil.data(element).has("scrolltop")) {
+        return KTUtil.data(element).get("scrolltop");
     } else {
         return null;
     }
-}
+};
 
 // Create instances
-KTScrolltop.createInstances = function (selector = '[data-kt-scrolltop="true"]') {
+KTScrolltop.createInstances = function (
+    selector = '[data-kt-scrolltop="true"]'
+) {
     // Initialize Menus
     var elements = document.body.querySelectorAll(selector);
 
@@ -4144,7 +4581,7 @@ KTScrolltop.createInstances = function (selector = '[data-kt-scrolltop="true"]')
             new KTScrolltop(elements[i]);
         }
     }
-}
+};
 
 // Global initialization
 KTScrolltop.init = function () {
@@ -4152,11 +4589,11 @@ KTScrolltop.init = function () {
 };
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTScrolltop;
 }
 
-"use strict";
+("use strict");
 
 // Class definition
 var KTSearch = function (element, options) {
@@ -4171,12 +4608,12 @@ var KTSearch = function (element, options) {
 
     // Default Options
     var defaultOptions = {
-        minLength: 2,  // Miniam text lenght to query search
-        keypress: true,  // Enable search on keypress
-        enter: true,  // Enable search on enter key press
-        layout: 'menu',  // Use 'menu' or 'inline' layout options to display search results
+        minLength: 2, // Miniam text lenght to query search
+        keypress: true, // Enable search on keypress
+        enter: true, // Enable search on enter key press
+        layout: "menu", // Use 'menu' or 'inline' layout options to display search results
         responsive: null, // Pass integer value or bootstrap compatible breakpoint key(sm,md,lg,xl,xxl) to enable reponsive form mode for device width below the breakpoint value
-        showOnFocus: true // Always show menu on input focus
+        showOnFocus: true, // Always show menu on input focus
     };
 
     ////////////////////////////
@@ -4185,12 +4622,12 @@ var KTSearch = function (element, options) {
 
     // Construct
     var _construct = function () {
-        if (KTUtil.data(element).has('search') === true) {
-            the = KTUtil.data(element).get('search');
+        if (KTUtil.data(element).has("search") === true) {
+            the = KTUtil.data(element).get("search");
         } else {
             _init();
         }
-    }
+    };
 
     // Init
     var _init = function () {
@@ -4200,27 +4637,27 @@ var KTSearch = function (element, options) {
 
         // Elements
         the.element = element;
-        the.contentElement = _getElement('content');
-        the.formElement = _getElement('form');
-        the.inputElement = _getElement('input');
-        the.spinnerElement = _getElement('spinner');
-        the.clearElement = _getElement('clear');
-        the.toggleElement = _getElement('toggle');
-        the.submitElement = _getElement('submit');
-        the.toolbarElement = _getElement('toolbar');
+        the.contentElement = _getElement("content");
+        the.formElement = _getElement("form");
+        the.inputElement = _getElement("input");
+        the.spinnerElement = _getElement("spinner");
+        the.clearElement = _getElement("clear");
+        the.toggleElement = _getElement("toggle");
+        the.submitElement = _getElement("submit");
+        the.toolbarElement = _getElement("toolbar");
 
-        the.resultsElement = _getElement('results');
-        the.suggestionElement = _getElement('suggestion');
-        the.emptyElement = _getElement('empty');
+        the.resultsElement = _getElement("results");
+        the.suggestionElement = _getElement("suggestion");
+        the.emptyElement = _getElement("empty");
 
         // Set initialized
-        the.element.setAttribute('data-kt-search', 'true');
+        the.element.setAttribute("data-kt-search", "true");
 
         // Layout
-        the.layout = _getOption('layout');
+        the.layout = _getOption("layout");
 
         // Menu
-        if (the.layout === 'menu') {
+        if (the.layout === "menu") {
             the.menuObject = new KTMenu(the.contentElement);
         } else {
             the.menuObject = null;
@@ -4233,8 +4670,8 @@ var KTSearch = function (element, options) {
         _handlers();
 
         // Bind Instance
-        KTUtil.data(the.element).set('search', the);
-    }
+        KTUtil.data(the.element).set("search", the);
+    };
 
     // Handlera
     var _handlers = function () {
@@ -4251,68 +4688,75 @@ var KTSearch = function (element, options) {
 
         // Submit
         if (the.submitElement) {
-            the.submitElement.addEventListener('click', _search);
+            the.submitElement.addEventListener("click", _search);
         }
 
         // Enter
-        if (_getOption('enter') === true) {
-            the.inputElement.addEventListener('keypress', _enter);
+        if (_getOption("enter") === true) {
+            the.inputElement.addEventListener("keypress", _enter);
         }
 
         // Clear
         if (the.clearElement) {
-            the.clearElement.addEventListener('click', _clear);
+            the.clearElement.addEventListener("click", _clear);
         }
 
         // Menu
         if (the.menuObject) {
             // Toggle menu
             if (the.toggleElement) {
-                the.toggleElement.addEventListener('click', _show);
+                the.toggleElement.addEventListener("click", _show);
 
-                the.menuObject.on('kt.menu.dropdown.show', function (item) {
+                the.menuObject.on("kt.menu.dropdown.show", function (item) {
                     if (KTUtil.visible(the.toggleElement)) {
-                        the.toggleElement.classList.add('active');
-                        the.toggleElement.classList.add('show');
+                        the.toggleElement.classList.add("active");
+                        the.toggleElement.classList.add("show");
                     }
                 });
 
-                the.menuObject.on('kt.menu.dropdown.hide', function (item) {
+                the.menuObject.on("kt.menu.dropdown.hide", function (item) {
                     if (KTUtil.visible(the.toggleElement)) {
-                        the.toggleElement.classList.remove('active');
-                        the.toggleElement.classList.remove('show');
+                        the.toggleElement.classList.remove("active");
+                        the.toggleElement.classList.remove("show");
                     }
                 });
             }
 
-            the.menuObject.on('kt.menu.dropdown.shown', function () {
+            the.menuObject.on("kt.menu.dropdown.shown", function () {
                 the.inputElement.focus();
             });
         }
 
         // Window resize handling
-        window.addEventListener('resize', function () {
+        window.addEventListener("resize", function () {
             var timer;
 
-            KTUtil.throttle(timer, function () {
-                _update();
-            }, 200);
+            KTUtil.throttle(
+                timer,
+                function () {
+                    _update();
+                },
+                200
+            );
         });
-    }
+    };
 
     // Focus
     var _focus = function () {
-        the.element.classList.add('focus');
+        the.element.classList.add("focus");
 
-        if (_getOption('show-on-focus') === true || the.inputElement.value.length >= minLength) {
+        if (
+            _getOption("show-on-focus") === true ||
+            the.inputElement.value.length >= minLength
+        ) {
             _show();
         }
-    }
+    };
 
     // Blur
     var _blur = function () {
-        the.element.classList.remove('focus');
-    }
+        the.element.classList.remove("focus");
+    };
 
     // Enter
     var _enter = function (e) {
@@ -4323,12 +4767,12 @@ var KTSearch = function (element, options) {
 
             _search();
         }
-    }
+    };
 
     // Input
     var _input = function () {
-        if (_getOption('min-length')) {
-            var minLength = parseInt(_getOption('min-length'));
+        if (_getOption("min-length")) {
+            var minLength = parseInt(_getOption("min-length"));
 
             if (the.inputElement.value.length >= minLength) {
                 _search();
@@ -4336,7 +4780,7 @@ var KTSearch = function (element, options) {
                 _clear();
             }
         }
-    }
+    };
 
     // Search
     var _search = function () {
@@ -4352,7 +4796,10 @@ var KTSearch = function (element, options) {
             }
 
             // Hide search toolbar
-            if (the.toolbarElement && the.formElement.contains(the.toolbarElement)) {
+            if (
+                the.toolbarElement &&
+                the.formElement.contains(the.toolbarElement)
+            ) {
                 the.toolbarElement.classList.add("d-none");
             }
 
@@ -4360,9 +4807,9 @@ var KTSearch = function (element, options) {
             the.inputElement.focus();
 
             the.processing = true;
-            KTEventHandler.trigger(the.element, 'kt.search.process', the);
+            KTEventHandler.trigger(the.element, "kt.search.process", the);
         }
-    }
+    };
 
     // Complete
     var _complete = function () {
@@ -4385,11 +4832,14 @@ var KTSearch = function (element, options) {
         _show();
 
         the.processing = false;
-    }
+    };
 
     // Clear
     var _clear = function () {
-        if (KTEventHandler.trigger(the.element, 'kt.search.clear', the) === false) {
+        if (
+            KTEventHandler.trigger(the.element, "kt.search.clear", the) ===
+            false
+        ) {
             return;
         }
 
@@ -4403,33 +4853,42 @@ var KTSearch = function (element, options) {
         }
 
         // Show search toolbar
-        if (the.toolbarElement && the.formElement.contains(the.toolbarElement)) {
+        if (
+            the.toolbarElement &&
+            the.formElement.contains(the.toolbarElement)
+        ) {
             the.toolbarElement.classList.remove("d-none");
         }
 
         // Hide menu
-        if (_getOption('show-on-focus') === false) {
+        if (_getOption("show-on-focus") === false) {
             _hide();
         }
 
-        KTEventHandler.trigger(the.element, 'kt.search.cleared', the);
-    }
+        KTEventHandler.trigger(the.element, "kt.search.cleared", the);
+    };
 
     // Update
     var _update = function () {
         // Handle responsive form
-        if (the.layout === 'menu') {
+        if (the.layout === "menu") {
             var responsiveFormMode = _getResponsiveFormMode();
 
-            if (responsiveFormMode === 'on' && the.contentElement.contains(the.formElement) === false) {
+            if (
+                responsiveFormMode === "on" &&
+                the.contentElement.contains(the.formElement) === false
+            ) {
                 the.contentElement.prepend(the.formElement);
-                the.formElement.classList.remove('d-none');
-            } else if (responsiveFormMode === 'off' && the.contentElement.contains(the.formElement) === true) {
+                the.formElement.classList.remove("d-none");
+            } else if (
+                responsiveFormMode === "off" &&
+                the.contentElement.contains(the.formElement) === true
+            ) {
                 the.element.prepend(the.formElement);
-                the.formElement.classList.add('d-none');
+                the.formElement.classList.add("d-none");
             }
         }
-    }
+    };
 
     // Show menu
     var _show = function () {
@@ -4438,7 +4897,7 @@ var KTSearch = function (element, options) {
 
             the.menuObject.show(the.element);
         }
-    }
+    };
 
     // Hide menu
     var _hide = function () {
@@ -4447,17 +4906,17 @@ var KTSearch = function (element, options) {
 
             the.menuObject.hide(the.element);
         }
-    }
+    };
 
     // Get option
     var _getOption = function (name) {
-        if (the.element.hasAttribute('data-kt-search-' + name) === true) {
-            var attr = the.element.getAttribute('data-kt-search-' + name);
+        if (the.element.hasAttribute("data-kt-search-" + name) === true) {
+            var attr = the.element.getAttribute("data-kt-search-" + name);
             var value = KTUtil.getResponsiveValue(attr);
 
-            if (value !== null && String(value) === 'true') {
+            if (value !== null && String(value) === "true") {
                 value = true;
-            } else if (value !== null && String(value) === 'false') {
+            } else if (value !== null && String(value) === "false") {
                 value = false;
             }
 
@@ -4471,16 +4930,18 @@ var KTSearch = function (element, options) {
                 return null;
             }
         }
-    }
+    };
 
     // Get element
     var _getElement = function (name) {
-        return the.element.querySelector('[data-kt-search-element="' + name + '"]');
-    }
+        return the.element.querySelector(
+            '[data-kt-search-element="' + name + '"]'
+        );
+    };
 
     // Check if responsive form mode is enabled
     var _getResponsiveFormMode = function () {
-        var responsive = _getOption('responsive');
+        var responsive = _getOption("responsive");
         var width = KTUtil.getViewPort().width;
 
         if (!responsive) {
@@ -4498,11 +4959,11 @@ var KTSearch = function (element, options) {
         } else {
             return "off";
         }
-    }
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('search');
-    }
+        KTUtil.data(the.element).remove("search");
+    };
 
     // Construct class
     _construct();
@@ -4514,89 +4975,89 @@ var KTSearch = function (element, options) {
     // Plugin API
     the.show = function () {
         return _show();
-    }
+    };
 
     the.hide = function () {
         return _hide();
-    }
+    };
 
     the.update = function () {
         return _update();
-    }
+    };
 
     the.search = function () {
         return _search();
-    }
+    };
 
     the.complete = function () {
         return _complete();
-    }
+    };
 
     the.clear = function () {
         return _clear();
-    }
+    };
 
     the.isProcessing = function () {
         return the.processing;
-    }
+    };
 
     the.getQuery = function () {
         return the.inputElement.value;
-    }
+    };
 
     the.getMenu = function () {
         return the.menuObject;
-    }
+    };
 
     the.getFormElement = function () {
         return the.formElement;
-    }
+    };
 
     the.getInputElement = function () {
         return the.inputElement;
-    }
+    };
 
     the.getContentElement = function () {
         return the.contentElement;
-    }
+    };
 
     the.getElement = function () {
         return the.element;
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 
     // Event API
     the.on = function (name, handler) {
         return KTEventHandler.on(the.element, name, handler);
-    }
+    };
 
     the.one = function (name, handler) {
         return KTEventHandler.one(the.element, name, handler);
-    }
+    };
 
     the.off = function (name, handlerId) {
         return KTEventHandler.off(the.element, name, handlerId);
-    }
+    };
 };
 
 // Static methods
 KTSearch.getInstance = function (element) {
-    if (element !== null && KTUtil.data(element).has('search')) {
-        return KTUtil.data(element).get('search');
+    if (element !== null && KTUtil.data(element).has("search")) {
+        return KTUtil.data(element).get("search");
     } else {
         return null;
     }
-}
+};
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTSearch;
 }
 
-"use strict";
+("use strict");
 
 // Class definition
 var KTStepper = function (element, options) {
@@ -4613,9 +5074,11 @@ var KTStepper = function (element, options) {
     var defaultOptions = {
         startIndex: 1,
         animation: false,
-        animationSpeed: '0.3s',
-        animationNextClass: 'animate__animated animate__slideInRight animate__fast',
-        animationPreviousClass: 'animate__animated animate__slideInLeft animate__fast'
+        animationSpeed: "0.3s",
+        animationNextClass:
+            "animate__animated animate__slideInRight animate__fast",
+        animationPreviousClass:
+            "animate__animated animate__slideInLeft animate__fast",
     };
 
     ////////////////////////////
@@ -4623,27 +5086,39 @@ var KTStepper = function (element, options) {
     ////////////////////////////
 
     var _construct = function () {
-        if (KTUtil.data(element).has('stepper') === true) {
-            the = KTUtil.data(element).get('stepper');
+        if (KTUtil.data(element).has("stepper") === true) {
+            the = KTUtil.data(element).get("stepper");
         } else {
             _init();
         }
-    }
+    };
 
     var _init = function () {
         the.options = KTUtil.deepExtend({}, defaultOptions, options);
-        the.uid = KTUtil.getUniqueId('stepper');
+        the.uid = KTUtil.getUniqueId("stepper");
 
         the.element = element;
 
         // Set initialized
-        the.element.setAttribute('data-kt-stepper', 'true');
+        the.element.setAttribute("data-kt-stepper", "true");
 
         // Elements
-        the.steps = KTUtil.findAll(the.element, '[data-kt-stepper-element="nav"]');
-        the.btnNext = KTUtil.find(the.element, '[data-kt-stepper-action="next"]');
-        the.btnPrevious = KTUtil.find(the.element, '[data-kt-stepper-action="previous"]');
-        the.btnSubmit = KTUtil.find(the.element, '[data-kt-stepper-action="submit"]');
+        the.steps = KTUtil.findAll(
+            the.element,
+            '[data-kt-stepper-element="nav"]'
+        );
+        the.btnNext = KTUtil.find(
+            the.element,
+            '[data-kt-stepper-action="next"]'
+        );
+        the.btnPrevious = KTUtil.find(
+            the.element,
+            '[data-kt-stepper-action="previous"]'
+        );
+        the.btnSubmit = KTUtil.find(
+            the.element,
+            '[data-kt-stepper-action="submit"]'
+        );
 
         // Variables
         the.totalStepsNumber = the.steps.length;
@@ -4660,13 +5135,13 @@ var KTStepper = function (element, options) {
         the.nextListener = function (e) {
             e.preventDefault();
 
-            KTEventHandler.trigger(the.element, 'kt.stepper.next', the);
+            KTEventHandler.trigger(the.element, "kt.stepper.next", the);
         };
 
         the.previousListener = function (e) {
             e.preventDefault();
 
-            KTEventHandler.trigger(the.element, 'kt.stepper.previous', the);
+            KTEventHandler.trigger(the.element, "kt.stepper.previous", the);
         };
 
         the.stepListener = function (e) {
@@ -4677,7 +5152,11 @@ var KTStepper = function (element, options) {
                     if (the.steps[i] === this) {
                         the.clickedStepIndex = i + 1;
 
-                        KTEventHandler.trigger(the.element, 'kt.stepper.click', the);
+                        KTEventHandler.trigger(
+                            the.element,
+                            "kt.stepper.click",
+                            the
+                        );
 
                         return;
                     }
@@ -4686,22 +5165,31 @@ var KTStepper = function (element, options) {
         };
 
         // Event Handlers
-        KTUtil.addEvent(the.btnNext, 'click', the.nextListener);
+        KTUtil.addEvent(the.btnNext, "click", the.nextListener);
 
-        KTUtil.addEvent(the.btnPrevious, 'click', the.previousListener);
+        KTUtil.addEvent(the.btnPrevious, "click", the.previousListener);
 
-        the.stepListenerId = KTUtil.on(the.element, '[data-kt-stepper-action="step"]', 'click', the.stepListener);
+        the.stepListenerId = KTUtil.on(
+            the.element,
+            '[data-kt-stepper-action="step"]',
+            "click",
+            the.stepListener
+        );
 
         // Bind Instance
-        KTUtil.data(the.element).set('stepper', the);
-    }
+        KTUtil.data(the.element).set("stepper", the);
+    };
 
     var _goTo = function (index) {
         // Trigger "change" event
-        KTEventHandler.trigger(the.element, 'kt.stepper.change', the);
+        KTEventHandler.trigger(the.element, "kt.stepper.change", the);
 
         // Skip if this step is already shown
-        if (index === the.currentStepIndex || index > the.totalStepsNumber || index < 0) {
+        if (
+            index === the.currentStepIndex ||
+            index > the.totalStepsNumber ||
+            index < 0
+        ) {
             return;
         }
 
@@ -4716,145 +5204,163 @@ var KTStepper = function (element, options) {
         _refreshUI();
 
         // Trigger "changed" event
-        KTEventHandler.trigger(the.element, 'kt.stepper.changed', the);
+        KTEventHandler.trigger(the.element, "kt.stepper.changed", the);
 
         return the;
-    }
+    };
 
     var _goNext = function () {
         return _goTo(_getNextStepIndex());
-    }
+    };
 
     var _goPrevious = function () {
         return _goTo(_getPreviousStepIndex());
-    }
+    };
 
     var _goLast = function () {
         return _goTo(_getLastStepIndex());
-    }
+    };
 
     var _goFirst = function () {
         return _goTo(_getFirstStepIndex());
-    }
+    };
 
     var _refreshUI = function () {
-        var state = '';
+        var state = "";
 
         if (_isLastStep()) {
-            state = 'last';
+            state = "last";
         } else if (_isFirstStep()) {
-            state = 'first';
+            state = "first";
         } else {
-            state = 'between';
+            state = "between";
         }
 
         // Set state class
-        KTUtil.removeClass(the.element, 'last');
-        KTUtil.removeClass(the.element, 'first');
-        KTUtil.removeClass(the.element, 'between');
+        KTUtil.removeClass(the.element, "last");
+        KTUtil.removeClass(the.element, "first");
+        KTUtil.removeClass(the.element, "between");
 
         KTUtil.addClass(the.element, state);
 
         // Step Items
-        var elements = KTUtil.findAll(the.element, '[data-kt-stepper-element="nav"], [data-kt-stepper-element="content"], [data-kt-stepper-element="info"]');
+        var elements = KTUtil.findAll(
+            the.element,
+            '[data-kt-stepper-element="nav"], [data-kt-stepper-element="content"], [data-kt-stepper-element="info"]'
+        );
 
         if (elements && elements.length > 0) {
             for (var i = 0, len = elements.length; i < len; i++) {
                 var element = elements[i];
                 var index = KTUtil.index(element) + 1;
 
-                KTUtil.removeClass(element, 'current');
-                KTUtil.removeClass(element, 'completed');
-                KTUtil.removeClass(element, 'pending');
+                KTUtil.removeClass(element, "current");
+                KTUtil.removeClass(element, "completed");
+                KTUtil.removeClass(element, "pending");
 
                 if (index == the.currentStepIndex) {
-                    KTUtil.addClass(element, 'current');
+                    KTUtil.addClass(element, "current");
 
-                    if (the.options.animation !== false && element.getAttribute('data-kt-stepper-element') == 'content') {
-                        KTUtil.css(element, 'animationDuration', the.options.animationSpeed);
+                    if (
+                        the.options.animation !== false &&
+                        element.getAttribute("data-kt-stepper-element") ==
+                            "content"
+                    ) {
+                        KTUtil.css(
+                            element,
+                            "animationDuration",
+                            the.options.animationSpeed
+                        );
 
-                        var animation = _getStepDirection(the.passedStepIndex) === 'previous' ? the.options.animationPreviousClass : the.options.animationNextClass;
+                        var animation =
+                            _getStepDirection(the.passedStepIndex) ===
+                            "previous"
+                                ? the.options.animationPreviousClass
+                                : the.options.animationNextClass;
                         KTUtil.animateClass(element, animation);
                     }
                 } else {
                     if (index < the.currentStepIndex) {
-                        KTUtil.addClass(element, 'completed');
+                        KTUtil.addClass(element, "completed");
                     } else {
-                        KTUtil.addClass(element, 'pending');
+                        KTUtil.addClass(element, "pending");
                     }
                 }
             }
         }
-    }
+    };
 
     var _isLastStep = function () {
         return the.currentStepIndex === the.totalStepsNumber;
-    }
+    };
 
     var _isFirstStep = function () {
         return the.currentStepIndex === 1;
-    }
+    };
 
     var _isBetweenStep = function () {
         return _isLastStep() === false && _isFirstStep() === false;
-    }
+    };
 
     var _getNextStepIndex = function () {
-        if (the.totalStepsNumber >= (the.currentStepIndex + 1)) {
+        if (the.totalStepsNumber >= the.currentStepIndex + 1) {
             return the.currentStepIndex + 1;
         } else {
             return the.totalStepsNumber;
         }
-    }
+    };
 
     var _getPreviousStepIndex = function () {
-        if ((the.currentStepIndex - 1) > 1) {
+        if (the.currentStepIndex - 1 > 1) {
             return the.currentStepIndex - 1;
         } else {
             return 1;
         }
-    }
+    };
 
     var _getFirstStepIndex = function () {
         return 1;
-    }
+    };
 
     var _getLastStepIndex = function () {
         return the.totalStepsNumber;
-    }
+    };
 
     var _getTotalStepsNumber = function () {
         return the.totalStepsNumber;
-    }
+    };
 
     var _getStepDirection = function (index) {
         if (index > the.currentStepIndex) {
-            return 'next';
+            return "next";
         } else {
-            return 'previous';
+            return "previous";
         }
-    }
+    };
 
     var _getStepContent = function (index) {
-        var content = KTUtil.findAll(the.element, '[data-kt-stepper-element="content"]');
+        var content = KTUtil.findAll(
+            the.element,
+            '[data-kt-stepper-element="content"]'
+        );
 
         if (content[index - 1]) {
             return content[index - 1];
         } else {
             return false;
         }
-    }
+    };
 
     var _destroy = function () {
         // Event Handlers
-        KTUtil.removeEvent(the.btnNext, 'click', the.nextListener);
+        KTUtil.removeEvent(the.btnNext, "click", the.nextListener);
 
-        KTUtil.removeEvent(the.btnPrevious, 'click', the.previousListener);
+        KTUtil.removeEvent(the.btnPrevious, "click", the.previousListener);
 
-        KTUtil.off(the.element, 'click', the.stepListenerId);
+        KTUtil.off(the.element, "click", the.stepListenerId);
 
-        KTUtil.data(the.element).remove('stepper');
-    }
+        KTUtil.data(the.element).remove("stepper");
+    };
 
     // Construct Class
     _construct();
@@ -4866,85 +5372,85 @@ var KTStepper = function (element, options) {
     // Plugin API
     the.getElement = function (index) {
         return the.element;
-    }
+    };
 
     the.goTo = function (index) {
         return _goTo(index);
-    }
+    };
 
     the.goPrevious = function () {
         return _goPrevious();
-    }
+    };
 
     the.goNext = function () {
         return _goNext();
-    }
+    };
 
     the.goFirst = function () {
         return _goFirst();
-    }
+    };
 
     the.goLast = function () {
         return _goLast();
-    }
+    };
 
     the.getCurrentStepIndex = function () {
         return the.currentStepIndex;
-    }
+    };
 
     the.getNextStepIndex = function () {
         return _getNextStepIndex();
-    }
+    };
 
     the.getPassedStepIndex = function () {
         return the.passedStepIndex;
-    }
+    };
 
     the.getClickedStepIndex = function () {
         return the.clickedStepIndex;
-    }
+    };
 
     the.getPreviousStepIndex = function () {
         return _getPreviousStepIndex();
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 
     // Event API
     the.on = function (name, handler) {
         return KTEventHandler.on(the.element, name, handler);
-    }
+    };
 
     the.one = function (name, handler) {
         return KTEventHandler.one(the.element, name, handler);
-    }
+    };
 
     the.off = function (name, handlerId) {
         return KTEventHandler.off(the.element, name, handlerId);
-    }
+    };
 
     the.trigger = function (name, event) {
         return KTEventHandler.trigger(the.element, name, event, the, event);
-    }
+    };
 };
 
 // Static methods
 KTStepper.getInstance = function (element) {
-    if (element !== null && KTUtil.data(element).has('stepper')) {
-        return KTUtil.data(element).get('stepper');
+    if (element !== null && KTUtil.data(element).has("stepper")) {
+        return KTUtil.data(element).get("stepper");
     } else {
         return null;
     }
-}
+};
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTStepper;
 }
 
-"use strict";
+("use strict");
 
 var KTStickyHandlersInitialized = false;
 
@@ -4965,49 +5471,49 @@ var KTSticky = function (element, options) {
         reverse: false,
         release: null,
         animation: true,
-        animationSpeed: '0.3s',
-        animationClass: 'animation-slide-in-down'
+        animationSpeed: "0.3s",
+        animationClass: "animation-slide-in-down",
     };
     ////////////////////////////
     // ** Private Methods  ** //
     ////////////////////////////
 
     var _construct = function () {
-        if (KTUtil.data(element).has('sticky') === true) {
-            the = KTUtil.data(element).get('sticky');
+        if (KTUtil.data(element).has("sticky") === true) {
+            the = KTUtil.data(element).get("sticky");
         } else {
             _init();
         }
-    }
+    };
 
     var _init = function () {
         the.element = element;
         the.options = KTUtil.deepExtend({}, defaultOptions, options);
-        the.uid = KTUtil.getUniqueId('sticky');
-        the.name = the.element.getAttribute('data-kt-sticky-name');
-        the.attributeName = 'data-kt-sticky-' + the.name;
-        the.attributeName2 = 'data-kt-' + the.name;
+        the.uid = KTUtil.getUniqueId("sticky");
+        the.name = the.element.getAttribute("data-kt-sticky-name");
+        the.attributeName = "data-kt-sticky-" + the.name;
+        the.attributeName2 = "data-kt-" + the.name;
         the.eventTriggerState = true;
         the.lastScrollTop = 0;
         the.scrollHandler;
 
         // Set initialized
-        the.element.setAttribute('data-kt-sticky', 'true');
+        the.element.setAttribute("data-kt-sticky", "true");
 
         // Event Handlers
-        window.addEventListener('scroll', _scroll);
+        window.addEventListener("scroll", _scroll);
 
         // Initial Launch
         _scroll();
 
         // Bind Instance
-        KTUtil.data(the.element).set('sticky', the);
-    }
+        KTUtil.data(the.element).set("sticky", the);
+    };
 
     var _scroll = function (e) {
-        var offset = _getOption('offset');
-        var release = _getOption('release');
-        var reverse = _getOption('reverse');
+        var offset = _getOption("offset");
+        var release = _getOption("release");
+        var reverse = _getOption("reverse");
         var st;
         var attrName;
         var diff;
@@ -5022,30 +5528,38 @@ var KTSticky = function (element, options) {
         release = release ? document.querySelector(release) : null;
 
         st = KTUtil.getScrollTop();
-        diff = document.documentElement.scrollHeight - window.innerHeight - KTUtil.getScrollTop();
+        diff =
+            document.documentElement.scrollHeight -
+            window.innerHeight -
+            KTUtil.getScrollTop();
 
-        var proceed = (!release || (release.offsetTop - release.clientHeight) > st);
+        var proceed = !release || release.offsetTop - release.clientHeight > st;
 
-        if (reverse === true) {  // Release on reverse scroll mode
+        if (reverse === true) {
+            // Release on reverse scroll mode
             if (st > offset && proceed) {
                 if (document.body.hasAttribute(the.attributeName) === false) {
-
                     if (_enable() === false) {
                         return;
                     }
 
-                    document.body.setAttribute(the.attributeName, 'on');
-                    document.body.setAttribute(the.attributeName2, 'on');
+                    document.body.setAttribute(the.attributeName, "on");
+                    document.body.setAttribute(the.attributeName2, "on");
                     the.element.setAttribute("data-kt-sticky-enabled", "true");
                 }
 
                 if (the.eventTriggerState === true) {
-                    KTEventHandler.trigger(the.element, 'kt.sticky.on', the);
-                    KTEventHandler.trigger(the.element, 'kt.sticky.change', the);
+                    KTEventHandler.trigger(the.element, "kt.sticky.on", the);
+                    KTEventHandler.trigger(
+                        the.element,
+                        "kt.sticky.change",
+                        the
+                    );
 
                     the.eventTriggerState = false;
                 }
-            } else { // Back scroll mode
+            } else {
+                // Back scroll mode
                 if (document.body.hasAttribute(the.attributeName) === true) {
                     _disable();
                     document.body.removeAttribute(the.attributeName);
@@ -5054,32 +5568,41 @@ var KTSticky = function (element, options) {
                 }
 
                 if (the.eventTriggerState === false) {
-                    KTEventHandler.trigger(the.element, 'kt.sticky.off', the);
-                    KTEventHandler.trigger(the.element, 'kt.sticky.change', the);
+                    KTEventHandler.trigger(the.element, "kt.sticky.off", the);
+                    KTEventHandler.trigger(
+                        the.element,
+                        "kt.sticky.change",
+                        the
+                    );
                     the.eventTriggerState = true;
                 }
             }
 
             the.lastScrollTop = st;
-        } else { // Classic scroll mode
+        } else {
+            // Classic scroll mode
             if (st > offset && proceed) {
                 if (document.body.hasAttribute(the.attributeName) === false) {
-
                     if (_enable() === false) {
                         return;
                     }
 
-                    document.body.setAttribute(the.attributeName, 'on');
-                    document.body.setAttribute(the.attributeName2, 'on');
+                    document.body.setAttribute(the.attributeName, "on");
+                    document.body.setAttribute(the.attributeName2, "on");
                     the.element.setAttribute("data-kt-sticky-enabled", "true");
                 }
 
                 if (the.eventTriggerState === true) {
-                    KTEventHandler.trigger(the.element, 'kt.sticky.on', the);
-                    KTEventHandler.trigger(the.element, 'kt.sticky.change', the);
+                    KTEventHandler.trigger(the.element, "kt.sticky.on", the);
+                    KTEventHandler.trigger(
+                        the.element,
+                        "kt.sticky.change",
+                        the
+                    );
                     the.eventTriggerState = false;
                 }
-            } else { // back scroll mode
+            } else {
+                // back scroll mode
                 if (document.body.hasAttribute(the.attributeName) === true) {
                     _disable();
                     document.body.removeAttribute(the.attributeName);
@@ -5088,8 +5611,12 @@ var KTSticky = function (element, options) {
                 }
 
                 if (the.eventTriggerState === false) {
-                    KTEventHandler.trigger(the.element, 'kt.sticky.off', the);
-                    KTEventHandler.trigger(the.element, 'kt.sticky.change', the);
+                    KTEventHandler.trigger(the.element, "kt.sticky.off", the);
+                    KTEventHandler.trigger(
+                        the.element,
+                        "kt.sticky.change",
+                        the
+                    );
                     the.eventTriggerState = true;
                 }
             }
@@ -5097,35 +5624,42 @@ var KTSticky = function (element, options) {
 
         if (release) {
             if (release.offsetTop - release.clientHeight > st) {
-                the.element.setAttribute('data-kt-sticky-released', 'true');
+                the.element.setAttribute("data-kt-sticky-released", "true");
             } else {
-                the.element.removeAttribute('data-kt-sticky-released');
+                the.element.removeAttribute("data-kt-sticky-released");
             }
         }
-    }
+    };
 
     var _enable = function (update) {
-        var top = _getOption('top');
+        var top = _getOption("top");
         top = top ? parseInt(top) : 0;
 
-        var left = _getOption('left');
-        var right = _getOption('right');
-        var width = _getOption('width');
-        var zindex = _getOption('zindex');
-        var dependencies = _getOption('dependencies');
-        var classes = _getOption('class');
+        var left = _getOption("left");
+        var right = _getOption("right");
+        var width = _getOption("width");
+        var zindex = _getOption("zindex");
+        var dependencies = _getOption("dependencies");
+        var classes = _getOption("class");
 
         var height = _calculateHeight();
-        var heightOffset = _getOption('height-offset');
+        var heightOffset = _getOption("height-offset");
         heightOffset = heightOffset ? parseInt(heightOffset) : 0;
 
         if (height + heightOffset + top > KTUtil.getViewPort().height) {
             return false;
         }
 
-        if (update !== true && _getOption('animation') === true) {
-            KTUtil.css(the.element, 'animationDuration', _getOption('animationSpeed'));
-            KTUtil.animateClass(the.element, 'animation ' + _getOption('animationClass'));
+        if (update !== true && _getOption("animation") === true) {
+            KTUtil.css(
+                the.element,
+                "animationDuration",
+                _getOption("animationSpeed")
+            );
+            KTUtil.animateClass(
+                the.element,
+                "animation " + _getOption("animationClass")
+            );
         }
 
         if (classes !== null) {
@@ -5133,39 +5667,39 @@ var KTSticky = function (element, options) {
         }
 
         if (zindex !== null) {
-            KTUtil.css(the.element, 'z-index', zindex);
-            KTUtil.css(the.element, 'position', 'fixed');
+            KTUtil.css(the.element, "z-index", zindex);
+            KTUtil.css(the.element, "position", "fixed");
         }
 
         if (top >= 0) {
-            KTUtil.css(the.element, 'top', String(top) + 'px');
+            KTUtil.css(the.element, "top", String(top) + "px");
         }
 
         if (width !== null) {
-            if (width['target']) {
-                var targetElement = document.querySelector(width['target']);
+            if (width["target"]) {
+                var targetElement = document.querySelector(width["target"]);
                 if (targetElement) {
-                    width = KTUtil.css(targetElement, 'width');
+                    width = KTUtil.css(targetElement, "width");
                 }
             }
 
-            KTUtil.css(the.element, 'width', width);
+            KTUtil.css(the.element, "width", width);
         }
 
         if (left !== null) {
-            if (String(left).toLowerCase() === 'auto') {
+            if (String(left).toLowerCase() === "auto") {
                 var offsetLeft = KTUtil.offset(the.element).left;
 
                 if (offsetLeft >= 0) {
-                    KTUtil.css(the.element, 'left', String(offsetLeft) + 'px');
+                    KTUtil.css(the.element, "left", String(offsetLeft) + "px");
                 }
             } else {
-                KTUtil.css(the.element, 'left', left);
+                KTUtil.css(the.element, "left", left);
             }
         }
 
         if (right !== null) {
-            KTUtil.css(the.element, 'right', right);
+            KTUtil.css(the.element, "right", right);
         }
 
         // Height dependencies
@@ -5174,22 +5708,26 @@ var KTSticky = function (element, options) {
 
             if (dependencyElements && dependencyElements.length > 0) {
                 for (var i = 0, len = dependencyElements.length; i < len; i++) {
-                    KTUtil.css(dependencyElements[i], 'padding-top', String(height) + 'px');
+                    KTUtil.css(
+                        dependencyElements[i],
+                        "padding-top",
+                        String(height) + "px"
+                    );
                 }
             }
         }
-    }
+    };
 
     var _disable = function () {
-        KTUtil.css(the.element, 'top', '');
-        KTUtil.css(the.element, 'width', '');
-        KTUtil.css(the.element, 'left', '');
-        KTUtil.css(the.element, 'right', '');
-        KTUtil.css(the.element, 'z-index', '');
-        KTUtil.css(the.element, 'position', '');
+        KTUtil.css(the.element, "top", "");
+        KTUtil.css(the.element, "width", "");
+        KTUtil.css(the.element, "left", "");
+        KTUtil.css(the.element, "right", "");
+        KTUtil.css(the.element, "z-index", "");
+        KTUtil.css(the.element, "position", "");
 
-        var dependencies = _getOption('dependencies');
-        var classes = _getOption('class');
+        var dependencies = _getOption("dependencies");
+        var classes = _getOption("class");
 
         if (classes !== null) {
             KTUtil.removeClass(the.element, classes);
@@ -5201,41 +5739,40 @@ var KTSticky = function (element, options) {
 
             if (dependencyElements && dependencyElements.length > 0) {
                 for (var i = 0, len = dependencyElements.length; i < len; i++) {
-                    KTUtil.css(dependencyElements[i], 'padding-top', '');
+                    KTUtil.css(dependencyElements[i], "padding-top", "");
                 }
             }
         }
-    }
+    };
 
-    var _check = function () {
-
-    }
+    var _check = function () {};
 
     var _calculateHeight = function () {
-        var height = parseFloat(KTUtil.css(the.element, 'height'));
+        var height = parseFloat(KTUtil.css(the.element, "height"));
 
-        height = height + parseFloat(KTUtil.css(the.element, 'margin-top'));
-        height = height + parseFloat(KTUtil.css(the.element, 'margin-bottom'));
+        height = height + parseFloat(KTUtil.css(the.element, "margin-top"));
+        height = height + parseFloat(KTUtil.css(the.element, "margin-bottom"));
 
-        if (KTUtil.css(element, 'border-top')) {
-            height = height + parseFloat(KTUtil.css(the.element, 'border-top'));
+        if (KTUtil.css(element, "border-top")) {
+            height = height + parseFloat(KTUtil.css(the.element, "border-top"));
         }
 
-        if (KTUtil.css(element, 'border-bottom')) {
-            height = height + parseFloat(KTUtil.css(the.element, 'border-bottom'));
+        if (KTUtil.css(element, "border-bottom")) {
+            height =
+                height + parseFloat(KTUtil.css(the.element, "border-bottom"));
         }
 
         return height;
-    }
+    };
 
     var _getOption = function (name) {
-        if (the.element.hasAttribute('data-kt-sticky-' + name) === true) {
-            var attr = the.element.getAttribute('data-kt-sticky-' + name);
+        if (the.element.hasAttribute("data-kt-sticky-" + name) === true) {
+            var attr = the.element.getAttribute("data-kt-sticky-" + name);
             var value = KTUtil.getResponsiveValue(attr);
 
-            if (value !== null && String(value) === 'true') {
+            if (value !== null && String(value) === "true") {
                 value = true;
-            } else if (value !== null && String(value) === 'false') {
+            } else if (value !== null && String(value) === "false") {
                 value = false;
             }
 
@@ -5249,12 +5786,12 @@ var KTSticky = function (element, options) {
                 return null;
             }
         }
-    }
+    };
 
     var _destroy = function () {
-        window.removeEventListener('scroll', _scroll);
-        KTUtil.data(the.element).remove('sticky');
-    }
+        window.removeEventListener("scroll", _scroll);
+        KTUtil.data(the.element).remove("sticky");
+    };
 
     // Construct Class
     _construct();
@@ -5270,41 +5807,41 @@ var KTSticky = function (element, options) {
             document.body.removeAttribute(the.attributeName);
             document.body.removeAttribute(the.attributeName2);
             _enable(true);
-            document.body.setAttribute(the.attributeName, 'on');
-            document.body.setAttribute(the.attributeName2, 'on');
+            document.body.setAttribute(the.attributeName, "on");
+            document.body.setAttribute(the.attributeName2, "on");
         }
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 
     // Event API
     the.on = function (name, handler) {
         return KTEventHandler.on(the.element, name, handler);
-    }
+    };
 
     the.one = function (name, handler) {
         return KTEventHandler.one(the.element, name, handler);
-    }
+    };
 
     the.off = function (name, handlerId) {
         return KTEventHandler.off(the.element, name, handlerId);
-    }
+    };
 
     the.trigger = function (name, event) {
         return KTEventHandler.trigger(the.element, name, event, the, event);
-    }
+    };
 };
 
 // Static methods
 KTSticky.getInstance = function (element) {
-    if (element !== null && KTUtil.data(element).has('sticky')) {
-        return KTUtil.data(element).get('sticky');
+    if (element !== null && KTUtil.data(element).has("sticky")) {
+        return KTUtil.data(element).get("sticky");
     } else {
         return null;
     }
-}
+};
 
 // Create instances
 KTSticky.createInstances = function (selector = '[data-kt-sticky="true"]') {
@@ -5317,28 +5854,34 @@ KTSticky.createInstances = function (selector = '[data-kt-sticky="true"]') {
             sticky = new KTSticky(elements[i]);
         }
     }
-}
+};
 
 // Window resize handler
 KTSticky.handleResize = function () {
-    window.addEventListener('resize', function () {
+    window.addEventListener("resize", function () {
         var timer;
 
-        KTUtil.throttle(timer, function () {
-            // Locate and update Offcanvas instances on window resize
-            var elements = document.body.querySelectorAll('[data-kt-sticky="true"]');
+        KTUtil.throttle(
+            timer,
+            function () {
+                // Locate and update Offcanvas instances on window resize
+                var elements = document.body.querySelectorAll(
+                    '[data-kt-sticky="true"]'
+                );
 
-            if (elements && elements.length > 0) {
-                for (var i = 0, len = elements.length; i < len; i++) {
-                    var sticky = KTSticky.getInstance(elements[i]);
-                    if (sticky) {
-                        sticky.update();
+                if (elements && elements.length > 0) {
+                    for (var i = 0, len = elements.length; i < len; i++) {
+                        var sticky = KTSticky.getInstance(elements[i]);
+                        if (sticky) {
+                            sticky.update();
+                        }
                     }
                 }
-            }
-        }, 200);
+            },
+            200
+        );
     });
-}
+};
 
 // Global initialization
 KTSticky.init = function () {
@@ -5351,11 +5894,11 @@ KTSticky.init = function () {
 };
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTSticky;
 }
 
-"use strict";
+("use strict");
 
 var KTSwapperHandlersInitialized = false;
 
@@ -5372,7 +5915,7 @@ var KTSwapper = function (element, options) {
 
     // Default Options
     var defaultOptions = {
-        mode: 'append'
+        mode: "append",
     };
 
     ////////////////////////////
@@ -5380,51 +5923,52 @@ var KTSwapper = function (element, options) {
     ////////////////////////////
 
     var _construct = function () {
-        if (KTUtil.data(element).has('swapper') === true) {
-            the = KTUtil.data(element).get('swapper');
+        if (KTUtil.data(element).has("swapper") === true) {
+            the = KTUtil.data(element).get("swapper");
         } else {
             _init();
         }
-    }
+    };
 
     var _init = function () {
         the.element = element;
         the.options = KTUtil.deepExtend({}, defaultOptions, options);
 
         // Set initialized
-        the.element.setAttribute('data-kt-swapper', 'true');
+        the.element.setAttribute("data-kt-swapper", "true");
 
         // Initial update
         _update();
 
         // Bind Instance
-        KTUtil.data(the.element).set('swapper', the);
-    }
+        KTUtil.data(the.element).set("swapper", the);
+    };
 
     var _update = function (e) {
-        var parentSelector = _getOption('parent');
+        var parentSelector = _getOption("parent");
 
-        var mode = _getOption('mode');
-        var parentElement = parentSelector ? document.querySelector(parentSelector) : null;
-
+        var mode = _getOption("mode");
+        var parentElement = parentSelector
+            ? document.querySelector(parentSelector)
+            : null;
 
         if (parentElement && element.parentNode !== parentElement) {
-            if (mode === 'prepend') {
+            if (mode === "prepend") {
                 parentElement.prepend(element);
-            } else if (mode === 'append') {
+            } else if (mode === "append") {
                 parentElement.append(element);
             }
         }
-    }
+    };
 
     var _getOption = function (name) {
-        if (the.element.hasAttribute('data-kt-swapper-' + name) === true) {
-            var attr = the.element.getAttribute('data-kt-swapper-' + name);
+        if (the.element.hasAttribute("data-kt-swapper-" + name) === true) {
+            var attr = the.element.getAttribute("data-kt-swapper-" + name);
             var value = KTUtil.getResponsiveValue(attr);
 
-            if (value !== null && String(value) === 'true') {
+            if (value !== null && String(value) === "true") {
                 value = true;
-            } else if (value !== null && String(value) === 'false') {
+            } else if (value !== null && String(value) === "false") {
                 value = false;
             }
 
@@ -5438,11 +5982,11 @@ var KTSwapper = function (element, options) {
                 return null;
             }
         }
-    }
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('swapper');
-    }
+        KTUtil.data(the.element).remove("swapper");
+    };
 
     // Construct Class
     _construct();
@@ -5454,38 +5998,38 @@ var KTSwapper = function (element, options) {
     // Methods
     the.update = function () {
         _update();
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 
     // Event API
     the.on = function (name, handler) {
         return KTEventHandler.on(the.element, name, handler);
-    }
+    };
 
     the.one = function (name, handler) {
         return KTEventHandler.one(the.element, name, handler);
-    }
+    };
 
     the.off = function (name, handlerId) {
         return KTEventHandler.off(the.element, name, handlerId);
-    }
+    };
 
     the.trigger = function (name, event) {
         return KTEventHandler.trigger(the.element, name, event, the, event);
-    }
+    };
 };
 
 // Static methods
 KTSwapper.getInstance = function (element) {
-    if (element !== null && KTUtil.data(element).has('swapper')) {
-        return KTUtil.data(element).get('swapper');
+    if (element !== null && KTUtil.data(element).has("swapper")) {
+        return KTUtil.data(element).get("swapper");
     } else {
         return null;
     }
-}
+};
 
 // Create instances
 KTSwapper.createInstances = function (selector = '[data-kt-swapper="true"]') {
@@ -5498,26 +6042,32 @@ KTSwapper.createInstances = function (selector = '[data-kt-swapper="true"]') {
             swapper = new KTSwapper(elements[i]);
         }
     }
-}
+};
 
 // Window resize handler
 KTSwapper.handleResize = function () {
-    window.addEventListener('resize', function () {
+    window.addEventListener("resize", function () {
         var timer;
 
-        KTUtil.throttle(timer, function () {
-            // Locate and update Offcanvas instances on window resize
-            var elements = document.querySelectorAll('[data-kt-swapper="true"]');
+        KTUtil.throttle(
+            timer,
+            function () {
+                // Locate and update Offcanvas instances on window resize
+                var elements = document.querySelectorAll(
+                    '[data-kt-swapper="true"]'
+                );
 
-            if (elements && elements.length > 0) {
-                for (var i = 0, len = elements.length; i < len; i++) {
-                    var swapper = KTSwapper.getInstance(elements[i]);
-                    if (swapper) {
-                        swapper.update();
+                if (elements && elements.length > 0) {
+                    for (var i = 0, len = elements.length; i < len; i++) {
+                        var swapper = KTSwapper.getInstance(elements[i]);
+                        if (swapper) {
+                            swapper.update();
+                        }
                     }
                 }
-            }
-        }, 200);
+            },
+            200
+        );
     });
 };
 
@@ -5532,11 +6082,11 @@ KTSwapper.init = function () {
 };
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTSwapper;
 }
 
-"use strict";
+("use strict");
 
 // Class definition
 var KTToggle = function (element, options) {
@@ -5551,7 +6101,7 @@ var KTToggle = function (element, options) {
 
     // Default Options
     var defaultOptions = {
-        saveState: true
+        saveState: true,
     };
 
     ////////////////////////////
@@ -5559,53 +6109,64 @@ var KTToggle = function (element, options) {
     ////////////////////////////
 
     var _construct = function () {
-        if (KTUtil.data(element).has('toggle') === true) {
-            the = KTUtil.data(element).get('toggle');
+        if (KTUtil.data(element).has("toggle") === true) {
+            the = KTUtil.data(element).get("toggle");
         } else {
             _init();
         }
-    }
+    };
 
     var _init = function () {
         // Variables
         the.options = KTUtil.deepExtend({}, defaultOptions, options);
-        the.uid = KTUtil.getUniqueId('toggle');
+        the.uid = KTUtil.getUniqueId("toggle");
 
         // Elements
         the.element = element;
 
-        the.target = document.querySelector(the.element.getAttribute('data-kt-toggle-target')) ? document.querySelector(the.element.getAttribute('data-kt-toggle-target')) : the.element;
-        the.state = the.element.hasAttribute('data-kt-toggle-state') ? the.element.getAttribute('data-kt-toggle-state') : '';
-        the.mode = the.element.hasAttribute('data-kt-toggle-mode') ? the.element.getAttribute('data-kt-toggle-mode') : '';
-        the.attribute = 'data-kt-' + the.element.getAttribute('data-kt-toggle-name');
+        the.target = document.querySelector(
+            the.element.getAttribute("data-kt-toggle-target")
+        )
+            ? document.querySelector(
+                  the.element.getAttribute("data-kt-toggle-target")
+              )
+            : the.element;
+        the.state = the.element.hasAttribute("data-kt-toggle-state")
+            ? the.element.getAttribute("data-kt-toggle-state")
+            : "";
+        the.mode = the.element.hasAttribute("data-kt-toggle-mode")
+            ? the.element.getAttribute("data-kt-toggle-mode")
+            : "";
+        the.attribute =
+            "data-kt-" + the.element.getAttribute("data-kt-toggle-name");
 
         // Event Handlers
         _handlers();
 
         // Bind Instance
-        KTUtil.data(the.element).set('toggle', the);
-    }
+        KTUtil.data(the.element).set("toggle", the);
+    };
 
     var _handlers = function () {
-        KTUtil.addEvent(the.element, 'click', function (e) {
+        KTUtil.addEvent(the.element, "click", function (e) {
             e.preventDefault();
 
-            if (the.mode !== '') {
-                if (the.mode === 'off' && _isEnabled() === false) {
+            if (the.mode !== "") {
+                if (the.mode === "off" && _isEnabled() === false) {
                     _toggle();
-                } else if (the.mode === 'on' && _isEnabled() === true) {
+                } else if (the.mode === "on" && _isEnabled() === true) {
                     _toggle();
                 }
             } else {
                 _toggle();
             }
         });
-    }
+    };
 
     // Event handlers
     var _toggle = function () {
         // Trigger "after.toggle" event
-        KTEventHandler.trigger(the.element, 'kt.toggle.change', the);
+        KTEventHandler.trigger(the.element, "kt.toggle.change", the);
 
         if (_isEnabled()) {
             _disable();
@@ -5614,39 +6175,39 @@ var KTToggle = function (element, options) {
         }
 
         // Trigger "before.toggle" event
-        KTEventHandler.trigger(the.element, 'kt.toggle.changed', the);
+        KTEventHandler.trigger(the.element, "kt.toggle.changed", the);
 
         return the;
-    }
+    };
 
     var _enable = function () {
         if (_isEnabled() === true) {
             return;
         }
 
-        KTEventHandler.trigger(the.element, 'kt.toggle.enable', the);
+        KTEventHandler.trigger(the.element, "kt.toggle.enable", the);
 
-        the.target.setAttribute(the.attribute, 'on');
+        the.target.setAttribute(the.attribute, "on");
 
         if (the.state.length > 0) {
             the.element.classList.add(the.state);
         }
 
-        if (typeof KTCookie !== 'undefined' && the.options.saveState === true) {
-            KTCookie.set(the.attribute, 'on');
+        if (typeof KTCookie !== "undefined" && the.options.saveState === true) {
+            KTCookie.set(the.attribute, "on");
         }
 
-        KTEventHandler.trigger(the.element, 'kt.toggle.enabled', the);
+        KTEventHandler.trigger(the.element, "kt.toggle.enabled", the);
 
         return the;
-    }
+    };
 
     var _disable = function () {
         if (_isEnabled() === false) {
             return;
         }
 
-        KTEventHandler.trigger(the.element, 'kt.toggle.disable', the);
+        KTEventHandler.trigger(the.element, "kt.toggle.disable", the);
 
         the.target.removeAttribute(the.attribute);
 
@@ -5654,22 +6215,25 @@ var KTToggle = function (element, options) {
             the.element.classList.remove(the.state);
         }
 
-        if (typeof KTCookie !== 'undefined' && the.options.saveState === true) {
+        if (typeof KTCookie !== "undefined" && the.options.saveState === true) {
             KTCookie.remove(the.attribute);
         }
 
-        KTEventHandler.trigger(the.element, 'kt.toggle.disabled', the);
+        KTEventHandler.trigger(the.element, "kt.toggle.disabled", the);
 
         return the;
-    }
+    };
 
     var _isEnabled = function () {
-        return (String(the.target.getAttribute(the.attribute)).toLowerCase() === 'on');
-    }
+        return (
+            String(the.target.getAttribute(the.attribute)).toLowerCase() ===
+            "on"
+        );
+    };
 
     var _destroy = function () {
-        KTUtil.data(the.element).remove('toggle');
-    }
+        KTUtil.data(the.element).remove("toggle");
+    };
 
     // Construct class
     _construct();
@@ -5681,57 +6245,57 @@ var KTToggle = function (element, options) {
     // Plugin API
     the.toggle = function () {
         return _toggle();
-    }
+    };
 
     the.enable = function () {
         return _enable();
-    }
+    };
 
     the.disable = function () {
         return _disable();
-    }
+    };
 
     the.isEnabled = function () {
         return _isEnabled();
-    }
+    };
 
     the.goElement = function () {
         return the.element;
-    }
+    };
 
     the.destroy = function () {
         return _destroy();
-    }
+    };
 
     // Event API
     the.on = function (name, handler) {
         return KTEventHandler.on(the.element, name, handler);
-    }
+    };
 
     the.one = function (name, handler) {
         return KTEventHandler.one(the.element, name, handler);
-    }
+    };
 
     the.off = function (name, handlerId) {
         return KTEventHandler.off(the.element, name, handlerId);
-    }
+    };
 
     the.trigger = function (name, event) {
         return KTEventHandler.trigger(the.element, name, event, the, event);
-    }
+    };
 };
 
 // Static methods
 KTToggle.getInstance = function (element) {
-    if (element !== null && KTUtil.data(element).has('toggle')) {
-        return KTUtil.data(element).get('toggle');
+    if (element !== null && KTUtil.data(element).has("toggle")) {
+        return KTUtil.data(element).get("toggle");
     } else {
         return null;
     }
-}
+};
 
 // Create instances
-KTToggle.createInstances = function (selector = '[data-kt-toggle]') {
+KTToggle.createInstances = function (selector = "[data-kt-toggle]") {
     // Get instances
     var elements = document.body.querySelectorAll(selector);
 
@@ -5741,7 +6305,7 @@ KTToggle.createInstances = function (selector = '[data-kt-toggle]') {
             new KTToggle(elements[i]);
         }
     }
-}
+};
 
 // Global initialization
 KTToggle.init = function () {
@@ -5749,10 +6313,10 @@ KTToggle.init = function () {
 };
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTToggle;
 }
-"use strict";
+("use strict");
 
 /**
  * @class KTUtil  base utilize class that privides helper functions
@@ -5765,7 +6329,7 @@ if (!Element.prototype.matches) {
     Element.prototype.matches = function (s) {
         var matches = (this.document || this.ownerDocument).querySelectorAll(s),
             i = matches.length;
-        while (--i >= 0 && matches.item(i) !== this) { }
+        while (--i >= 0 && matches.item(i) !== this) {}
         return i > -1;
     };
 }
@@ -5795,13 +6359,12 @@ if (!Element.prototype.closest) {
  */
 (function (elem) {
     for (var i = 0; i < elem.length; i++) {
-        if (!window[elem[i]] || 'remove' in window[elem[i]].prototype) continue;
+        if (!window[elem[i]] || "remove" in window[elem[i]].prototype) continue;
         window[elem[i]].prototype.remove = function () {
             this.parentNode.removeChild(this);
         };
     }
-})(['Element', 'CharacterData', 'DocumentType']);
-
+})(["Element", "CharacterData", "DocumentType"]);
 
 //
 // requestAnimationFrame polyfill by Erik Möller.
@@ -5814,11 +6377,13 @@ if (!Element.prototype.closest) {
 //
 (function () {
     var lastTime = 0;
-    var vendors = ['webkit', 'moz'];
+    var vendors = ["webkit", "moz"];
     for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+        window.requestAnimationFrame =
+            window[vendors[x] + "RequestAnimationFrame"];
         window.cancelAnimationFrame =
-            window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+            window[vendors[x] + "CancelAnimationFrame"] ||
+            window[vendors[x] + "CancelRequestAnimationFrame"];
     }
 
     if (!window.requestAnimationFrame)
@@ -5836,15 +6401,15 @@ if (!Element.prototype.closest) {
         window.cancelAnimationFrame = function (id) {
             clearTimeout(id);
         };
-}());
+})();
 
 // Source: https://github.com/jserz/js_piece/blob/master/DOM/ParentNode/prepend()/prepend().md
 (function (arr) {
     arr.forEach(function (item) {
-        if (item.hasOwnProperty('prepend')) {
+        if (item.hasOwnProperty("prepend")) {
             return;
         }
-        Object.defineProperty(item, 'prepend', {
+        Object.defineProperty(item, "prepend", {
             configurable: true,
             enumerable: true,
             writable: true,
@@ -5854,11 +6419,15 @@ if (!Element.prototype.closest) {
 
                 argArr.forEach(function (argItem) {
                     var isNode = argItem instanceof Node;
-                    docFrag.appendChild(isNode ? argItem : document.createTextNode(String(argItem)));
+                    docFrag.appendChild(
+                        isNode
+                            ? argItem
+                            : document.createTextNode(String(argItem))
+                    );
                 });
 
                 this.insertBefore(docFrag, this.firstChild);
-            }
+            },
         });
     });
 })([Element.prototype, Document.prototype, DocumentFragment.prototype]);
@@ -5881,7 +6450,7 @@ window.KTUtilElementDataStore = {};
 window.KTUtilElementDataStoreID = 0;
 window.KTUtilDelegatedEventHandlers = {};
 
-var KTUtil = function () {
+var KTUtil = (function () {
     var resizeHandlers = [];
 
     /**
@@ -5899,10 +6468,14 @@ var KTUtil = function () {
 
         var timer;
 
-        window.addEventListener('resize', function () {
-            KTUtil.throttle(timer, function () {
-                _runResizeHandlers();
-            }, 200);
+        window.addEventListener("resize", function () {
+            KTUtil.throttle(
+                timer,
+                function () {
+                    _runResizeHandlers();
+                },
+                200
+            );
         });
     };
 
@@ -5945,14 +6518,14 @@ var KTUtil = function () {
         },
 
         resize: function () {
-            if (typeof (Event) === 'function') {
+            if (typeof Event === "function") {
                 // modern browsers
-                window.dispatchEvent(new Event('resize'));
+                window.dispatchEvent(new Event("resize"));
             } else {
                 // for IE and other old browsers
                 // causes deprecation warning on modern browsers
-                var evt = window.document.createEvent('UIEvents');
-                evt.initUIEvent('resize', true, false, window, 0);
+                var evt = window.document.createEvent("UIEvents");
+                evt.initUIEvent("resize", true, false, window, 0);
                 window.dispatchEvent(evt);
             }
         },
@@ -5964,7 +6537,9 @@ var KTUtil = function () {
          */
         getURLParam: function (paramName) {
             var searchString = window.location.search.substring(1),
-                i, val, params = searchString.split("&");
+                i,
+                val,
+                params = searchString.split("&");
 
             for (i = 0; i < params.length; i++) {
                 val = params[i].split("=");
@@ -5981,7 +6556,10 @@ var KTUtil = function () {
          * @returns {boolean}
          */
         isMobileDevice: function () {
-            var test = (this.getViewPort().width < this.getBreakpoint('lg') ? true : false);
+            var test =
+                this.getViewPort().width < this.getBreakpoint("lg")
+                    ? true
+                    : false;
 
             if (test === false) {
                 // For use within normal web clients
@@ -6006,15 +6584,15 @@ var KTUtil = function () {
          */
         getViewPort: function () {
             var e = window,
-                a = 'inner';
-            if (!('innerWidth' in window)) {
-                a = 'client';
+                a = "inner";
+            if (!("innerWidth" in window)) {
+                a = "client";
                 e = document.documentElement || document.body;
             }
 
             return {
-                width: e[a + 'Width'],
-                height: e[a + 'Height']
+                width: e[a + "Width"],
+                height: e[a + "Height"],
             };
         },
 
@@ -6028,14 +6606,14 @@ var KTUtil = function () {
             var width = this.getViewPort().width;
             var breakpoint = this.getBreakpoint(mode);
 
-            return (width >= breakpoint);
+            return width >= breakpoint;
         },
 
         isBreakpointDown: function (mode) {
             var width = this.getViewPort().width;
             var breakpoint = this.getBreakpoint(mode);
 
-            return (width < breakpoint);
+            return width < breakpoint;
         },
 
         getViewportWidth: function () {
@@ -6048,7 +6626,7 @@ var KTUtil = function () {
          * @returns {boolean}
          */
         getUniqueId: function (prefix) {
-            return prefix + Math.floor(Math.random() * (new Date()).getTime());
+            return prefix + Math.floor(Math.random() * new Date().getTime());
         },
 
         /**
@@ -6057,7 +6635,7 @@ var KTUtil = function () {
          * @returns {number}
          */
         getBreakpoint: function (breakpoint) {
-            var value = this.getCssVariableValue('--bs-' + breakpoint);
+            var value = this.getCssVariableValue("--bs-" + breakpoint);
 
             if (value) {
                 value = parseInt(value.trim());
@@ -6075,13 +6653,13 @@ var KTUtil = function () {
         isset: function (obj, keys) {
             var stone;
 
-            keys = keys || '';
+            keys = keys || "";
 
-            if (keys.indexOf('[') !== -1) {
-                throw new Error('Unsupported object path notation.');
+            if (keys.indexOf("[") !== -1) {
+                throw new Error("Unsupported object path notation.");
             }
 
-            keys = keys.split('.');
+            keys = keys.split(".");
 
             do {
                 if (obj === undefined) {
@@ -6095,7 +6673,6 @@ var KTUtil = function () {
                 }
 
                 obj = obj[stone];
-
             } while (keys.length);
 
             return true;
@@ -6113,14 +6690,18 @@ var KTUtil = function () {
                 // Ignore z-index if position is set to a value where z-index is ignored by the browser
                 // This makes behavior of this function consistent across browsers
                 // WebKit always returns auto if the element is positioned
-                position = KTUtil.css(el, 'position');
+                position = KTUtil.css(el, "position");
 
-                if (position === "absolute" || position === "relative" || position === "fixed") {
+                if (
+                    position === "absolute" ||
+                    position === "relative" ||
+                    position === "fixed"
+                ) {
                     // IE returns 0 when zIndex is not specified
                     // other browsers return a string
                     // we ignore the case of nested elements with an explicit value of 0
                     // <div style="z-index: -10;"><div style="z-index: 0;"></div></div>
-                    value = parseInt(KTUtil.css(el, 'z-index'));
+                    value = parseInt(KTUtil.css(el, "z-index"));
 
                     if (!isNaN(value) && value !== 0) {
                         return value;
@@ -6142,7 +6723,7 @@ var KTUtil = function () {
             var position;
 
             while (el && el !== document) {
-                position = KTUtil.css(el, 'position');
+                position = KTUtil.css(el, "position");
 
                 if (position === "fixed") {
                     return true;
@@ -6160,7 +6741,7 @@ var KTUtil = function () {
         sleep: function (milliseconds) {
             var start = new Date().getTime();
             for (var i = 0; i < 1e7; i++) {
-                if ((new Date().getTime() - start) > milliseconds) {
+                if (new Date().getTime() - start > milliseconds) {
                     break;
                 }
             }
@@ -6198,7 +6779,10 @@ var KTUtil = function () {
                     }
 
                     // based on https://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/
-                    if (Object.prototype.toString.call(obj[key]) === '[object Object]') {
+                    if (
+                        Object.prototype.toString.call(obj[key]) ===
+                        "[object Object]"
+                    ) {
                         out[key] = KTUtil.deepExtend(out[key], obj[key]);
                         continue;
                     }
@@ -6215,8 +6799,7 @@ var KTUtil = function () {
             out = out || {};
 
             for (var i = 1; i < arguments.length; i++) {
-                if (!arguments[i])
-                    continue;
+                if (!arguments[i]) continue;
 
                 for (var key in arguments[i]) {
                     if (arguments[i].hasOwnProperty(key))
@@ -6228,7 +6811,7 @@ var KTUtil = function () {
         },
 
         getBody: function () {
-            return document.getElementsByTagName('body')[0];
+            return document.getElementsByTagName("body")[0];
         },
 
         /**
@@ -6258,15 +6841,17 @@ var KTUtil = function () {
                 return;
             }
 
-            return el.classList ? el.classList.contains(className) : new RegExp('\\b' + className + '\\b').test(el.className);
+            return el.classList
+                ? el.classList.contains(className)
+                : new RegExp("\\b" + className + "\\b").test(el.className);
         },
 
         addClass: function (el, className) {
-            if (!el || typeof className === 'undefined') {
+            if (!el || typeof className === "undefined") {
                 return;
             }
 
-            var classNames = className.split(' ');
+            var classNames = className.split(" ");
 
             if (el.classList) {
                 for (var i = 0; i < classNames.length; i++) {
@@ -6276,17 +6861,17 @@ var KTUtil = function () {
                 }
             } else if (!KTUtil.hasClass(el, className)) {
                 for (var x = 0; x < classNames.length; x++) {
-                    el.className += ' ' + KTUtil.trim(classNames[x]);
+                    el.className += " " + KTUtil.trim(classNames[x]);
                 }
             }
         },
 
         removeClass: function (el, className) {
-            if (!el || typeof className === 'undefined') {
+            if (!el || typeof className === "undefined") {
                 return;
             }
 
-            var classNames = className.split(' ');
+            var classNames = className.split(" ");
 
             if (el.classList) {
                 for (var i = 0; i < classNames.length; i++) {
@@ -6294,7 +6879,13 @@ var KTUtil = function () {
                 }
             } else if (KTUtil.hasClass(el, className)) {
                 for (var x = 0; x < classNames.length; x++) {
-                    el.className = el.className.replace(new RegExp('\\b' + KTUtil.trim(classNames[x]) + '\\b', 'g'), '');
+                    el.className = el.className.replace(
+                        new RegExp(
+                            "\\b" + KTUtil.trim(classNames[x]) + "\\b",
+                            "g"
+                        ),
+                        ""
+                    );
                 }
             }
         },
@@ -6303,10 +6894,10 @@ var KTUtil = function () {
             var event;
             if (window.CustomEvent) {
                 event = new CustomEvent(eventName, {
-                    detail: data
+                    detail: data,
                 });
             } else {
-                event = document.createEvent('CustomEvent');
+                event = document.createEvent("CustomEvent");
                 event.initCustomEvent(eventName, true, true, data);
             }
 
@@ -6350,7 +6941,11 @@ var KTUtil = function () {
                         break;
 
                     default:
-                        throw "fireEvent: Couldn't find an event class for event '" + eventName + "'.";
+                        throw (
+                            "fireEvent: Couldn't find an event class for event '" +
+                            eventName +
+                            "'."
+                        );
                         break;
                 }
                 var event = doc.createEvent(eventClass);
@@ -6370,9 +6965,9 @@ var KTUtil = function () {
         },
 
         index: function (el) {
-            var c = el.parentNode.children, i = 0;
-            for (; i < c.length; i++)
-                if (c[i] == el) return i;
+            var c = el.parentNode.children,
+                i = 0;
+            for (; i < c.length; i++) if (c[i] == el) return i;
         },
 
         trim: function (string) {
@@ -6412,7 +7007,10 @@ var KTUtil = function () {
         },
 
         insertAfter: function (el, referenceNode) {
-            return referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
+            return referenceNode.parentNode.insertBefore(
+                el,
+                referenceNode.nextSibling
+            );
         },
 
         parents: function (elem, selector) {
@@ -6444,7 +7042,10 @@ var KTUtil = function () {
                 l = el.childNodes.length;
 
             for (var i; i < l; ++i) {
-                if (el.childNodes[i].nodeType == 1 && KTUtil.matches(el.childNodes[i], selector, log)) {
+                if (
+                    el.childNodes[i].nodeType == 1 &&
+                    KTUtil.matches(el.childNodes[i], selector, log)
+                ) {
                     result.push(el.childNodes[i]);
                 }
             }
@@ -6460,9 +7061,17 @@ var KTUtil = function () {
 
         matches: function (el, selector, log) {
             var p = Element.prototype;
-            var f = p.matches || p.webkitMatchesSelector || p.mozMatchesSelector || p.msMatchesSelector || function (s) {
-                return [].indexOf.call(document.querySelectorAll(s), this) !== -1;
-            };
+            var f =
+                p.matches ||
+                p.webkitMatchesSelector ||
+                p.mozMatchesSelector ||
+                p.msMatchesSelector ||
+                function (s) {
+                    return (
+                        [].indexOf.call(document.querySelectorAll(s), this) !==
+                        -1
+                    );
+                };
 
             if (el && el.tagName) {
                 return f.call(el, selector);
@@ -6483,11 +7092,15 @@ var KTUtil = function () {
                         el.customDataTag = window.KTUtilElementDataStoreID;
                     }
 
-                    if (window.KTUtilElementDataStore[el.customDataTag] === undefined) {
+                    if (
+                        window.KTUtilElementDataStore[el.customDataTag] ===
+                        undefined
+                    ) {
                         window.KTUtilElementDataStore[el.customDataTag] = {};
                     }
 
-                    window.KTUtilElementDataStore[el.customDataTag][name] = data;
+                    window.KTUtilElementDataStore[el.customDataTag][name] =
+                        data;
                 },
 
                 get: function (name) {
@@ -6499,7 +7112,9 @@ var KTUtil = function () {
                         return null;
                     }
 
-                    return this.has(name) ? window.KTUtilElementDataStore[el.customDataTag][name] : null;
+                    return this.has(name)
+                        ? window.KTUtilElementDataStore[el.customDataTag][name]
+                        : null;
                 },
 
                 has: function (name) {
@@ -6511,14 +7126,19 @@ var KTUtil = function () {
                         return false;
                     }
 
-                    return (window.KTUtilElementDataStore[el.customDataTag] && window.KTUtilElementDataStore[el.customDataTag][name]) ? true : false;
+                    return window.KTUtilElementDataStore[el.customDataTag] &&
+                        window.KTUtilElementDataStore[el.customDataTag][name]
+                        ? true
+                        : false;
                 },
 
                 remove: function (name) {
                     if (el && this.has(name)) {
-                        delete window.KTUtilElementDataStore[el.customDataTag][name];
+                        delete window.KTUtilElementDataStore[el.customDataTag][
+                            name
+                        ];
                     }
-                }
+                },
             };
         },
 
@@ -6527,7 +7147,9 @@ var KTUtil = function () {
 
             if (margin === true) {
                 width = parseFloat(el.offsetWidth);
-                width += parseFloat(KTUtil.css(el, 'margin-left')) + parseFloat(KTUtil.css(el, 'margin-right'));
+                width +=
+                    parseFloat(KTUtil.css(el, "margin-left")) +
+                    parseFloat(KTUtil.css(el, "margin-right"));
 
                 return parseFloat(width);
             } else {
@@ -6560,21 +7182,22 @@ var KTUtil = function () {
             return {
                 top: rect.top + win.pageYOffset,
                 left: rect.left + win.pageXOffset,
-                right: window.innerWidth - (el.offsetLeft + el.offsetWidth)
+                right: window.innerWidth - (el.offsetLeft + el.offsetWidth),
             };
         },
 
         height: function (el) {
-            return KTUtil.css(el, 'height');
+            return KTUtil.css(el, "height");
         },
 
         outerHeight: function (el, withMargin) {
             var height = el.offsetHeight;
             var style;
 
-            if (typeof withMargin !== 'undefined' && withMargin === true) {
+            if (typeof withMargin !== "undefined" && withMargin === true) {
                 style = getComputedStyle(el);
-                height += parseInt(style.marginTop) + parseInt(style.marginBottom);
+                height +=
+                    parseInt(style.marginTop) + parseInt(style.marginBottom);
 
                 return height;
             } else {
@@ -6593,9 +7216,7 @@ var KTUtil = function () {
             const containerBottom = containerTop + container.clientHeight;
 
             // The element is fully visible in the container
-            return (
-                (eleTop >= containerTop && eleBottom <= containerBottom)
-            );
+            return eleTop >= containerTop && eleBottom <= containerBottom;
         },
 
         getRelativeTopPosition: function (el, container) {
@@ -6639,28 +7260,32 @@ var KTUtil = function () {
             var easing;
 
             easings.linear = function (t, b, c, d) {
-                return c * t / d + b;
+                return (c * t) / d + b;
             };
 
             easing = easings.linear;
 
             // Early bail out if called incorrectly
-            if (typeof from !== 'number' ||
-                typeof to !== 'number' ||
-                typeof duration !== 'number' ||
-                typeof update !== 'function') {
+            if (
+                typeof from !== "number" ||
+                typeof to !== "number" ||
+                typeof duration !== "number" ||
+                typeof update !== "function"
+            ) {
                 return;
             }
 
             // Create mock done() function if necessary
-            if (typeof done !== 'function') {
-                done = function () { };
+            if (typeof done !== "function") {
+                done = function () {};
             }
 
             // Pick implementation (requestAnimationFrame | setTimeout)
-            var rAF = window.requestAnimationFrame || function (callback) {
-                window.setTimeout(callback, 1000 / 50);
-            };
+            var rAF =
+                window.requestAnimationFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 1000 / 50);
+                };
 
             // Animation loop
             var canceled = false;
@@ -6683,60 +7308,65 @@ var KTUtil = function () {
             update(from);
 
             // Start animation loop
-            var start = window.performance && window.performance.now ? window.performance.now() : +new Date();
+            var start =
+                window.performance && window.performance.now
+                    ? window.performance.now()
+                    : +new Date();
 
             rAF(loop);
         },
 
         actualCss: function (el, prop, cache) {
-            var css = '';
+            var css = "";
 
             if (el instanceof HTMLElement === false) {
                 return;
             }
 
-            if (!el.getAttribute('kt-hidden-' + prop) || cache === false) {
+            if (!el.getAttribute("kt-hidden-" + prop) || cache === false) {
                 var value;
 
                 // the element is hidden so:
                 // making the el block so we can meassure its height but still be hidden
                 css = el.style.cssText;
-                el.style.cssText = 'position: absolute; visibility: hidden; display: block;';
+                el.style.cssText =
+                    "position: absolute; visibility: hidden; display: block;";
 
-                if (prop == 'width') {
+                if (prop == "width") {
                     value = el.offsetWidth;
-                } else if (prop == 'height') {
+                } else if (prop == "height") {
                     value = el.offsetHeight;
                 }
 
                 el.style.cssText = css;
 
                 // store it in cache
-                el.setAttribute('kt-hidden-' + prop, value);
+                el.setAttribute("kt-hidden-" + prop, value);
 
                 return parseFloat(value);
             } else {
                 // store it in cache
-                return parseFloat(el.getAttribute('kt-hidden-' + prop));
+                return parseFloat(el.getAttribute("kt-hidden-" + prop));
             }
         },
 
         actualHeight: function (el, cache) {
-            return KTUtil.actualCss(el, 'height', cache);
+            return KTUtil.actualCss(el, "height", cache);
         },
 
         actualWidth: function (el, cache) {
-            return KTUtil.actualCss(el, 'width', cache);
+            return KTUtil.actualCss(el, "width", cache);
         },
 
         getScroll: function (element, method) {
             // The passed in `method` value should be 'Top' or 'Left'
-            method = 'scroll' + method;
-            return (element == window || element == document) ? (
-                self[(method == 'scrollTop') ? 'pageYOffset' : 'pageXOffset'] ||
-                (browserSupportsBoxModel && document.documentElement[method]) ||
-                document.body[method]
-            ) : element[method];
+            method = "scroll" + method;
+            return element == window || element == document
+                ? self[method == "scrollTop" ? "pageYOffset" : "pageXOffset"] ||
+                      (browserSupportsBoxModel &&
+                          document.documentElement[method]) ||
+                      document.body[method]
+                : element[method];
         },
 
         css: function (el, styleProp, value, important) {
@@ -6746,7 +7376,7 @@ var KTUtil = function () {
 
             if (value !== undefined) {
                 if (important === true) {
-                    el.style.setProperty(styleProp, value, 'important');
+                    el.style.setProperty(styleProp, value, "important");
                 } else {
                     el.style[styleProp] = value;
                 }
@@ -6757,21 +7387,30 @@ var KTUtil = function () {
                 if (defaultView && defaultView.getComputedStyle) {
                     // sanitize property name to css notation
                     // (hyphen separated words eg. font-Size)
-                    styleProp = styleProp.replace(/([A-Z])/g, "-$1").toLowerCase();
+                    styleProp = styleProp
+                        .replace(/([A-Z])/g, "-$1")
+                        .toLowerCase();
 
-                    return defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
-                } else if (el.currentStyle) { // IE
+                    return defaultView
+                        .getComputedStyle(el, null)
+                        .getPropertyValue(styleProp);
+                } else if (el.currentStyle) {
+                    // IE
                     // sanitize property name to camelCase
-                    styleProp = styleProp.replace(/\-(\w)/g, function (str, letter) {
-                        return letter.toUpperCase();
-                    });
+                    styleProp = styleProp.replace(
+                        /\-(\w)/g,
+                        function (str, letter) {
+                            return letter.toUpperCase();
+                        }
+                    );
 
                     value = el.currentStyle[styleProp];
 
                     // convert other units to pixels on IE
                     if (/^\d+(em|pt|%|ex)?$/i.test(value)) {
                         return (function (value) {
-                            var oldLeft = el.style.left, oldRsLeft = el.runtimeStyle.left;
+                            var oldLeft = el.style.left,
+                                oldRsLeft = el.runtimeStyle.left;
 
                             el.runtimeStyle.left = el.currentStyle.left;
                             el.style.left = value || 0;
@@ -6789,113 +7428,175 @@ var KTUtil = function () {
         },
 
         slide: function (el, dir, speed, callback, recalcMaxHeight) {
-            if (!el || (dir == 'up' && KTUtil.visible(el) === false) || (dir == 'down' && KTUtil.visible(el) === true)) {
+            if (
+                !el ||
+                (dir == "up" && KTUtil.visible(el) === false) ||
+                (dir == "down" && KTUtil.visible(el) === true)
+            ) {
                 return;
             }
 
-            speed = (speed ? speed : 600);
+            speed = speed ? speed : 600;
             var calcHeight = KTUtil.actualHeight(el);
             var calcPaddingTop = false;
             var calcPaddingBottom = false;
 
-            if (KTUtil.css(el, 'padding-top') && KTUtil.data(el).has('slide-padding-top') !== true) {
-                KTUtil.data(el).set('slide-padding-top', KTUtil.css(el, 'padding-top'));
+            if (
+                KTUtil.css(el, "padding-top") &&
+                KTUtil.data(el).has("slide-padding-top") !== true
+            ) {
+                KTUtil.data(el).set(
+                    "slide-padding-top",
+                    KTUtil.css(el, "padding-top")
+                );
             }
 
-            if (KTUtil.css(el, 'padding-bottom') && KTUtil.data(el).has('slide-padding-bottom') !== true) {
-                KTUtil.data(el).set('slide-padding-bottom', KTUtil.css(el, 'padding-bottom'));
+            if (
+                KTUtil.css(el, "padding-bottom") &&
+                KTUtil.data(el).has("slide-padding-bottom") !== true
+            ) {
+                KTUtil.data(el).set(
+                    "slide-padding-bottom",
+                    KTUtil.css(el, "padding-bottom")
+                );
             }
 
-            if (KTUtil.data(el).has('slide-padding-top')) {
-                calcPaddingTop = parseInt(KTUtil.data(el).get('slide-padding-top'));
+            if (KTUtil.data(el).has("slide-padding-top")) {
+                calcPaddingTop = parseInt(
+                    KTUtil.data(el).get("slide-padding-top")
+                );
             }
 
-            if (KTUtil.data(el).has('slide-padding-bottom')) {
-                calcPaddingBottom = parseInt(KTUtil.data(el).get('slide-padding-bottom'));
+            if (KTUtil.data(el).has("slide-padding-bottom")) {
+                calcPaddingBottom = parseInt(
+                    KTUtil.data(el).get("slide-padding-bottom")
+                );
             }
 
-            if (dir == 'up') { // up
-                el.style.cssText = 'display: block; overflow: hidden;';
+            if (dir == "up") {
+                // up
+                el.style.cssText = "display: block; overflow: hidden;";
 
                 if (calcPaddingTop) {
-                    KTUtil.animate(0, calcPaddingTop, speed, function (value) {
-                        el.style.paddingTop = (calcPaddingTop - value) + 'px';
-                    }, 'linear');
+                    KTUtil.animate(
+                        0,
+                        calcPaddingTop,
+                        speed,
+                        function (value) {
+                            el.style.paddingTop = calcPaddingTop - value + "px";
+                        },
+                        "linear"
+                    );
                 }
 
                 if (calcPaddingBottom) {
-                    KTUtil.animate(0, calcPaddingBottom, speed, function (value) {
-                        el.style.paddingBottom = (calcPaddingBottom - value) + 'px';
-                    }, 'linear');
+                    KTUtil.animate(
+                        0,
+                        calcPaddingBottom,
+                        speed,
+                        function (value) {
+                            el.style.paddingBottom =
+                                calcPaddingBottom - value + "px";
+                        },
+                        "linear"
+                    );
                 }
 
-                KTUtil.animate(0, calcHeight, speed, function (value) {
-                    el.style.height = (calcHeight - value) + 'px';
-                }, 'linear', function () {
-                    el.style.height = '';
-                    el.style.display = 'none';
+                KTUtil.animate(
+                    0,
+                    calcHeight,
+                    speed,
+                    function (value) {
+                        el.style.height = calcHeight - value + "px";
+                    },
+                    "linear",
+                    function () {
+                        el.style.height = "";
+                        el.style.display = "none";
 
-                    if (typeof callback === 'function') {
-                        callback();
+                        if (typeof callback === "function") {
+                            callback();
+                        }
                     }
-                });
-
-
-            } else if (dir == 'down') { // down
-                el.style.cssText = 'display: block; overflow: hidden;';
+                );
+            } else if (dir == "down") {
+                // down
+                el.style.cssText = "display: block; overflow: hidden;";
 
                 if (calcPaddingTop) {
-                    KTUtil.animate(0, calcPaddingTop, speed, function (value) {//
-                        el.style.paddingTop = value + 'px';
-                    }, 'linear', function () {
-                        el.style.paddingTop = '';
-                    });
+                    KTUtil.animate(
+                        0,
+                        calcPaddingTop,
+                        speed,
+                        function (value) {
+                            //
+                            el.style.paddingTop = value + "px";
+                        },
+                        "linear",
+                        function () {
+                            el.style.paddingTop = "";
+                        }
+                    );
                 }
 
                 if (calcPaddingBottom) {
-                    KTUtil.animate(0, calcPaddingBottom, speed, function (value) {
-                        el.style.paddingBottom = value + 'px';
-                    }, 'linear', function () {
-                        el.style.paddingBottom = '';
-                    });
+                    KTUtil.animate(
+                        0,
+                        calcPaddingBottom,
+                        speed,
+                        function (value) {
+                            el.style.paddingBottom = value + "px";
+                        },
+                        "linear",
+                        function () {
+                            el.style.paddingBottom = "";
+                        }
+                    );
                 }
 
-                KTUtil.animate(0, calcHeight, speed, function (value) {
-                    el.style.height = value + 'px';
-                }, 'linear', function () {
-                    el.style.height = '';
-                    el.style.display = '';
-                    el.style.overflow = '';
+                KTUtil.animate(
+                    0,
+                    calcHeight,
+                    speed,
+                    function (value) {
+                        el.style.height = value + "px";
+                    },
+                    "linear",
+                    function () {
+                        el.style.height = "";
+                        el.style.display = "";
+                        el.style.overflow = "";
 
-                    if (typeof callback === 'function') {
-                        callback();
+                        if (typeof callback === "function") {
+                            callback();
+                        }
                     }
-                });
+                );
             }
         },
 
         slideUp: function (el, speed, callback) {
-            KTUtil.slide(el, 'up', speed, callback);
+            KTUtil.slide(el, "up", speed, callback);
         },
 
         slideDown: function (el, speed, callback) {
-            KTUtil.slide(el, 'down', speed, callback);
+            KTUtil.slide(el, "down", speed, callback);
         },
 
         show: function (el, display) {
-            if (typeof el !== 'undefined') {
-                el.style.display = (display ? display : 'block');
+            if (typeof el !== "undefined") {
+                el.style.display = display ? display : "block";
             }
         },
 
         hide: function (el) {
-            if (typeof el !== 'undefined') {
-                el.style.display = 'none';
+            if (typeof el !== "undefined") {
+                el.style.display = "none";
             }
         },
 
         addEvent: function (el, type, handler, one) {
-            if (typeof el !== 'undefined' && el !== null) {
+            if (typeof el !== "undefined" && el !== null) {
                 el.addEventListener(type, handler);
             }
         },
@@ -6911,7 +7612,7 @@ var KTUtil = function () {
                 return;
             }
 
-            var eventId = KTUtil.getUniqueId('event');
+            var eventId = KTUtil.getUniqueId("event");
 
             window.KTUtilDelegatedEventHandlers[eventId] = function (e) {
                 var targets = element.querySelectorAll(selector);
@@ -6926,9 +7627,13 @@ var KTUtil = function () {
 
                     target = target.parentNode;
                 }
-            }
+            };
 
-            KTUtil.addEvent(element, event, window.KTUtilDelegatedEventHandlers[eventId]);
+            KTUtil.addEvent(
+                element,
+                event,
+                window.KTUtilDelegatedEventHandlers[eventId]
+            );
 
             return eventId;
         },
@@ -6938,7 +7643,11 @@ var KTUtil = function () {
                 return;
             }
 
-            KTUtil.removeEvent(element, event, window.KTUtilDelegatedEventHandlers[eventId]);
+            KTUtil.removeEvent(
+                element,
+                event,
+                window.KTUtilDelegatedEventHandlers[eventId]
+            );
 
             delete window.KTUtilDelegatedEventHandlers[eventId];
         },
@@ -6962,12 +7671,13 @@ var KTUtil = function () {
 
         hash: function (str) {
             var hash = 0,
-                i, chr;
+                i,
+                chr;
 
             if (str.length === 0) return hash;
             for (i = 0; i < str.length; i++) {
                 chr = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + chr;
+                hash = (hash << 5) - hash + chr;
                 hash |= 0; // Convert to 32bit integer
             }
 
@@ -6977,11 +7687,11 @@ var KTUtil = function () {
         animateClass: function (el, animationName, callback) {
             var animation;
             var animations = {
-                animation: 'animationend',
-                OAnimation: 'oAnimationEnd',
-                MozAnimation: 'mozAnimationEnd',
-                WebkitAnimation: 'webkitAnimationEnd',
-                msAnimation: 'msAnimationEnd',
+                animation: "animationend",
+                OAnimation: "oAnimationEnd",
+                MozAnimation: "mozAnimationEnd",
+                WebkitAnimation: "webkitAnimationEnd",
+                msAnimation: "msAnimationEnd",
             };
 
             for (var t in animations) {
@@ -7004,11 +7714,11 @@ var KTUtil = function () {
         transitionEnd: function (el, callback) {
             var transition;
             var transitions = {
-                transition: 'transitionend',
-                OTransition: 'oTransitionEnd',
-                MozTransition: 'mozTransitionEnd',
-                WebkitTransition: 'webkitTransitionEnd',
-                msTransition: 'msTransitionEnd'
+                transition: "transitionend",
+                OTransition: "oTransitionEnd",
+                MozTransition: "mozTransitionEnd",
+                WebkitTransition: "webkitTransitionEnd",
+                msTransition: "msTransitionEnd",
             };
 
             for (var t in transitions) {
@@ -7023,11 +7733,11 @@ var KTUtil = function () {
         animationEnd: function (el, callback) {
             var animation;
             var animations = {
-                animation: 'animationend',
-                OAnimation: 'oAnimationEnd',
-                MozAnimation: 'mozAnimationEnd',
-                WebkitAnimation: 'webkitAnimationEnd',
-                msAnimation: 'msAnimationEnd'
+                animation: "animationend",
+                OAnimation: "oAnimationEnd",
+                MozAnimation: "mozAnimationEnd",
+                WebkitAnimation: "webkitAnimationEnd",
+                msAnimation: "msAnimationEnd",
             };
 
             for (var t in animations) {
@@ -7040,23 +7750,27 @@ var KTUtil = function () {
         },
 
         animateDelay: function (el, value) {
-            var vendors = ['webkit-', 'moz-', 'ms-', 'o-', ''];
+            var vendors = ["webkit-", "moz-", "ms-", "o-", ""];
             for (var i = 0; i < vendors.length; i++) {
-                KTUtil.css(el, vendors[i] + 'animation-delay', value);
+                KTUtil.css(el, vendors[i] + "animation-delay", value);
             }
         },
 
         animateDuration: function (el, value) {
-            var vendors = ['webkit-', 'moz-', 'ms-', 'o-', ''];
+            var vendors = ["webkit-", "moz-", "ms-", "o-", ""];
             for (var i = 0; i < vendors.length; i++) {
-                KTUtil.css(el, vendors[i] + 'animation-duration', value);
+                KTUtil.css(el, vendors[i] + "animation-duration", value);
             }
         },
 
         scrollTo: function (target, offset, duration) {
             var duration = duration ? duration : 500;
             var targetPos = target ? KTUtil.offset(target).top : 0;
-            var scrollPos = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+            var scrollPos =
+                window.pageYOffset ||
+                document.documentElement.scrollTop ||
+                document.body.scrollTop ||
+                0;
             var from, to;
 
             if (offset) {
@@ -7092,32 +7806,37 @@ var KTUtil = function () {
         },
 
         numberString: function (nStr) {
-            nStr += '';
-            var x = nStr.split('.');
+            nStr += "";
+            var x = nStr.split(".");
             var x1 = x[0];
-            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var x2 = x.length > 1 ? "." + x[1] : "";
             var rgx = /(\d+)(\d{3})/;
             while (rgx.test(x1)) {
-                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                x1 = x1.replace(rgx, "$1" + "," + "$2");
             }
             return x1 + x2;
         },
 
         isRTL: function () {
-            return (document.querySelector('html').getAttribute("direction") === 'rtl');
+            return (
+                document.querySelector("html").getAttribute("direction") ===
+                "rtl"
+            );
         },
 
         snakeToCamel: function (s) {
-            return s.replace(/(\-\w)/g, function (m) { return m[1].toUpperCase(); });
+            return s.replace(/(\-\w)/g, function (m) {
+                return m[1].toUpperCase();
+            });
         },
 
         filterBoolean: function (val) {
             // Convert string boolean
-            if (val === true || val === 'true') {
+            if (val === true || val === "true") {
                 return true;
             }
 
-            if (val === false || val === 'false') {
+            if (val === false || val === "false") {
                 return false;
             }
 
@@ -7138,40 +7857,71 @@ var KTUtil = function () {
             var body = document.body;
             var html = document.documentElement;
 
-            return Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+            return Math.max(
+                body.scrollHeight,
+                body.offsetHeight,
+                html.clientHeight,
+                html.scrollHeight,
+                html.offsetHeight
+            );
         },
 
         getScrollTop: function () {
-            return (document.scrollingElement || document.documentElement).scrollTop;
+            return (document.scrollingElement || document.documentElement)
+                .scrollTop;
         },
 
         colorLighten: function (color, amount) {
             const addLight = function (color, amount) {
                 let cc = parseInt(color, 16) + amount;
-                let c = (cc > 255) ? 255 : (cc);
-                c = (c.toString(16).length > 1) ? c.toString(16) : `0${c.toString(16)}`;
+                let c = cc > 255 ? 255 : cc;
+                c =
+                    c.toString(16).length > 1
+                        ? c.toString(16)
+                        : `0${c.toString(16)}`;
                 return c;
-            }
+            };
 
-            color = (color.indexOf("#") >= 0) ? color.substring(1, color.length) : color;
+            color =
+                color.indexOf("#") >= 0
+                    ? color.substring(1, color.length)
+                    : color;
             amount = parseInt((255 * amount) / 100);
 
-            return color = `#${addLight(color.substring(0, 2), amount)}${addLight(color.substring(2, 4), amount)}${addLight(color.substring(4, 6), amount)}`;
+            return (color = `#${addLight(
+                color.substring(0, 2),
+                amount
+            )}${addLight(color.substring(2, 4), amount)}${addLight(
+                color.substring(4, 6),
+                amount
+            )}`);
         },
 
         colorDarken: function (color, amount) {
             const subtractLight = function (color, amount) {
                 let cc = parseInt(color, 16) - amount;
-                let c = (cc < 0) ? 0 : (cc);
-                c = (c.toString(16).length > 1) ? c.toString(16) : `0${c.toString(16)}`;
+                let c = cc < 0 ? 0 : cc;
+                c =
+                    c.toString(16).length > 1
+                        ? c.toString(16)
+                        : `0${c.toString(16)}`;
 
                 return c;
-            }
+            };
 
-            color = (color.indexOf("#") >= 0) ? color.substring(1, color.length) : color;
+            color =
+                color.indexOf("#") >= 0
+                    ? color.substring(1, color.length)
+                    : color;
             amount = parseInt((255 * amount) / 100);
 
-            return color = `#${subtractLight(color.substring(0, 2), amount)}${subtractLight(color.substring(2, 4), amount)}${subtractLight(color.substring(4, 6), amount)}`;
+            return (color = `#${subtractLight(
+                color.substring(0, 2),
+                amount
+            )}${subtractLight(color.substring(2, 4), amount)}${subtractLight(
+                color.substring(4, 6),
+                amount
+            )}`);
         },
 
         // Throttle function: Input as function which needs to be throttled and delay is the time interval in milliseconds
@@ -7194,23 +7944,30 @@ var KTUtil = function () {
         // Debounce function: Input as function which needs to be debounced and delay is the debounced time in milliseconds
         debounce: function (timer, func, delay) {
             // Cancels the setTimeout method execution
-            clearTimeout(timer)
+            clearTimeout(timer);
 
             // Executes the func after delay time.
             timer = setTimeout(func, delay);
         },
 
         parseJson: function (value) {
-            if (typeof value === 'string') {
-                value = value.replace(/'/g, "\"");
+            if (typeof value === "string") {
+                value = value.replace(/'/g, '"');
 
-                var jsonStr = value.replace(/(\w+:)|(\w+ :)/g, function (matched) {
-                    return '"' + matched.substring(0, matched.length - 1) + '":';
-                });
+                var jsonStr = value.replace(
+                    /(\w+:)|(\w+ :)/g,
+                    function (matched) {
+                        return (
+                            '"' +
+                            matched.substring(0, matched.length - 1) +
+                            '":'
+                        );
+                    }
+                );
 
                 try {
                     value = JSON.parse(jsonStr);
-                } catch (e) { }
+                } catch (e) {}
             }
 
             return value;
@@ -7222,16 +7979,18 @@ var KTUtil = function () {
 
             value = KTUtil.parseJson(value);
 
-            if (typeof value === 'object') {
+            if (typeof value === "object") {
                 var resultKey;
                 var resultBreakpoint = -1;
                 var breakpoint;
 
                 for (var key in value) {
-                    if (key === 'default') {
+                    if (key === "default") {
                         breakpoint = 0;
                     } else {
-                        breakpoint = this.getBreakpoint(key) ? this.getBreakpoint(key) : parseInt(key);
+                        breakpoint = this.getBreakpoint(key)
+                            ? this.getBreakpoint(key)
+                            : parseInt(key);
                     }
 
                     if (breakpoint <= width && breakpoint > resultBreakpoint) {
@@ -7260,11 +8019,11 @@ var KTUtil = function () {
             var result = null;
             value = KTUtil.parseJson(value);
 
-            if (typeof value === 'object') {
+            if (typeof value === "object") {
                 // Match condition
-                if (value['match'] !== undefined) {
-                    var selector = Object.keys(value['match'])[0];
-                    value = Object.values(value['match'])[0];
+                if (value["match"] !== undefined) {
+                    var selector = Object.keys(value["match"])[0];
+                    value = Object.values(value["match"])[0];
 
                     if (document.querySelector(selector) !== null) {
                         result = value;
@@ -7281,19 +8040,25 @@ var KTUtil = function () {
             var value = KTUtil.parseJson(value);
             var result = KTUtil.getResponsiveValue(value);
 
-            if (result !== null && result['match'] !== undefined) {
+            if (result !== null && result["match"] !== undefined) {
                 result = KTUtil.getSelectorMatchValue(result);
             }
 
-            if (result === null && value !== null && value['default'] !== undefined) {
-                result = value['default'];
+            if (
+                result === null &&
+                value !== null &&
+                value["default"] !== undefined
+            ) {
+                result = value["default"];
             }
 
             return result;
         },
 
         getCssVariableValue: function (variableName) {
-            var hex = getComputedStyle(document.documentElement).getPropertyValue(variableName);
+            var hex = getComputedStyle(
+                document.documentElement
+            ).getPropertyValue(variableName);
             if (hex && hex.length > 0) {
                 hex = hex.trim();
             }
@@ -7307,30 +8072,34 @@ var KTUtil = function () {
             return (
                 rect.top >= 0 &&
                 rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                rect.bottom <=
+                    (window.innerHeight ||
+                        document.documentElement.clientHeight) &&
+                rect.right <=
+                    (window.innerWidth || document.documentElement.clientWidth)
             );
         },
 
         isPartiallyInViewport: function (element) {
             let x = element.getBoundingClientRect().left;
             let y = element.getBoundingClientRect().top;
-            let ww = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-            let hw = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+            let ww = Math.max(
+                document.documentElement.clientWidth,
+                window.innerWidth || 0
+            );
+            let hw = Math.max(
+                document.documentElement.clientHeight,
+                window.innerHeight || 0
+            );
             let w = element.clientWidth;
             let h = element.clientHeight;
 
-            return (
-                (y < hw &&
-                    y + h > 0) &&
-                (x < ww &&
-                    x + w > 0)
-            );
+            return y < hw && y + h > 0 && x < ww && x + w > 0;
         },
 
         onDOMContentLoaded: function (callback) {
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', callback);
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", callback);
             } else {
                 callback();
             }
@@ -7346,18 +8115,18 @@ var KTUtil = function () {
 
         isHexColor(code) {
             return /^#[0-9A-F]{6}$/i.test(code);
-        }
-    }
-}();
+        },
+    };
+})();
 
 // Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTUtil;
 }
-"use strict";
+("use strict");
 
 // Class definition
-var KTAppLayoutBuilder = function () {
+var KTAppLayoutBuilder = (function () {
     var form;
     var actionInput;
     var url;
@@ -7381,44 +8150,61 @@ var KTAppLayoutBuilder = function () {
                 modal.show();
 
                 const date = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
-                KTCookie.set("app_engage_prebuilts_modal_displayed", "1", { expires: date });
+                KTCookie.set("app_engage_prebuilts_modal_displayed", "1", {
+                    expires: date,
+                });
             }, 3000);
         }
-    }
+    };
 
     var handleEngagePrebuiltsViewMenu = function () {
-        const selected = engagePrebuiltsModal.querySelector('[data-kt-element="selected"]');
-        const selectedTitle = engagePrebuiltsModal.querySelector('[data-kt-element="title"]');
-        const menu = engagePrebuiltsModal.querySelector('[data-kt-menu="true"]');
+        const selected = engagePrebuiltsModal.querySelector(
+            '[data-kt-element="selected"]'
+        );
+        const selectedTitle = engagePrebuiltsModal.querySelector(
+            '[data-kt-element="title"]'
+        );
+        const menu = engagePrebuiltsModal.querySelector(
+            '[data-kt-menu="true"]'
+        );
 
         // Toggle Handler
-        KTUtil.on(engagePrebuiltsModal, '[data-kt-mode]', 'click', function (e) {
-            const title = this.innerText;
-            const mode = this.getAttribute("data-kt-mode");
-            const selectedLink = menu.querySelector('.menu-link.active');
-            const viewImage = document.querySelector('#kt_app_engage_prebuilts_view_image');
-            const viewText = document.querySelector('#kt_app_engage_prebuilts_view_text');
-            selectedTitle.innerText = title;
+        KTUtil.on(
+            engagePrebuiltsModal,
+            "[data-kt-mode]",
+            "click",
+            function (e) {
+                const title = this.innerText;
+                const mode = this.getAttribute("data-kt-mode");
+                const selectedLink = menu.querySelector(".menu-link.active");
+                const viewImage = document.querySelector(
+                    "#kt_app_engage_prebuilts_view_image"
+                );
+                const viewText = document.querySelector(
+                    "#kt_app_engage_prebuilts_view_text"
+                );
+                selectedTitle.innerText = title;
 
-            if (selectedLink) {
-                selectedLink.classList.remove('active');
+                if (selectedLink) {
+                    selectedLink.classList.remove("active");
+                }
+
+                this.classList.add("active");
+
+                if (mode === "image") {
+                    viewImage.classList.remove("d-none");
+                    viewImage.classList.add("d-block");
+                    viewText.classList.remove("d-block");
+                    viewText.classList.add("d-none");
+                } else {
+                    viewText.classList.remove("d-none");
+                    viewText.classList.add("d-block");
+                    viewImage.classList.remove("d-block");
+                    viewImage.classList.add("d-none");
+                }
             }
-
-            this.classList.add('active');
-
-            if (mode === "image") {
-                viewImage.classList.remove("d-none");
-                viewImage.classList.add("d-block");
-                viewText.classList.remove("d-block");
-                viewText.classList.add("d-none");
-            } else {
-                viewText.classList.remove("d-none");
-                viewText.classList.add("d-block");
-                viewImage.classList.remove("d-block");
-                viewImage.classList.add("d-none");
-            }
-        });
-    }
+        );
+    };
 
     var handleEngageToggle = function () {
         engageToggleOff.addEventListener("click", function (e) {
@@ -7426,16 +8212,16 @@ var KTAppLayoutBuilder = function () {
 
             const date = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000); // 1 days from now
             KTCookie.set("app_engage_hide", "1", { expires: date });
-            engage.classList.add('app-engage-hide');
+            engage.classList.add("app-engage-hide");
         });
 
         engageToggleOn.addEventListener("click", function (e) {
             e.preventDefault();
 
             KTCookie.remove("app_engage_hide");
-            engage.classList.remove('app-engage-hide');
+            engage.classList.remove("app-engage-hide");
         });
-    }
+    };
 
     var handlePreview = function () {
         previewButton.addEventListener("click", function (e) {
@@ -7458,7 +8244,7 @@ var KTAppLayoutBuilder = function () {
                 data: data,
                 success: function (response, status, xhr) {
                     if (history.scrollRestoration) {
-                        history.scrollRestoration = 'manual';
+                        history.scrollRestoration = "manual";
                     }
                     location.reload();
                     return;
@@ -7466,7 +8252,12 @@ var KTAppLayoutBuilder = function () {
                     toastr.success(
                         "Preview has been updated with current configured layout.",
                         "Preview updated!",
-                        { timeOut: 0, extendedTimeOut: 0, closeButton: true, closeDuration: 0 }
+                        {
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            closeButton: true,
+                            closeDuration: 0,
+                        }
                     );
 
                     setTimeout(function () {
@@ -7477,12 +8268,17 @@ var KTAppLayoutBuilder = function () {
                     toastr.error(
                         "Please try it again later.",
                         "Something went wrong!",
-                        { timeOut: 0, extendedTimeOut: 0, closeButton: true, closeDuration: 0 }
+                        {
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            closeButton: true,
+                            closeDuration: 0,
+                        }
                     );
                 },
                 complete: function () {
                     previewButton.removeAttribute("data-kt-indicator");
-                }
+                },
             });
         });
     };
@@ -7494,7 +8290,12 @@ var KTAppLayoutBuilder = function () {
             toastr.success(
                 "Process has been started and it may take a while.",
                 "Generating HTML!",
-                { timeOut: 0, extendedTimeOut: 0, closeButton: true, closeDuration: 0 }
+                {
+                    timeOut: 0,
+                    extendedTimeOut: 0,
+                    closeButton: true,
+                    closeDuration: 0,
+                }
             );
 
             // Show progress
@@ -7513,22 +8314,35 @@ var KTAppLayoutBuilder = function () {
                 data: data,
                 success: function (response, status, xhr) {
                     var timer = setInterval(function () {
-                        $("<iframe/>").attr({
-                            src: url + "?layout-builder[action]=export&download=1&output=" + response,
-                            style: "visibility:hidden;display:none",
-                        }).ready(function () {
-                            // Stop the timer
-                            clearInterval(timer);
+                        $("<iframe/>")
+                            .attr({
+                                src:
+                                    url +
+                                    "?layout-builder[action]=export&download=1&output=" +
+                                    response,
+                                style: "visibility:hidden;display:none",
+                            })
+                            .ready(function () {
+                                // Stop the timer
+                                clearInterval(timer);
 
-                            exportButton.removeAttribute("data-kt-indicator");
-                        }).appendTo("body");
+                                exportButton.removeAttribute(
+                                    "data-kt-indicator"
+                                );
+                            })
+                            .appendTo("body");
                     }, 3000);
                 },
                 error: function (response) {
                     toastr.error(
                         "Please try it again later.",
                         "Something went wrong!",
-                        { timeOut: 0, extendedTimeOut: 0, closeButton: true, closeDuration: 0 }
+                        {
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            closeButton: true,
+                            closeDuration: 0,
+                        }
                     );
 
                     exportButton.removeAttribute("data-kt-indicator");
@@ -7557,7 +8371,7 @@ var KTAppLayoutBuilder = function () {
                 data: data,
                 success: function (response, status, xhr) {
                     if (history.scrollRestoration) {
-                        history.scrollRestoration = 'manual';
+                        history.scrollRestoration = "manual";
                     }
 
                     location.reload();
@@ -7566,7 +8380,12 @@ var KTAppLayoutBuilder = function () {
                     toastr.success(
                         "Preview has been successfully reset and the page will be reloaded.",
                         "Reset Preview!",
-                        { timeOut: 0, extendedTimeOut: 0, closeButton: true, closeDuration: 0 }
+                        {
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            closeButton: true,
+                            closeDuration: 0,
+                        }
                     );
 
                     setTimeout(function () {
@@ -7577,7 +8396,12 @@ var KTAppLayoutBuilder = function () {
                     toastr.error(
                         "Please try it again later.",
                         "Something went wrong!",
-                        { timeOut: 0, extendedTimeOut: 0, closeButton: true, closeDuration: 0 }
+                        {
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            closeButton: true,
+                            closeDuration: 0,
+                        }
                     );
                 },
                 complete: function () {
@@ -7588,41 +8412,55 @@ var KTAppLayoutBuilder = function () {
     };
 
     var handleThemeMode = function () {
-        var checkLight = document.querySelector('#kt_layout_builder_theme_mode_light');
-        var checkDark = document.querySelector('#kt_layout_builder_theme_mode_dark');
-        var check = document.querySelector('#kt_layout_builder_theme_mode_' + KTThemeMode.getMode());
+        var checkLight = document.querySelector(
+            "#kt_layout_builder_theme_mode_light"
+        );
+        var checkDark = document.querySelector(
+            "#kt_layout_builder_theme_mode_dark"
+        );
+        var check = document.querySelector(
+            "#kt_layout_builder_theme_mode_" + KTThemeMode.getMode()
+        );
 
         if (checkLight) {
             checkLight.addEventListener("click", function () {
                 this.checked = true;
-                this.closest('[data-kt-buttons="true"]').querySelector('.form-check-image.active').classList.remove('active');
-                this.closest('.form-check-image').classList.add('active');
-                KTThemeMode.setMode('light');
+                this.closest('[data-kt-buttons="true"]')
+                    .querySelector(".form-check-image.active")
+                    .classList.remove("active");
+                this.closest(".form-check-image").classList.add("active");
+                KTThemeMode.setMode("light");
             });
         }
 
         if (checkDark) {
             checkDark.addEventListener("click", function () {
                 this.checked = true;
-                this.closest('[data-kt-buttons="true"]').querySelector('.form-check-image.active').classList.remove('active');
-                this.closest('.form-check-image').classList.add('active');
-                KTThemeMode.setMode('dark');
+                this.closest('[data-kt-buttons="true"]')
+                    .querySelector(".form-check-image.active")
+                    .classList.remove("active");
+                this.closest(".form-check-image").classList.add("active");
+                KTThemeMode.setMode("dark");
             });
         }
 
         if (check) {
-            check.closest('.form-check-image').classList.add('active');
+            check.closest(".form-check-image").classList.add("active");
             check.checked = true;
         }
-    }
+    };
 
     return {
         // Public functions
         init: function () {
-            engage = document.querySelector('#kt_app_engage');
-            engageToggleOn = document.querySelector('#kt_app_engage_toggle_on');
-            engageToggleOff = document.querySelector('#kt_app_engage_toggle_off');
-            engagePrebuiltsModal = document.querySelector('#kt_app_engage_prebuilts_modal');
+            engage = document.querySelector("#kt_app_engage");
+            engageToggleOn = document.querySelector("#kt_app_engage_toggle_on");
+            engageToggleOff = document.querySelector(
+                "#kt_app_engage_toggle_off"
+            );
+            engagePrebuiltsModal = document.querySelector(
+                "#kt_app_engage_prebuilts_modal"
+            );
 
             if (engage && engagePrebuiltsModal) {
                 handleEngagePrebuilts();
@@ -7640,10 +8478,18 @@ var KTAppLayoutBuilder = function () {
             }
 
             url = form.getAttribute("action");
-            actionInput = document.querySelector("#kt_app_layout_builder_action");
-            previewButton = document.querySelector("#kt_app_layout_builder_preview");
-            exportButton = document.querySelector("#kt_app_layout_builder_export");
-            resetButton = document.querySelector("#kt_app_layout_builder_reset");
+            actionInput = document.querySelector(
+                "#kt_app_layout_builder_action"
+            );
+            previewButton = document.querySelector(
+                "#kt_app_layout_builder_preview"
+            );
+            exportButton = document.querySelector(
+                "#kt_app_layout_builder_export"
+            );
+            resetButton = document.querySelector(
+                "#kt_app_layout_builder_reset"
+            );
 
             if (previewButton) {
                 handlePreview();
@@ -7658,18 +8504,18 @@ var KTAppLayoutBuilder = function () {
             }
 
             handleThemeMode();
-        }
+        },
     };
-}();
+})();
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
     KTAppLayoutBuilder.init();
 });
-"use strict";
+("use strict");
 
 // Class definition
-var KTLayoutSearch = function () {
+var KTLayoutSearch = (function () {
     // Private variables
     var element;
     var formElement;
@@ -7695,136 +8541,167 @@ var KTLayoutSearch = function () {
             var number = KTUtil.getRandomInt(1, 3);
 
             // Hide recently viewed
-            mainElement.classList.add('d-none');
+            mainElement.classList.add("d-none");
 
             if (number === 3) {
                 // Hide results
-                resultsElement.classList.add('d-none');
+                resultsElement.classList.add("d-none");
                 // Show empty message
-                emptyElement.classList.remove('d-none');
+                emptyElement.classList.remove("d-none");
             } else {
                 // Show results
-                resultsElement.classList.remove('d-none');
+                resultsElement.classList.remove("d-none");
                 // Hide empty message
-                emptyElement.classList.add('d-none');
+                emptyElement.classList.add("d-none");
             }
 
             // Complete search
             search.complete();
         }, 1500);
-    }
+    };
 
     var processsAjax = function (search) {
         // Hide recently viewed
-        mainElement.classList.add('d-none');
+        mainElement.classList.add("d-none");
 
         // Learn more: https://axios-http.com/docs/intro
-        axios.post('/search.php', {
-            query: searchObject.getQuery()
-        })
+        axios
+            .post("/search.php", {
+                query: searchObject.getQuery(),
+            })
             .then(function (response) {
                 // Populate results
                 resultsElement.innerHTML = response;
                 // Show results
-                resultsElement.classList.remove('d-none');
+                resultsElement.classList.remove("d-none");
                 // Hide empty message
-                emptyElement.classList.add('d-none');
+                emptyElement.classList.add("d-none");
 
                 // Complete search
                 search.complete();
             })
             .catch(function (error) {
                 // Hide results
-                resultsElement.classList.add('d-none');
+                resultsElement.classList.add("d-none");
                 // Show empty message
-                emptyElement.classList.remove('d-none');
+                emptyElement.classList.remove("d-none");
 
                 // Complete search
                 search.complete();
             });
-    }
+    };
 
     var clear = function (search) {
         // Show recently viewed
-        mainElement.classList.remove('d-none');
+        mainElement.classList.remove("d-none");
         // Hide results
-        resultsElement.classList.add('d-none');
+        resultsElement.classList.add("d-none");
         // Hide empty message
-        emptyElement.classList.add('d-none');
-    }
+        emptyElement.classList.add("d-none");
+    };
 
     var handlePreferences = function () {
         // Preference show handler
         if (preferencesShowElement) {
-            preferencesShowElement.addEventListener('click', function () {
-                wrapperElement.classList.add('d-none');
-                preferencesElement.classList.remove('d-none');
+            preferencesShowElement.addEventListener("click", function () {
+                wrapperElement.classList.add("d-none");
+                preferencesElement.classList.remove("d-none");
             });
         }
 
         // Preference dismiss handler
         if (preferencesDismissElement) {
-            preferencesDismissElement.addEventListener('click', function () {
-                wrapperElement.classList.remove('d-none');
-                preferencesElement.classList.add('d-none');
+            preferencesDismissElement.addEventListener("click", function () {
+                wrapperElement.classList.remove("d-none");
+                preferencesElement.classList.add("d-none");
             });
         }
-    }
+    };
 
     var handleAdvancedOptionsForm = function () {
         // Show
         if (advancedOptionsFormShowElement) {
-            advancedOptionsFormShowElement.addEventListener('click', function () {
-                wrapperElement.classList.add('d-none');
-                advancedOptionsFormElement.classList.remove('d-none');
-            });
+            advancedOptionsFormShowElement.addEventListener(
+                "click",
+                function () {
+                    wrapperElement.classList.add("d-none");
+                    advancedOptionsFormElement.classList.remove("d-none");
+                }
+            );
         }
 
         // Cancel
         if (advancedOptionsFormCancelElement) {
-            advancedOptionsFormCancelElement.addEventListener('click', function () {
-                wrapperElement.classList.remove('d-none');
-                advancedOptionsFormElement.classList.add('d-none');
-            });
+            advancedOptionsFormCancelElement.addEventListener(
+                "click",
+                function () {
+                    wrapperElement.classList.remove("d-none");
+                    advancedOptionsFormElement.classList.add("d-none");
+                }
+            );
         }
-    }
+    };
 
     // Public methods
     return {
         init: function () {
             // Elements
-            element = document.querySelector('#kt_header_search');
+            element = document.querySelector("#kt_header_search");
 
             if (!element) {
                 return;
             }
 
-            wrapperElement = element.querySelector('[data-kt-search-element="wrapper"]');
-            formElement = element.querySelector('[data-kt-search-element="form"]');
-            mainElement = element.querySelector('[data-kt-search-element="main"]');
-            resultsElement = element.querySelector('[data-kt-search-element="results"]');
-            emptyElement = element.querySelector('[data-kt-search-element="empty"]');
+            wrapperElement = element.querySelector(
+                '[data-kt-search-element="wrapper"]'
+            );
+            formElement = element.querySelector(
+                '[data-kt-search-element="form"]'
+            );
+            mainElement = element.querySelector(
+                '[data-kt-search-element="main"]'
+            );
+            resultsElement = element.querySelector(
+                '[data-kt-search-element="results"]'
+            );
+            emptyElement = element.querySelector(
+                '[data-kt-search-element="empty"]'
+            );
 
-            preferencesElement = element.querySelector('[data-kt-search-element="preferences"]');
-            preferencesShowElement = element.querySelector('[data-kt-search-element="preferences-show"]');
-            preferencesDismissElement = element.querySelector('[data-kt-search-element="preferences-dismiss"]');
+            preferencesElement = element.querySelector(
+                '[data-kt-search-element="preferences"]'
+            );
+            preferencesShowElement = element.querySelector(
+                '[data-kt-search-element="preferences-show"]'
+            );
+            preferencesDismissElement = element.querySelector(
+                '[data-kt-search-element="preferences-dismiss"]'
+            );
 
-            advancedOptionsFormElement = element.querySelector('[data-kt-search-element="advanced-options-form"]');
-            advancedOptionsFormShowElement = element.querySelector('[data-kt-search-element="advanced-options-form-show"]');
-            advancedOptionsFormCancelElement = element.querySelector('[data-kt-search-element="advanced-options-form-cancel"]');
-            advancedOptionsFormSearchElement = element.querySelector('[data-kt-search-element="advanced-options-form-search"]');
+            advancedOptionsFormElement = element.querySelector(
+                '[data-kt-search-element="advanced-options-form"]'
+            );
+            advancedOptionsFormShowElement = element.querySelector(
+                '[data-kt-search-element="advanced-options-form-show"]'
+            );
+            advancedOptionsFormCancelElement = element.querySelector(
+                '[data-kt-search-element="advanced-options-form-cancel"]'
+            );
+            advancedOptionsFormSearchElement = element.querySelector(
+                '[data-kt-search-element="advanced-options-form-search"]'
+            );
 
             // Initialize search handler
             searchObject = new KTSearch(element);
 
             // Demo search handler
-            searchObject.on('kt.search.process', processs);
+            searchObject.on("kt.search.process", processs);
 
             // Ajax search handler
             //searchObject.on('kt.search.process', processsAjax);
 
             // Clear handler
-            searchObject.on('kt.search.clear', clear);
+            searchObject.on("kt.search.clear", clear);
 
             // Custom handlers
             if (preferencesElement) {
@@ -7834,18 +8711,18 @@ var KTLayoutSearch = function () {
             if (advancedOptionsFormElement) {
                 handleAdvancedOptionsForm();
             }
-        }
+        },
     };
-}();
+})();
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
     KTLayoutSearch.init();
 });
-"use strict";
+("use strict");
 
 // Class definition
-var KTAppSidebar = function () {
+var KTAppSidebar = (function () {
     // Private variables
     var wrapper;
     var sidebar;
@@ -7859,27 +8736,31 @@ var KTAppSidebar = function () {
         }
 
         // Add a class to prevent sidebar hover effect after toggle click
-        toggleObj.on('kt.toggle.change', function () {
+        toggleObj.on("kt.toggle.change", function () {
             // Set animation state
-            sidebar.classList.add('animating');
+            sidebar.classList.add("animating");
 
             // Wait till animation finishes
             setTimeout(function () {
                 // Remove animation state
-                sidebar.classList.remove('animating');
+                sidebar.classList.remove("animating");
             }, 300);
         });
 
         // Store sidebar minimize state in cookie
-        toggleObj.on('kt.toggle.changed', function () {
+        toggleObj.on("kt.toggle.changed", function () {
             // In server side check sidebar_minimize_state cookie
             // value and add data-kt-app-sidebar-minimize="on"
             // attribute to Body tag and "active" class to the toggle button
             var date = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
 
-            KTCookie.set("sidebar_minimize_state", toggleObj.isEnabled() ? "on" : "off", { expires: date });
+            KTCookie.set(
+                "sidebar_minimize_state",
+                toggleObj.isEnabled() ? "on" : "off",
+                { expires: date }
+            );
         });
-    }
+    };
 
     var handleMenuScroll = function () {
         var menuActiveItem = wrapper.querySelector(".menu-link.active");
@@ -7894,17 +8775,17 @@ var KTAppSidebar = function () {
 
         wrapper.scroll({
             top: KTUtil.getRelativeTopPosition(menuActiveItem, wrapper),
-            behavior: 'smooth'
+            behavior: "smooth",
         });
-    }
+    };
 
     // Public methods
     return {
         init: function () {
             // Elements
-            toggle = document.querySelector('#kt_app_sidebar_toggle');
-            wrapper = document.querySelector('#kt_app_sidebar_navs_wrappers');
-            sidebar = document.querySelector('#kt_app_sidebar');
+            toggle = document.querySelector("#kt_app_sidebar_toggle");
+            wrapper = document.querySelector("#kt_app_sidebar_navs_wrappers");
+            sidebar = document.querySelector("#kt_app_sidebar");
 
             if (toggle) {
                 handleToggle();
@@ -7913,19 +8794,18 @@ var KTAppSidebar = function () {
             if (wrapper) {
                 handleMenuScroll();
             }
-        }
+        },
     };
-}();
+})();
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
     KTAppSidebar.init();
 });
-"use strict";
+("use strict");
 
 // Class definition
-var KTThemeModeUser = function () {
-
+var KTThemeModeUser = (function () {
     var handleSubmit = function () {
         // Update chart on theme mode change
         KTThemeMode.on("kt.thememode.change", function () {
@@ -7938,14 +8818,14 @@ var KTThemeModeUser = function () {
             // store it in user profile and set the user opted theme mode via HTML attribute
             // <html data-theme-mode="light"> .... </html>
         });
-    }
+    };
 
     return {
         init: function () {
             handleSubmit();
-        }
+        },
     };
-}();
+})();
 
 // Initialize app on document ready
 KTUtil.onDOMContentLoaded(function () {
@@ -7953,13 +8833,13 @@ KTUtil.onDOMContentLoaded(function () {
 });
 
 // Declare KTThemeModeUser for Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTThemeModeUser;
 }
-"use strict";
+("use strict");
 
 // Class definition
-var KTThemeMode = function () {
+var KTThemeMode = (function () {
     var menu;
     var callbacks = [];
     var the = this;
@@ -7976,13 +8856,13 @@ var KTThemeMode = function () {
         }
 
         return "light";
-    }
+    };
 
     var setMode = function (mode, menuMode) {
         var currentMode = getMode();
 
         // Reset mode if system mode was changed
-        if (menuMode === 'system') {
+        if (menuMode === "system") {
             if (getSystemMode() !== mode) {
                 mode = getSystemMode();
             }
@@ -7991,17 +8871,26 @@ var KTThemeMode = function () {
         }
 
         // Read active menu mode value
-        var activeMenuItem = menu ? menu.querySelector('[data-kt-element="mode"][data-kt-value="' + menuMode + '"]') : null;
+        var activeMenuItem = menu
+            ? menu.querySelector(
+                  '[data-kt-element="mode"][data-kt-value="' + menuMode + '"]'
+              )
+            : null;
 
         // Enable switching state
-        document.documentElement.setAttribute("data-kt-theme-mode-switching", "true");
+        document.documentElement.setAttribute(
+            "data-kt-theme-mode-switching",
+            "true"
+        );
 
         // Set mode to the target document.documentElement
         document.documentElement.setAttribute("data-bs-theme", mode);
 
         // Disable switching state
         setTimeout(function () {
-            document.documentElement.removeAttribute("data-kt-theme-mode-switching");
+            document.documentElement.removeAttribute(
+                "data-kt-theme-mode-switching"
+            );
         }, 300);
 
         // Store mode value in storage
@@ -8014,40 +8903,58 @@ var KTThemeMode = function () {
         }
 
         if (mode !== currentMode) {
-            KTEventHandler.trigger(document.documentElement, 'kt.thememode.change', the);
+            KTEventHandler.trigger(
+                document.documentElement,
+                "kt.thememode.change",
+                the
+            );
         }
-    }
+    };
 
     var getMenuMode = function () {
         if (!menu) {
             return null;
         }
 
-        var menuItem = menu ? menu.querySelector('.active[data-kt-element="mode"]') : null;
+        var menuItem = menu
+            ? menu.querySelector('.active[data-kt-element="mode"]')
+            : null;
 
-        if (menuItem && menuItem.getAttribute('data-kt-value')) {
-            return menuItem.getAttribute('data-kt-value');
-        } else if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
-            return document.documentElement.getAttribute("data-bs-theme-mode")
+        if (menuItem && menuItem.getAttribute("data-kt-value")) {
+            return menuItem.getAttribute("data-kt-value");
+        } else if (
+            document.documentElement.hasAttribute("data-bs-theme-mode")
+        ) {
+            return document.documentElement.getAttribute("data-bs-theme-mode");
         } else if (localStorage.getItem("data-bs-theme-mode") !== null) {
             return localStorage.getItem("data-bs-theme-mode");
         } else {
-            return typeof defaultThemeMode !== "undefined" ? defaultThemeMode : "light";
+            return typeof defaultThemeMode !== "undefined"
+                ? defaultThemeMode
+                : "light";
         }
-    }
+    };
 
     var getSystemMode = function () {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light";
-    }
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+    };
 
     var initMode = function () {
         setMode(getMode(), getMenuMode());
-        KTEventHandler.trigger(document.documentElement, 'kt.thememode.init', the);
-    }
+        KTEventHandler.trigger(
+            document.documentElement,
+            "kt.thememode.init",
+            the
+        );
+    };
 
     var getActiveMenuItem = function () {
-        return menu.querySelector('[data-kt-element="mode"][data-kt-value="' + getMenuMode() + '"]');
-    }
+        return menu.querySelector(
+            '[data-kt-element="mode"][data-kt-value="' + getMenuMode() + '"]'
+        );
+    };
 
     var setActiveMenuItem = function (item) {
         var menuMode = item.getAttribute("data-kt-value");
@@ -8060,10 +8967,12 @@ var KTThemeMode = function () {
 
         item.classList.add("active");
         localStorage.setItem("data-bs-theme-mode", menuMode);
-    }
+    };
 
     var handleMenu = function () {
-        var items = [].slice.call(menu.querySelectorAll('[data-kt-element="mode"]'));
+        var items = [].slice.call(
+            menu.querySelectorAll('[data-kt-element="mode"]')
+        );
 
         items.map(function (item) {
             item.addEventListener("click", function (e) {
@@ -8079,11 +8988,13 @@ var KTThemeMode = function () {
                 setMode(mode, menuMode);
             });
         });
-    }
+    };
 
     return {
         init: function () {
-            menu = document.querySelector('[data-kt-element="theme-mode-menu"]');
+            menu = document.querySelector(
+                '[data-kt-element="theme-mode-menu"]'
+            );
 
             initMode();
 
@@ -8105,7 +9016,7 @@ var KTThemeMode = function () {
         },
 
         setMode: function (mode) {
-            return setMode(mode)
+            return setMode(mode);
         },
 
         on: function (name, handler) {
@@ -8113,10 +9024,14 @@ var KTThemeMode = function () {
         },
 
         off: function (name, handlerId) {
-            return KTEventHandler.off(document.documentElement, name, handlerId);
-        }
+            return KTEventHandler.off(
+                document.documentElement,
+                name,
+                handlerId
+            );
+        },
     };
-}();
+})();
 
 // Initialize app on document ready
 KTUtil.onDOMContentLoaded(function () {
@@ -8124,6 +9039,6 @@ KTUtil.onDOMContentLoaded(function () {
 });
 
 // Declare KTThemeMode for Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = KTThemeMode;
 }
