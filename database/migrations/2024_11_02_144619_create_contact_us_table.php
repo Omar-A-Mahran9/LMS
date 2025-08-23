@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone');
 
             $table->unsignedBigInteger('category_id')->nullable();
+                $table->foreignId('student_id')->nullable()->constrained('students')->onDelete('cascade');
 
             // Foreign key constraint.
             $table->foreign('category_id')

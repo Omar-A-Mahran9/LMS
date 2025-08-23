@@ -23,12 +23,10 @@ public function index(Request $request)
         $andsFilters = [];
         $query = Student::query();
 
-        // Filter by category
         if ($request->filled('filter_category') && $request->filter_category !== 'all') {
             $andsFilters[] = ['category_id', '=', $request->filter_category];
         }
 
-        // Filter by enrollment
         if ($request->filled('filter_enrollment') && $request->filter_enrollment !== 'all') {
             $value = $request->filter_enrollment;
 

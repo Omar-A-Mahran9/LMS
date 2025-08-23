@@ -33,6 +33,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     ->name('certificate.public');
 
 Route::middleware(['auth:api'])->group(function () {
+          Route::post('Ask_us', 'ContactUsController@store');
+
     Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');
     Route::get('get_rates_for_course/{course_id}', 'CourseController@getRatesForCourse');
     Route::post('student_rates_for_course', 'CourseController@storerate');
@@ -71,6 +73,8 @@ Route::middleware(['auth:api'])->group(function () {
 });
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {
+        Route::post('Ask_us', 'ContactUsController@store');
+
     Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
     Route::get('/courses/{id}/sections/count', [SectionController::class, 'countSectionByCourse']);
     Route::get('videos_by_classes_with_code/{id}', 'CourseController@getVideosByClassCode');
@@ -110,7 +114,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('coursesList', 'CourseController@CoursesList');
 
     Route::post('news-letter', 'HomeController@newsLetter');
-    Route::post('Ask_us', 'ContactUsController@store');
 
 
 });

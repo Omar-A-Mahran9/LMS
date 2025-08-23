@@ -10,17 +10,19 @@ use Illuminate\Http\Request;
 class ContactUsController extends Controller
 {
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreContact_usRequest $request)
-    {
+public function store(StoreContact_usRequest $request)
+{
+    $data = $request->validated();
 
-        $contact_us = $request->validated();
-        $contact_us_data = Contact_us::create($contact_us);
-        return $this->success(__('َquestion has been registered successfully'));
-
+    if (auth('student')->check()) {
+        $data['student_id'] = auth('student')->id();
     }
+
+    Contact_us::create($data);
+
+    return $this->success(__('Question has been registered successfully'));
+}
+
 
     public function data(){
     $locale = app()->getLocale(); // 'ar' or 'en'
