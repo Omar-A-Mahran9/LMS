@@ -60,8 +60,7 @@
                                                 @if ($contact->reply)
                                                     @if (Str::endsWith($contact->reply, '.mp3'))
                                                         <audio controls>
-                                                            <source
-                                                                src="{{ $contact->full_audio_path }}"
+                                                            <source src="{{ $contact->full_audio_path }}"
                                                                 type="audio/mpeg">
                                                             {{ __('Your browser does not support the audio element.') }}
                                                         </audio>
@@ -130,19 +129,20 @@
                             <h3 class="card-title">{{ __('Reply') }}</h3>
                         </div>
                         <div class="card-body">
-                            @if ($contact->full_audio_path)
-                                <audio controls>
-                                    <source src="{{ $contact->full_audio_path }}" type="audio/mpeg">
-                                    Your browser does not support the audio element.
-                                </audio>
-                            @endif
-
                             @if ($contact->reply)
-                                <p><strong>{{ __('Text Reply:') }}</strong> {{ $contact->reply }}</p>
+                                @if (Str::endsWith($contact->reply, '.mp3'))
+                                    <audio controls>
+                                        <source src="{{ asset('uploads/replies/' . $contact->reply) }}" type="audio/mpeg">
+                                        {{ __('Your browser does not support the audio element.') }}
+                                    </audio>
+                                @else
+                                    <p><strong>{{ __('Text Reply:') }}</strong> {{ $contact->reply }}</p>
+                                @endif
                             @endif
                         </div>
                     </div>
                 @endif
+
 
             </div>
         </div>
