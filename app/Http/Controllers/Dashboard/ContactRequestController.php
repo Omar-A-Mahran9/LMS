@@ -61,7 +61,7 @@ public function reply(Request $request, $id)
             'reply' => 'mimes:mp3,wav,ogg|max:10240', // audio only
         ]);
 
-        $audioName = uploadAudioToDirectory($request->file('reply'), 'contact_us');
+        $audioName = uploadAudioToDirectory($request->file('reply'), 'Contact');
 
         $contact->update([
             'reply'      => $audioName,
