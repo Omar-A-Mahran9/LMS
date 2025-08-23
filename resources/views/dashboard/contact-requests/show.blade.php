@@ -58,7 +58,16 @@
                                             <td class="text-muted">{{ __('Reply') }}</td>
                                             <td class="text-end">
                                                 @if ($contact->reply)
-                                                    {{ $contact->reply }}
+                                                    @if (Str::endsWith($contact->reply, '.mp3'))
+                                                        <audio controls>
+                                                            <source
+                                                                src="{{ $contact->full_audio_path }}"
+                                                                type="audio/mpeg">
+                                                            {{ __('Your browser does not support the audio element.') }}
+                                                        </audio>
+                                                    @else
+                                                        {{ $contact->reply }}
+                                                    @endif
                                                     <br>
                                                 @else
                                                     <span
@@ -66,6 +75,7 @@
                                                 @endif
                                             </td>
                                         </tr>
+
                                         <tr>
                                             <td class="text-muted">{{ __('Created At') }}</td>
                                             <td class="text-end">{{ $contact->created_at }}</td>
