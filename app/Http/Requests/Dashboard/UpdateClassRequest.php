@@ -54,7 +54,7 @@ class UpdateClassRequest extends FormRequest
             new NotNumbersOnly(),
          ],
 
-    'description_ar' => ['required', new NotNumbersOnly()],
+    'description_ar' => ['nullable', new NotNumbersOnly()],
     'description_en' => ['required', new NotNumbersOnly()],
 
 
