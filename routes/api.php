@@ -62,13 +62,14 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('profile-info', 'ProfileController@profileInfo')->name('profile-info');
     Route::post('update-profile-info', 'ProfileController@updateProfileInfo')->name('update-profile-info');
-     Route::post('logout', [ProfileController::class, 'logout'])->name('logout');
+    Route::post('logout', [ProfileController::class, 'logout'])->name('logout');
     Route::post('logout-all', [ProfileController::class, 'logoutFromAllDevices'])->name('logout-all');;
     Route::put('update-profile-password', [ProfileController::class, 'updatePassword']);
     Route::get('quizzes-results', [ProfileController::class, 'quizzesResults'])->name('quizzes.results');
     Route::get('homework-results', [ProfileController::class, 'homeworksResults'])->name('homeworks.results');
     Route::get('my-courses', [ProfileController::class, 'myCourses'])->name('courses');
     Route::get('stats', [ProfileController::class, 'studentStatistics'])->name('stats');
+    Route::get('my-question', [ProfileController::class, 'myQuestion'])->name('courses');
 
 });
 

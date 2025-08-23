@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\CoursesDetailsResource;
 use App\Http\Resources\Api\StudentResource;
 use App\Http\Resources\Api\UpdateStudentProfileRequest;
+use App\Models\Contact_us;
 use App\Models\Course;
 use App\Models\HomeWork;
 use App\Models\Quiz;
@@ -353,5 +354,18 @@ public function studentStatistics()
     ]);
 }
 
+public function myQuestion()
+{
+    $studentId = auth('student')->id(); // using student guard
+
+    $questions = Contact_us::with('student')
+        ->where('student_id', $studentId)
+        ->latest()
+        ->get();
+
+    return $this->success("",
+         $questions,
+    );
+}
 
 }

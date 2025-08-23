@@ -13,8 +13,10 @@ class Contact_us extends Model
     protected $table = 'contact_us';
     protected $guarded = [];
     protected $casts   = ['created_at' => 'date:Y-m-d', 'updated_at' => 'date:Y-m-d'];
-    /**
-     * The "booted" method of the model.
-     */
 
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'student_id');
+    }
 }
