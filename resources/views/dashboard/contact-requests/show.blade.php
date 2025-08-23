@@ -60,8 +60,6 @@
                                                 @if ($contact->reply)
                                                     {{ $contact->reply }}
                                                     <br>
-                                                    <small class="text-muted">{{ __('Replied at') }}:
-                                                        {{ $contact->replied_at ? $contact->replied_at : '-' }}</small>
                                                 @else
                                                     <span
                                                         class="badge badge-light-warning">{{ __('Not Replied Yet') }}</span>
@@ -80,7 +78,7 @@
                     </div>
                 </div>
                 <!--end::Contact Card-->
-                @if (!$contact->reply )
+                @if (!$contact->reply)
                     <div class="card mt-5">
                         <div class="card-header">
                             <h3 class="card-title">{{ __('Send a Reply') }}</h3>
