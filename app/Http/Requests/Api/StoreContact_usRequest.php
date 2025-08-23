@@ -22,7 +22,7 @@ class StoreContact_usRequest extends FormRequest
      */
     public function rules(): array
     {
-          if (auth('student')->check()) {
+          if (auth('api')->check()) {
         return [
             'category_id' => ['required', 'numeric', 'exists:categories,id'],
             'message' => ['required'],
