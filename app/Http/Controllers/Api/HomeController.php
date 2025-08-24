@@ -35,15 +35,14 @@ class HomeController extends Controller
 {
 public function topHeroesByCategory(Request $request)
 {
-    $categoryId = $request->get('category_id');
+    $categoryId = $request->get('category_id')??2;
     $classId = $request->get('class_id')??9;
-    $quizId = $request->get('quiz_id');
+    $quizId = $request->get('quiz_id')??34;
 
     $category = Category::where('is_publish', 1)
         ->whereNull('parent_id')
         ->when($categoryId, fn($q) => $q->where('id', $categoryId))
         ->with([
-            'courses.classes.quizzes',
             'courses.classes.quizzes.attempts.student',
             'courses.classes.quizzes.questions'
         ])
