@@ -60,6 +60,7 @@ public function topHeroesByCategory(Request $request)
             // تصفية حسب الكلاس
             if ($classId && $class->id != $classId) {
                 continue;
+                dd($class->id);
             }
 
             foreach ($class->quizzes as $quiz) {
