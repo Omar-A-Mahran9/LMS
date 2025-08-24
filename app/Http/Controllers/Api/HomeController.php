@@ -57,17 +57,17 @@ public function topHeroesByCategory(Request $request)
     foreach ($category->courses as $course) {
         foreach ($course->classes as $class) {
 
-            // // تصفية حسب الكلاس
-            // if ($classId && $class->id != $classId) {
-            //     continue;
-            // }
+            // تصفية حسب الكلاس
+            if ($classId && $class->id != $classId) {
+                continue;
+            }
 
             foreach ($class->quizzes as $quiz) {
 
                 // تصفية حسب الكويز
-                // if ($quizId && $quiz->id != $quizId) {
-                //     continue;
-                // }
+                if ($quizId && $quiz->id != $quizId) {
+                    continue;
+                }
 
                 $quizFullMark = $quiz->questions->sum('points') ?? 100;
 
@@ -109,8 +109,8 @@ public function topHeroesByCategory(Request $request)
     }
 
     $topStudents = collect($studentStats)
-    ->filter(fn($data) => $data['attempts'] > 0 && $data['total_score'] == $data['total_possible'])
-    ->sortByDesc(fn($data) => $data['total_score']) // Sort by highest score
+    ->filter(fn($data) => $data['attempts'] > 0 && $data['total_score'] == $data['total_possible']);
+    // ->sortByDesc(fn($data) => $data['total_score']) // Sort by highest score
 
     // ->take(10) // Get top 10
     ->values()
