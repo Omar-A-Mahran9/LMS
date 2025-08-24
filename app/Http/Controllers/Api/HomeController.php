@@ -59,7 +59,7 @@ public function topHeroesByCategory(Request $request)
 
             // تصفية حسب الكلاس
             if ($classId && $class->id != $classId) {
-                                dd($class->id);
+                                dd($classId,$class->id);
 
                 continue;
             }
