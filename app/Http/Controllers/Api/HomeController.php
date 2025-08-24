@@ -43,6 +43,7 @@ public function topHeroesByCategory(Request $request)
         ->whereNull('parent_id')
         ->when($categoryId, fn($q) => $q->where('id', $categoryId))
         ->with([
+            'courses.classes.quizzes',
             'courses.classes.quizzes.attempts.student',
             'courses.classes.quizzes.questions'
         ])
@@ -59,8 +60,6 @@ public function topHeroesByCategory(Request $request)
 
             // تصفية حسب الكلاس
             if ($classId && $class->id != $classId) {
-                                dd($classId,$class->id);
-
                 continue;
             }
 
