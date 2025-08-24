@@ -35,7 +35,7 @@ class HomeController extends Controller
 {
 public function topHeroesByCategory(Request $request)
 {
-    $categoryId = $request->get('category_id');
+    $categoryId = $request->get('category_id')??2;
     $classId = $request->get('class_id');
     $quizId = $request->get('quiz_id')??34;
 
