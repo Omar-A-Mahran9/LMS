@@ -37,7 +37,7 @@ public function topHeroesByCategory(Request $request)
 {
     $categoryId = $request->get('category_id');
     $classId = $request->get('class_id');
-    $quizId = $request->get('quiz_id')??32;
+    $quizId = $request->get('quiz_id');
 
     $category = Category::where('is_publish', 1)
         ->whereNull('parent_id')
@@ -57,21 +57,26 @@ public function topHeroesByCategory(Request $request)
     foreach ($category->courses as $course) {
         foreach ($course->classes as $class) {
 
-            // تصفية حسب الكلاس
+            // Filter by class if provided
             if ($classId && $class->id != $classId) {
                 continue;
             }
 
-            foreach ($class->quizzes as $quiz) {
+            // Determine which quizzes to process
+            $quizzes = $class->quizzes;
+            if ($quizId) {
+                $quizzes = $quizzes->where('id', $quizId);
+            } else {
+                // Take the latest quiz if quiz_id is not provided
+                $latestQuiz = $quizzes->sortByDesc('created_at')->first();
+                $quizzes = $latestQuiz ? collect([$latestQuiz]) : collect([]);
+            }
 
-                // تصفية حسب الكويز
-                if ($quizId && $quiz->id != $quizId) {
-                    continue;
-                }
+            foreach ($quizzes as $quiz) {
 
                 $quizFullMark = $quiz->questions->sum('points') ?? 100;
 
-                // أخذ أفضل محاولة لكل طالب
+                // Best attempt per student
                 $bestAttempts = $quiz->attempts
                     ->groupBy('student_id')
                     ->map(fn($attempts) => $attempts->sortByDesc('score')->first());
@@ -80,7 +85,7 @@ public function topHeroesByCategory(Request $request)
                     $student = $attempt->student;
                     if (!$student) continue;
 
-                    // تجاهل بيانات الاختبار
+                    // Skip test accounts
                     if (
                         str_contains(strtolower($student->first_name), 'test') ||
                         str_contains(strtolower($student->last_name), 'test') ||
@@ -109,23 +114,21 @@ public function topHeroesByCategory(Request $request)
     }
 
     $topStudents = collect($studentStats)
-    ->filter(fn($data) => $data['attempts'] > 0 && $data['total_score'] == $data['total_possible'])
-    ->sortByDesc(fn($data) => $data['total_score']) // Sort by highest score
-
-    // ->take(10) // Get top 10
-    ->values()
-    ->map(function ($item) {
-        return [
-            'student_id' => $item['student']->id,
-            'name' => $item['student']->first_name . " " . $item['student']->last_name,
-            'image' => $item['student']->full_image_path,
-            'category' => $item['student']->category->name ?? 'N/A',
-            'attempts' => $item['attempts'],
-            'average_score' => $item['total_possible'], // Consider renaming if this isn't the average
-            'full_score' => $item['total_score'],
-        ];
-    });
-
+        ->filter(fn($data) => $data['attempts'] > 0 && $data['total_score'] == $data['total_possible'])
+        ->sortByDesc(fn($data) => $data['total_score'])
+        // ->take(10)
+        ->values()
+        ->map(function ($item) {
+            return [
+                'student_id' => $item['student']->id,
+                'name' => $item['student']->first_name . " " . $item['student']->last_name,
+                'image' => $item['student']->full_image_path,
+                'category' => $item['student']->category->name ?? 'N/A',
+                'attempts' => $item['attempts'],
+                'average_score' => $item['total_possible'], // rename if needed
+                'full_score' => $item['total_score'],
+            ];
+        });
 
     return $this->success('', [
         'image' => getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
