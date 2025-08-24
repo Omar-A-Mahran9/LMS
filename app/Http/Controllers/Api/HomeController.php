@@ -35,9 +35,9 @@ class HomeController extends Controller
 {
 public function topHeroesByCategory(Request $request)
 {
-    $categoryId = $request->get('category_id')??2;
+    $categoryId = $request->get('category_id');
     $classId = $request->get('class_id');
-    $quizId = $request->get('quiz_id')??34;
+    $quizId = $request->get('quiz_id')??35;
 
     $category = Category::where('is_publish', 1)
         ->whereNull('parent_id')
