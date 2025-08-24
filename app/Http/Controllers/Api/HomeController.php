@@ -57,17 +57,17 @@ public function topHeroesByCategory(Request $request)
     foreach ($category->courses as $course) {
         foreach ($course->classes as $class) {
 
-            // تصفية حسب الكلاس
-            if ($classId && $class->id != $classId) {
-                continue;
-            }
+            // // تصفية حسب الكلاس
+            // if ($classId && $class->id != $classId) {
+            //     continue;
+            // }
 
             foreach ($class->quizzes as $quiz) {
 
                 // تصفية حسب الكويز
-                if ($quizId && $quiz->id != $quizId) {
-                    continue;
-                }
+                // if ($quizId && $quiz->id != $quizId) {
+                //     continue;
+                // }
 
                 $quizFullMark = $quiz->questions->sum('points') ?? 100;
 
