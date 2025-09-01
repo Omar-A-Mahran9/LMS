@@ -51,9 +51,9 @@ public function getCoursesByCategory(Request $request)
     $query = Course::query()
         ->where('is_active', 1)
         ->where('is_class', 1)
-        ->where('is_enrollment_open', 1)
-        ->whereDate('start_date', '<=', now())
-        ->whereDate('end_date', '>=', now());
+        ->where('is_enrollment_open', 1);
+        // ->whereDate('start_date', '<=', now())
+        // ->whereDate('end_date', '>=', now());
 
     if ($categoryId) {
         $category = Category::find($categoryId);
@@ -98,8 +98,8 @@ public function getCoursesById(Request $request, $id)
     $course = Course::where('id', $id)
         ->where('is_active', 1)
         ->where('is_enrollment_open', 1)
-        ->whereDate('start_date', '<=', now())
-        ->whereDate('end_date', '>=', now())
+        // ->whereDate('start_date', '<=', now())
+        // ->whereDate('end_date', '>=', now())
         ->first();
 
     if (
@@ -522,9 +522,9 @@ public function getCourses(Request $request)
     $query = Course::query()
         ->where('is_active', 1)
         ->where('is_class', 0)
-        ->where('is_enrollment_open', 1)
-        ->whereDate('start_date', '<=',  $today)
-        ->whereDate('end_date', '>=',  $today);
+        ->where('is_enrollment_open', 1);
+        // ->whereDate('start_date', '<=',  $today)
+        // ->whereDate('end_date', '>=',  $today);
 
     if (Auth::guard('api')->check()) {
         $student = Auth::guard('api')->user();
