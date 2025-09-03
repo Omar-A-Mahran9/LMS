@@ -9,7 +9,7 @@ class Quiz extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['title','description'];
+    protected $appends = ['title', 'description', 'full_score']; // add full_score
     protected $casts   = [
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
@@ -54,6 +54,11 @@ class Quiz extends Model
     public function attempts()
     {
         return $this->hasMany(QuizAttempt::class);
+    }
+
+        public function getFullScoreAttribute()
+    {
+        return $this->questions->sum('points');
     }
 
 }

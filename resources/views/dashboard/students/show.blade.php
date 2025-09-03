@@ -227,21 +227,26 @@
                                     <div class="d-flex align-items-center gap-3 mb-3">
                                         <i class="ki-outline ki-check-circle fs-2hx text-warning"></i>
                                         <div>
-                                            <div class="fs-3 fw-bold text-gray-800">{{ $student->quizAttempts->count() }}
+                                            <div class="fs-3 fw-bold text-gray-800">
+                                                {{ $student->quizAttempts->whereNotNull('score')->count() }}
                                             </div>
                                             <div class="text-muted">{{ __('Quiz Attempts') }}</div>
                                         </div>
                                     </div>
                                     <ul class="list-unstyled mt-3">
-                                        @foreach ($student->quizAttempts as $attempt)
-                                            <li>{{ $attempt->quiz->title ?? '-' }}:
-                                                <strong>{{ $attempt->score }}%</strong>
+                                        @foreach ($student->quizAttempts->whereNotNull('score') as $attempt)
+                                            <li>
+                                                {{ $attempt->quiz->title ?? '-' }}:
+                                                <strong>
+                                                    {{ $attempt->score }} / {{ $attempt->quiz->full_score ?? '-' }}
+                                                </strong>
                                             </li>
                                         @endforeach
                                     </ul>
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- Homework Attempts -->
                         <div class="col-md-6 col-xl-4">
