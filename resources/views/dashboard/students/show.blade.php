@@ -228,17 +228,21 @@
                                         <i class="ki-outline ki-check-circle fs-2hx text-warning"></i>
                                         <div>
                                             <div class="fs-3 fw-bold text-gray-800">
-                                                {{ $student->quizAttempts->whereNotNull('score')->count() }}
+                                                {{ $student->quizAttempts->count() }}
                                             </div>
                                             <div class="text-muted">{{ __('Quiz Attempts') }}</div>
                                         </div>
                                     </div>
                                     <ul class="list-unstyled mt-3">
-                                        @foreach ($student->quizAttempts->whereNotNull('score') as $attempt)
+                                        @foreach ($student->quizAttempts as $attempt)
                                             <li>
                                                 {{ $attempt->quiz->title ?? '-' }}:
                                                 <strong>
-                                                    {{ $attempt->score }} / {{ $attempt->quiz->full_score ?? '-' }}
+                                                    @if (is_null($attempt->score))
+                                                        {{ __('Not Attempted') }}
+                                                    @else
+                                                        {{ $attempt->score }} / {{ $attempt->quiz->full_score ?? '-' }}
+                                                    @endif
                                                 </strong>
                                             </li>
                                         @endforeach
@@ -246,6 +250,7 @@
                                 </div>
                             </div>
                         </div>
+
 
 
                         <!-- Homework Attempts -->
