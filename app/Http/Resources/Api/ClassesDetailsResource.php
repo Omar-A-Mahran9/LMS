@@ -29,10 +29,14 @@ class ClassesDetailsResource extends JsonResource
   $hasLive = $this->lives()
             ->where('is_active', true)
             ->exists();
+              $liveIds = $this->lives()
+        ->where('is_active', true)
+        ->pluck('id'); // 👈 get all active live IDs
         return [
                "id" => $this->id,
             'image' => $this->full_image_path,
             'has_live'=>  $hasLive,
+            'live_ids' => $liveIds, // 👈 add live IDs
 
             'title' => $this->title,
             'started_at' => $this->course->start_date,
