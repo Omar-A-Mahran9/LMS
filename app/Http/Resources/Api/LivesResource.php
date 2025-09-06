@@ -24,7 +24,7 @@ public function toArray(Request $request): array
             'chat_enabled'    => (bool) $this->chat_enabled,
             'start_at'   => $this->start_time,
             'end_at'   => $this->start_time,
-            'stream' =>$this->is_active || $now->between(Carbon::parse($this->start_time), Carbon::parse($this->end_time)),
+            'has_live' =>$this->is_active || $now->between(Carbon::parse($this->start_time), Carbon::parse($this->end_time)),
 
         ];
     }
