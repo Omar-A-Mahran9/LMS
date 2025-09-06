@@ -95,7 +95,8 @@ $nextClass = $this->course
 
             'description'  => $this->description,
             'started_at' => $this->course->start_date,
-             'attachment' => $this->full_attachment_path,
+            // 'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,
+            'attachment' => $this->full_attachment_path,
             'quiz_id'=>$activeQuiz->id??"not found Quiz",
    'videos' => $this->videos->map(function ($video) {
                 return new VideoResource($video, $this->studentId);
@@ -109,7 +110,6 @@ $nextClass = $this->course
 'quiz_required' => (!auth()->id() || (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()))
     ? 0
     : $this->quiz_required,
-
             // IDs and attempts
             'quiz_id'            => !$quizAttemptLimitReached ? $activeQuiz?->id : null,
             'quiz_attempted'     => $hasAttemptedQuiz,
