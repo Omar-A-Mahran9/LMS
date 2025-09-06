@@ -5,6 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class ClassDetailsResource extends JsonResource
 {
