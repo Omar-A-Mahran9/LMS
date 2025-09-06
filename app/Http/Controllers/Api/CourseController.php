@@ -729,7 +729,7 @@ public function access(Request $request)
     // $code->increment('used_count');
 
 
-    return $this->success('successfully code', [
+    return $this->success('تم التحقق من الكود بنجاح', [
     // 'class_url' => env('APP_URL') . '/api/videos_by_classes_with_code/' . $request->class_id,
     ]);
 
