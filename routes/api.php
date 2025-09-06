@@ -43,11 +43,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
     Route::post('videos/{video}/watch', 'CourseController@logWatch');
     Route::get('class/{id}', 'CourseController@getClassById');
-    Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
-    Route::get('quiz/{id}', 'CourseController@getQuizById');
-    Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
-    Route::post('student-quizzes/{quizAttemptId}/submit', [StudentQuizController::class, 'submitQuiz']);
-    Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
+    // Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
+    // Route::get('quiz/{id}', 'CourseController@getQuizById');
+    // Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
+    // Route::post('student-quizzes/{quizAttemptId}/submit', [StudentQuizController::class, 'submitQuiz']);
+    // Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
     Route::get('homeworks/{homeworkId}/start', [StudentHomeworkController::class, 'startHomework']);
     Route::post('student-homeworks/{homeworkAttemptId}/submit', [StudentHomeworkController::class, 'submitHomework']);
     Route::get('student-homeworks/{studentHomeworkId}/results', [StudentHomeworkController::class, 'results']);
@@ -81,6 +81,11 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('videos_by_classes_with_code/{id}', 'CourseController@getVideosByClassCode');
    Route::get('all_classes', 'CourseController@getAllClasses');
     Route::post('access_class', 'CourseController@access');
+    Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
+    Route::get('quiz/{id}', 'CourseController@getQuizById');
+    Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
+    Route::post('student-quizzes/{quizAttemptId}/submit', [StudentQuizController::class, 'submitQuiz']);
+    Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
     Route::get('check_course/{id}', 'CourseController@checkCourseAccess');
    Route::get('all_classes_data', 'CourseController@getAllClassesData');
    Route::get('all_quizes_data', 'CourseController@getAllQuizesData');
