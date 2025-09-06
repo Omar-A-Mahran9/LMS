@@ -520,130 +520,127 @@ private function checkAnswer($question, $studentAnswer)
 
 public function results($studentQuizId)
 {
- $attempt = QuizAttempt::with([
-    'quiz.questions.answers',
-    'answers.answer'
-    ])->where('id', $studentQuizId)
-    ->where('student_id', auth()->id())
-    ->first();
+    $attempt = QuizAttempt::with([
+        'quiz.questions.answers',
+        'answers.answer'
+    ])->where('id', $studentQuizId)->first();
 
     if (!$attempt) {
-        return $this->failure('Quiz attempt not found or access denied.');
+        return $this->failure('Quiz attempt not found.');
     }
 
-    if (!$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
+    // تحقق من ملكية المحاولة:
+    if ($attempt->student_id) {
+        // لو طالب مسجل لازم يكون هو نفسه
+        if ($attempt->student_id !== auth()->id()) {
+            return $this->failure('Access denied.');
+        }
+
+        // ولازم يكون مسجل في الكورس
+        if (!$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
             return $this->failure('You are not enrolled in this course.');
         }
-        $results = [];
-        $totalScore = 0;
-        $fullScore = 0;
+    }
 
-        foreach ($attempt->quiz->questions as $question) {
-            $fullScore += $question->points;
+    $results = [];
+    $totalScore = 0;
+    $fullScore = 0;
 
-            $attemptAnswer = $attempt->answers->firstWhere('quiz_question_id', $question->id);
+    foreach ($attempt->quiz->questions as $question) {
+        $fullScore += $question->points;
 
-            if ($question->type === 'short_answer') {
-                // For short‑answer, single “correct” text
-                $correctAnswers = [
-                    'answer' => $question->expected_answer,
-                ];
-            } else {
-                // For MCQ / true_false, collect all correct options
-                $correctAnswers = $question->answers
-                    ->where('is_correct', 1)
-                    ->map(fn($ans) => [
-                        'id'     => $ans->id,
-                        'answer' => $ans->answer,
-                    ])
-                    ->values()
-                    ->toArray();
-            }
+        $attemptAnswer = $attempt->answers->firstWhere('quiz_question_id', $question->id);
 
-
-            $studentAnswer = null;
-            $isCorrect = false;
-
-            if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-                $selectedId = $attemptAnswer?->quiz_answer_id;
-
-                if ($attemptAnswer?->quiz_answer_id) {
-                    // Find the selected answer object for student answer
-                    $selectedAnswer = $question->answers->firstWhere('id', $attemptAnswer->quiz_answer_id);
-                    if ($selectedAnswer) {
-                        $studentAnswer = [
-                            'id' => $selectedAnswer->id,
-                            'answer' => $selectedAnswer->answer,
-                        ];
-                    }
-                }
-
-                // Check if student's selected answer id is in correct answers
-                $isCorrect = $correctAnswers && collect($correctAnswers)
-                    ->pluck('id')
-                    ->contains($attemptAnswer?->quiz_answer_id);
-            } elseif ($question->type === 'short_answer') {
-                // For short answer, student_answer is the text typed, with id null
-                $studentAnswerText = $attemptAnswer?->answer_text ?? null;
-                $studentAnswer = $studentAnswerText !== null ? [
-                    'id' => null,
-                    'answer' => $studentAnswerText,
-                ] : null;
-
-
-                  $correctAnswer = $question->expected_answer;
-        if ($correctAnswer) {
-            $normalizedStudent = $this->normalizeAnswer($studentAnswerText);
-            $normalizedCorrect = $this->normalizeAnswer($correctAnswer);
-
-            similar_text($normalizedStudent, $normalizedCorrect, $percent);
-
-            // dd($normalizedStudent, $normalizedCorrect, $percent);
-
-            if ($percent >= 90) {
-                    $isCorrect = true;
-            }
-            }
-            }
-
-            $pointsAwarded = $isCorrect ? $question->points : 0;
-            $totalScore += $pointsAwarded;
-
-            $results[] = [
-                'question_id'      => $question->id,
-                'question_type'      => $question->type,
-                'answer_percent' => round($attemptAnswer->answer_percent) . '%',
-
-                'question'         => $question->question,
-                'question_answers' => $question->answers->map(fn($ans) => [
-                                                'id' => $ans->id,
-                                                'answer' => $ans->answer_en,
-                                                'is_correct' => (bool) $ans->is_correct, // optional
-                                                'is_selected'=> $ans->id === $selectedId,
-
-                                            ])->values()->toArray(),
-                'student_answer'   => $studentAnswer,
-                'correct_answers'  => $correctAnswers,
-                'is_correct'       => $isCorrect,
-                'points_awarded'   => $pointsAwarded,
-                'points_possible'  => $question->points,
+        if ($question->type === 'short_answer') {
+            $correctAnswers = [
+                'answer' => $question->expected_answer,
             ];
+        } else {
+            $correctAnswers = $question->answers
+                ->where('is_correct', 1)
+                ->map(fn($ans) => [
+                    'id'     => $ans->id,
+                    'answer' => $ans->answer,
+                ])
+                ->values()
+                ->toArray();
         }
 
-        return $this->success('', [
-            'class_id'=> $attempt->quiz->class_id,
+        $studentAnswer = null;
+        $isCorrect = false;
+        $selectedId = null;
 
-            'section_id'=> $attempt->quiz->section_id,
+        if (in_array($question->type, ['multiple_choice', 'true_false'])) {
+            $selectedId = $attemptAnswer?->quiz_answer_id;
 
-            'course_id'=> $attempt->quiz->section->course_id ??$attempt->quiz->class->course_id,
-            'attempt_id'   => $attempt->id,
-            'quiz_title'   => $attempt->quiz->title_en,
-            'score'        => $totalScore,
-            'full_score'   => $fullScore,
-            'submitted_at' => $attempt->submitted_at,
-            'results'      => $results,
-        ]);
+            if ($selectedId) {
+                $selectedAnswer = $question->answers->firstWhere('id', $selectedId);
+                if ($selectedAnswer) {
+                    $studentAnswer = [
+                        'id' => $selectedAnswer->id,
+                        'answer' => $selectedAnswer->answer,
+                    ];
+                }
+            }
+
+            $isCorrect = $correctAnswers && collect($correctAnswers)
+                ->pluck('id')
+                ->contains($selectedId);
+        } elseif ($question->type === 'short_answer') {
+            $studentAnswerText = $attemptAnswer?->answer_text ?? null;
+            $studentAnswer = $studentAnswerText !== null ? [
+                'id' => null,
+                'answer' => $studentAnswerText,
+            ] : null;
+
+            $correctAnswer = $question->expected_answer;
+            if ($correctAnswer) {
+                $normalizedStudent = $this->normalizeAnswer($studentAnswerText);
+                $normalizedCorrect = $this->normalizeAnswer($correctAnswer);
+
+                similar_text($normalizedStudent, $normalizedCorrect, $percent);
+
+                if ($percent >= 90) {
+                    $isCorrect = true;
+                }
+            }
+        }
+
+        $pointsAwarded = $isCorrect ? $question->points : 0;
+        $totalScore += $pointsAwarded;
+
+        $results[] = [
+            'question_id'      => $question->id,
+            'question_type'    => $question->type,
+            'answer_percent'   => $attemptAnswer?->answer_percent ? round($attemptAnswer->answer_percent) . '%' : null,
+            'question'         => $question->question,
+            'question_answers' => $question->answers->map(fn($ans) => [
+                'id' => $ans->id,
+                'answer' => $ans->answer_en,
+                'is_correct' => (bool) $ans->is_correct,
+                'is_selected'=> $ans->id === $selectedId,
+            ])->values()->toArray(),
+            'student_answer'   => $studentAnswer,
+            'correct_answers'  => $correctAnswers,
+            'is_correct'       => $isCorrect,
+            'points_awarded'   => $pointsAwarded,
+            'points_possible'  => $question->points,
+        ];
+    }
+
+    return $this->success('', [
+        'class_id'    => $attempt->quiz->class_id,
+        'section_id'  => $attempt->quiz->section_id,
+        'course_id'   => $attempt->quiz->section->course_id ?? $attempt->quiz->class->course_id,
+        'attempt_id'  => $attempt->id,
+        'quiz_title'  => $attempt->quiz->title_en,
+        'score'       => $totalScore,
+        'full_score'  => $fullScore,
+        'submitted_at'=> $attempt->submitted_at,
+        'results'     => $results,
+    ]);
 }
+
 
 
 function normalizeAnswer($text)
