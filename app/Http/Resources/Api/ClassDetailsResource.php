@@ -95,7 +95,7 @@ $nextClass = $this->course
 
             'description'  => $this->description,
             'started_at' => $this->course->start_date,
-            'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,
+'quiz_required' => (!Auth::check() || $hasAttemptedActiveQuiz) ? 0 : $this->quiz_required,
             'attachment' => $this->full_attachment_path,
             'quiz_id'=>$activeQuiz->id??"not found Quiz",
    'videos' => $this->videos->map(function ($video) {
