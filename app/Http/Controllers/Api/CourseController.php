@@ -216,10 +216,74 @@ public function getQuizClassById($id)
     }
 
 
+// public function getVideosByClass($id)
+// {
+//     $studentId = Auth::id();
+//     $student = Auth::user();
+
+//     // Fetch class and check if it's active
+//     $class = CourseClass::where('id', $id)
+//         ->where('is_active', 1)
+//         ->first();
+
+//     if (!$class) {
+//         return $this->failure('Class not found or unpublished');
+//     }
+
+//     // Check if student is enrolled in the course
+//     $course = Course::where('id', $class->course_id)
+//         ->where('is_active', 1)
+//         ->whereHas('enrollments', function ($q) use ($studentId) {
+//             $q->where('student_id', $studentId)
+//               ->where('status', 'approved')
+//               ->where('is_active', 1);
+//         })
+//         ->first();
+
+//     if (!$course) {
+//         return $this->failure('Course not found or unauthorized.');
+//     }
+
+//     // Optionally track class view (like section)
+//     $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
+//     if (!Cache::has($cacheKey)) {
+//         $class->increment('views');
+//         Cache::put($cacheKey, true, now()->addHours(6));
+//     }
+
+//     // Eager load videos and student progress
+//     $videos = $class->videos()
+//         ->where('is_active', 1)
+//         ->with(['studentProgress' => function ($query) use ($studentId) {
+//             $query->where('student_id', $studentId);
+//         }])
+//         ->get();
+
+//     // Format each video using the resource
+
+
+//     return $this->success('Class videos loaded', [
+//         // 'course_data' => [
+//         //     'course_id'           => $course->id,
+//         //     'course_title'        => $course->title,
+//         //     'has_certificate'     => $course->certificate_available,
+//         //     'certificate_url'     => $course->certificate_available
+//         //         ? getOrGeneratePublicCertificateUrl($student, $course)
+//         //         : null,
+//         //     'is_completed'        => $course->is_completed,
+//         //     'progress_percentage' => $course->progress_percentage,
+//         //     'has_rated'           => Student_rate::where('course_id', $course->id)
+//         //         ->where('student_id', $studentId)
+//         //         ->exists(),
+//         // ],
+//         'class_data' =>new ClassDetailsResource($class, $studentId),
+//     ]);
+// }
+
 public function getVideosByClass($id)
 {
     $studentId = Auth::id();
-    $student = Auth::user();
+    $student   = Auth::user();
 
     // Fetch class and check if it's active
     $class = CourseClass::where('id', $id)
@@ -230,53 +294,47 @@ public function getVideosByClass($id)
         return $this->failure('Class not found or unpublished');
     }
 
-    // Check if student is enrolled in the course
+    // Fetch the related course
     $course = Course::where('id', $class->course_id)
-        ->where('is_active', 1)
-        ->whereHas('enrollments', function ($q) use ($studentId) {
+        ->where('is_active', 1);
+
+    // Only enforce enrollment if the user is logged in
+    if ($studentId) {
+        $course->whereHas('enrollments', function ($q) use ($studentId) {
             $q->where('student_id', $studentId)
               ->where('status', 'approved')
               ->where('is_active', 1);
-        })
-        ->first();
+        });
+    }
+
+    $course = $course->first();
 
     if (!$course) {
         return $this->failure('Course not found or unauthorized.');
     }
 
-    // Optionally track class view (like section)
-    $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
-    if (!Cache::has($cacheKey)) {
-        $class->increment('views');
-        Cache::put($cacheKey, true, now()->addHours(6));
+    // Track class view only if student is logged in
+    if ($studentId) {
+        $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
+        if (!Cache::has($cacheKey)) {
+            $class->increment('views');
+            Cache::put($cacheKey, true, now()->addHours(6));
+        }
     }
 
-    // Eager load videos and student progress
+    // Eager load videos with optional student progress
     $videos = $class->videos()
         ->where('is_active', 1)
         ->with(['studentProgress' => function ($query) use ($studentId) {
-            $query->where('student_id', $studentId);
+            if ($studentId) {
+                $query->where('student_id', $studentId);
+            }
         }])
         ->get();
 
-    // Format each video using the resource
-
-
     return $this->success('Class videos loaded', [
-        // 'course_data' => [
-        //     'course_id'           => $course->id,
-        //     'course_title'        => $course->title,
-        //     'has_certificate'     => $course->certificate_available,
-        //     'certificate_url'     => $course->certificate_available
-        //         ? getOrGeneratePublicCertificateUrl($student, $course)
-        //         : null,
-        //     'is_completed'        => $course->is_completed,
-        //     'progress_percentage' => $course->progress_percentage,
-        //     'has_rated'           => Student_rate::where('course_id', $course->id)
-        //         ->where('student_id', $studentId)
-        //         ->exists(),
-        // ],
-        'class_data' =>new ClassDetailsResource($class, $studentId),
+        'class_data' => new ClassDetailsResource($class, $studentId),
+        'videos'     => $videos,
     ]);
 }
 
@@ -386,6 +444,61 @@ $this->success('Course access data.'
 }
 
 
+// public function logWatch(Request $request, $id)
+// {
+//     $request->validate([
+//         'watch_seconds' => 'required|integer|min:1',
+//         'last_watched_second' => 'nullable|integer|min:0',
+//     ]);
+
+//     $video = CourseVideo::findOrFail($id);
+//     $student = auth()->user();
+
+//     $progress = CourseVideoStudent::firstOrNew([
+//         'course_video_id' => $video->id,
+//         'student_id'      => $student->id,
+//     ]);
+
+//     // Initialize previous values if not set
+//     $previousWatchSeconds = $progress->watch_seconds ?? 0;
+//     $previousLastSecond = $progress->last_watched_second ?? 0;
+
+//     // ✅ لا نسمح بحساب الرجوع للخلف
+//     $newLastSecond = $request->input('last_watched_second', $previousLastSecond);
+//     if ($newLastSecond > $previousLastSecond) {
+//         $progress->last_watched_second = $newLastSecond;
+//     }
+
+//     // ✅ نضيف watch_seconds فقط إذا النقطة الحالية > السابقة
+//     $watchSeconds = $request->watch_seconds;
+//     if ($newLastSecond <= $previousLastSecond) {
+//         $watchSeconds = 0; // لا تضيف أي شيء لو رجع المستخدم
+//     }
+
+//     $progress->watch_seconds = min(
+//         $previousWatchSeconds + $watchSeconds,
+//         $video->duration_seconds
+//     );
+
+//     // تحديث وقت المشاهدة
+//     $progress->last_watched_at = now();
+
+//     // ✅ التحقق من الإكمال مرة واحدة فقط
+//     if (
+//         !$progress->is_completed &&
+//         $progress->watch_seconds >= $video->duration_seconds
+//     ) {
+//         $progress->is_completed = true;
+//         $progress->completed_at = now();
+//         $progress->views = ($progress->views ?? 0) + 1;
+
+//         $video->increment('views');
+//     }
+
+//     $progress->save();
+
+//     return $this->success('Progress updated', $progress);
+// }
 public function logWatch(Request $request, $id)
 {
     $request->validate([
@@ -396,25 +509,35 @@ public function logWatch(Request $request, $id)
     $video = CourseVideo::findOrFail($id);
     $student = auth()->user();
 
+    // ✅ لو المستخدم مش عامل Login
+    if (!$student) {
+        // ممكن نعمل بس increment للـ views
+        $video->increment('views');
+        return $this->success('View logged (guest)', [
+            'video_id'       => $video->id,
+            'watch_seconds'  => $request->watch_seconds,
+            'last_watched_second' => $request->last_watched_second,
+            'is_guest'       => true,
+        ]);
+    }
+
+    // ✅ لو المستخدم مسجّل دخول
     $progress = CourseVideoStudent::firstOrNew([
         'course_video_id' => $video->id,
         'student_id'      => $student->id,
     ]);
 
-    // Initialize previous values if not set
     $previousWatchSeconds = $progress->watch_seconds ?? 0;
-    $previousLastSecond = $progress->last_watched_second ?? 0;
+    $previousLastSecond   = $progress->last_watched_second ?? 0;
 
-    // ✅ لا نسمح بحساب الرجوع للخلف
     $newLastSecond = $request->input('last_watched_second', $previousLastSecond);
     if ($newLastSecond > $previousLastSecond) {
         $progress->last_watched_second = $newLastSecond;
     }
 
-    // ✅ نضيف watch_seconds فقط إذا النقطة الحالية > السابقة
     $watchSeconds = $request->watch_seconds;
     if ($newLastSecond <= $previousLastSecond) {
-        $watchSeconds = 0; // لا تضيف أي شيء لو رجع المستخدم
+        $watchSeconds = 0;
     }
 
     $progress->watch_seconds = min(
@@ -422,10 +545,8 @@ public function logWatch(Request $request, $id)
         $video->duration_seconds
     );
 
-    // تحديث وقت المشاهدة
     $progress->last_watched_at = now();
 
-    // ✅ التحقق من الإكمال مرة واحدة فقط
     if (
         !$progress->is_completed &&
         $progress->watch_seconds >= $video->duration_seconds
@@ -439,7 +560,10 @@ public function logWatch(Request $request, $id)
 
     $progress->save();
 
-    return $this->success('Progress updated', $progress);
+    return $this->success('Progress updated', [
+        'is_guest'  => false,
+        'progress'  => $progress,
+    ]);
 }
 
 

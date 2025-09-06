@@ -40,9 +40,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('student_rates_for_course', 'CourseController@storerate');
     Route::get('videos_by_course/{id}', 'CourseController@getVideosBySections');
 
-    Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
-    Route::post('videos/{video}/watch', 'CourseController@logWatch');
-    Route::get('class/{id}', 'CourseController@getClassById');
+    // Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
+    // Route::post('videos/{video}/watch', 'CourseController@logWatch');
+    // Route::get('class/{id}', 'CourseController@getClassById');
     // Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
     // Route::get('quiz/{id}', 'CourseController@getQuizById');
     // Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
@@ -90,7 +90,11 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
    Route::get('all_classes_data', 'CourseController@getAllClassesData');
    Route::get('all_quizes_data', 'CourseController@getAllQuizesData');
 
+    Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
+    Route::post('videos/{video}/watch', 'CourseController@logWatch');
+    Route::get('class/{id}', 'CourseController@getClassById');
 
+    
     Route::post('login', 'Auth\AuthController@login');
     Route::post('login-otp/{customer:phone}', 'Auth\AuthController@loginOTP');
     Route::post('register', 'Auth\AuthController@register');
