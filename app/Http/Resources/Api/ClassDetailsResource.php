@@ -80,6 +80,9 @@ $nextClass = $this->course
       $hasLive = $this->lives()
             ->where('is_active', true)
             ->exists();
+    $liveIds = $this->lives()
+        ->where('is_active', true)
+        ->pluck('id'); // 👈 get all active live IDs
         return [
             "id" => $this->id,
             'next_class_id' => $nextClass?->id,
@@ -87,7 +90,9 @@ $nextClass = $this->course
             'title' => $this->title,
             'short_title'        => $this->short_title,
                         'course_id'        => $this->course_id,
-            'has_live'=>$hasLive,
+            'live_ids'=>$hasLive,
+                        'live_ids'=>$liveIds,
+
             'description'  => $this->description,
             'started_at' => $this->course->start_date,
             'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,
