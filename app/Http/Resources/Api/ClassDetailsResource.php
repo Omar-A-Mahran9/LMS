@@ -108,7 +108,7 @@ $nextClass = $this->course
 ) ? true : false,
 'tt'=>auth()->check(),
             // 'has_homeworks'  => (!$homeworkAttemptLimitReached && $this->homeworks()->exists() && $activeHomework && $activeHomework->questions()->exists()) ? true : false,
-            'quiz_required'  => (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()) && auth() ? $this->quiz_required : 0,
+            'quiz_required'  => (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()) && auth()->check()? $this->quiz_required : 0,
 // 'quiz_required' => (!auth()->id() || (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()))
 //     ? 0
 //     : $this->quiz_required,
