@@ -90,7 +90,7 @@ $nextClass = $this->course
             'title' => $this->title,
             'short_title'        => $this->short_title,
                         'course_id'        => $this->course_id,
-            'live_ids'=>$hasLive,
+            'has_live'=>$hasLive,
                         'live_ids'=>$liveIds,
 
             'description'  => $this->description,
