@@ -5,7 +5,6 @@ namespace App\Http\Resources\Api;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
 class ClassDetailsResource extends JsonResource
 {
@@ -13,8 +12,6 @@ class ClassDetailsResource extends JsonResource
 
     public function __construct($resource, $studentId = null)
     {
-            dd(Auth::check());
-
         parent::__construct($resource);
         $this->studentId = $studentId ?? auth('api')->id();
     }
@@ -98,8 +95,7 @@ $nextClass = $this->course
 
             'description'  => $this->description,
             'started_at' => $this->course->start_date,
-            'quiz_required' => (!Auth::check() || $hasAttemptedActiveQuiz) ? 0 : $this->quiz_required,
-            'attachment' => $this->full_attachment_path,
+             'attachment' => $this->full_attachment_path,
             'quiz_id'=>$activeQuiz->id??"not found Quiz",
    'videos' => $this->videos->map(function ($video) {
                 return new VideoResource($video, $this->studentId);
@@ -110,7 +106,9 @@ $nextClass = $this->course
             'has_quizzes'    => (!$quizAttemptLimitReached && $this->quizzes()->exists() && $activeQuiz && $activeQuiz->questions()->exists()
 ) ? true : false,
             'has_homeworks'  => (!$homeworkAttemptLimitReached && $this->homeworks()->exists() && $activeHomework && $activeHomework->questions()->exists()) ? true : false,
-            'quiz_required'  => (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()) ? $this->quiz_required : 0,
+'quiz_required' => (!auth()->id() || (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()))
+    ? 0
+    : $this->quiz_required,
 
             // IDs and attempts
             'quiz_id'            => !$quizAttemptLimitReached ? $activeQuiz?->id : null,
