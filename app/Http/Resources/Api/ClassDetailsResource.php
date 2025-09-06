@@ -78,7 +78,7 @@ $nextClass = $this->course
             }
         }
       $hasLive = $this->lives()
-            ->where('is_active', true)
+            ->where('is_active', 1)
             ->exists();
     $liveIds = $this->lives()
         ->where('is_active', true)
