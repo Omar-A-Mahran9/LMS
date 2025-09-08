@@ -25,7 +25,7 @@ public function startQuiz(Request $request, $quizId)
         return $this->failure('Quiz is not linked to an active course.');
     }
 
-    if (!$quiz->course->isStudentEnrolled($studentId)&&$studentId) {
+    if (!$quiz->course->isStudentEnrolled($studentId)&&$studentId !=null) {
         return $this->failure('You are not enrolled in this course.');
     }
    if ($quiz->questions->isEmpty()) {
