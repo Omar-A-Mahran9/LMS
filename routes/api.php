@@ -45,7 +45,7 @@ Route::middleware(['auth:api'])->group(function () {
     // Route::get('class/{id}', 'CourseController@getClassById');
     // Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
     // Route::get('quiz/{id}', 'CourseController@getQuizById');
-    Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
+    // Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
     // Route::post('student-quizzes/{quizAttemptId}/submit', [StudentQuizController::class, 'submitQuiz']);
     // Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
     Route::get('homeworks/{homeworkId}/start', [StudentHomeworkController::class, 'startHomework']);
