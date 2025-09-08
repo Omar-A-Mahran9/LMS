@@ -12,100 +12,30 @@ use Illuminate\Http\Request;
 class StudentQuizController extends Controller
 {
     // Start a quiz attempt or get existing attempt
-// public function startQuiz(Request $request, $quizId)
-// {
-//     $studentId = auth()->id();
-
-//     $quiz = Quiz::with('course')->find($quizId);
-
-//     if (!$quiz) {
-//         return $this->failure(__('Quiz is not found'));
-//     }
-
-//     if (!$quiz->course || !$quiz->course->is_active) {
-//         return $this->failure('Quiz is not linked to an active course.');
-//     }
-
-//     if (!$quiz->course->isStudentEnrolled($studentId)) {
-//         return $this->failure('You are not enrolled in this course.');
-//     }
-//    if ($quiz->questions->isEmpty()) {
-//         return $this->failure(__('Quiz does not contain any questions.'));
-//     }
-//     if ($quiz->attempt_count !== null) {
-//         $usedAttempts = QuizAttempt::where('quiz_id', $quizId)
-//             ->where('student_id', $studentId)
-//             // ->whereNotNull('submitted_at')
-//             ->count();
-
-//         if ($usedAttempts >= $quiz->attempt_count) {
-//             return $this->failure(__('You have reached the maximum number of attempts.'));
-//         }
-//     }
-
-//     $quiz->increment('attempt');
-
-//     $attempt = QuizAttempt::where('quiz_id', $quizId)
-//         ->where('student_id', $studentId)
-//         ->whereNull('submitted_at')
-//         ->first();
-
-//     if ($attempt && $quiz->duration_minutes) {
-//         if ($attempt->started_at->addMinutes($quiz->duration_minutes)->isPast()) {
-//             $attempt->answers()->delete();
-//             // $attempt->delete();
-//             $attempt = null;
-//         }
-//     }
-
-//     if (!$attempt) {
-//         $attempt = QuizAttempt::create([
-//             'quiz_id' => $quizId,
-//             'student_id' => $studentId,
-//             'started_at' => now(),
-//         ]);
-//     }
-
-//     return $this->success('', [
-//         'attempt' => [
-//             'attempt_id' => $attempt->id,
-//             'student_id' => $studentId,
-//             'started_at' => $attempt->started_at->format('H:i:s'),
-//         ],
-//         'quiz' => new QuizResource($quiz),
-//     ]);
-// }
 public function startQuiz(Request $request, $quizId)
 {
-    $studentId = auth()->id(); // can be null if guest
+    $studentId = auth()->id();
 
-    $quiz = Quiz::with(['course', 'questions'])->find($quizId);
+    $quiz = Quiz::with('course')->find($quizId);
 
     if (!$quiz) {
         return $this->failure(__('Quiz is not found'));
     }
 
     if (!$quiz->course || !$quiz->course->is_active) {
-        return $this->failure(__('Quiz is not linked to an active course.'));
+        return $this->failure('Quiz is not linked to an active course.');
     }
-
-    // // Guests cannot start quizzes
-    // if (!$studentId) {
-    //     return $this->failure(__('You must be logged in to start this quiz.'));
-    // }
 
     if (!$quiz->course->isStudentEnrolled($studentId)) {
-        return $this->failure(__('You are not enrolled in this course.'));
+        return $this->failure('You are not enrolled in this course.');
     }
-
-    if ($quiz->questions->isEmpty()) {
+   if ($quiz->questions->isEmpty()) {
         return $this->failure(__('Quiz does not contain any questions.'));
     }
-
-    // Attempt count limit
     if ($quiz->attempt_count !== null) {
         $usedAttempts = QuizAttempt::where('quiz_id', $quizId)
             ->where('student_id', $studentId)
+            // ->whereNotNull('submitted_at')
             ->count();
 
         if ($usedAttempts >= $quiz->attempt_count) {
@@ -115,22 +45,19 @@ public function startQuiz(Request $request, $quizId)
 
     $quiz->increment('attempt');
 
-    // Find ongoing attempt
     $attempt = QuizAttempt::where('quiz_id', $quizId)
         ->where('student_id', $studentId)
         ->whereNull('submitted_at')
         ->first();
 
-    // Expired attempt cleanup
     if ($attempt && $quiz->duration_minutes) {
         if ($attempt->started_at->addMinutes($quiz->duration_minutes)->isPast()) {
             $attempt->answers()->delete();
-            $attempt->delete();
+            // $attempt->delete();
             $attempt = null;
         }
     }
 
-    // Create new attempt if needed
     if (!$attempt) {
         $attempt = QuizAttempt::create([
             'quiz_id' => $quizId,
@@ -148,6 +75,7 @@ public function startQuiz(Request $request, $quizId)
         'quiz' => new QuizResource($quiz),
     ]);
 }
+
 
 
 
