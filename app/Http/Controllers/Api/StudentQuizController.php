@@ -26,7 +26,7 @@ public function startQuiz(Request $request, $quizId)
     if (!$quiz->course || !$quiz->course->is_active) {
         return $this->failure('Quiz is not linked to an active course.');
     }
-    dd($quiz->course->class_id);
+    dd($quiz->course);
     if ($code) {
         $accessCode = ClassAccessCode::where('class_id', $quiz->course->class_id ?? null)
             ->where('code', $code)
