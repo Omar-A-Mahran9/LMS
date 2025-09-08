@@ -14,7 +14,7 @@ class ClassDetailsResource extends JsonResource
     {
         parent::__construct($resource);
         $this->studentId = $studentId ?? auth('api')->id();
- 
+
     }
     public function toArray(Request $request): array
     {
@@ -108,8 +108,8 @@ $nextClass = $this->course
             'has_quizzes'    => (!$quizAttemptLimitReached && $this->quizzes()->exists() && $activeQuiz && $activeQuiz->questions()->exists()
 ) ? true : false,
              // 'has_homeworks'  => (!$homeworkAttemptLimitReached && $this->homeworks()->exists() && $activeHomework && $activeHomework->questions()->exists()) ? true : false,
-            'quiz_required'  =>  0,
-            // 'quiz_required'  => (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()&& auth('api')->check()) ? $this->quiz_required : 0,
+            // 'quiz_required'  =>  0,
+            'quiz_required'  => (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()&& auth('api')->check()) ? $this->quiz_required : 0,
 
             // IDs and attempts
             'quiz_id'            => !$quizAttemptLimitReached ? $activeQuiz?->id : null,
