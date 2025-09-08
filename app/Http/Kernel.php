@@ -71,5 +71,7 @@ class Kernel extends HttpKernel
         'json.response' => \App\Http\Middleware\ForceJsonResponse::class,
         'cors' => \App\Http\Middleware\Cors::class,
         'oto.token' => \App\Http\Middleware\OtoAccessToken::class,
+            'optional.auth' => \App\Http\Middleware\OptionalAuth::class,
+
     ];
 }
