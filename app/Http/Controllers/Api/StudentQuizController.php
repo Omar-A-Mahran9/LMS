@@ -34,8 +34,7 @@ if ($code) {
         ->where('code', $code)
         ->where('is_active', true)
         ->first();
-dd($accessCode);
-    if (!$accessCode) {
+     if (!$accessCode) {
         return $this->failure(__('Invalid or inactive access code.'));
     }
 
