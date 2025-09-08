@@ -11,30 +11,26 @@ use App\Http\Resources\Api\CoursesDetailsResource;
 use App\Http\Resources\Api\CourseStatusResource;
 use App\Http\Resources\Api\QuizResource;
 use App\Http\Resources\Api\SectionResource;
-use App\Http\Resources\Api\VideoResource;
-
+ 
 
 use App\Models\Category;
 use App\Models\ClassAccessCode;
 use App\Models\ClassAccessLog;
 use App\Models\ClassStudent;
-use App\Models\CommonQuestion;
-use App\Models\Course;
+ use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\CourseVideo;
 use App\Models\CourseVideoStudent;
 use App\Models\Government;
 
 use App\Models\Quiz;
-use App\Models\Rate;
-use App\Models\Section;
+ use App\Models\Section;
 use App\Models\Student_rate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+
 
 class CourseController extends Controller
 {
