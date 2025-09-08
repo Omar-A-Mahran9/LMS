@@ -89,10 +89,10 @@ public function startQuiz(Request $request, $quizId)
         return $this->failure(__('Quiz is not linked to an active course.'));
     }
 
-    // Guests cannot start quizzes
-    if (!$studentId) {
-        return $this->failure(__('You must be logged in to start this quiz.'));
-    }
+    // // Guests cannot start quizzes
+    // if (!$studentId) {
+    //     return $this->failure(__('You must be logged in to start this quiz.'));
+    // }
 
     if (!$quiz->course->isStudentEnrolled($studentId)) {
         return $this->failure(__('You are not enrolled in this course.'));
