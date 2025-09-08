@@ -77,29 +77,33 @@ class StudentQuizController extends Controller
 // }
 public function startQuiz(Request $request, $quizId)
 {
-    $studentId = auth()->id(); // ممكن يكون null لو مش مسجل دخول
+    $studentId = auth()->id(); // can be null if guest
 
-    $quiz = Quiz::with('course')->find($quizId);
+    $quiz = Quiz::with(['course', 'questions'])->find($quizId);
 
     if (!$quiz) {
         return $this->failure(__('Quiz is not found'));
     }
 
-    // لو عايز تخلي الكورس لازم يكون Active
     if (!$quiz->course || !$quiz->course->is_active) {
-        return $this->failure('Quiz is not linked to an active course.');
+        return $this->failure(__('Quiz is not linked to an active course.'));
     }
 
-    // الشرط ده هنشيله لأنه مش مطلوب تسجيل دخول
-    // if ($studentId && !$quiz->course->isStudentEnrolled($studentId)) {
-    //     return $this->failure('You are not enrolled in this course.');
-    // }
+    // Guests cannot start quizzes
+    if (!$studentId) {
+        return $this->failure(__('You must be logged in to start this quiz.'));
+    }
+
+    if (!$quiz->course->isStudentEnrolled($studentId)) {
+        return $this->failure(__('You are not enrolled in this course.'));
+    }
 
     if ($quiz->questions->isEmpty()) {
         return $this->failure(__('Quiz does not contain any questions.'));
     }
 
-    if ($quiz->attempt_count !== null && $studentId) {
+    // Attempt count limit
+    if ($quiz->attempt_count !== null) {
         $usedAttempts = QuizAttempt::where('quiz_id', $quizId)
             ->where('student_id', $studentId)
             ->count();
@@ -111,40 +115,40 @@ public function startQuiz(Request $request, $quizId)
 
     $quiz->increment('attempt');
 
-    $attempt = null;
+    // Find ongoing attempt
+    $attempt = QuizAttempt::where('quiz_id', $quizId)
+        ->where('student_id', $studentId)
+        ->whereNull('submitted_at')
+        ->first();
 
-    // بس نرجع attempt قديم لو الطالب مسجل دخول
-    if ($studentId) {
-        $attempt = QuizAttempt::where('quiz_id', $quizId)
-            ->where('student_id', $studentId)
-            ->whereNull('submitted_at')
-            ->first();
-
-        if ($attempt && $quiz->duration_minutes) {
-            if ($attempt->started_at->addMinutes($quiz->duration_minutes)->isPast()) {
-                $attempt->answers()->delete();
-                $attempt = null;
-            }
+    // Expired attempt cleanup
+    if ($attempt && $quiz->duration_minutes) {
+        if ($attempt->started_at->addMinutes($quiz->duration_minutes)->isPast()) {
+            $attempt->answers()->delete();
+            $attempt->delete();
+            $attempt = null;
         }
     }
 
+    // Create new attempt if needed
     if (!$attempt) {
         $attempt = QuizAttempt::create([
-            'quiz_id'    => $quizId,
-            'student_id' => $studentId, // هتبقى null لو مش مسجل دخول
+            'quiz_id' => $quizId,
+            'student_id' => $studentId,
             'started_at' => now(),
         ]);
     }
 
     return $this->success('', [
         'attempt' => [
-            'attempt_id'  => $attempt->id,
-            'student_id'  => $studentId, // null لو ضيف
-            'started_at'  => $attempt->started_at->format('H:i:s'),
+            'attempt_id' => $attempt->id,
+            'student_id' => $studentId,
+            'started_at' => $attempt->started_at->format('H:i:s'),
         ],
         'quiz' => new QuizResource($quiz),
     ]);
 }
+
 
 
 // public function submitQuiz(Request $request, $quizAttemptId)
