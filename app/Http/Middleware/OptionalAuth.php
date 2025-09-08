@@ -16,7 +16,7 @@ class OptionalAuth
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
-        dd('dd');
+        
         try {
             if ($request->bearerToken()) {
                 Auth::guard($guard ?: 'api')->onceUsingId(
