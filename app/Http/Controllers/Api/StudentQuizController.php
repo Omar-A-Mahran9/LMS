@@ -26,30 +26,32 @@ public function startQuiz(Request $request, $quizId)
     if (!$quiz->course || !$quiz->course->is_active) {
         return $this->failure('Quiz is not linked to an active course.');
     }
-    dd($quiz->course->classes);
-    if ($code) {
-        $accessCode = ClassAccessCode::where('class_id', $quiz->course->class_id ?? null)
-            ->where('code', $code)
-            ->where('is_active', true)
-            ->first();
-dd( $accessCode);
-        if (!$accessCode) {
-            return $this->failure(__('Invalid or inactive access code.'));
-        }
+if ($code) {
+    // Get all class_ids related to this course
+    $classIds = $quiz->course->classes->pluck('id');
 
-        // Check single_use
-        if ($accessCode->single_use && $accessCode->used_count >= 1) {
-            return $this->failure(__('This code has already been used.'));
-        }
+    $accessCode = \App\Models\ClassAccessCode::whereIn('class_id', $classIds)
+        ->where('code', $code)
+        ->where('is_active', true)
+        ->first();
 
-        // Check usage_limit
-        if ($accessCode->usage_limit !== null && $accessCode->used_count >= $accessCode->usage_limit) {
-            return $this->failure(__('This code has reached its usage limit.'));
-        }
-
-        // ✅ Increase usage count
-        $accessCode->increment('used_count');
+    if (!$accessCode) {
+        return $this->failure(__('Invalid or inactive access code.'));
     }
+
+    // Check single_use
+    if ($accessCode->single_use && $accessCode->used_count >= 1) {
+        return $this->failure(__('This code has already been used.'));
+    }
+
+    // Check usage_limit
+    if ($accessCode->usage_limit !== null && $accessCode->used_count >= $accessCode->usage_limit) {
+        return $this->failure(__('This code has reached its usage limit.'));
+    }
+
+    // ✅ Increase usage count
+    $accessCode->increment('used_count');
+}
 
   if ($studentId !== null && !$quiz->course->isStudentEnrolled($studentId)) {
     return $this->failure('You are not enrolled in this course.');
