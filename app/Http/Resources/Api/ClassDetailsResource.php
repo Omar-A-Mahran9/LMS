@@ -108,25 +108,25 @@ $hasCode = !empty($request->code) && $this->isValidCode($request->code, $activeQ
 
 
             // Flags
-        //     'has_quizzes'    => (!$quizAttemptLimitReached && $this->quizzes()->exists() && $activeQuiz && $activeQuiz->questions()->exists()
-        // ) ? true : false,
-                'has_quizzes' => (
-            !$quizAttemptLimitReached &&
-            $this->quizzes()->exists() &&
-            $activeQuiz &&
-            $activeQuiz->questions()->exists() &&
-            (auth('api')->check() || $hasCode)   // ✅ logged-in student OR valid code
+            'has_quizzes'    => (!$quizAttemptLimitReached && $this->quizzes()->exists() && $activeQuiz && $activeQuiz->questions()->exists()
         ) ? true : false,
+        //         'has_quizzes' => (
+        //     !$quizAttemptLimitReached &&
+        //     $this->quizzes()->exists() &&
+        //     $activeQuiz &&
+        //     $activeQuiz->questions()->exists() &&
+        //     (auth('api')->check() || $hasCode)   // ✅ logged-in student OR valid code
+        // ) ? true : false,
              // 'has_homeworks'  => (!$homeworkAttemptLimitReached && $this->homeworks()->exists() && $activeHomework && $activeHomework->questions()->exists()) ? true : false,
 
-            // 'quiz_required'  => (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()&& auth('api')->check()) ? $this->quiz_required : 0,
-        'quiz_required' => (
-            !$quizAttemptLimitReached &&
-            !$hasAttemptedQuiz &&
-            $activeQuiz &&
-            $activeQuiz->questions()->exists() &&
-            (auth('api')->check() || $hasCode)   // ✅ student OR valid code
-        ) ? $this->quiz_required : 0,
+            'quiz_required'  => (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()&& auth('api')->check()) ? $this->quiz_required : 0,
+        // 'quiz_required' => (
+        //     !$quizAttemptLimitReached &&
+        //     !$hasAttemptedQuiz &&
+        //     $activeQuiz &&
+        //     $activeQuiz->questions()->exists() &&
+        //     (auth('api')->check() || $hasCode)   // ✅ student OR valid code
+        // ) ? $this->quiz_required : 0,
 
             // IDs and attempts
             'quiz_id'            => !$quizAttemptLimitReached ? $activeQuiz?->id : null,
