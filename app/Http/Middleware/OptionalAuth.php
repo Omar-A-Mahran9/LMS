@@ -14,17 +14,16 @@ class OptionalAuth
      * This middleware tries to authenticate the user if a token exists,
      * but does not fail if no token is provided.
      */
-    public function handle(Request $request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next, $guard = 'api')
     {
-        
-        try {
-            if ($request->bearerToken()) {
-                Auth::guard($guard ?: 'api')->onceUsingId(
-                    optional(Auth::guard($guard ?: 'api')->user())->id
-                );
+        Auth::shouldUse($guard);
+
+        if ($request->bearerToken()) {
+            try {
+                Auth::authenticate(); // will throw if invalid/expired
+            } catch (\Throwable $e) {
+                // Invalid or expired token → continue as guest
             }
-        } catch (\Throwable $e) {
-            // If token invalid or expired, just ignore and continue as guest
         }
 
         return $next($request);
