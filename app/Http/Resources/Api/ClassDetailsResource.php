@@ -5,6 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class ClassDetailsResource extends JsonResource
 {
@@ -19,13 +20,13 @@ class ClassDetailsResource extends JsonResource
     public function toArray(Request $request): array
     {
         $studentId = $this->studentId;
-// Find next class in the same course
-$nextClass = $this->course
-    ? $this->course->classes()
-        ->where('id', '>', $this->id)
-        ->orderBy('id', 'asc')
-        ->first()
-    : null;
+        // Find next class in the same course
+            $nextClass = $this->course
+        ? $this->course->classes()
+            ->where('id', '>', $this->id)
+            ->orderBy('id', 'asc')
+            ->first()
+        : null;
 
         $student = auth('api')->user();
         $activeQuiz = $this->quizzes()->where('is_active', true)->first();
@@ -44,6 +45,8 @@ $nextClass = $this->course
         $quizAttemptLimitReached = false;
         $hasAttemptedHomework = false;
         $homeworkAttemptLimitReached = false;
+$hasCode = !empty($request->code) && $this->isValidCode($request->code, $activeQuiz);
+
 
         // Check quiz attempts
         if ($studentId && $activeQuiz) {
@@ -81,7 +84,7 @@ $nextClass = $this->course
       $hasLive = $this->lives()
             ->where('is_active', 1)
             ->exists();
-    $liveIds = $this->lives()
+      $liveIds = $this->lives()
         ->where('is_active', true)
         ->pluck('id'); // 👈 get all active live IDs
         return [
@@ -99,17 +102,31 @@ $nextClass = $this->course
             // 'quiz_required' => $hasAttemptedActiveQuiz ? 0 : $this->quiz_required,
             'attachment' => $this->full_attachment_path,
             'quiz_id'=>$activeQuiz->id??"not found Quiz",
-   'videos' => $this->videos->map(function ($video) {
+        'videos' => $this->videos->map(function ($video) {
                 return new VideoResource($video, $this->studentId);
             }),
 
 
             // Flags
-            'has_quizzes'    => (!$quizAttemptLimitReached && $this->quizzes()->exists() && $activeQuiz && $activeQuiz->questions()->exists()
-) ? true : false,
+        //     'has_quizzes'    => (!$quizAttemptLimitReached && $this->quizzes()->exists() && $activeQuiz && $activeQuiz->questions()->exists()
+        // ) ? true : false,
+                'has_quizzes' => (
+            !$quizAttemptLimitReached &&
+            $this->quizzes()->exists() &&
+            $activeQuiz &&
+            $activeQuiz->questions()->exists() &&
+            (auth('api')->check() || $hasCode)   // ✅ logged-in student OR valid code
+        ) ? true : false,
              // 'has_homeworks'  => (!$homeworkAttemptLimitReached && $this->homeworks()->exists() && $activeHomework && $activeHomework->questions()->exists()) ? true : false,
-            // 'quiz_required'  =>  0,
-            'quiz_required'  => (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()&& auth('api')->check()) ? $this->quiz_required : 0,
+
+            // 'quiz_required'  => (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()&& auth('api')->check()) ? $this->quiz_required : 0,
+        'quiz_required' => (
+            !$quizAttemptLimitReached &&
+            !$hasAttemptedQuiz &&
+            $activeQuiz &&
+            $activeQuiz->questions()->exists() &&
+            (auth('api')->check() || $hasCode)   // ✅ student OR valid code
+        ) ? $this->quiz_required : 0,
 
             // IDs and attempts
             'quiz_id'            => !$quizAttemptLimitReached ? $activeQuiz?->id : null,
@@ -119,4 +136,18 @@ $nextClass = $this->course
 
         ];
     }
+
+    protected function isValidCode(string $code, $quiz): bool
+{
+    return DB::table('class_access_codes')
+        ->where('code', $code)
+        ->where('class_id', $quiz->course->classes->pluck('id'))
+        ->where('is_active', true)
+        ->where(function ($q) {
+            $q->whereNull('usage_limit')
+              ->orWhereColumn('used_count', '<', 'usage_limit');
+        })
+        ->exists();
+}
+
 }
