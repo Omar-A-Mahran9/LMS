@@ -30,11 +30,11 @@ if ($code) {
     // Get all class_ids related to this course
     $classIds = $quiz->course->classes->pluck('id');
 
-    $accessCode = \App\Models\ClassAccessCode::whereIn('class_id', $classIds)
+    $accessCode = ClassAccessCode::whereIn('class_id', $classIds)
         ->where('code', $code)
         ->where('is_active', true)
         ->first();
-
+dd($accessCode);
     if (!$accessCode) {
         return $this->failure(__('Invalid or inactive access code.'));
     }
@@ -49,8 +49,6 @@ if ($code) {
         return $this->failure(__('This code has reached its usage limit.'));
     }
 
-    // ✅ Increase usage count
-    $accessCode->increment('used_count');
 }
 
   if ($studentId !== null && !$quiz->course->isStudentEnrolled($studentId)) {
