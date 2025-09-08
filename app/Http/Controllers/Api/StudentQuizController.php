@@ -14,8 +14,7 @@ class StudentQuizController extends Controller
     // Start a quiz attempt or get existing attempt
 public function startQuiz(Request $request, $quizId)
 {
-    $studentId = auth();
-    dd( $studentId );
+    $studentId = auth()->id();
      $quiz = Quiz::with('course')->find($quizId);
 
     if (!$quiz) {
