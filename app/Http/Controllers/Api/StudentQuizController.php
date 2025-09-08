@@ -38,7 +38,7 @@ public function startQuiz(Request $request, $quizId)
             // ->whereNotNull('submitted_at')
             ->count();
 
-        if ($usedAttempts >= $quiz->attempt_count) {
+        if ($studentId !== null && $usedAttempts >= $quiz->attempt_count) {
             return $this->failure(__('You have reached the maximum number of attempts.'));
         }
     }
