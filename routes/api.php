@@ -134,9 +134,12 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 
 Route::middleware(['optional.auth'])->group(function () {
+    Route::get('videos_by_classes/{id}', 'CourseController@getVideosByClass');
+    Route::post('videos/{video}/watch', 'CourseController@logWatch');
+    Route::get('class/{id}', 'CourseController@getClassById');
     Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
     Route::get('quiz/{id}', 'CourseController@getQuizById');
-    Route::get('class/{id}', 'CourseController@getClassById');
-        Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
-
+    Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
+    Route::post('student-quizzes/{quizAttemptId}/submit', [StudentQuizController::class, 'submitQuiz']);
+    Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
 });
