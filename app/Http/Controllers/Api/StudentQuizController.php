@@ -15,8 +15,7 @@ class StudentQuizController extends Controller
 public function startQuiz(Request $request, $quizId)
 {
     $code=$request->code;
-    dd($code);
-    $studentId = auth()->id();
+     $studentId = auth()->id();
      $quiz = Quiz::with('course')->find($quizId);
 
     if (!$quiz) {
@@ -64,6 +63,7 @@ public function startQuiz(Request $request, $quizId)
         $attempt = QuizAttempt::create([
             'quiz_id' => $quizId,
             'student_id' => $studentId,
+            'code'=>$code,
             'started_at' => now(),
         ]);
     }
