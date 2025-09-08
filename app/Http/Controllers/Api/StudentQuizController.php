@@ -15,8 +15,7 @@ class StudentQuizController extends Controller
 public function startQuiz(Request $request, $quizId)
 {
     $studentId = auth()->id();
-dd($studentId);
-    $quiz = Quiz::with('course')->find($quizId);
+     $quiz = Quiz::with('course')->find($quizId);
 
     if (!$quiz) {
         return $this->failure(__('Quiz is not found'));
