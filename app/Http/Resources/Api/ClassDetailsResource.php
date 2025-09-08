@@ -14,6 +14,7 @@ class ClassDetailsResource extends JsonResource
     {
         parent::__construct($resource);
         $this->studentId = $studentId ?? auth('api')->id();
+ 
     }
     public function toArray(Request $request): array
     {
