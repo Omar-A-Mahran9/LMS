@@ -200,12 +200,13 @@ var KTDatatablesHomeworkServerSide = (function () {
                     tinymce
                         .get("description_homework_en_inp")
                         ?.setContent(data.description_en || "");
+                    $("#duration_minutes_inp_homework").val(
+                        data.duration_minutes || ""
+                    );
                 }
 
                 // Duration
-                $("#duration_minutes_inp_homework").val(
-                    data.duration_minutes || ""
-                );
+
                 $("#attempt_count_inp_homework").val(data.attempt_count || "");
 
                 // Active switch
