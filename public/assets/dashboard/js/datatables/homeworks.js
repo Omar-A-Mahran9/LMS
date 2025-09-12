@@ -190,12 +190,8 @@ var KTDatatablesHomeworkServerSide = (function () {
                 // Set modal title
                 $("#form_title").text(__("Edit Homework"));
 
-                // Titles
-                if (data.title_ar)
-                    $("#title_ar_homework_inp").val(data.title_ar);
-
-                if (data.title_ar)
-                    $("#title_en_homework_inp").val(data.title_en);
+         $("#title_ar_homework_inp").val(data?.title_ar || "");
+$("#title_en_homework_inp").val(data?.title_en || "");
 
                 // Descriptions (using correct IDs)
                 tinymce
