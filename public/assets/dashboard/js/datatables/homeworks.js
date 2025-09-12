@@ -190,31 +190,26 @@ var KTDatatablesHomeworkServerSide = (function () {
                 // Set modal title
                 $("#form_title").text(__("Edit Homework"));
 
-                $("#title_ar_homework_inp").val(data?.title_ar || "");
-                $("#title_en_homework_inp").val(data?.title_en || "");
+                // Titles
+                $("#title_ar_homework_inp").val(data.title_ar);
+                $("#title_en_homework_inp").val(data.title_en);
 
-                if (data) {
-                    tinymce
-                        .get("description_homework_ar_inp")
-                        ?.setContent(data.description_ar || "");
-                    tinymce
-                        .get("description_homework_en_inp")
-                        ?.setContent(data.description_en || "");
-                    $("#duration_minutes_inp_homework").val(
-                        data.duration_minutes || ""
-                    );
-                    $("#attempt_count_inp_homework").val(
-                        data.attempt_count || ""
-                    );
-                }
+                // Descriptions (using correct IDs)
+                tinymce
+                    .get("description_homework_ar_inp")
+                    .setContent(data.description_ar || "");
+                tinymce
+                    .get("description_homework_en_inp")
+                    .setContent(data.description_en || "");
 
                 // Duration
+                $("#duration_minutes_inp_homework").val(
+                    data.duration_minutes || ""
+                );
+                $("#attempt_count_inp_homework").val(data.attempt_count || "");
 
                 // Active switch
-                $("#is_active_switch_homework").prop(
-                    "checked",
-                    !!data.is_active
-                );
+                $("#is_active_switch_homework").prop("checked", !!data.is_active);
 
                 // Set form action to PUT
                 $("#crud_form_homework").attr(
