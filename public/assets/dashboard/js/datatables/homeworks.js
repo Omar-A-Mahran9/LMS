@@ -190,16 +190,17 @@ var KTDatatablesHomeworkServerSide = (function () {
                 // Set modal title
                 $("#form_title").text(__("Edit Homework"));
 
-         $("#title_ar_homework_inp").val(data?.title_ar || "");
-$("#title_en_homework_inp").val(data?.title_en || "");
+                $("#title_ar_homework_inp").val(data?.title_ar || "");
+                $("#title_en_homework_inp").val(data?.title_en || "");
 
-                // Descriptions (using correct IDs)
-                tinymce
-                    .get("description_homework_ar_inp")
-                    .setContent(data.description_ar || "");
-                tinymce
-                    .get("description_homework_en_inp")
-                    .setContent(data.description_en || "");
+                if (data) {
+                    tinymce
+                        .get("description_homework_ar_inp")
+                        ?.setContent(data.description_ar || "");
+                    tinymce
+                        .get("description_homework_en_inp")
+                        ?.setContent(data.description_en || "");
+                }
 
                 // Duration
                 $("#duration_minutes_inp_homework").val(
