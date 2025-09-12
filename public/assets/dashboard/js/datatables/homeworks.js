@@ -191,8 +191,11 @@ var KTDatatablesHomeworkServerSide = (function () {
                 $("#form_title").text(__("Edit Homework"));
 
                 // Titles
-                $("#title_ar_homework_inp").val(data.title_ar);
-                $("#title_en_homework_inp").val(data.title_en);
+                if (data.title_ar)
+                    $("#title_ar_homework_inp").val(data.title_ar);
+
+                if (data.title_ar)
+                    $("#title_en_homework_inp").val(data.title_en);
 
                 // Descriptions (using correct IDs)
                 tinymce
@@ -209,7 +212,10 @@ var KTDatatablesHomeworkServerSide = (function () {
                 $("#attempt_count_inp_homework").val(data.attempt_count || "");
 
                 // Active switch
-                $("#is_active_switch_homework").prop("checked", !!data.is_active);
+                $("#is_active_switch_homework").prop(
+                    "checked",
+                    !!data.is_active
+                );
 
                 // Set form action to PUT
                 $("#crud_form_homework").attr(
