@@ -133,6 +133,7 @@ $hasCode = !empty($request->code) && $this->isValidCode($request->code, $activeQ
             'quiz_attempted'     => $hasAttemptedQuiz,
             'homework_id'        => !$homeworkAttemptLimitReached ? $activeHomework?->id : null,
             'homework_attempted' => $hasAttemptedHomework,
+             'has_homeworks'  => (!$homeworkAttemptLimitReached && $this->homeworks()->exists() && $activeHomework && $activeHomework->questions()->exists()) ? true : false,
 
         ];
     }
