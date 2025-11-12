@@ -45,7 +45,7 @@ class ClassDetailsResource extends JsonResource
         $quizAttemptLimitReached = false;
         $hasAttemptedHomework = false;
         $homeworkAttemptLimitReached = false;
-$hasCode = !empty($request->code) && $this->isValidCode($request->code, $activeQuiz);
+        $hasCode = !empty($request->code) && $this->isValidCode($request->code, $activeQuiz);
 
 
         // Check quiz attempts
@@ -138,18 +138,18 @@ $hasCode = !empty($request->code) && $this->isValidCode($request->code, $activeQ
         ];
     }
 
-protected function isValidCode(string $code, $quiz): bool
-{
-    return DB::table('class_access_codes')
-        ->where('code', $code)
-        ->whereIn('class_id', $quiz->course?->classes?->pluck('id') ?? [])
-        ->where('is_active', 1) // use 1 instead of true for MySQL tinyint
-        ->where(function ($q) {
-            $q->whereNull('usage_limit')
-              ->orWhereColumn('used_count', '<', 'usage_limit');
-        })
-        ->exists();
-}
+// protected function isValidCode(string $code, $quiz): bool
+// {
+//     return DB::table('class_access_codes')
+//         ->where('code', $code)
+//         ->whereIn('class_id', $quiz->course?->classes?->pluck('id') ?? [])
+//         ->where('is_active', 1) // use 1 instead of true for MySQL tinyint
+//         ->where(function ($q) {
+//             $q->whereNull('usage_limit')
+//               ->orWhereColumn('used_count', '<', 'usage_limit');
+//         })
+//         ->exists();
+// }
 
 
 }
