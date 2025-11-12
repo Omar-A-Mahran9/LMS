@@ -142,7 +142,7 @@ protected function isValidCode(string $code, $quiz): bool
 {
     return DB::table('class_access_codes')
         ->where('code', $code)
-        ->whereIn('class_id', $quiz->course->classes->pluck('id'))
+        ->whereIn('class_id', $quiz->course?->classes?->pluck('id') ?? [])
         ->where('is_active', 1) // use 1 instead of true for MySQL tinyint
         ->where(function ($q) {
             $q->whereNull('usage_limit')
