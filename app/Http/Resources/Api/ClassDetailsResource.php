@@ -45,7 +45,7 @@ class ClassDetailsResource extends JsonResource
         $quizAttemptLimitReached = false;
         $hasAttemptedHomework = false;
         $homeworkAttemptLimitReached = false;
-        $hasCode = !empty($request->code) && $this->isValidCode($request->code, $activeQuiz);
+        // $hasCode = !empty($request->code) && $this->isValidCode($request->code, $activeQuiz);
 
 
         // Check quiz attempts
