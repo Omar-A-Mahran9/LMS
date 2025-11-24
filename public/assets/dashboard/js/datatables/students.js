@@ -38,6 +38,8 @@ var KTDatatablesServerSide = (function () {
             columns: [
                 { data: "id" },
                 { data: "full_name" },
+                { data: "government" },
+
                 { data: "image" },
                 { data: "phone" },
                 { data: "block_flag" },

@@ -121,6 +121,8 @@
                         </th>  --}}
                         <th>#</th>
                         <th>{{ __('Name') }}</th>
+                        <th>{{ __('Government') }}</th>
+
                         <th>{{ __('Image') }}</th>
                         <th>{{ __('Phone') }}</th>
                         <th>{{ __('Status') }}</th>
