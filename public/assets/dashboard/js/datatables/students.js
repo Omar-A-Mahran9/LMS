@@ -96,6 +96,29 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
+                    targets: 2,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return `
+                            <!--begin::Overlay-->
+                            <a class="d-block overlay" data-action="preview_attachments" href="#">
+                                <!--begin::Image-->
+                                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded h-100px"
+                                    style="background-image:url('${row.government}')">
+                                </div>
+                                <!--end::Image-->
+
+                                <!--begin::Action-->
+                                <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                    <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                </div>
+                                <!--end::Action-->
+                            </a>
+                            <!--end::Overlay-->
+                        `;
+                    },
+                },
+                {
                     targets: 3,
                     render: function (data, type, row) {
                         return `
