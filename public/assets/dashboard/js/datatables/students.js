@@ -32,7 +32,7 @@ var KTDatatablesServerSide = (function () {
                 data: function (d) {
                     d.filter_category = $("#filter_category").val();
                     d.filter_enrollment = $("#filter_enrollment").val();
-                    d.government_id = $("#filter_government").val();
+                    d.filter_government = $("#filter_government").val();
                 },
             },
             columns: [
