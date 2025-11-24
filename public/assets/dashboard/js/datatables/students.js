@@ -74,6 +74,22 @@ var KTDatatablesServerSide = (function () {
                 },
                 {
                     targets: 2,
+                    render: function (data, type, row) {
+                        return `
+                            <div>
+                                <!--begin::Info-->
+                                <div class="d-flex flex-column justify-content-center">
+                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${
+                                        row.government?.name ?? "-"
+                                    }</a>
+                                </div>
+                                <!--end::Info-->
+                            </div>
+                        `;
+                    },
+                },
+                {
+                    targets: 3,
                     orderable: false,
                     render: function (data, type, row) {
                         return `
@@ -95,20 +111,7 @@ var KTDatatablesServerSide = (function () {
                         `;
                     },
                 },
-                {
-                    targets: 3,
-                    render: function (data, type, row) {
-                        return `
-                            <div>
-                                <!--begin::Info-->
-                                <div class="d-flex flex-column justify-content-center">
-                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.created_at}</a>
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                        `;
-                    },
-                },
+
                 {
                     targets: 4,
                     render: function (data, type, row) {

@@ -51,7 +51,7 @@ class StudentController extends Controller
             $data = getModelData(
                 model: new Student(),
                 andsFilters: $andsFilters,
-                relations: []
+                relations: ['government' => ['id', 'name_ar']],
             );
 
             // 🟥 Apply enrollment filters manually
