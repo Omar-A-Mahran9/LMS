@@ -96,30 +96,21 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
-                    targets: 2,
-                    orderable: false,
+                    targets: 3,
                     render: function (data, type, row) {
                         return `
-                            <!--begin::Overlay-->
-                            <a class="d-block overlay" data-action="preview_attachments" href="#">
-                                <!--begin::Image-->
-                                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded h-100px"
-                                    style="background-image:url('${row.government}')">
+                            <div>
+                                <!--begin::Info-->
+                                <div class="d-flex flex-column justify-content-center">
+                                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.created_at}</a>
                                 </div>
-                                <!--end::Image-->
-
-                                <!--begin::Action-->
-                                <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                    <i class="bi bi-eye-fill text-white fs-3x"></i>
-                                </div>
-                                <!--end::Action-->
-                            </a>
-                            <!--end::Overlay-->
+                                <!--end::Info-->
+                            </div>
                         `;
                     },
                 },
                 {
-                    targets: 3,
+                    targets: 4,
                     render: function (data, type, row) {
                         return `
                             <div>
@@ -133,7 +124,7 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
-                    targets: 4,
+                    targets: 5,
                     render: function (data) {
                         let status = {
                             0: { color: "primary", title: __("Enabled") },
@@ -146,7 +137,7 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
-                    targets: 5,
+                    targets: 6,
                     render: function (data, type, row) {
                         return `
                             <div>
