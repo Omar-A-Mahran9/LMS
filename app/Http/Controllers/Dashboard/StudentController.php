@@ -15,100 +15,111 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-public function index(Request $request)
-{
-    $this->authorize('view_students');
+    public function index(Request $request)
+    {
+        $this->authorize('view_students');
 
-    if ($request->ajax()) {
-        $andsFilters = [];
-        $query = Student::query();
+        if ($request->ajax()) {
+            $andsFilters = [];
+            $query = Student::query();
 
-        if ($request->filled('filter_category') && $request->filter_category !== 'all') {
-            $andsFilters[] = ['category_id', '=', $request->filter_category];
-        }
-
-        if ($request->filled('filter_enrollment') && $request->filter_enrollment !== 'all') {
-            $value = $request->filter_enrollment;
-
-            if ($value === 'enrolled_any_course') {
-                $query->whereHas('courses'); // students enrolled in any course
-            } elseif (Str::startsWith($value, 'course_')) {
-                $courseId = Str::after($value, 'course_');
-                $query->whereHas('courses', function ($q) use ($courseId) {
-                    $q->where('courses.id', $courseId); // students in specific course
-                });
+            // 🟦 Filter by category
+            if ($request->filled('filter_category') && $request->filter_category !== 'all') {
+                $andsFilters[] = ['category_id', '=', $request->filter_category];
             }
+
+            // 🟩 Filter by government (NEW)
+            if ($request->filled('filter_government') && $request->filter_government !== 'all') {
+                $andsFilters[] = ['government_id', '=', $request->filter_government];
+            }
+
+            // 🟧 Filter by enrollment
+            if ($request->filled('filter_enrollment') && $request->filter_enrollment !== 'all') {
+                $value = $request->filter_enrollment;
+
+                if ($value === 'enrolled_any_course') {
+                    $query->whereHas('courses');
+                } elseif (Str::startsWith($value, 'course_')) {
+                    $courseId = Str::after($value, 'course_');
+                    $query->whereHas('courses', function ($q) use ($courseId) {
+                        $q->where('courses.id', $courseId);
+                    });
+                }
+            }
+
+            // 🟪 Get base data (category + government filters)
+            $data = getModelData(
+                model: new Student(),
+                andsFilters: $andsFilters,
+                relations: []
+            );
+
+            // 🟥 Apply enrollment filters manually
+            if ($request->filled('filter_enrollment') && $request->filter_enrollment !== 'all') {
+                $data['data'] = $query
+                    ->where($andsFilters) // combine all filters!
+                    ->get();
+
+                $data['recordsTotal'] = $data['data']->count();
+                $data['recordsFiltered'] = $data['data']->count();
+            }
+
+            return response()->json($data);
         }
 
-        // ⚡ Pass a query to getModelData via a temporary "scope" closure
-        $data = getModelData(
-            model: new Student, // pass Model instance
-            andsFilters: $andsFilters,
-            relations: [],      // add any eager loaded relations if needed
-        );
+        $governments = Government::get();
+        $categories  = Category::where('is_publish', 1)->get();
+        $courses     = Course::get();
 
-        // Manually apply the enrollment filter because getModelData expects Model
-        if ($request->filled('filter_enrollment') && $request->filter_enrollment !== 'all') {
-            $data['data'] = $query->get();
-            $data['recordsTotal'] = $data['data']->count();
-            $data['recordsFiltered'] = $data['data']->count();
-        }
-
-        return response()->json($data);
+        return view('dashboard.students.index', compact('governments', 'categories', 'courses'));
     }
 
-    $governments = Government::get();
-    $categories  = Category::where('is_publish', 1)->get();
-    $courses     = Course::get();
-
-    return view('dashboard.students.index', compact('governments', 'categories', 'courses'));
-}
 
 
     public function store(StoreStudentRequest $request)
     {
         $data          = $request->validated();
         $data['image'] = uploadImageToDirectory($request->file('image'), "Students");
-        $data['block_flag']= false;
+        $data['block_flag'] = false;
         Student::create($data);
 
         return response(["Student created successfully"]);
     }
 
- public function update(UpdateStudentRequest $request, Student $student)
-{
-    // Validate the request data with your form request
-    $data = $request->validated();
+    public function update(UpdateStudentRequest $request, Student $student)
+    {
+        // Validate the request data with your form request
+        $data = $request->validated();
 
-    // If there's a new image uploaded, handle the upload and set the image path
-    if ($request->hasFile('image')) {
-        $data['image'] = uploadImageToDirectory($request->file('image'), "Students");
+        // If there's a new image uploaded, handle the upload and set the image path
+        if ($request->hasFile('image')) {
+            $data['image'] = uploadImageToDirectory($request->file('image'), "Students");
+        }
+
+        // Update the student record with the validated data
+        $student->update($data);
+
+        // Return a JSON response for AJAX success handling
+        return response()->json(["message" => __("Student updated successfully")]);
     }
 
-    // Update the student record with the validated data
-    $student->update($data);
 
-    // Return a JSON response for AJAX success handling
-    return response()->json(["message" => __("Student updated successfully")]);
-}
+    public function show(Student $student)
+    {
+        $this->authorize('view_students');
 
+        $student->load([
+            'government',
+            'category',
+            'courses' => ['sections', 'quizzes'], // لو كنت تحتاج مزيد من العلاقات
+            'enrolledClasses.course',
+            'quizAttempts.quiz',
+            'homeworks.homework',
+            'studentProgress.video'
+        ]);
 
-public function show(Student $student)
-{
-    $this->authorize('view_students');
-
-    $student->load([
-        'government',
-        'category',
-        'courses' => ['sections', 'quizzes'], // لو كنت تحتاج مزيد من العلاقات
-        'enrolledClasses.course',
-        'quizAttempts.quiz',
-        'homeworks.homework',
-        'studentProgress.video'
-    ]);
-
-    return view('dashboard.students.show', compact('student'));
-}
+        return view('dashboard.students.show', compact('student'));
+    }
 
 
 
@@ -125,15 +136,13 @@ public function show(Student $student)
     public function blocked(Request $request, Student $student)
     {
         // $this->authorize('delete_students');
-        if ($student->block_flag === 0)
-        {
+        if ($student->block_flag === 0) {
             $student->update([
                 'block_flag' => true
             ]);
             return response(["Student blocked successfully"]);
         }
-        if ($student->block_flag === 1)
-        {
+        if ($student->block_flag === 1) {
             $student->update([
                 'block_flag' => false
             ]);
@@ -143,30 +152,30 @@ public function show(Student $student)
 
 
     public function reportPdf(Student $student)
-{
-    $student->load([
-        'government',
-        'category',
-        'courses',
-        'quizAttempts.quiz',
-        'homeworks.homework',
-    ]);
+    {
+        $student->load([
+            'government',
+            'category',
+            'courses',
+            'quizAttempts.quiz',
+            'homeworks.homework',
+        ]);
 
-    $quizStats = [
-        'count' => $student->quizAttempts->count(),
-        'average_score' => round($student->quizAttempts->avg('score'), 2),
-    ];
+        $quizStats = [
+            'count' => $student->quizAttempts->count(),
+            'average_score' => round($student->quizAttempts->avg('score'), 2),
+        ];
 
-    $homeworkStats = [
-        'count' => $student->homeworks->count(),
-        'submitted' => $student->homeworks->whereNotNull('submitted_at')->count(),
-    ];
+        $homeworkStats = [
+            'count' => $student->homeworks->count(),
+            'submitted' => $student->homeworks->whereNotNull('submitted_at')->count(),
+        ];
 
-    $pdf = Pdf::loadView('dashboard.students.report_pdf', compact('student', 'quizStats', 'homeworkStats'))
-        ->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('dashboard.students.report_pdf', compact('student', 'quizStats', 'homeworkStats'))
+            ->setPaper('a4', 'portrait');
 
-    return $pdf->download("student_report_{$student->id}.pdf");
-}
+        return $pdf->download("student_report_{$student->id}.pdf");
+    }
 
 
 }

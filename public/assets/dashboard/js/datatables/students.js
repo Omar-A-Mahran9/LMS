@@ -10,6 +10,9 @@ var KTDatatablesServerSide = (function () {
     $("#filter_enrollment").on("change", function () {
         $("#kt_datatable").DataTable().ajax.reload();
     });
+    $("#filter_government").on("change", function () {
+        $("#kt_datatable").DataTable().ajax.reload();
+    });
     // Private functions
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
@@ -29,6 +32,7 @@ var KTDatatablesServerSide = (function () {
                 data: function (d) {
                     d.filter_category = $("#filter_category").val();
                     d.filter_enrollment = $("#filter_enrollment").val();
+                    d.government_id = $("#filter_government").val();
                 },
             },
             columns: [
