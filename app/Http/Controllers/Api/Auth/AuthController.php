@@ -13,54 +13,112 @@ use App\Http\Resources\Api\StudentResource;
 use App\Models\Student;
 use Illuminate\Support\Facades\Hash;
 
-
 class AuthController extends Controller
 {
-public function login(Request $request)
-{
-    $request->validate([
-        'login' => ['required', 'string'], // Email or phone
-        'password' => ['required', 'min:6'],
-    ]);
+    // public function login(Request $request)
+    // {
+    //     $request->validate([
+    //         'login' => ['required', 'string'], // Email or phone
+    //         'password' => ['required', 'min:6'],
+    //     ]);
 
-    $loginInput = $request->input('login');
-    $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+    //     $loginInput = $request->input('login');
+    //     $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
-    $student = Student::where($fieldType, $loginInput)->first();
+    //     $student = Student::where($fieldType, $loginInput)->first();
 
-    if (!$student) {
-        return $this->validationFailure([
-            'login' => [__('Your Data is not found')],
+    //     if (!$student) {
+    //         return $this->validationFailure([
+    //             'login' => [__('Your Data is not found')],
+    //         ]);
+    //     }
+
+    //     if ($student->block_flag === 1) {
+    //         return $this->validationFailure([
+    //             'login' => [__('Your account is blocked. Please contact support.')],
+    //         ]);
+    //     }
+
+    //     if (Hash::check($request->password, $student->password)) {
+
+    //         // 🔹 Revoke all previous tokens (logout from other devices)
+    //         $student->tokens()->delete();
+
+    //         // Create new token
+    //         $tokenResult = $student->createToken('Personal access token to apis');
+    //         $tokenResult->accessToken->expires_at = now()->addHours(24);
+    //         $tokenResult->accessToken->save();
+
+    //         return $this->success("logged in successfully", [
+    //             'token' => $tokenResult->plainTextToken,
+    //             'user'  => new StudentResource($student),
+    //         ]);
+    //     }
+
+    //     return $this->validationFailure([
+    //         'password' => [__("Password mismatch")],
+    //     ]);
+    // }
+    public function login(Request $request)
+    {
+        $request->validate([
+            'login' => ['required', 'string'],
+            'password' => ['required', 'min:6'],
+            'device_id' => ['required', 'string'],
+            'device_name' => ['nullable'],
+            'device_type' => ['nullable'],
         ]);
-    }
 
-    if ($student->block_flag === 1) {
-        return $this->validationFailure([
-            'login' => [__('Your account is blocked. Please contact support.')],
-        ]);
-    }
+        $loginInput = $request->input('login');
+        $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
-    if (Hash::check($request->password, $student->password)) {
+        $student = Student::where($fieldType, $loginInput)->first();
 
-        // 🔹 Revoke all previous tokens (logout from other devices)
+        if (!$student) {
+            return $this->validationFailure([
+                'login' => [__('Your Data is not found')],
+            ]);
+        }
+
+        if (!Hash::check($request->password, $student->password)) {
+            return $this->validationFailure([
+                'password' => [__("Password mismatch")],
+            ]);
+        }
+
+        // check device
+        $device = StudentDevice::where('student_id', $student->id)
+            ->where('device_id', $request->device_id)
+            ->first();
+
+        if (!$device) {
+
+            // limit devices
+            if ($student->devices()->count() >= 2) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'You have reached maximum allowed devices'
+                ], 403);
+            }
+
+            StudentDevice::create([
+                'student_id' => $student->id,
+                'device_id' => $request->device_id,
+                'device_name' => $request->device_name,
+                'device_type' => $request->device_type,
+                'ip' => $request->ip()
+            ]);
+        }
+
         $student->tokens()->delete();
 
-        // Create new token
         $tokenResult = $student->createToken('Personal access token to apis');
-        $tokenResult->accessToken->expires_at = now()->addHours(24);
-        $tokenResult->accessToken->save();
 
         return $this->success("logged in successfully", [
             'token' => $tokenResult->plainTextToken,
-            'user'  => new StudentResource($student),
+            'user' => new StudentResource($student),
         ]);
     }
-
-    return $this->validationFailure([
-        'password' => [__("Password mismatch")],
-    ]);
-}
-
 
     public function loginOTP(Request $request, Student $student)
     {
@@ -91,59 +149,59 @@ public function login(Request $request)
     }
 
 
-public function register(Request $request)
-{
-    $data = $request->validate([
-        'first_name' => ['required', 'string', 'max:255'],
-        'middle_name' => ['nullable', 'string', 'max:255'],
-        'last_name' => ['required', 'string', 'max:255'],
+    public function register(Request $request)
+    {
+        $data = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
 
-        'phone' => ['required', 'string', 'regex:/^[0-9]+$/', 'max:20', 'unique:students'],
-        'parent_phone' => ['nullable', 'string', 'regex:/^[0-9]+$/', 'max:20'],
-        'parent_job' => 'nullable|string|max:255',
-        'gender' => 'required|in:male,female',
-        'government_id' => 'required|exists:governments,id',
-        'category_id' => 'required|exists:categories,id',
+            'phone' => ['required', 'string', 'regex:/^[0-9]+$/', 'max:20', 'unique:students'],
+            'parent_phone' => ['nullable', 'string', 'regex:/^[0-9]+$/', 'max:20'],
+            'parent_job' => 'nullable|string|max:255',
+            'gender' => 'required|in:male,female',
+            'government_id' => 'required|exists:governments,id',
+            'category_id' => 'required|exists:categories,id',
 
-        'email' => 'required|string|email|unique:students',
+            'email' => 'required|string|email|unique:students',
 
-        'password' => ['required', 'string', 'min:8', 'max:255'],
-        'confirm_password' => ['required', 'same:password'],
+            'password' => ['required', 'string', 'min:8', 'max:255'],
+            'confirm_password' => ['required', 'same:password'],
 
 
-    ]);
+        ]);
 
-    // Handle image upload if provided
-    if ($request->hasFile('image')) {
-        $data['image'] = uploadImageToDirectory($request->file('image'), 'Students');
+        // Handle image upload if provided
+        if ($request->hasFile('image')) {
+            $data['image'] = uploadImageToDirectory($request->file('image'), 'Students');
+        }
+
+
+
+        // Default flags
+        $data['block_flag'] = false;
+
+        // Create the student record
+        $student = Student::create($data);
+
+        // Generate OTP and expiration (valid 15 minutes)
+        $student->otp = rand(111111, 999999);
+        $student->otp_expiration = now()->addMinutes(15);
+        $student->remember_token = Str::random(10);
+        $student->save();
+
+        // Optionally send OTP here
+        // $student->sendOTP();
+
+        // Create a personal access token
+        // $token = $student->createToken('Personal Access Token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Registration successful',
+            // 'token' => $token,
+            'student' => new StudentResource($student),
+        ], 201);
     }
-
-
-
-    // Default flags
-    $data['block_flag'] = false;
-
-    // Create the student record
-    $student = Student::create($data);
-
-    // Generate OTP and expiration (valid 15 minutes)
-    $student->otp = rand(111111, 999999);
-    $student->otp_expiration = now()->addMinutes(15);
-    $student->remember_token = Str::random(10);
-    $student->save();
-
-    // Optionally send OTP here
-    // $student->sendOTP();
-
-    // Create a personal access token
-    // $token = $student->createToken('Personal Access Token')->plainTextToken;
-
-    return response()->json([
-        'message' => 'Registration successful',
-        // 'token' => $token,
-        'student' => new StudentResource($student),
-    ], 201);
-}
 
 
 

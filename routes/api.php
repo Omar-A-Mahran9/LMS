@@ -29,11 +29,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 
 });
-        Route::get('certificate/{id}', [CertificateController::class, 'publicDownload'])
+Route::get('certificate/{id}', [CertificateController::class, 'publicDownload'])
     ->name('certificate.public');
 
 Route::middleware(['auth:api'])->group(function () {
-          Route::post('Ask_us', 'ContactUsController@store');
+    Route::post('Ask_us', 'ContactUsController@store');
 
     Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');
     Route::get('get_rates_for_course/{course_id}', 'CourseController@getRatesForCourse');
@@ -63,7 +63,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('profile-info', 'ProfileController@profileInfo')->name('profile-info');
     Route::post('update-profile-info', 'ProfileController@updateProfileInfo')->name('update-profile-info');
     Route::post('logout', [ProfileController::class, 'logout'])->name('logout');
-    Route::post('logout-all', [ProfileController::class, 'logoutFromAllDevices'])->name('logout-all');;
+    Route::post('logout-all', [ProfileController::class, 'logoutFromAllDevices'])->name('logout-all');
+    ;
     Route::put('update-profile-password', [ProfileController::class, 'updatePassword']);
     Route::get('quizzes-results', [ProfileController::class, 'quizzesResults'])->name('quizzes.results');
     Route::get('homework-results', [ProfileController::class, 'homeworksResults'])->name('homeworks.results');
@@ -74,13 +75,14 @@ Route::middleware(['auth:api'])->group(function () {
 });
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {
-        Route::post('Ask_us', 'ContactUsController@store');
+    Route::post('Ask_us', 'ContactUsController@store');
 
     Route::get('/sections/{id}/videos/count', [SectionVideoController::class, 'countBySection']);
     Route::get('/courses/{id}/sections/count', [SectionController::class, 'countSectionByCourse']);
     Route::get('videos_by_classes_with_code/{id}', 'CourseController@getVideosByClassCode');
-   Route::get('all_classes', 'CourseController@getAllClasses');
+    Route::get('all_classes', 'CourseController@getAllClasses');
     Route::post('access_class', 'CourseController@access');
+    Route::get('videos_by_classes_with_free/{id}', 'CourseController@getVideosByClassCode');
 
     // Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
     // Route::get('quiz/{id}', 'CourseController@getQuizById');
@@ -92,8 +94,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('videos/{video}/watch', 'CourseController@logWatch');
 
     Route::get('check_course/{id}', 'CourseController@checkCourseAccess');
-   Route::get('all_classes_data', 'CourseController@getAllClassesData');
-   Route::get('all_quizes_data', 'CourseController@getAllQuizesData');
+    Route::get('all_classes_data', 'CourseController@getAllClassesData');
+    Route::get('all_quizes_data', 'CourseController@getAllQuizesData');
 
 
     // Route::get('class/{id}', 'CourseController@getClassById');
@@ -122,7 +124,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('courses_by_category', 'CourseController@getCoursesByCategory');
     Route::get('courses', 'CourseController@getCourses');
     Route::get('courses_by_id/{id}', 'CourseController@getCoursesById');
-     Route::get('books', 'BookController@index');
+    Route::get('books', 'BookController@index');
     Route::get('books/{id}', 'BookController@show');
     Route::post('/books/order', [BookOrderController::class, 'store']);
     Route::get('coursesList', 'CourseController@CoursesList');

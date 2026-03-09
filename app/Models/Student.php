@@ -11,7 +11,9 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Student extends Authenticatable
 {
-    use HasFactory, HasApiTokens, SMSTrait;
+    use HasFactory;
+    use HasApiTokens;
+    use SMSTrait;
 
     protected $appends = [ 'full_image_path'];
     protected $guarded = ["password_confirmation"];
@@ -27,7 +29,7 @@ class Student extends Authenticatable
      */
     protected static function booted(): void
     {
-        static::addGlobalScope(new SortingScope);
+        static::addGlobalScope(new SortingScope());
     }
 
     public function setPasswordAttribute($value)
@@ -49,17 +51,17 @@ class Student extends Authenticatable
         return $this->belongsTo(Government::class);
     }
 
-     public function quizAttempts()
+    public function quizAttempts()
     {
         return $this->hasMany(QuizAttempt::class);
     }
 
     public function quizzes()
-{
-    return $this->belongsToMany(Quiz::class, 'quiz_attempts')
-                ->withPivot(['score', 'submitted_at', 'started_at'])
-                ->withTimestamps();
-}
+    {
+        return $this->belongsToMany(Quiz::class, 'quiz_attempts')
+                    ->withPivot(['score', 'submitted_at', 'started_at'])
+                    ->withTimestamps();
+    }
 
     public function enrolledCourses()
     {
@@ -71,12 +73,12 @@ class Student extends Authenticatable
         return $this->belongsToMany(CourseClass::class, 'class_student', 'student_id', 'class_id')->withTimestamps();
     }
 
-  public function courses()
-{
-    return $this->belongsToMany(Course::class, 'course_student')
-                ->withPivot('payment_type', 'status', 'is_active')
-                ->withTimestamps();
-}
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_student')
+                    ->withPivot('payment_type', 'status', 'is_active')
+                    ->withTimestamps();
+    }
 
     public function books()
     {
@@ -99,7 +101,8 @@ class Student extends Authenticatable
     }
 
 
-    public function sendOTP(){
+    public function sendOTP()
+    {
         $this->otp = rand(1111, 9999);
         $this->otp_expiration = now()->addMinutes(5); // Optional
         // $this->sendSMS("$appName: $this->otp هو رمز الحماية,لا تشارك الرمز");
@@ -108,14 +111,17 @@ class Student extends Authenticatable
     }
 
     public function homeworks()
-{
-    return $this->hasMany(HomeWorkAttempt::class, 'student_id');
-}
+    {
+        return $this->hasMany(HomeWorkAttempt::class, 'student_id');
+    }
 
-// App\Models\Student.php
-public function homeWorkAttempts()
-{
-    return $this->hasMany(HomeWorkAttempt::class);
-}
-
+    // App\Models\Student.php
+    public function homeWorkAttempts()
+    {
+        return $this->hasMany(HomeWorkAttempt::class);
+    }
+    public function devices()
+    {
+        return $this->hasMany(StudentDevice::class);
+    }
 }

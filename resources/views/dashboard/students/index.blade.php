@@ -62,16 +62,18 @@
                         </select>
                     </div>
 
-                    <div style="min-width: 250px;" class="ms-5">
+                    <div style="min-width: 250px;" class="ms-5 d-flex align-items-center">
                         <select id="filter_government" name="filter_government" class="form-select" data-control="select2"
                             data-placeholder="{{ __('Filter by Government') }}">
                             <option value="all">{{ __('All Governments') }}</option>
-
                             @foreach ($governments as $gov)
                                 <option value="{{ $gov->id }}">{{ $gov->name }}</option>
                             @endforeach
                         </select>
+
+                        <!-- هنا العدد -->
                     </div>
+
 
 
                     <!--end::Category Filter-->
