@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\StudentResource;
 use App\Models\Student;
+use App\Models\StudentDevice;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
