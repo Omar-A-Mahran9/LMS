@@ -94,11 +94,11 @@ class AuthController extends Controller
 
         if (!$device) {
 
-            // limit devices
-            if ($student->devices()->count() >= 2) {
+            // limit to 1 device only
+            if ($student->devices()->count() >= 1) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'You have reached maximum allowed devices'
+                    'message' => 'You have reached maximum allowed device'
                 ], 403);
             }
 
@@ -120,7 +120,6 @@ class AuthController extends Controller
             'user' => new StudentResource($student),
         ]);
     }
-
     public function loginOTP(Request $request, Student $student)
     {
         $request['phone'] = $student->phone;
