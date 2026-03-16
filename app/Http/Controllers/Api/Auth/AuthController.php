@@ -92,24 +92,24 @@ class AuthController extends Controller
             ->where('device_id', $request->device_id)
             ->first();
 
-        if (!$device) {
+        // if (!$device) {
 
-            // limit to 1 device only
-            if ($student->devices()->count() >= 1) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'You have reached maximum allowed device'
-                ], 403);
-            }
+        //     // limit to 1 device only
+        //     if ($student->devices()->count() >= 1) {
+        //         return response()->json([
+        //             'status' => false,
+        //             'message' => 'You have reached maximum allowed device'
+        //         ], 403);
+        //     }
 
-            StudentDevice::create([
-                'student_id' => $student->id,
-                'device_id' => $request->device_id,
-                'device_name' => $request->device_name,
-                'device_type' => $request->device_type,
-                'ip' => $request->ip()
-            ]);
-        }
+        //     StudentDevice::create([
+        //         'student_id' => $student->id,
+        //         'device_id' => $request->device_id,
+        //         'device_name' => $request->device_name,
+        //         'device_type' => $request->device_type,
+        //         'ip' => $request->ip()
+        //     ]);
+        // }
 
         $student->tokens()->delete();
 
