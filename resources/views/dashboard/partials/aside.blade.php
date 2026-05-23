@@ -128,6 +128,15 @@
                     </x-dashboard.aside-item>
                 @endcan
 
+                {{-- Bundles --}}
+                {{-- @can('view_bundle') --}}
+                <x-dashboard.aside-item :slug="'bundles'" :route="route('dashboard.bundles.index')" :title="__('Bundles')">
+
+                    <i class="ki-outline ki-package fs-2"></i>
+
+                </x-dashboard.aside-item>
+                {{-- @endcan --}}
+
                 @can('view_orders')
                     <x-dashboard.aside-item :slug="'orders'" :route="route('dashboard.orders.index')" :title="__('Orders')">
                         <i class="ki-outline ki-parcel fs-1"></i>

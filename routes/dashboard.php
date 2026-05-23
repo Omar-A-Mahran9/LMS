@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\BookOrderController;
+use App\Http\Controllers\Dashboard\BundleController;
 use App\Http\Controllers\Dashboard\ContactRequestController;
 use App\Http\Controllers\Dashboard\CourseController;
 use App\Http\Controllers\Dashboard\EnrollmentController;
@@ -14,8 +15,6 @@ use App\Http\Controllers\Dashboard\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
-
 Route::get("/", "DashboardController@index")->name('index');
 /* begin Delete And restore */
 Route::delete("admins/delete-selected", "AdminController@deleteSelected");
@@ -27,55 +26,71 @@ Route::delete("students/delete-selected", "StudentController@deleteSelected");
 Route::delete("cities/delete-selected", "GovernmentsController@deleteSelected");
 Route::get("cities/restore-selected", "GovernmentsController@restoreSelected");
 Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected");
- Route::delete("Course/delete-selected", "CourseController@deleteSelected");
- Route::get("Course/restore-selected", "CourseController@restoreSelected");
- Route::delete("Course/delete-selected", "CourseController@deleteSelected");
- Route::get("Course/restore-selected", "CourseController@restoreSelected");
- Route::delete("whyus/delete-selected", "WhyusController@deleteSelected");
- Route::get("whyus/restore-selected", "WhyusController@restoreSelected");
- Route::delete("CommonQuestion/delete-selected", "CommonQuestionController@deleteSelected");
- Route::get("CommonQuestion/restore-selected", "CommonQuestionController@restoreSelected");
- Route::delete("howuse/delete-selected", "HowuseController@deleteSelected");
- Route::get("howuse/restore-selected", "HowuseController@restoreSelected");
- Route::delete("enrollments/delete-selected", "EnrollmentController@deleteSelected");
- Route::get("enrollments/restore-selected", "EnrollmentController@restoreSelected");
+Route::delete("Course/delete-selected", "CourseController@deleteSelected");
+Route::get("Course/restore-selected", "CourseController@restoreSelected");
+Route::delete("Course/delete-selected", "CourseController@deleteSelected");
+Route::get("Course/restore-selected", "CourseController@restoreSelected");
+Route::delete("whyus/delete-selected", "WhyusController@deleteSelected");
+Route::get("whyus/restore-selected", "WhyusController@restoreSelected");
+Route::delete("CommonQuestion/delete-selected", "CommonQuestionController@deleteSelected");
+Route::get("CommonQuestion/restore-selected", "CommonQuestionController@restoreSelected");
+Route::delete("howuse/delete-selected", "HowuseController@deleteSelected");
+Route::get("howuse/restore-selected", "HowuseController@restoreSelected");
+Route::delete("enrollments/delete-selected", "EnrollmentController@deleteSelected");
+Route::get("enrollments/restore-selected", "EnrollmentController@restoreSelected");
 Route::get('students/{student}/report/pdf', [StudentController::class, 'reportPdf'])->name('students.report.pdf');
 Route::post('enrollments/toggle-status', [EnrollmentController::class, 'toggleStatus'])
     ->name('enrollments.toggleStatus');
- Route::resource('lives', 'LiveController')->except(['create', 'edit']);
+Route::resource('lives', 'LiveController')->except(['create', 'edit']);
 Route::get('/categories/{id}/courses', [CourseController::class, 'getCourses']);
 Route::put('contact-us/{contact}/reply', [ContactRequestController::class, 'reply'])->name('contact.reply');
 Route::get('contact-us/{contact}/reply', [ContactRequestController::class, 'showReplyForm'])->name('contact.reply_form');
 
- Route::resource('courses', 'CourseController')->except(['create', 'edit']);
- Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
- Route::get('classes/{classId}/videos', 'CourseVideoController@getvideosbyclasses');
-  Route::get('sections/{sectionId}/videos', 'SectionVideoController@getvideosbyclasses');
- Route::resource('reading_passage', 'ReadingPassageController')->except(['create', 'edit']);
+Route::resource('courses', 'CourseController')->except(['create', 'edit']);
+Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
+Route::get('classes/{classId}/videos', 'CourseVideoController@getvideosbyclasses');
+Route::get('sections/{sectionId}/videos', 'SectionVideoController@getvideosbyclasses');
+Route::resource('reading_passage', 'ReadingPassageController')->except(['create', 'edit']);
 Route::get('quizzes/{quiz}/has-reading-passages', [QuizController::class, 'hasReadingPassages']);
 Route::get('quizzes/{quiz}/has-passages', [QuizController::class, 'hasPassages']);
 
- Route::resource('classes', 'ClassController')->except(['create', 'edit']);
-  Route::resource('sections', 'SectionController')->except(['create', 'edit']);
+Route::resource('classes', 'ClassController')->except(['create', 'edit']);
+Route::resource('sections', 'SectionController')->except(['create', 'edit']);
 
- Route::resource('books', 'BookController')->except(['create', 'edit']);
-  Route::resource('generateCode', 'GenerateCodeController')->except(['create', 'edit']);
+Route::resource('books', 'BookController')->except(['create', 'edit']);
+Route::resource('generateCode', 'GenerateCodeController')->except(['create', 'edit']);
+
 Route::get('generate-codes/export/pdf', [GenerateCodeController::class, 'exportPDF'])
     ->name('generateCode.exportPDF');
 
- Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
- Route::resource('classes.quizzes', QuizByClassController::class);
-  Route::resource('sections.quizzes', QuizBySectionController::class);
 
-  Route::resource('classes.homeworks', HomeworkByClassController::class);
-  Route::resource('sections.homeworks', HomeworkBySectionController::class);
 
- Route::resource('homeworks', 'HomeWorkController')->except(['create', 'edit']);
- Route::resource('questions', 'QuestionController')->except(['create', 'edit']);
- Route::resource('homeworks-questions', 'HomeWorkQuestionController')->except(['create', 'edit']);
-  Route::resource('CommonQuestion', 'CommonQuestionController')->except(['create', 'edit']);
+Route::resource('bundles', 'BundleController')->except(['create', 'edit']);
+
+Route::get('bundles/export/pdf', [BundleController::class, 'exportPDF'])
+    ->name('bundles.exportPDF');
+
+Route::post('bundles/{bundle}/generate-codes', [BundleController::class, 'generateCodes'])
+    ->name('bundles.generateCodes');
+
+Route::post('bundles/redeem-code', [BundleController::class, 'redeemCode'])
+    ->name('bundles.redeemCode');
+
+
+
+Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
+Route::resource('classes.quizzes', QuizByClassController::class);
+Route::resource('sections.quizzes', QuizBySectionController::class);
+
+Route::resource('classes.homeworks', HomeworkByClassController::class);
+Route::resource('sections.homeworks', HomeworkBySectionController::class);
+
+Route::resource('homeworks', 'HomeWorkController')->except(['create', 'edit']);
+Route::resource('questions', 'QuestionController')->except(['create', 'edit']);
+Route::resource('homeworks-questions', 'HomeWorkQuestionController')->except(['create', 'edit']);
+Route::resource('CommonQuestion', 'CommonQuestionController')->except(['create', 'edit']);
 /** begin resources routes **/
- Route::resource('admins', 'AdminController')->except(['create', 'edit']);
+Route::resource('admins', 'AdminController')->except(['create', 'edit']);
 Route::resource('booking', 'BookingController')->except(['create', 'edit']);
 Route::resource('brands', 'BrandController')->except(['create', 'edit']);
 Route::resource('enrollments', 'EnrollmentController')->except(['create', 'edit']);
@@ -127,7 +142,7 @@ Route::prefix('settings')->name('settings.')->group(function () {
     Route::match(['get', 'post'], 'home-content/general', 'HomeController@general')->name('home.general');
 
 
- });
+});
 
 Route::get('trash/{modelName}/{id}/restore', 'TrashController@restore')->name('trash.restore');
 Route::get('trash/{modelName?}', 'TrashController@index')->name('trash');
