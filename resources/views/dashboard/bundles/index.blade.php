@@ -283,7 +283,8 @@
 
                                 </label>
 
-                                <input type="number" name="usage_limit" class="form-control" min="1">
+                                <input id="usage_limit_inp" type="number" name="usage_limit" class="form-control"
+                                    min="1">
                                 <div class="invalid-feedback" id="usage_limit"></div>
 
                             </div>

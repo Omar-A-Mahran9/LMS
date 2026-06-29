@@ -6,7 +6,8 @@
     "Why us": "لماذا نحن",
     "Course": "الكورس",
     "Not found score (may be refresh page during exam or not submit your exam)": "(لا يوجد نتيجة - (لم تقم بحفظ اجابتك أو قمت بتحديث الصفحة أثناء الامتحان",
-
+    "Codes Count": "عدد الأكواد",
+    "Classes Count":"عدد الحصص",
     "Courses": "الكورسات",
     "Add Why us": "اضافة لماذا نحن",
     "Why us list": "قائمة لماذا نحن",
@@ -470,7 +471,7 @@
     "Choose the cities": "اختر المحافظات",
     "New": "جديد",
     "Add Bundle": "إضافة باقة",
-    "Bundles List":"قائمة الباقات",
+    "Bundles List": "قائمة الباقات",
     "Bundles": "باقة",
     "You are not enrolled in this course.": "انت غير مسجل في الكورس",
     "Not Attempted": "لم يحضر",

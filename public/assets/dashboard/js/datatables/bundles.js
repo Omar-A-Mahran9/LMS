@@ -60,8 +60,7 @@ var KTDatatablesServerSide = (function () {
                 |--------------------------------------------------------------------------
                 */
 
-
-                   {
+                {
                     targets: 1,
                     orderable: false,
                     render: function (data, type, row) {
@@ -262,9 +261,15 @@ var KTDatatablesServerSide = (function () {
 
                 $("#title_en_inp").val(data.title_en);
 
-                $("#description_ar_inp").val(data.description_ar ?? "");
-
-                $("#description_en_inp").val(data.description_en ?? "");
+                tinymce
+                    .get("description_ar_inp")
+                    .setContent(data.description_ar);
+                tinymce
+                    .get("description_en_inp")
+                    .setContent(data.description_en);
+                $("#code_count_inp").val(data.codes_count);
+                $("#usage_limit_inp").val(data.usage_limit ?? "");
+                 $("#single_use_switch").prop("checked", data.single_use == 1);
 
                 $("#classes_inp")
                     .val(data.classes.map((x) => x.id))

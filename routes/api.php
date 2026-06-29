@@ -83,7 +83,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('all_classes', 'CourseController@getAllClasses');
     Route::post('access_class', 'CourseController@access');
     Route::get('videos_by_classes_with_free/{id}', 'CourseController@getVideosByClassCode');
-
+    Route::get('all_bundles', 'CourseController@getAllBundles');
+    Route::post('access_bundle', 'CourseController@accessBundle');
+    Route::get('videos_by_bundle_with_code/{id}', 'CourseController@getVideosByBundleCode');
     // Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
     // Route::get('quiz/{id}', 'CourseController@getQuizById');
     // Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
