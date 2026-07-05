@@ -24,8 +24,9 @@ return new class () extends Migration {
             $table->unsignedInteger('used_count')->default(0);
 
             $table->boolean('is_active')->default(true);
+            $table->timestamp('starts_at')->nullable();
+            $table->timestamp('expires_at')->nullable();
 
- 
             $table->foreign('bundle_id')
                 ->references('id')
                 ->on('bundles')

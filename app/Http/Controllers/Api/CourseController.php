@@ -925,93 +925,93 @@ public function accessBundle(Request $request)
         ]);
     }
 
-public function getVideosByBundleCode(Request $request, $id)
-{
-    $studentId = Auth::id();
+    public function getVideosByBundleCode(Request $request, $id)
+    {
+        $studentId = Auth::id();
 
-    $class = CourseClass::where('id', $id)
-        ->where('is_active', 1)
-        ->first();
+        $class = CourseClass::where('id', $id)
+            ->where('is_active', 1)
+            ->first();
 
-    if (!$class) {
-        return $this->failure('Class not found or unpublished');
-    }
-
-    $request->validate([
-        'code' => 'required|string',
-    ]);
-
-    $bundleCode = BundleAccessCode::with([
-            'bundle.classes.videos'
-        ])
-        ->where('code', $request->code)
-        ->where('is_active', 1)
-        ->first();
-
-    if (!$bundleCode) {
-        return $this->failure(__('Invalid or inactive bundle code.'));
-    }
-
-    // Check usage
-    if (
-        ($bundleCode->single_use && $bundleCode->used_count >= 1) ||
-        ($bundleCode->usage_limit !== null &&
-         $bundleCode->used_count >= $bundleCode->usage_limit)
-    ) {
-        return $this->failure(__('This access code has expired or reached its usage limit.'));
-    }
-
-    // Check that class belongs to bundle
-    $exists = $bundleCode->bundle->classes()
-        ->where('classes.id', $class->id)
-        ->exists();
-
-    if (!$exists) {
-        return $this->failure(__('This class does not belong to this bundle.'));
-    }
-
-    // Increment usage
-    $bundleCode->increment('used_count');
-
-    // Optional Log
-    /*
-    BundleAccessLog::create([
-        'student_id'      => auth('api')->id(),
-        'bundle_id'       => $bundleCode->bundle_id,
-        'access_code_id'  => $bundleCode->id,
-        'device_ip'       => $request->ip(),
-        'user_agent'      => $request->userAgent(),
-    ]);
-    */
-
-    // Track view only for logged-in users
-    if ($studentId) {
-        $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
-
-        if (!Cache::has($cacheKey)) {
-            $class->increment('views');
-            Cache::put($cacheKey, true, now()->addHours(6));
+        if (!$class) {
+            return $this->failure('Class not found or unpublished');
         }
-    }
 
-    // Load videos
-    $videos = $class->videos()
-        ->where('is_active', 1)
-        ->with([
-            'studentProgress' => function ($query) use ($studentId) {
-                if ($studentId) {
-                    $query->where('student_id', $studentId);
-                }
+        $request->validate([
+            'code' => 'required|string',
+        ]);
+
+        $bundleCode = BundleAccessCode::with([
+                'bundle.classes.videos'
+            ])
+            ->where('code', $request->code)
+            ->where('is_active', 1)
+            ->first();
+
+        if (!$bundleCode) {
+            return $this->failure(__('Invalid or inactive bundle code.'));
+        }
+
+        // Check usage
+        if (
+            ($bundleCode->single_use && $bundleCode->used_count >= 1) ||
+            ($bundleCode->usage_limit !== null &&
+            $bundleCode->used_count >= $bundleCode->usage_limit)
+        ) {
+            return $this->failure(__('This access code has expired or reached its usage limit.'));
+        }
+
+        // Check that class belongs to bundle
+        $exists = $bundleCode->bundle->classes()
+            ->where('classes.id', $class->id)
+            ->exists();
+
+        if (!$exists) {
+            return $this->failure(__('This class does not belong to this bundle.'));
+        }
+
+        // Increment usage
+        $bundleCode->increment('used_count');
+
+        // Optional Log
+        /*
+        BundleAccessLog::create([
+            'student_id'      => auth('api')->id(),
+            'bundle_id'       => $bundleCode->bundle_id,
+            'access_code_id'  => $bundleCode->id,
+            'device_ip'       => $request->ip(),
+            'user_agent'      => $request->userAgent(),
+        ]);
+        */
+
+        // Track view only for logged-in users
+        if ($studentId) {
+            $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
+
+            if (!Cache::has($cacheKey)) {
+                $class->increment('views');
+                Cache::put($cacheKey, true, now()->addHours(6));
             }
-        ])
-        ->get();
+        }
 
-    return $this->success('Bundle class videos loaded', [
-        'bundle'     => new ApiBundleResource($bundleCode->bundle),
-        'class_data' => new ClassDetailsResource($class, $studentId),
-        'videos'     => $videos,
-    ]);
-}
+        // Load videos
+        $videos = $class->videos()
+            ->where('is_active', 1)
+            ->with([
+                'studentProgress' => function ($query) use ($studentId) {
+                    if ($studentId) {
+                        $query->where('student_id', $studentId);
+                    }
+                }
+            ])
+            ->get();
+
+        return $this->success('Bundle class videos loaded', [
+            'bundle'     => new ApiBundleResource($bundleCode->bundle),
+            'class_data' => new ClassDetailsResource($class, $studentId),
+            'videos'     => $videos,
+        ]);
+    }
 
 
 }

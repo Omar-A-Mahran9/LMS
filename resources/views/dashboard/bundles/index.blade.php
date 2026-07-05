@@ -157,204 +157,197 @@
         enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
 
         @csrf
+        {{-- Hidden id field: يتظبط من الـ JS وقت فتح الفورم في وضع Edit، ويتغير معاه الـ action --}}
+        <input type="hidden" name="id" id="id_inp" value="">
 
         <div class="modal fade" tabindex="-1" id="crud_modal">
-
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
-
                 <div class="modal-content">
 
                     <div class="modal-header">
-
                         <h5 class="modal-title" id="form_title">
-
                             {{ __('Add Bundle') }}
-
                         </h5>
-
                         <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal">
-
                             <i class="ki-outline ki-cross fs-1"></i>
-
                         </div>
-
                     </div>
 
                     <div class="modal-body">
-                        <div class="row  ">
+
+                        <div class="row">
                             <div class="col-12 d-flex flex-column justify-content-center">
-                                <label for="image_inp"
-                                    class="form-label  text-center fs-6 fw-bold mb-3">{{ __('Thumbnail Image') }}</label>
+                                <label for="image_inp" class="form-label text-center fs-6 fw-bold mb-3">
+                                    {{ __('Thumbnail Image') }}
+                                </label>
                                 <x-dashboard.upload-image-inp name="image" :image="null" :directory="'bundles'"
                                     placeholder="default.svg" type="editable" />
+                                <div class="invalid-feedback d-block" id="image"></div>
                             </div>
-
                         </div>
 
                         <div class="row mb-4">
                             <div class="col-6">
-                                <label for="title_ar_inp" class="form-label ">{{ __('Title (Arabic)') }}</label>
+                                <label for="title_ar_inp" class="form-label">{{ __('Title (Arabic)') }}</label>
                                 <input type="text" name="title_ar" id="title_ar_inp" class="form-control"
-                                    placeholder="{{ __('Enter title in Arabic') }}">
+                                    maxlength="191" required placeholder="{{ __('Enter title in Arabic') }}">
                                 <div class="invalid-feedback" id="title_ar"></div>
                             </div>
                             <div class="col-6">
-                                <label for="title_en_inp" class="form-label ">{{ __('Title (English)') }}</label>
+                                <label for="title_en_inp" class="form-label">{{ __('Title (English)') }}</label>
                                 <input type="text" name="title_en" id="title_en_inp" class="form-control"
-                                    placeholder="{{ __('Enter title in English') }}">
+                                    maxlength="191" required placeholder="{{ __('Enter title in English') }}">
                                 <div class="invalid-feedback" id="title_en"></div>
                             </div>
                         </div>
-
 
                         <div class="row mb-4">
                             <div class="col-6">
                                 <label for="description_ar_inp"
                                     class="form-label">{{ __('Description (Arabic)') }}</label>
-
                                 <textarea name="description_ar" id="description_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
-
                                 <div class="fv-plugins-message-container invalid-feedback" id="description_ar"></div>
-
                             </div>
-                            <!--begin::Col-->
-
                             <div class="col-6">
                                 <label for="description_en_inp"
                                     class="form-label">{{ __('Description (English)') }}</label>
-
                                 <textarea name="description_en" id="description_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
-
                                 <div class="fv-plugins-message-container invalid-feedback" id="description_en"></div>
-
                             </div>
-
-
                         </div>
 
-
-
-
-
-
                         <div class="mb-4">
-
-                            <label class="form-label">
-
-                                {{ __('Classes') }}
-
-                            </label>
-
-                            <select name="classes[]" id="classes_inp" multiple class="form-select"
+                            <label class="form-label">{{ __('Classes') }}</label>
+                            <select name="classes[]" id="classes_inp" multiple class="form-select" required
                                 data-control="select2" data-placeholder="{{ __('Select Classes') }}">
-
                                 @foreach ($classes as $class)
-                                    <option value="{{ $class->id }}">
-
-                                        {{ $class->title }}
-
-                                    </option>
+                                    <option value="{{ $class->id }}">{{ $class->title }}</option>
                                 @endforeach
-
                             </select>
-
                             <div class="invalid-feedback" id="classes"></div>
+                        </div>
 
+                        {{-- سعر الباقة --}}
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <label for="price_inp" class="form-label">{{ __('Bundle Price') }}</label>
+                                <input type="number" name="price" id="price_inp" class="form-control" min="0"
+                                    step="0.01" required placeholder="{{ __('Enter bundle price') }}">
+                                <div class="invalid-feedback" id="price"></div>
+                            </div>
+                            <div class="col-6">
+                                <label for="discount_price_inp"
+                                    class="form-label">{{ __('Discounted Price (optional)') }}</label>
+                                <input type="number" name="discount_price" id="discount_price_inp" class="form-control"
+                                    min="0" step="0.01"
+                                    placeholder="{{ __('Enter discounted price if any') }}">
+                                <div class="invalid-feedback" id="discount_price"></div>
+                            </div>
+                        </div>
+
+                        {{-- تاريخ صلاحية الأكواد --}}
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <label for="starts_at_inp" class="form-label">{{ __('Valid From') }}</label>
+                                <input type="date" name="starts_at" id="starts_at_inp" class="form-control">
+                                <div class="invalid-feedback" id="starts_at"></div>
+                            </div>
+                            <div class="col-6">
+                                <label for="expires_at_inp" class="form-label">{{ __('Expires At') }}</label>
+                                <input type="date" name="expires_at" id="expires_at_inp" class="form-control">
+                                <div class="invalid-feedback" id="expires_at"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-check form-switch mb-4">
+                            {{-- fallback عشان لو اتشالت العلامة يتبعت false مش null --}}
+                            <input type="hidden" name="single_use" value="0">
+                            <input class="form-check-input" type="checkbox" name="single_use" id="single_use_switch"
+                                value="1" checked>
+                            <label class="form-check-label" for="single_use_switch">{{ __('Single Use') }}</label>
                         </div>
 
                         <div class="row mb-4">
-
-
                             <div class="col-6" id="code_count_wrapper">
                                 <label for="code_count_inp"
                                     class="form-label">{{ __('Number of Codes to Generate') }}</label>
                                 <input type="number" name="code_count" id="code_count_inp" class="form-control"
-                                    min="1" placeholder="{{ __('Enter number of codes (e.g. 40)') }}">
+                                    min="1" step="1" required
+                                    placeholder="{{ __('Enter number of codes (e.g. 40)') }}">
                                 <div class="invalid-feedback" id="code_count"></div>
+                                <div class="form-text" id="code_count_edit_note" style="display:none;">
+                                    {{ __('Codes already generated cannot be changed after creation.') }}
+                                </div>
                             </div>
 
-
-
-                            <div class="col-6">
-
-                                <label class="form-label">
-
-                                    {{ __('Usage Limit') }}
-
-                                </label>
-
+                            <div class="col-6" id="usage_limit_wrapper">
+                                <label for="usage_limit_inp" class="form-label">{{ __('Usage Limit per Code') }}</label>
                                 <input id="usage_limit_inp" type="number" name="usage_limit" class="form-control"
-                                    min="1">
+                                    min="1" step="1">
                                 <div class="invalid-feedback" id="usage_limit"></div>
-
                             </div>
-
                         </div>
 
                         <div class="form-check form-switch mb-4">
-
-                            <input class="form-check-input" type="checkbox" name="single_use" value="1" checked>
-
-                            <label class="form-check-label">
-
-                                {{ __('Single Use') }}
-
-                            </label>
-
-                        </div>
-
-
-
-                        <div class="form-check form-switch mb-4">
-
+                            <input type="hidden" name="is_active" value="0">
                             <input class="form-check-input" type="checkbox" name="is_active" id="is_active_switch"
                                 value="1" checked>
-
-                            <label class="form-check-label">
-
-                                {{ __('Active') }}
-
-                            </label>
-
+                            <label class="form-check-label" for="is_active_switch">{{ __('Active') }}</label>
                         </div>
 
                     </div>
 
                     <div class="modal-footer">
-
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-
                             {{ __('Close') }}
-
                         </button>
-
                         <button type="submit" class="btn btn-primary">
-
-                            <span class="indicator-label">
-
-                                {{ __('Save') }}
-
-                            </span>
-
+                            <span class="indicator-label">{{ __('Save') }}</span>
                             <span class="indicator-progress">
-
                                 {{ __('Please wait...') }}
-
                                 <span class="spinner-border spinner-border-sm ms-2"></span>
-
                             </span>
-
                         </button>
-
                     </div>
 
                 </div>
-
             </div>
-
         </div>
-
     </form>
+
+    <script>
+        // toggle usage_limit عند تفعيل single_use، وإخفاء code_count في وضع التعديل
+        document.addEventListener('DOMContentLoaded', function() {
+            const singleUse = document.getElementById('single_use_switch');
+            const usageLimitWrapper = document.getElementById('usage_limit_wrapper');
+            const usageLimitInput = document.getElementById('usage_limit_inp');
+
+            function toggleUsageLimit() {
+                const disabled = singleUse.checked;
+                usageLimitWrapper.style.display = disabled ? 'none' : '';
+                usageLimitInput.disabled = disabled;
+            }
+
+            singleUse.addEventListener('change', toggleUsageLimit);
+            toggleUsageLimit();
+
+            // مثال: عند فتح الفورم للتعديل (id_inp مش فاضي) اخفي حقل عدد الأكواد
+            const idInput = document.getElementById('id_inp');
+            const codeCountWrapper = document.getElementById('code_count_wrapper');
+            const codeCountInput = document.getElementById('code_count_inp');
+            const editNote = document.getElementById('code_count_edit_note');
+
+            function toggleCodeCountForEdit() {
+                const isEdit = idInput.value !== '';
+                codeCountInput.disabled = isEdit;
+                codeCountInput.required = !isEdit;
+                editNote.style.display = isEdit ? '' : 'none';
+            }
+
+            // استدعِ toggleCodeCountForEdit() من دالة فتح الـ Edit بتاعتك بعد ما تحط قيمة id_inp
+            toggleCodeCountForEdit();
+        });
+    </script>
 @endsection
 
 

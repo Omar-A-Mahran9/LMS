@@ -20,7 +20,8 @@ return new class () extends Migration {
             $table->text('description_en')->nullable();
 
             $table->string('image')->nullable();
-
+            $table->decimal('price', 10, 2);
+            $table->decimal('discount_price', 10, 2)->nullable();
             $table->boolean('is_active')->default(true);
 
 
