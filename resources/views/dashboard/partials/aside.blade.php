@@ -90,7 +90,11 @@
                         <i class="fas fa-tv fs-2"></i>
                     </x-dashboard.aside-item>
                 @endcan
-
+    @can('view_books')
+                    <x-dashboard.aside-item :slug="'books'" :route="route('dashboard.books.index')" :title="__('Books')">
+                        <i class="fas fa-tv fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
                 @can('view_questions')
                     <x-dashboard.aside-item :slug="'classes'" :route="route('dashboard.classes.index')" :title="__('Classes')">
                         <i class="fas fa-school fs-2"></i>

@@ -182,7 +182,6 @@
                                 </label>
                                 <x-dashboard.upload-image-inp name="image" :image="null" :directory="'bundles'"
                                     placeholder="default.svg" type="editable" />
-                                <div class="invalid-feedback d-block" id="image"></div>
                             </div>
                         </div>
 

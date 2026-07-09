@@ -58,7 +58,7 @@ class BundleController extends Controller
             'expires_at'       => 'nullable|date|after_or_equal:starts_at',
 
             'code_count'       => 'required|integer|min:1',
-            'usage_limit'      => 'required|integer|min:1',
+            'usage_limit'      => 'nullable|integer',
 
             'single_use'       => 'nullable|boolean',
             'is_active'        => 'nullable|boolean',
@@ -282,14 +282,34 @@ class BundleController extends Controller
         return response()->json(['status' => true, 'message' => 'تم حذف الكود بنجاح.']);
     }
 
-
-    public function show(ClassAccessCode $generateCode)
+    public function show(Bundle $bundle)
     {
-        $generateCode->load(['class', 'logs.student']);
-
-        return view('dashboard.codes.show', [
-            'code' => $generateCode
+        $bundle->load([
+            'classes',
+            'codes' => function ($query) {
+                $query->withCount('logs')->latest();
+            },
         ]);
+
+        // إحصائيات سريعة عن الأكواد
+        $stats = [
+            'total'    => $bundle->codes->count(),
+            'active'   => $bundle->codes->where('is_active', true)->count(),
+            'inactive' => $bundle->codes->where('is_active', false)->count(),
+            'used_up'  => $bundle->codes->filter(fn ($c) => !$c->canBeUsed())->count(),
+            'available' => $bundle->codes->filter(fn ($c) => $c->canBeUsed())->count(),
+        ];
+
+        return view('dashboard.bundles.show', [
+            'bundle' => $bundle,
+            'stats'  => $stats,
+        ]);
+    }
+
+    public function showCode(BundleAccessCode $generateCode)
+    {
+        $generateCode->load(['bundle', 'logs.student']);
+        return view('dashboard.codes.show', ['code' => $generateCode]);
     }
 
 }

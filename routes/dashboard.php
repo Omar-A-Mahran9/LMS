@@ -73,6 +73,9 @@ Route::get('bundles/export/pdf', [BundleController::class, 'exportPDF'])
 Route::post('bundles/{bundle}/generate-codes', [BundleController::class, 'generateCodes'])
     ->name('bundles.generateCodes');
 
+Route::get('codes/{generateCode}', [BundleController::class, 'showCode'])
+    ->name('codes.show');
+
 Route::post('bundles/redeem-code', [BundleController::class, 'redeemCode'])
     ->name('bundles.redeemCode');
 

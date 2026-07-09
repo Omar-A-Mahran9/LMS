@@ -341,6 +341,34 @@
     "Amount": "المبلغ",
     "Fee": "الضريبة",
 
+
+
+    "Bundle Details": "تفاصيل الباقة",
+    "Back to Bundles": "العودة إلى الباقات",
+
+     "Total Codes": "إجمالي الأكواد",
+    "Available": "متاح",
+    "Fully Used": "مستخدم بالكامل",
+    "Active Codes": "الأكواد النشطة",
+    "Inactive Codes": "الأكواد غير النشطة",
+
+    "Classes in this Bundle": "الفصول الموجودة في هذه الباقة",
+    "No classes added to this bundle yet": "لا توجد فصول مضافة إلى هذه الباقة حتى الآن",
+
+    "Access Codes": "أكواد الوصول",
+    "Search code...": "البحث عن كود...",
+
+    "Usage": "الاستخدام",
+    "Logs Count": "عدد السجلات",
+    "Can Be Used": "قابل للاستخدام",
+
+    "Copy": "نسخ",
+    "View Logs": "عرض السجلات",
+
+
+    "Unlimited": "غير محدود",
+
+    "No codes generated for this bundle yet": "لم يتم إنشاء أي أكواد لهذه الباقة حتى الآن",
     "orders": "الطلبات",
     "Search for vendors ( Name - Email )": "ابحث عن التجار ( الاسم - البريد الالكتروني )",
     "Password": "كلمة المرور",
