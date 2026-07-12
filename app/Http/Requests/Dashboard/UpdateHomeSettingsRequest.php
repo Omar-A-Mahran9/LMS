@@ -40,8 +40,8 @@ class UpdateHomeSettingsRequest extends FormRequest
                 'label_general_ar' => 'required|string',
                 'general_ar' => 'required|string',
                 'general_en' => 'required|string',
-                'logo_image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
-                'light_logo_image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
+                'logo_image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
+                'light_logo_image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1024',
                 'favicon_icon'     => 'nullable|mimes:jpg,jpeg,png,gif,svg,webp,ico|max:1024',
 
             ],
