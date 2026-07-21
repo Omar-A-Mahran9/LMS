@@ -282,6 +282,7 @@
                 $(`[name='parent_id']`).trigger('change');
                 $("#crud_form").attr('action', `/dashboard/categories?type=${categoryType}`);
                 $('.image-input-wrapper').css('background-image', `url('/placeholder_images/default.svg')`);
+
             });
         });
     </script>
