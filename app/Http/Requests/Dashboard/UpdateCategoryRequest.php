@@ -27,7 +27,7 @@ class UpdateCategoryRequest extends FormRequest
     {
         $category = request()->route('category');
         return [
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:1024',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg',
             "name_ar" => ["required", "string:255", new NotNumbersOnly(), Rule::unique('categories')->ignore($category)],
             "name_en" => ["required", "string:255", new NotNumbersOnly(), Rule::unique('categories')->ignore($category)],
             'description_ar' => ["required", "string:255", new NotNumbersOnly()],
