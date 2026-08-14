@@ -91,6 +91,8 @@
     "Classes: ": "حصص",
     "All Students": "كل الطلاب",
     "Inactive": "غير نشط",
+    "Active": "نشط",
+
     "Uploaded on": "تم الرفع في",
     "Add New video": "إضافة فيديو جديد",
     "Courses and Class list": "قائمة الكورسات والحصص",
@@ -122,7 +124,10 @@
     "Quiz is not found": "الامتحان غير موجود",
     "Homework is not found": "الواجب غير موجود",
     "General": "عام",
-    
+    "Search courses...": "البحث في الكورسات",
+    "Search classes...": "البحث في الحصص",
+    "Search quizzes...": "البحث في الامتحانات",
+
     "logo": "الهوية",
     "Not found": "لا يوجد",
     "Has Reading Passage?": "يوجد قطع لهذا الامتحان",
@@ -342,12 +347,10 @@
     "Amount": "المبلغ",
     "Fee": "الضريبة",
 
-
-
     "Bundle Details": "تفاصيل الباقة",
     "Back to Bundles": "العودة إلى الباقات",
 
-     "Total Codes": "إجمالي الأكواد",
+    "Total Codes": "إجمالي الأكواد",
     "Available": "متاح",
     "Fully Used": "مستخدم بالكامل",
     "Active Codes": "الأكواد النشطة",
@@ -365,7 +368,6 @@
 
     "Copy": "نسخ",
     "View Logs": "عرض السجلات",
-
 
     "Unlimited": "غير محدود",
 

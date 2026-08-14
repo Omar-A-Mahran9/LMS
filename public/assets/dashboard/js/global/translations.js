@@ -12,6 +12,7 @@ let translations = {
         correct: "صحيح",
         Sections: "الاقسام",
         Classes: "الحصص",
+        Active: "نشط",
 
         "Choose the type": "اختر النوع",
         Approved: "مقبول",

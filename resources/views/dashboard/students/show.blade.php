@@ -73,6 +73,13 @@
             </div>
             <!-- End Student Card -->
 
+            <!--
+                        Perf note: the "Watched Videos" card below reads $video->course and $video->class
+                        per video. If the student has many watched videos, eager-load these in the
+                        controller to avoid N+1 queries:
+                        $student->load(['watchedVideos.course', 'watchedVideos.class']);
+                    -->
+
             <!-- Report Cards -->
             <div class="card card-flush">
                 <div class="card-header">
@@ -102,8 +109,14 @@
                                     <div class="report-search position-relative mb-4">
                                         <i
                                             class="ki-outline ki-magnifier fs-4 position-absolute top-50 translate-middle-y ms-3 text-gray-500"></i>
-                                        <input type="text" class="form-control form-control-sm ps-10 report-search-input"
-                                            placeholder="{{ __('Search courses...') }}" autocomplete="off">
+                                        <input type="text"
+                                            class="form-control form-control-sm ps-10 pe-10 report-search-input"
+                                            placeholder="بحث في الكورسات..." autocomplete="off"
+                                            aria-label="بحث في الكورسات">
+                                        <button type="button"
+                                            class="report-search-clear btn btn-icon btn-sm position-absolute top-50 end-0 translate-middle-y me-1 d-none">
+                                            <i class="ki-outline ki-cross fs-6 text-gray-500"></i>
+                                        </button>
                                     </div>
 
                                     <ul class="list-unstyled report-scroll flex-grow-1 m-0"
@@ -133,7 +146,7 @@
         default => $pivot->payment_type,
     };
 @endphp
-                                            <li class="report-item d-flex justify-content-between align-items-start py-3 border-bottom border-dashed">
+                                            <li class="report-item d-flex justify-content-between align-items-start py-3 border-bottom ">
                                                 <div>
                                                     <div class="fw-semibold text-gray-800">{{ $i + 1 }} - {{ $course->title }}
                                                         @if ($course->is_completed_for_student ?? false)
@@ -172,10 +185,10 @@
                                                 </div>
                                             </li>
                                         @empty
-                                            <li class="report-empty-initial text-muted text-center py-5">{{ __('No enrolled courses') }}</li>
+                                            <li class="report-empty-initial text-muted text-center py-5">لا يوجد كورسات مشترك بها</li>
 @endforelse
                                     </ul>
-                                    <div class="report-empty text-muted text-center py-5 d-none">{{ __('No matches') }}</div>
+                                    <div class="report-empty text-muted text-center py-5 d-none">لا توجد نتائج مطابقة</div>
                                 </div>
                             </div>
                         </div>
@@ -200,8 +213,11 @@
 
                                     <div class="report-search position-relative mb-4">
                                         <i class="ki-outline ki-magnifier fs-4 position-absolute top-50 translate-middle-y ms-3 text-gray-500"></i>
-                                        <input type="text" class="form-control form-control-sm ps-10 report-search-input"
-                                            placeholder="{{ __('Search classes...') }}" autocomplete="off">
+                                        <input type="text" class="form-control form-control-sm ps-10 pe-10 report-search-input"
+                                            placeholder="بحث في الحصص..." autocomplete="off" aria-label="بحث في الحصص">
+                                        <button type="button" class="report-search-clear btn btn-icon btn-sm position-absolute top-50 end-0 translate-middle-y me-1 d-none">
+                                            <i class="ki-outline ki-cross fs-6 text-gray-500"></i>
+                                        </button>
                                     </div>
 
                                     <ul class="list-unstyled report-scroll flex-grow-1 m-0" style="max-height: 400px; overflow-y: auto;">
@@ -221,7 +237,7 @@
                                                 };
                                             @endphp
                                             <li
-                                                class="report-item d-flex justify-content-between align-items-center py-3 border-bottom border-dashed">
+                                                class="report-item d-flex justify-content-between align-items-center py-3 border-bottom ">
                                                 <div class="text-gray-800">
                                                     {{ $course->title }}
                                                     @if ($enrollStatus)
@@ -267,12 +283,11 @@
                                                 </div>
                                             </li>
                                         @empty
-                                            <li class="report-empty-initial text-muted text-center py-5">
-                                                {{ __('No enrolled classes') }}</li>
+                                            <li class="report-empty-initial text-muted text-center py-5">لا يوجد حصص مشترك
+                                                بها</li>
                                         @endforelse
                                     </ul>
-                                    <div class="report-empty text-muted text-center py-5 d-none">{{ __('No matches') }}
-                                    </div>
+                                    <div class="report-empty text-muted text-center py-5 d-none">لا توجد نتائج مطابقة</div>
                                 </div>
                             </div>
                         </div>
@@ -299,8 +314,13 @@
                                         <i
                                             class="ki-outline ki-magnifier fs-4 position-absolute top-50 translate-middle-y ms-3 text-gray-500"></i>
                                         <input type="text"
-                                            class="form-control form-control-sm ps-10 report-search-input"
-                                            placeholder="{{ __('Search quizzes...') }}" autocomplete="off">
+                                            class="form-control form-control-sm ps-10 pe-10 report-search-input"
+                                            placeholder="بحث في الامتحانات..." autocomplete="off"
+                                            aria-label="بحث في الامتحانات">
+                                        <button type="button"
+                                            class="report-search-clear btn btn-icon btn-sm position-absolute top-50 end-0 translate-middle-y me-1 d-none">
+                                            <i class="ki-outline ki-cross fs-6 text-gray-500"></i>
+                                        </button>
                                     </div>
 
                                     <ul class="list-unstyled report-scroll flex-grow-1 m-0"
@@ -315,7 +335,7 @@
                                                 $quizTitle = $attempt->quiz->title ?? '-';
                                             @endphp
                                             <li
-                                                class="report-item d-flex justify-content-between align-items-center py-3 border-bottom border-dashed">
+                                                class="report-item d-flex justify-content-between align-items-center py-3 border-bottom ">
                                                 <span class="text-gray-800">{{ $quizTitle }}</span>
                                                 <strong>
                                                     @if (is_null($attempt->score))
@@ -333,12 +353,11 @@
                                                 </strong>
                                             </li>
                                         @empty
-                                            <li class="report-empty-initial text-muted text-center py-5">
-                                                {{ __('No quiz attempts') }}</li>
+                                            <li class="report-empty-initial text-muted text-center py-5">لا توجد محاولات
+                                                امتحانات</li>
                                         @endforelse
                                     </ul>
-                                    <div class="report-empty text-muted text-center py-5 d-none">{{ __('No matches') }}
-                                    </div>
+                                    <div class="report-empty text-muted text-center py-5 d-none">لا توجد نتائج مطابقة</div>
                                 </div>
                             </div>
                         </div>
@@ -364,8 +383,13 @@
                                         <i
                                             class="ki-outline ki-magnifier fs-4 position-absolute top-50 translate-middle-y ms-3 text-gray-500"></i>
                                         <input type="text"
-                                            class="form-control form-control-sm ps-10 report-search-input"
-                                            placeholder="{{ __('Search homework...') }}" autocomplete="off">
+                                            class="form-control form-control-sm ps-10 pe-10 report-search-input"
+                                            placeholder="بحث في الواجبات..." autocomplete="off"
+                                            aria-label="بحث في الواجبات">
+                                        <button type="button"
+                                            class="report-search-clear btn btn-icon btn-sm position-absolute top-50 end-0 translate-middle-y me-1 d-none">
+                                            <i class="ki-outline ki-cross fs-6 text-gray-500"></i>
+                                        </button>
                                     </div>
 
                                     <ul class="list-unstyled report-scroll flex-grow-1 m-0"
@@ -374,18 +398,17 @@
                                             @php
                                                 $hwTitle = $attempt->homework->title ?? '-';
                                             @endphp
-                                            <li class="report-item py-2 border-bottom border-dashed text-gray-800">
+                                            <li class="report-item py-2 border-bottom  text-gray-800">
                                                 {{ $hwTitle }}: {{ __('Attempted') }}
                                                 {{ $student->homeWorkAttempts->where('home_work_id', $attempt->home_work_id)->count() }}
                                                 {{ __('time(s)') }}
                                             </li>
                                         @empty
-                                            <li class="report-empty-initial text-muted text-center py-5">
-                                                {{ __('No homework attempts') }}</li>
+                                            <li class="report-empty-initial text-muted text-center py-5">لا توجد محاولات
+                                                واجبات</li>
                                         @endforelse
                                     </ul>
-                                    <div class="report-empty text-muted text-center py-5 d-none">{{ __('No matches') }}
-                                    </div>
+                                    <div class="report-empty text-muted text-center py-5 d-none">لا توجد نتائج مطابقة</div>
                                 </div>
                             </div>
                         </div>
@@ -411,8 +434,13 @@
                                         <i
                                             class="ki-outline ki-magnifier fs-4 position-absolute top-50 translate-middle-y ms-3 text-gray-500"></i>
                                         <input type="text"
-                                            class="form-control form-control-sm ps-10 report-search-input"
-                                            placeholder="{{ __('Search videos...') }}" autocomplete="off">
+                                            class="form-control form-control-sm ps-10 pe-10 report-search-input"
+                                            placeholder="بحث في الفيديوهات..." autocomplete="off"
+                                            aria-label="بحث في الفيديوهات">
+                                        <button type="button"
+                                            class="report-search-clear btn btn-icon btn-sm position-absolute top-50 end-0 translate-middle-y me-1 d-none">
+                                            <i class="ki-outline ki-cross fs-6 text-gray-500"></i>
+                                        </button>
                                     </div>
 
                                     <ul class="list-unstyled report-scroll flex-grow-1 m-0"
@@ -427,8 +455,20 @@
                                                         $video->pivot->last_watched_at,
                                                     )->diffForHumans()
                                                     : '-';
+
+                                                // A video belongs to either a course or a class - show whichever is set.
+                                                $parentLabel = null;
+                                                $parentIcon = null;
+                                                if ($video->class) {
+                                                    $parentLabel =
+                                                        $video->class->title ?? ($video->class->name ?? null);
+                                                    $parentIcon = 'ki-clipboard';
+                                                } elseif ($video->course) {
+                                                    $parentLabel = $video->course->title ?? null;
+                                                    $parentIcon = 'ki-wallet';
+                                                }
                                             @endphp
-                                            <li class="report-item py-3 border-bottom border-dashed">
+                                            <li class="report-item py-3 border-bottom ">
                                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                                     <span class="text-gray-800 fw-semibold">{{ $video->title }}</span>
                                                     @if ($video->pivot->is_completed)
@@ -438,23 +478,28 @@
                                                             class="badge bg-light-warning text-warning">{{ $percent }}%</span>
                                                     @endif
                                                 </div>
+                                                @if ($parentLabel)
+                                                    <div class="text-muted fs-8 mb-1">
+                                                        <i
+                                                            class="ki-outline {{ $parentIcon }} fs-7 me-1"></i>{{ $parentLabel }}
+                                                    </div>
+                                                @endif
                                                 <div class="progress h-6px">
                                                     <div class="progress-bar bg-primary"
                                                         style="width: {{ $percent }}%"></div>
                                                 </div>
                                                 <div class="text-muted fs-8 mt-1">
-                                                    {{ __('Stopped at') }} {{ gmdate('i:s', $watchSeconds) }}
-                                                    • {{ __('Last watched') }} {{ $lastAt }}
-                                                    • {{ __('Views') }}: {{ $video->pivot->views }}
+                                                    توقف عند {{ gmdate('i:s', $watchSeconds) }}
+                                                    • آخر مشاهدة {{ $lastAt }}
+                                                    • المشاهدات: {{ $video->pivot->views }}
                                                 </div>
                                             </li>
                                         @empty
-                                            <li class="report-empty-initial text-muted text-center py-5">
-                                                {{ __('No watched videos') }}</li>
+                                            <li class="report-empty-initial text-muted text-center py-5">لا توجد فيديوهات
+                                                تمت مشاهدتها</li>
                                         @endforelse
                                     </ul>
-                                    <div class="report-empty text-muted text-center py-5 d-none">{{ __('No matches') }}
-                                    </div>
+                                    <div class="report-empty text-muted text-center py-5 d-none">لا توجد نتائج مطابقة</div>
                                 </div>
                             </div>
                         </div>
@@ -479,6 +524,11 @@
 
         .report-search-input {
             border-radius: 6px;
+        }
+
+        .report-search-clear {
+            border: none;
+            background: transparent;
         }
 
         .report-item {
@@ -573,28 +623,54 @@
         // Per-card search. Matches against the item's own visible text (no separate
         // data attribute to keep in sync), so it always reflects exactly what's on screen.
         (function() {
+            function filterCard(input) {
+                const term = input.value.trim().toLowerCase();
+                const card = input.closest('.report-card');
+                if (!card) return;
+
+                const list = card.querySelector('.report-scroll');
+                const emptyState = card.querySelector('.report-empty');
+                const clearBtn = card.querySelector('.report-search-clear');
+                const items = list ? list.querySelectorAll('.report-item') : [];
+
+                if (clearBtn) clearBtn.classList.toggle('d-none', term === '');
+
+                let visibleCount = 0;
+                items.forEach(function(item) {
+                    const text = (item.textContent || '').toLowerCase();
+                    const matches = text.indexOf(term) !== -1;
+                    item.style.display = matches ? '' : 'none';
+                    if (matches) visibleCount++;
+                });
+
+                if (emptyState) {
+                    const show = term !== '' && visibleCount === 0 && items.length > 0;
+                    emptyState.classList.toggle('d-none', !show);
+                }
+            }
+
             document.querySelectorAll('.report-search-input').forEach(function(input) {
-                input.addEventListener('keyup', function() {
-                    const term = input.value.trim().toLowerCase();
-                    const card = input.closest('.report-card');
-                    if (!card) return;
+                input.addEventListener('input', function() {
+                    filterCard(input);
+                }, true);
 
-                    const list = card.querySelector('.report-scroll');
-                    const emptyState = card.querySelector('.report-empty');
-                    const items = list ? list.querySelectorAll('.report-item') : [];
-
-                    let visibleCount = 0;
-                    items.forEach(function(item) {
-                        const text = (item.textContent || '').toLowerCase();
-                        const matches = text.indexOf(term) !== -1;
-                        item.style.display = matches ? '' : 'none';
-                        if (matches) visibleCount++;
+                // Prevent Metronic's KTMenu keyboard navigation (bound at document level
+                // for the Active/Inactive dropdowns) from swallowing keystrokes typed here.
+                ['keydown', 'keyup', 'keypress'].forEach(function(evt) {
+                    input.addEventListener(evt, function(e) {
+                        e.stopPropagation();
                     });
+                });
+            });
 
-                    if (emptyState) {
-                        const show = term !== '' && visibleCount === 0 && items.length > 0;
-                        emptyState.classList.toggle('d-none', !show);
-                    }
+            document.querySelectorAll('.report-search-clear').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const wrapper = btn.closest('.report-search');
+                    const input = wrapper ? wrapper.querySelector('.report-search-input') : null;
+                    if (!input) return;
+                    input.value = '';
+                    input.focus();
+                    filterCard(input);
                 });
             });
         })();
