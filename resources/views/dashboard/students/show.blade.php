@@ -448,7 +448,19 @@
                     </div>
                 </div>
 
-                {{-- Watched Videos with progress --}}
+                {{--
+                    Watched Videos, split by parent type.
+                    A video's course_video is either tied to a Course (course_id set) or a
+                    CourseClass (class_id set) - never both - so we split the already
+                    eager-loaded $student->watchedVideos collection in PHP rather than
+                    issuing two separate queries.
+                --}}
+                @php
+                    $courseWatchedVideos = $student->watchedVideos->whereNull('class_id')->values();
+                    $classWatchedVideos = $student->watchedVideos->whereNotNull('class_id')->values();
+                @endphp
+
+                {{-- Watched Videos - Courses --}}
                 <div class="col-md-6 col-xl-4">
                     <div class="card h-100 report-card border-0 shadow-sm rounded-3">
                         <div class="card-body d-flex flex-column">
@@ -459,9 +471,8 @@
                                     </span>
                                 </div>
                                 <div>
-                                    <div class="fs-3 fw-bold text-gray-800 lh-1">{{ $student->watchedVideos->count() }}
-                                    </div>
-                                    <div class="text-muted fs-7">{{ __('Watched Videos') }}</div>
+                                    <div class="fs-3 fw-bold text-gray-800 lh-1">{{ $courseWatchedVideos->count() }}</div>
+                                    <div class="text-muted fs-7">{{ __('Watched Videos - Courses') }}</div>
                                 </div>
                             </div>
 
@@ -469,7 +480,8 @@
                                 <i
                                     class="ki-outline ki-magnifier fs-4 position-absolute top-50 translate-middle-y ms-3 text-gray-500"></i>
                                 <input type="text" class="form-control form-control-sm ps-10 pe-10 report-search-input"
-                                    placeholder="بحث في الفيديوهات..." autocomplete="off" aria-label="بحث في الفيديوهات">
+                                    placeholder="بحث في فيديوهات الكورسات..." autocomplete="off"
+                                    aria-label="بحث في فيديوهات الكورسات">
                                 <button type="button"
                                     class="report-search-clear btn btn-icon btn-sm position-absolute top-50 end-0 translate-middle-y me-1 d-none">
                                     <i class="ki-outline ki-cross fs-6 text-gray-500"></i>
@@ -477,8 +489,8 @@
                             </div>
 
                             <ul class="list-unstyled report-scroll flex-grow-1 m-0"
-                                style="max-height: 720px; overflow-y: auto;">
-                                @forelse ($student->watchedVideos as $video)
+                                style="max-height: 560px; overflow-y: auto;">
+                                @forelse ($courseWatchedVideos as $video)
                                     @php
                                         $duration = $video->duration_seconds ?: 1;
                                         $watchSeconds = (int) ($video->pivot->watch_seconds ?? 0);
@@ -486,17 +498,7 @@
                                         $lastAt = $video->pivot->last_watched_at
                                             ? \Carbon\Carbon::parse($video->pivot->last_watched_at)->diffForHumans()
                                             : '-';
-
-                                        // A video belongs to either a course or a class - show whichever is set.
-                                        $parentLabel = null;
-                                        $parentIcon = null;
-                                        if ($video->class) {
-                                            $parentLabel = $video->class->title ?? ($video->class->name ?? null);
-                                            $parentIcon = 'ki-clipboard';
-                                        } elseif ($video->course) {
-                                            $parentLabel = $video->course->title ?? null;
-                                            $parentIcon = 'ki-wallet';
-                                        }
+                                        $parentLabel = $video->course->title ?? null;
                                     @endphp
                                     <li class="report-item py-3 border-bottom">
                                         <div class="d-flex justify-content-between align-items-center mb-1">
@@ -510,8 +512,7 @@
                                         </div>
                                         @if ($parentLabel)
                                             <div class="text-muted fs-8 mb-1">
-                                                <i
-                                                    class="ki-outline {{ $parentIcon }} fs-7 me-1"></i>{{ $parentLabel }}
+                                                <i class="ki-outline ki-wallet fs-7 me-1"></i>{{ $parentLabel }}
                                             </div>
                                         @endif
                                         <div class="progress h-6px">
@@ -525,7 +526,82 @@
                                         </div>
                                     </li>
                                 @empty
-                                    <li class="report-empty-initial text-muted text-center py-5">لا توجد فيديوهات تمت
+                                    <li class="report-empty-initial text-muted text-center py-5">لا توجد فيديوهات كورسات
+                                        تمت مشاهدتها</li>
+                                @endforelse
+                            </ul>
+                            <div class="report-empty text-muted text-center py-5 d-none">لا توجد نتائج مطابقة</div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Watched Videos - Classes --}}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card h-100 report-card border-0 shadow-sm rounded-3">
+                        <div class="card-body d-flex flex-column">
+                            <div class="report-card-head d-flex align-items-center gap-3 mb-4">
+                                <div class="symbol symbol-45px">
+                                    <span class="symbol-label bg-light-info">
+                                        <i class="ki-outline ki-video fs-2 text-info"></i>
+                                    </span>
+                                </div>
+                                <div>
+                                    <div class="fs-3 fw-bold text-gray-800 lh-1">{{ $classWatchedVideos->count() }}</div>
+                                    <div class="text-muted fs-7">{{ __('Watched Videos - Classes') }}</div>
+                                </div>
+                            </div>
+
+                            <div class="report-search position-relative mb-4">
+                                <i
+                                    class="ki-outline ki-magnifier fs-4 position-absolute top-50 translate-middle-y ms-3 text-gray-500"></i>
+                                <input type="text" class="form-control form-control-sm ps-10 pe-10 report-search-input"
+                                    placeholder="بحث في فيديوهات الحصص..." autocomplete="off"
+                                    aria-label="بحث في فيديوهات الحصص">
+                                <button type="button"
+                                    class="report-search-clear btn btn-icon btn-sm position-absolute top-50 end-0 translate-middle-y me-1 d-none">
+                                    <i class="ki-outline ki-cross fs-6 text-gray-500"></i>
+                                </button>
+                            </div>
+
+                            <ul class="list-unstyled report-scroll flex-grow-1 m-0"
+                                style="max-height: 560px; overflow-y: auto;">
+                                @forelse ($classWatchedVideos as $video)
+                                    @php
+                                        $duration = $video->duration_seconds ?: 1;
+                                        $watchSeconds = (int) ($video->pivot->watch_seconds ?? 0);
+                                        $percent = min(100, round(($watchSeconds / $duration) * 100));
+                                        $lastAt = $video->pivot->last_watched_at
+                                            ? \Carbon\Carbon::parse($video->pivot->last_watched_at)->diffForHumans()
+                                            : '-';
+                                        $parentLabel = $video->class->title ?? ($video->class->name ?? null);
+                                    @endphp
+                                    <li class="report-item py-3 border-bottom">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="text-gray-800 fw-semibold">{{ $video->title }}</span>
+                                            @if ($video->pivot->is_completed)
+                                                <span class="badge bg-success">{{ __('Completed') }}</span>
+                                            @else
+                                                <span
+                                                    class="badge bg-light-warning text-warning">{{ $percent }}%</span>
+                                            @endif
+                                        </div>
+                                        @if ($parentLabel)
+                                            <div class="text-muted fs-8 mb-1">
+                                                <i class="ki-outline ki-clipboard fs-7 me-1"></i>{{ $parentLabel }}
+                                            </div>
+                                        @endif
+                                        <div class="progress h-6px">
+                                            <div class="progress-bar bg-primary" style="width: {{ $percent }}%">
+                                            </div>
+                                        </div>
+                                        <div class="text-muted fs-8 mt-1">
+                                            توقف عند {{ gmdate('i:s', $watchSeconds) }}
+                                            • آخر مشاهدة {{ $lastAt }}
+                                            • المشاهدات: {{ $video->pivot->views }}
+                                        </div>
+                                    </li>
+                                @empty
+                                    <li class="report-empty-initial text-muted text-center py-5">لا توجد فيديوهات حصص تمت
                                         مشاهدتها</li>
                                 @endforelse
                             </ul>
