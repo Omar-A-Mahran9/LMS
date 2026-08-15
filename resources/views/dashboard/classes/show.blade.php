@@ -858,7 +858,23 @@
 
                                     </div>
 
-
+                                    @if ($hasReadingPassages)
+                                        <div class="mb-3">
+                                            <label for="reading_passage_id_inp">{{ __('Reading Passage') }}</label>
+                                            <select name="reading_passage_id" id="reading_passage_id_inp"
+                                                class="form-select" data-control="select2"
+                                                data-placeholder="{{ __('Select a reading passage') }}"
+                                                data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
+                                                <option value="">{{ __('None') }}</option>
+                                                @foreach ($readingPassages as $passage)
+                                                    <option value="{{ $passage->id }}">
+                                                        {{ $passage->title }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <div class="invalid-feedback" id="reading_passage_id"></div>
+                                        </div>
+                                    @endif
                                     <!-- Question Type -->
                                     <div class="mb-3">
 
