@@ -4,162 +4,154 @@
     <div id="kt_app_content" class="flex-column-fluid">
         <div id="kt_app_content_container" class="app-container container-xxl">
             @can('view_dashboard')
-                <!-- LMS General Statistics -->
-                <div class="row gy-5 g-xl-10 mb-5">
-                    @foreach ([['icon' => 'ki-book', 'value' => $totalCourses, 'label' => __('Total Courses')], ['icon' => 'ki-people', 'value' => $totalStudents, 'label' => __('Total Students')], ['icon' => 'ki-book-open', 'value' => $totalBooks, 'label' => __('Total Books')], ['icon' => 'ki-list-check', 'value' => $totalBookOrders, 'label' => __('Book Orders')], ['icon' => 'ki-cart', 'value' => $totalBookings, 'label' => __('Course Enrollments')]] as $item)
-                        <div class="col-sm-4 col-xl-3">
-                            <div class="card h-lg-40">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <!-- Main Stat -->
-                                        <div class="text-center">
-                                            <div class="d-flex align-items-center gap-3">
-                                                <i class="ki-outline {{ $item['icon'] }} fs-2hx text-gray-600"></i>
-                                                <div class="fs-3x fw-bold text-gray-800">{{ $item['value'] }}</div>
+                {{-- ==================== STAT CARDS ==================== --}}
+                <div class="row gy-5 g-xl-8 mb-8">
+                    @foreach ([['icon' => 'ki-book', 'color' => 'primary', 'value' => $totalCourses, 'label' => __('Total Courses')], ['icon' => 'ki-people', 'color' => 'success', 'value' => $totalStudents, 'label' => __('Total Students')], ['icon' => 'ki-book-open', 'color' => 'info', 'value' => $totalBooks, 'label' => __('Total Books')], ['icon' => 'ki-list-check', 'color' => 'warning', 'value' => $totalBookOrders, 'label' => __('Book Orders')], ['icon' => 'ki-cart', 'color' => 'danger', 'value' => $totalBookings, 'label' => __('Course Enrollments')]] as $item)
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="card h-100 shadow-sm border-0 stat-card">
+                                <div class="card-body p-6">
+                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                        <div class="symbol symbol-45px">
+                                            <div class="symbol-label bg-light-{{ $item['color'] }}">
+                                                <i class="ki-outline {{ $item['icon'] }} fs-2x text-{{ $item['color'] }}"></i>
                                             </div>
-                                            <div class="text-muted">{{ $item['label'] }}</div>
                                         </div>
-
-                                        <!-- Conditional Table: example for 'Total Students' -->
-                                        @if ($item['label'] == __('Total Students'))
-                                            <table class="table table-sm table-borderless ms-5 w-auto">
-
-                                                <tbody>
-                                                    @foreach ($studentByCategory as $row)
-                                                        <tr>
-                                                            <td class="fw-bold text-muted">
-                                                                {{ $row->category ?? __('Uncategorized') }}</td>
-                                                            <td class="text-end text-gray-800">{{ $row->total }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        @endif
-
-                                        <!-- Table for Courses: classes & sections -->
-                                        @if ($item['label'] == __('Total Courses'))
-                                            <table class="table table-sm table-borderless ms-5 w-auto">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="fw-bold text-muted">{{ __('Class Count') }}</td>
-                                                        <td class="text-end text-gray-800">
-                                                            {{ $courseContentStats['class_count'] }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="fw-bold text-muted">{{ __('Section Count') }}</td>
-                                                        <td class="text-end text-gray-800">
-                                                            {{ $courseContentStats['section_count'] }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        @endif
-
-
-                                        <!-- Table for Books: active/inactive -->
-                                        @if ($item['label'] == __('Total Books'))
-                                            <table class="table table-sm table-borderless ms-5 w-auto">
-                                                <tbody>
-                                                    @foreach ($booksStatus as $status)
-                                                        <tr>
-                                                            <td>
-                                                                <span
-                                                                    class="badge {{ $status->is_active ? 'bg-success' : 'bg-danger' }}">
-                                                                    {{ $status->is_active ? __('Active') : __('Inactive') }}
-                                                                </span>
-                                                            </td>
-                                                            <td>{{ $status->total }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        @endif
-
-                                        @if ($item['label'] == __('Book Orders'))
-                                            <table class="table table-sm table-borderless ms-5 w-auto">
-
-                                                <tbody>
-                                                    @foreach (['pending', 'approved', 'rejected'] as $status)
-                                                        <tr>
-                                                            <td>
-                                                                <span
-                                                                    class="badge
-                            {{ $status == 'pending' ? 'bg-warning' : ($status == 'approved' ? 'bg-success' : 'bg-danger') }}">
-                                                                    {{ __(ucfirst($status)) }}
-                                                                </span>
-                                                            </td>
-                                                            <td class="text-end text-gray-800">
-                                                                {{ $bookOrderStats[$status] ?? 0 }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        @endif
-
+                                        <div class="text-end">
+                                            <div class="fs-2x fw-bold text-gray-900 lh-1">{{ $item['value'] }}</div>
+                                        </div>
                                     </div>
-                                </div>
 
+                                    <div class="fs-6 fw-semibold text-muted mb-4">{{ $item['label'] }}</div>
+
+                                    {{-- Breakdown table per card --}}
+                                    @if ($item['label'] == __('Total Students'))
+                                        <div class="separator separator-dashed mb-3"></div>
+                                        <div class="d-flex flex-column gap-2">
+                                            @forelse ($studentByCategory as $row)
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span
+                                                        class="fs-7 text-muted">{{ $row->category ?? __('Uncategorized') }}</span>
+                                                    <span class="fs-7 fw-bold text-gray-800">{{ $row->total }}</span>
+                                                </div>
+                                            @empty
+                                                <span class="fs-7 text-muted">{{ __('No data') }}</span>
+                                            @endforelse
+                                        </div>
+                                    @endif
+
+                                    @if ($item['label'] == __('Total Courses'))
+                                        <div class="separator separator-dashed mb-3"></div>
+                                        <div class="d-flex flex-column gap-2">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="fs-7 text-muted">{{ __('Class Count') }}</span>
+                                                <span
+                                                    class="fs-7 fw-bold text-gray-800">{{ $courseContentStats['class_count'] }}</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="fs-7 text-muted">{{ __('Section Count') }}</span>
+                                                <span
+                                                    class="fs-7 fw-bold text-gray-800">{{ $courseContentStats['section_count'] }}</span>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    @if ($item['label'] == __('Total Books'))
+                                        <div class="separator separator-dashed mb-3"></div>
+                                        <div class="d-flex flex-column gap-2">
+                                            @forelse ($booksStatus as $status)
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span
+                                                        class="badge badge-light-{{ $status->is_active ? 'success' : 'danger' }}">
+                                                        {{ $status->is_active ? __('Active') : __('Inactive') }}
+                                                    </span>
+                                                    <span class="fs-7 fw-bold text-gray-800">{{ $status->total }}</span>
+                                                </div>
+                                            @empty
+                                                <span class="fs-7 text-muted">{{ __('No data') }}</span>
+                                            @endforelse
+                                        </div>
+                                    @endif
+
+                                    @if ($item['label'] == __('Book Orders'))
+                                        <div class="separator separator-dashed mb-3"></div>
+                                        <div class="d-flex flex-column gap-2">
+                                            @foreach (['pending', 'approved', 'rejected'] as $status)
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span
+                                                        class="badge badge-light-{{ $status == 'pending' ? 'warning' : ($status == 'approved' ? 'success' : 'danger') }}">
+                                                        {{ __(ucfirst($status)) }}
+                                                    </span>
+                                                    <span
+                                                        class="fs-7 fw-bold text-gray-800">{{ $bookOrderStats[$status] ?? 0 }}</span>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
 
-                <div class="row gy-5 g-xl-10 mt-4 ">
-                    @foreach (['pending', 'approved', 'rejected'] as $status)
+                {{-- ==================== STATUS SUMMARY CARDS ==================== --}}
+                <div class="row gy-5 g-xl-8">
+                    @foreach (['pending' => 'warning', 'approved' => 'success', 'rejected' => 'danger'] as $status => $color)
                         <div class="col-md-4">
-                            <div class="card shadow-sm">
-                                <div class="card-body d-flex flex-column align-items-center justify-content-center py-10">
+                            <div class="card shadow-sm border-0 h-100">
+                                <div class="card-body d-flex flex-column align-items-center text-center py-10">
 
-                                    <div
-                                        class="symbol symbol-50px mb-4 {{ $status == 'pending' ? 'bg-warning' : ($status == 'approved' ? 'bg-success' : 'bg-danger') }}">
-                                        <i class="ki-outline ki-check-circle text-white fs-2"></i>
+                                    <div class="symbol symbol-60px mb-5">
+                                        <div class="symbol-label bg-light-{{ $color }}">
+                                            <i class="ki-outline ki-check-circle text-{{ $color }} fs-2qx"></i>
+                                        </div>
                                     </div>
 
-                                    <h5 class="text-gray-800 fw-bold mb-2">
+                                    <h5 class="text-gray-900 fw-bold mb-6 text-uppercase">
                                         {{ __(ucfirst($status)) }}
                                     </h5>
 
-                                    <div class="d-flex flex-column align-items-center">
-                                        <div class="fs-4 text-gray-700 mb-1">{{ __('Enrollments') }}:</div>
-                                        <div class="fs-2 fw-bold text-gray-800">{{ $enrollments[$status] ?? 0 }}</div>
+                                    <div class="w-100 px-6">
+                                        <div class="d-flex justify-content-between align-items-center py-2">
+                                            <span class="fs-6 text-muted">{{ __('Enrollments') }}</span>
+                                            <span class="fs-3 fw-bold text-gray-900">{{ $enrollments[$status] ?? 0 }}</span>
+                                        </div>
+
+                                        <div class="separator separator-dashed my-3"></div>
+
+                                        <div class="d-flex justify-content-between align-items-center py-2">
+                                            <span class="fs-6 text-muted">{{ __('Book Orders') }}</span>
+                                            <span class="fs-3 fw-bold text-gray-900">{{ $bookOrderStats[$status] ?? 0 }}</span>
+                                        </div>
                                     </div>
 
-                                    <div class="separator my-4 w-50"></div>
-
-                                    <div class="d-flex flex-column align-items-center">
-                                        <div class="fs-4 text-gray-700 mb-1">{{ __('Book Orders') }}:</div>
-                                        <div class="fs-2 fw-bold text-gray-800">{{ $bookOrderStats[$status] ?? 0 }}</div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
-
-
-            
             @else
-                <!-- Greeting -->
-
-
-                <!-- Centered Logo Display -->
-                <div class="d-flex flex-column align-items-center justify-content-center text-center" style="min-height: 60vh;">
-                    <!-- Greeting Section -->
-                    <div class="mb-5">
-                        <h2 class="text-muted fs-6 mb-1">{{ __('Hello') }}</h2>
-                        <h2 class="text-dark fs-4 fw-bold">
-                            {{ auth()->user()->name }}
-                        </h2>
-                    </div>
-
-                    <!-- Logo Image -->
+                {{-- ==================== WELCOME SCREEN ==================== --}}
+                <div class="d-flex flex-column align-items-center justify-content-center text-center" style="min-height: 70vh;">
                     <img src="{{ getImagePathFromDirectory(setting('logo_image'), 'Settings') }}" alt="Logo"
-                        class="img-fluid mb-4" style="max-width: 280px;">
+                        class="img-fluid mb-6" style="max-width: 220px;">
 
-
+                    <h2 class="text-muted fs-6 mb-1">{{ __('Hello') }}</h2>
+                    <h1 class="text-dark fs-2 fw-bold">
+                        {{ auth()->user()->name }}
+                    </h1>
                 </div>
             @endcan
-
-
         </div>
     </div>
+
+    <style>
+        .stat-card {
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .08) !important;
+        }
+    </style>
 @endsection
