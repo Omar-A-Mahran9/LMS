@@ -231,14 +231,11 @@
                                     @endif
 
                                     @if ($hasReadingPassages)
-                                        <div id="add_btn_reading_passage" data-bs-toggle="modal"
-                                            data-bs-target="#crud_reading_passage_modal" data-kt-docs-table-toolbar="base">
-
+                                        <div id="add_btn_reading_passage" class="d-flex justify-content-end">
                                             <button type="button" class="btn btn-primary" id="reading_passage"
-                                                data-bs-toggle="tooltip" data-kt-initialized="1">
+                                                data-bs-toggle="modal" data-bs-target="#crud_reading_passage_modal">
 
                                                 <span class="svg-icon svg-icon-2">
-
                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                         xmlns="http://www.w3.org/2000/svg">
 
@@ -252,13 +249,10 @@
                                                         </rect>
 
                                                     </svg>
-
                                                 </span>
 
                                                 {{ __('Add new reading passage') }}
-
                                             </button>
-
                                         </div>
                                     @endif
 
