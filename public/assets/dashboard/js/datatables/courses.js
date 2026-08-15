@@ -16,7 +16,10 @@ var KTDatatablesServerSide = (function () {
             searchDelay: searchDelay,
             processing: processing,
             serverSide: serverSide,
-            order: [],
+            order: [
+                [6, "desc"], // is_active DESC
+                [7, "desc"], // created_at DESC
+            ],
             stateSave: saveState,
             select: {
                 style: "multi",
@@ -142,14 +145,14 @@ var KTDatatablesServerSide = (function () {
                         if (row.is_active) {
                             return `
                                      <span class="badge badge-success">${__(
-                                         "active"
+                                         "active",
                                      )}</span>
 
                             `;
                         } else {
                             return `
                                      <span class="badge badge-danger">${__(
-                                         "inactive"
+                                         "inactive",
                                      )}</span>
                              `;
                         }
@@ -237,7 +240,7 @@ var KTDatatablesServerSide = (function () {
 
     var handleEditRows = () => {
         const editButtons = document.querySelectorAll(
-            '[data-kt-docs-table-filter="edit_row"]'
+            '[data-kt-docs-table-filter="edit_row"]',
         );
 
         editButtons.forEach((btn) => {
@@ -252,12 +255,12 @@ var KTDatatablesServerSide = (function () {
 
                 $(".image-input-wrapper").css(
                     "background-image",
-                    `url('${data.full_image_path}')`
+                    `url('${data.full_image_path}')`,
                 );
 
                 $("#slide_image_inp").css(
                     "background-image",
-                    `url('${data.full_slide_image_path}')`
+                    `url('${data.full_slide_image_path}')`,
                 );
 
                 // Titles
@@ -308,7 +311,7 @@ var KTDatatablesServerSide = (function () {
                 $("#max_students_inp").val(data.max_students);
                 $("#enrollment_open_switch").prop(
                     "checked",
-                    data.is_enrollment_open
+                    data.is_enrollment_open,
                 );
 
                 // SEO
@@ -325,7 +328,7 @@ var KTDatatablesServerSide = (function () {
                 $("#featured_switch").prop("checked", data.featured);
                 $("#certificate_switch").prop(
                     "checked",
-                    data.certificate_available
+                    data.certificate_available,
                 );
 
                 // If you have subcategories
@@ -346,7 +349,7 @@ var KTDatatablesServerSide = (function () {
                 // Remove previous _method input if any, then add PUT
                 $("#crud_form").find('input[name="_method"]').remove();
                 $("#crud_form").prepend(
-                    `<input type="hidden" name="_method" value="PUT">`
+                    `<input type="hidden" name="_method" value="PUT">`,
                 );
 
                 // Show modal

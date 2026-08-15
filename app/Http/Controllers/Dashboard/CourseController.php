@@ -56,7 +56,8 @@ public function index(Request $request)
     return response()->json(getModelData(
         model: new Course(),
         relations: ['instructor' => ['id', 'name']],
-        andsFilters: $andsFilters
+        andsFilters: $andsFilters,
+        
     ));
     }else {
         // Return the main view with data
