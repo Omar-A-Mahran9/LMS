@@ -488,6 +488,73 @@
                         </button>
                     </div>
                 @endif
+                <form id="crud_reading_passage_form" class="ajax-form w-75"
+                    action="{{ route('dashboard.reading_passage.store') }}" method="post" enctype="multipart/form-data"
+                    data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
+                    @csrf
+                    <div class="modal fade" tabindex="-1" id="crud_reading_passage_modal">
+                        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="form_title">{{ __('Add new reading passage') }}</h5>
+                                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                        <i class="ki-outline ki-cross fs-1"></i>
+                                    </div>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="row mb-4">
+                                        <div class="col-6">
+                                            <label for="title_ar_read_inp"
+                                                class="form-label">{{ __('Title (Arabic)') }}</label>
+                                            <input type="text" name="title_ar" id="title_ar_read_inp"
+                                                class="form-control" placeholder="{{ __('Enter Arabic title') }}">
+                                            <div class="invalid-feedback" id="title_ar"></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="title_en_read_inp"
+                                                class="form-label">{{ __('Title (English)') }}</label>
+                                            <input type="text" name="title_en" id="title_en_read_inp"
+                                                class="form-control" placeholder="{{ __('Enter English title') }}">
+                                            <div class="invalid-feedback" id="title_en"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-4">
+                                        <div class="col-6">
+                                            <label for="description_read_ar_inp"
+                                                class="form-label">{{ __('Description (Arabic)') }}</label>
+                                            <textarea name="description_ar" id="description_read_ar_inp" data-kt-autosize="true" class="tinymce"></textarea>
+                                            <div class="fv-plugins-message-container invalid-feedback"
+                                                id="description_ar"></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="description_read_en_inp"
+                                                class="form-label">{{ __('Description (English)') }}</label>
+                                            <textarea name="description_en" id="description_read_en_inp" data-kt-autosize="true" class="tinymce"></textarea>
+                                            <div class="fv-plugins-message-container invalid-feedback"
+                                                id="description_en"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light"
+                                        data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <span class="indicator-label">{{ __('Save') }}</span>
+                                        <span class="indicator-progress">
+                                            {{ __('Please wait...') }} <span
+                                                class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
                 <form id="question_form" class="ajax-form" method="post"
                     action="{{ route('dashboard.questions.store') }}" enctype="multipart/form-data"
                     data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
