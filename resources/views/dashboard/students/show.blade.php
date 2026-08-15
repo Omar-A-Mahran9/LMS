@@ -457,7 +457,7 @@
                 --}}
                 @php
                     $courseWatchedVideos = $student->watchedVideos->whereNull('class_id')->values();
-                    $classWatchedVideos = $student->watchedVideos->values();
+                    $classWatchedVideos = $student->watchedVideos->whereNotNull('class_id')->values();
                 @endphp
 
                 {{-- Watched Videos - Courses --}}
