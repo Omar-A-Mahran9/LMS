@@ -8,6 +8,7 @@ use App\Http\Requests\Dashboard\UpdateClassRequest;
 use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\Quiz;
+use App\Models\ReadingPassage;
 use Illuminate\Http\Request;
 
 class ClassController extends Controller
@@ -112,6 +113,8 @@ class ClassController extends Controller
 
     public function show($id)
     {
+        $readingPassages = ReadingPassage::latest()->get();
+
         $class = CourseClass::with('course')->findOrFail($id); // Eager load course
         $this->authorize('view_classes');
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
@@ -124,7 +127,7 @@ class ClassController extends Controller
         $hasReadingPassages = $class->quizzes()
                       ->where('have_reading_passages', true)
                       ->exists();
-        return view('dashboard.classes.show', compact('class', 'quizExists', 'courses', 'quizzes', 'homeworskExists', 'course', 'hasReadingPassages'));
+        return view('dashboard.classes.show', compact('class', 'quizExists', 'courses', 'quizzes', 'homeworskExists', 'course', 'hasReadingPassages', 'readingPassages'));
     }
 
 
