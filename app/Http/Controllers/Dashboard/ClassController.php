@@ -124,7 +124,7 @@ class ClassController extends Controller
         $hasReadingPassages = $class->quizzes()
                       ->where('have_reading_passages', true)
                       ->exists();
-        return view('dashboard.classes.show', compact('class', 'quizExists', 'courses', 'quizzes', 'homeworskExists', 'course'));
+        return view('dashboard.classes.show', compact('class', 'quizExists', 'courses', 'quizzes', 'homeworskExists', 'course', 'hasReadingPassages'));
     }
 
 
