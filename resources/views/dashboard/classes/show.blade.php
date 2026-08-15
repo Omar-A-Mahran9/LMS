@@ -467,7 +467,8 @@
                         </div>
                     </div>
                 </form>
-
+                ddnssjddnndndnddnndndndndd
+                @if ($hasReadingPassages)
                     <div id="add_btn_reading_passage" data-bs-toggle="modal" data-bs-target="#crud_reading_passage_modal"
                         data-kt-docs-table-toolbar="base" for="kt_datatable">
 
@@ -487,7 +488,7 @@
                             <!--end::Svg Icon-->{{ __('Add new reading passage') }}
                         </button>
                     </div>
-           
+                @endif
                 <form id="crud_reading_passage_form" class="ajax-form w-75"
                     action="{{ route('dashboard.reading_passage.store') }}" method="post" enctype="multipart/form-data"
                     data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
