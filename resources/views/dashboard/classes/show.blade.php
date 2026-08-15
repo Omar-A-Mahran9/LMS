@@ -467,7 +467,6 @@
                         </div>
                     </div>
                 </form>
-                @dd($hasReadingPassages)
                 @if ($hasReadingPassages)
                     <div id="add_btn_reading_passage" data-bs-toggle="modal" data-bs-target="#crud_reading_passage_modal"
                         data-kt-docs-table-toolbar="base" for="kt_datatable">
