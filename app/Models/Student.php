@@ -90,7 +90,7 @@ class Student extends Authenticatable
 
     public function watchedVideos()
     {
-        return $this->belongsToMany(CourseVideo::class)
+        return $this->belongsToMany(CourseVideo::class, 'course_video_student')
             ->withPivot(['is_completed', 'watch_seconds', 'last_watched_at', 'views'])
             ->withTimestamps();
     }

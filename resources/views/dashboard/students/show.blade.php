@@ -120,11 +120,11 @@
             {{-- ==================== END STUDENT CARD ==================== --}}
 
             <!--
-                            Perf note: the "Watched Videos" card below reads $video->course and $video->class
-                            per video. If the student has many watched videos, eager-load these in the
-                            controller to avoid N+1 queries:
-                            $student->load(['watchedVideos.course', 'watchedVideos.class']);
-                        -->
+                                Perf note: the "Watched Videos" card below reads $video->course and $video->class
+                                per video. If the student has many watched videos, eager-load these in the
+                                controller to avoid N+1 queries:
+                                $student->load(['watchedVideos.course', 'watchedVideos.class']);
+                            -->
 
             {{-- ==================== REPORT SECTION ==================== --}}
             <div class="d-flex flex-wrap flex-stack mb-6">
@@ -457,9 +457,10 @@
                 --}}
                 @php
                     $courseWatchedVideos = $student->watchedVideos->whereNull('class_id')->values();
-                    $classWatchedVideos = $student->watchedVideos->whereNotNull('class_id')->values();
-                @endphp
+                    $classWatchedVideos = $student->watchedVideos->values();
 
+                @endphp
+                {{-- @dd($classWatchedVideos); --}}
                 {{-- Watched Videos - Courses --}}
                 <div class="col-md-6 col-xl-4">
                     <div class="card h-100 report-card border-0 shadow-sm rounded-3">
