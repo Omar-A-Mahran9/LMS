@@ -500,9 +500,11 @@
                     </div>
                 </form>
 
-                <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.reading_passage.store') }}"
-                    method="post" enctype="multipart/form-data" data-success-callback="onAjaxSuccess"
-                    data-error-callback="onAjaxError">
+                <!-- FIX: this form previously duplicated id="crud_form" (same as the quiz form above).
+                         Renamed to a unique id since it is a separate form for a separate resource. -->
+                <form id="crud_reading_passage_form" class="ajax-form w-75"
+                    action="{{ route('dashboard.reading_passage.store') }}" method="post" enctype="multipart/form-data"
+                    data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
                     @csrf
                     <div class="modal fade" tabindex="-1" id="crud_reading_passage_modal">
                         <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -840,8 +842,13 @@
                     </div>
                 </form>
 
-                <form class="ajax-form w-75" action="{{ route('dashboard.sections.homeworks.store', $section->id) }}"
-                    method="post" enctype="multipart/form-data" data-success-callback="onAjaxSuccess"
+                <!-- FIX: added id="crud_form_homework" - homeworks_section.js already expects this exact
+                         id ($("#crud_form_homework").attr("action", ...)) when opening the modal to edit an
+                         existing homework, but the tag never had an id, so the edit form's action URL was
+                         never being updated (edits could silently post to the "create" endpoint instead). -->
+                <form id="crud_form_homework" class="ajax-form w-75"
+                    action="{{ route('dashboard.sections.homeworks.store', $section->id) }}" method="post"
+                    enctype="multipart/form-data" data-success-callback="onAjaxSuccess"
                     data-error-callback="onAjaxError">
                     @csrf
                     <div class="modal fade" tabindex="-1" id='crud_homework'>
@@ -864,19 +871,25 @@
 
 
                                     {{-- Titles --}}
+                                    {{-- FIX: these previously duplicated id="title_ar_inp" / "title_en_inp",
+                                         the same ids used by the quiz modal above. jQuery selectors like
+                                         $("#title_ar_inp") always resolve to the FIRST match in the DOM (the
+                                         quiz field), so editing a homework was silently writing into the
+                                         quiz modal's fields instead of this one. Renamed to *_hw_inp and
+                                         updated homeworks_section.js to match. --}}
                                     <div class="row mb-4">
                                         <div class="col-6">
-                                            <label for="title_ar_inp"
+                                            <label for="title_ar_hw_inp"
                                                 class="form-label">{{ __('Title (Arabic)') }}</label>
-                                            <input type="text" name="title_ar" id="title_ar_inp" class="form-control"
-                                                placeholder="{{ __('Enter Arabic title') }}">
+                                            <input type="text" name="title_ar" id="title_ar_hw_inp"
+                                                class="form-control" placeholder="{{ __('Enter Arabic title') }}">
                                             <div class="invalid-feedback" id="title_ar"></div>
                                         </div>
                                         <div class="col-6">
-                                            <label for="title_en_inp"
+                                            <label for="title_en_hw_inp"
                                                 class="form-label">{{ __('Title (English)') }}</label>
-                                            <input type="text" name="title_en" id="title_en_inp" class="form-control"
-                                                placeholder="{{ __('Enter English title') }}">
+                                            <input type="text" name="title_en" id="title_en_hw_inp"
+                                                class="form-control" placeholder="{{ __('Enter English title') }}">
                                             <div class="invalid-feedback" id="title_en"></div>
                                         </div>
                                     </div>
@@ -903,11 +916,13 @@
                                     </div>
 
                                     {{-- homework Info --}}
+                                    {{-- FIX: duration_minutes_inp / is_active_switch below previously
+                                         duplicated the quiz modal's ids too - same bug as above. --}}
                                     <div class="row mb-4">
                                         <div class="col-3">
-                                            <label for="duration_minutes_inp"
+                                            <label for="duration_minutes_hw_inp"
                                                 class="form-label">{{ __('Duration (Minutes)') }}</label>
-                                            <input type="number" name="duration_minutes" id="duration_minutes_inp"
+                                            <input type="number" name="duration_minutes" id="duration_minutes_hw_inp"
                                                 class="form-control" min="0">
                                             <div class="fv-plugins-message-container invalid-feedback"
                                                 id="duration_minutes">
@@ -915,9 +930,9 @@
                                         </div>
 
                                         <div class="col-3">
-                                            <label for="attempt_count_inp"
+                                            <label for="attempt_count_hw_inp"
                                                 class="form-label">{{ __('attempt count') }}</label>
-                                            <input type="number" name="attempt_count" id="attempt_count_inp"
+                                            <input type="number" name="attempt_count" id="attempt_count_hw_inp"
                                                 class="form-control" min="0">
                                             <div class="fv-plugins-message-container invalid-feedback" id="attempt_count">
                                             </div>
@@ -925,9 +940,9 @@
                                         <div class="col-2 d-flex align-items-center mt-4">
                                             <label class="form-check form-switch form-check-custom form-check-solid">
                                                 <input class="form-check-input" name="is_active" type="checkbox"
-                                                    value="1" id="is_active_switch" checked>
+                                                    value="1" id="is_active_hw_switch" checked>
                                                 <span class="form-check-label text-dark"
-                                                    for="is_active_switch">{{ __('Active') }}</span>
+                                                    for="is_active_hw_switch">{{ __('Active') }}</span>
                                             </label>
                                         </div>
 
@@ -1215,81 +1230,6 @@
         }).trigger('change'); // Trigger on load
     </script>
 
-
-    {{-- <script>
-        $(document).ready(function() {
-            $("#add_btn").click(function(e) {
-                e.preventDefault();
-
-                // Remove method override inputs (_method) used for PUT/PATCH on edit
-                $("[title='_method']").remove();
-
-                // Reset the form fields
-                $("#crud_form")[0].reset();
-
-
-                // Clear validation errors and invalid classes
-                $("#crud_form").find('.invalid-feedback').text('');
-                $("#crud_form").find('.is-invalid').removeClass('is-invalid');
-
-                // Reset TinyMCE editors content if present
-                if (typeof tinymce !== 'undefined') {
-                    tinymce.editors.forEach(editor => editor.setContent(''));
-                }
-
-                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#is_active_switch")
-                    .prop('checked', false);
-                $("#crud_form").attr('action', `/dashboard/sections/${sectionId}/quizzes`);
-
-
-                // Reset modal title
-                $("#form_title").text("{{ __('Add new quiz') }}");
-
-                // Optionally, reset date inputs
-                $(" #duration_minutes_inp").val('');
-
-                // Open modal if you want to show it on "Add"
-                $("#crud_modal").modal('show');
-            });
-
-            $("#add_btn_homework").click(function(e) {
-                e.preventDefault();
-
-                // Remove method override inputs (_method) used for PUT/PATCH on edit
-                $("[title='_method']").remove();
-
-                // Reset the form fields
-                $("#crud_homework")[0].reset();
-
-
-                // Clear validation errors and invalid classes
-                $("#crud_homework").find('.invalid-feedback').text('');
-                $("#crud_homework").find('.is-invalid').removeClass('is-invalid');
-
-                // Reset TinyMCE editors content if present
-                if (typeof tinymce !== 'undefined') {
-                    tinymce.editors.forEach(editor => editor.setContent(''));
-                }
-
-                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#is_active_switch")
-                    .prop('checked', false);
-                $("#crud_homework").attr('action', `/dashboard/sections/${sectionId}/homeworks`);
-
-
-                // Reset modal title
-                $("#form_title").text("{{ __('Add new quiz') }}");
-
-                // Optionally, reset date inputs
-                $(" #duration_minutes_inp").val('');
-
-                // Open modal if you want to show it on "Add"
-                $("#crud_homework").modal('show');
-            });
-        });
-    </script> --}}
-
     <script>
         $(document).ready(function() {
 
@@ -1358,9 +1298,11 @@
                 resetForm('#video_form', '#videoModal');
             });
 
+            // FIX: was resetForm('form#crud_homework', '#crud_homework') - there is no <form id="crud_homework">
+            // (that id belongs to the modal div). Now points at the actual form id, crud_form_homework.
             $('#add_btn_homework').click(e => {
                 e.preventDefault();
-                resetForm('form#crud_homework', '#crud_homework');
+                resetForm('#crud_form_homework', '#crud_homework');
             });
 
             $('#add_btn_question_homework').click(e => {

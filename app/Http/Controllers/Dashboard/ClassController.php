@@ -4,69 +4,68 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreClassRequest;
- use App\Http\Requests\Dashboard\UpdateClassRequest;
- use App\Models\Course;
+use App\Http\Requests\Dashboard\UpdateClassRequest;
+use App\Models\Course;
 use App\Models\CourseClass;
-
 use App\Models\Quiz;
 use Illuminate\Http\Request;
 
 class ClassController extends Controller
 {
-public function index(Request $request)
-{
-    $this->authorize('view_classes');
+    public function index(Request $request)
+    {
+        $this->authorize('view_classes');
 
-    $courseId = $request->input('course_id');
+        $courseId = $request->input('course_id');
 
-    // Fetch all courses for the dropdown
-    $courses = Course::select('id', 'title_en', 'title_ar')->get();
+        // Fetch all courses for the dropdown
+        $courses = Course::select('id', 'title_en', 'title_ar')->get();
 
-    // AJAX request
-    if ($request->ajax()) {
-if ($courseId) {
-    return response()->json(
-        getModelData(
-            model: new CourseClass(),
-            andsFilters: [['course_id', '=', $courseId]],
-            relations: [
-                'course' => ['id', 'title_ar', 'title_en', 'category_id'],
-                'course.category' => ['id', 'name_ar', 'name_en','description_ar','description_en']
-            ]
-        )
-    );
-} else {
-    return response()->json(
-        getModelData(
-            model: new CourseClass(),
-            relations: [
-                'course' => ['id', 'title_ar', 'title_en', 'category_id'],
-                'course.category' => ['id', 'name_ar', 'name_en','description_ar','description_en']
-            ]
-        )
-    );
-}
+        // AJAX request
+        if ($request->ajax()) {
+            if ($courseId) {
+                return response()->json(
+                    getModelData(
+                        model: new CourseClass(),
+                        andsFilters: [['course_id', '=', $courseId]],
+                        relations: [
+                            'course' => ['id', 'title_ar', 'title_en', 'category_id'],
+                            'course.category' => ['id', 'name_ar', 'name_en','description_ar','description_en']
+                        ]
+                    )
+                );
+            } else {
+                return response()->json(
+                    getModelData(
+                        model: new CourseClass(),
+                        relations: [
+                            'course' => ['id', 'title_ar', 'title_en', 'category_id'],
+                            'course.category' => ['id', 'name_ar', 'name_en','description_ar','description_en']
+                        ]
+                    )
+                );
+            }
 
 
+        }
+
+        // Regular page load
+        return view('dashboard.classes.index', compact('courses'));
     }
 
-    // Regular page load
-    return view('dashboard.classes.index', compact('courses'));
-}
 
 
-
-  public function store(StoreClassRequest $request)
+    public function store(StoreClassRequest $request)
     {
         $this->authorize('create_classes');
 
         $validated = $request->validated();
-    // Handle image uploads
+        // Handle image uploads
         if ($request->hasFile('image')) {
             $validated['image'] = uploadImageToDirectory($request->file('image'), 'courses_classes');
         }
         if ($request->hasFile('attachment')) {
-        $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'courses_classes');
+            $validated['attachment'] = uploadAttachmentToDirectory($request->file('attachment'), 'courses_classes');
         }
         // Set default values for checkboxes
         $validated['is_preview'] = $request->boolean('is_preview');
@@ -81,7 +80,7 @@ if ($courseId) {
     public function update(UpdateClassRequest $request, $id)
     {
         $this->authorize('update_classes');
-        $courseClass=CourseClass::find($id);
+        $courseClass = CourseClass::find($id);
         $validated = $request->validated();
 
         // Handle image update
@@ -111,37 +110,39 @@ if ($courseId) {
         $courseClass->update($validated);
     }
 
-public function show($id)
-{
-    $class = CourseClass::with('course')->findOrFail($id); // Eager load course
-    $this->authorize('view_classes');
+    public function show($id)
+    {
+        $class = CourseClass::with('course')->findOrFail($id); // Eager load course
+        $this->authorize('view_classes');
         $courses = Course::select('id', 'title_en', 'title_ar')->get();
 
         $quizzes = Quiz::select('id', 'title_en', 'title_ar')->get();
-            $course=$class->course;
+        $course = $class->course;
 
-    $quizExists = $class->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
-    $homeworskExists = $class->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
-
-    return view('dashboard.classes.show', compact('class', 'quizExists','courses','quizzes','homeworskExists','course'));
-}
-
-
-public function destroy( $id)
-{
-    $this->authorize('delete_classes');
-    $courseVideo=CourseClass::find($id);
-    // Optionally delete the associated image file
-    if ($courseVideo->image) {
-        deleteImageFromDirectory($courseVideo->image, 'courses_classes'); // This should be your helper function to delete a file
+        $quizExists = $class->quizzes()->exists(); // Assumes you have quizzes() relationship in CourseClass model
+        $homeworskExists = $class->homeworks()->exists(); // Assumes you have quizzes() relationship in CourseClass model
+        $hasReadingPassages = $class->quizzes()
+                      ->where('have_reading_passages', true)
+                      ->exists();
+        return view('dashboard.classes.show', compact('class', 'quizExists', 'courses', 'quizzes', 'homeworskExists', 'course'));
     }
 
-    $courseVideo->delete();
 
-    return response()->json([
-        'status' => true,
-        'message' => __('Course class deleted successfully.'),
-    ]);
-}
+    public function destroy($id)
+    {
+        $this->authorize('delete_classes');
+        $courseVideo = CourseClass::find($id);
+        // Optionally delete the associated image file
+        if ($courseVideo->image) {
+            deleteImageFromDirectory($courseVideo->image, 'courses_classes'); // This should be your helper function to delete a file
+        }
+
+        $courseVideo->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => __('Course class deleted successfully.'),
+        ]);
+    }
 
 }

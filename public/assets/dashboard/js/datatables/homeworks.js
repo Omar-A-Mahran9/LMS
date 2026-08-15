@@ -1,10 +1,9 @@
 "use strict";
-
 var homeworkdatatable;
 // Class definition
 var KTDatatablesHomeworkServerSide = (function () {
-    if (typeof classId !== "undefined" && classId) {
-        var dbTable = `classes/${classId}/homeworks`;
+    if (typeof sectionId !== "undefined" && sectionId) {
+        var dbTable = `sections/${sectionId}/homeworks`;
     } else {
         var dbTable = "homeworks";
     }
@@ -12,6 +11,7 @@ var KTDatatablesHomeworkServerSide = (function () {
     var initDatatableHomework = function () {
         homeworkdatatable = $("#kt_workhome_datatable").DataTable({
             language: language,
+            searchDelay: searchDelay,
             processing: processing,
             serverSide: serverSide,
             order: [],
@@ -82,14 +82,14 @@ var KTDatatablesHomeworkServerSide = (function () {
                         if (row.is_active) {
                             return `
                                      <span class="badge badge-success">${__(
-                                         "active"
+                                         "active",
                                      )}</span>
 
                             `;
                         } else {
                             return `
                                      <span class="badge badge-danger">${__(
-                                         "inactive"
+                                         "inactive",
                                      )}</span>
                              `;
                         }
@@ -114,7 +114,7 @@ var KTDatatablesHomeworkServerSide = (function () {
                             <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="javascript:;" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
+                                    <a href="javascript:;" class="menu-link px-3" data-kt-docs-table-filter="edit_row_homework">
                                         ${__("Edit")}
                                     </a>
                                 </div>
@@ -163,8 +163,6 @@ var KTDatatablesHomeworkServerSide = (function () {
 
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
         homeworkdatatable.on("draw", function () {
-            initToggleToolbar();
-            toggleToolbars();
             handleEditRows();
             deleteHomeworkRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({
@@ -177,7 +175,7 @@ var KTDatatablesHomeworkServerSide = (function () {
 
     var handleEditRows = () => {
         const editButtons = document.querySelectorAll(
-            '[data-kt-docs-table-filter="edit_row"]'
+            '[data-kt-docs-table-filter="edit_row_homework"]',
         );
 
         editButtons.forEach((btn) => {
@@ -187,40 +185,61 @@ var KTDatatablesHomeworkServerSide = (function () {
                 let currentBtnIndex = $(editButtons).index(btn);
                 let data = homeworkdatatable.row(currentBtnIndex).data();
 
-                // Set modal title
-                $("#form_title").text(__("Edit Homework"));
+                // Set form title
+                $("#form_title").text(__("Edit Course"));
 
                 // Titles
-                $("#title_ar_homework_inp").val(data.title_ar);
-                $("#title_en_homework_inp").val(data.title_en);
+                // FIX: was #title_ar_inp / #title_en_inp - those ids belong to the quiz modal.
+                // Now targets the homework modal's own (unique) fields.
+                $("#title_ar_hw_inp").val(data.title_ar);
+                $("#title_en_hw_inp").val(data.title_en);
 
-                // Descriptions (using correct IDs)
-                tinymce
-                    .get("description_homework_ar_inp")
-                    .setContent(data.description_ar || "");
-                tinymce
-                    .get("description_homework_en_inp")
-                    .setContent(data.description_en || "");
+                // FIX: was tinymce.get("description_ar_inp") / ("description_en_inp") - those
+                // ids belong to the quiz modal's editors. The homework modal's own editors already
+                // had unique ids in the blade (description_homework_ar_inp / _en_inp); this just
+                // makes the JS actually target them.
+                if (tinymce.get("description_homework_ar_inp")) {
+                    tinymce
+                        .get("description_homework_ar_inp")
+                        .setContent(data.description_ar);
+                }
 
-                // Duration
-                $("#duration_minutes_inp_homework").val(
-                    data.duration_minutes || ""
-                );
-                $("#attempt_count_inp_homework").val(data.attempt_count || "");
+                if (tinymce.get("description_homework_en_inp")) {
+                    tinymce
+                        .get("description_homework_en_inp")
+                        .setContent(data.description_en);
+                }
 
-                // Active switch
-                $("#is_active_switch_homework").prop("checked", !!data.is_active);
+                // Relationships
+                $("#course_section_id_inp")
+                    .val(data.course_section_id)
+                    .trigger("change");
 
-                // Set form action to PUT
+                // Relationships
+                $("#course_id_inp").val(data.course_id).trigger("change");
+
+                // FIX: was #duration_minutes_inp - shared id with the quiz modal.
+                $("#duration_minutes_hw_inp").val(data.duration_minutes);
+                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
+
+                // Flags
+                // FIX: was #is_active_switch - shared id with the quiz modal's switch. Editing a
+                // homework was previously toggling the QUIZ modal's Active switch instead of this one.
+                $("#is_active_hw_switch").prop("checked", data.is_active);
+
+                // FIX: form action now targets the correct homework form id (crud_form_homework),
+                // matching the id added in the blade. This used to reference a non-existent
+                // "#crud_form_homework" selector too - so this part already matches - only the
+                // blade side needed the id added.
                 $("#crud_form_homework").attr(
                     "action",
-                    `/dashboard/homeworks/${data.id}`
+                    `/dashboard/homeworks/${data.id}`,
                 );
 
-                // Replace _method hidden input with PUT
+                // Remove previous _method input if any, then add PUT
                 $("#crud_form_homework").find('input[name="_method"]').remove();
                 $("#crud_form_homework").prepend(
-                    `<input type="hidden" name="_method" value="PUT">`
+                    `<input type="hidden" name="_method" value="PUT">`,
                 );
 
                 // Show modal
