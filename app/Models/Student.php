@@ -87,14 +87,22 @@ class Student extends Authenticatable
                     ->withTimestamps();
     }
 
-
     public function watchedVideos()
     {
-        return $this->belongsToMany(CourseVideo::class, 'course_video_student')
-            ->withPivot(['is_completed', 'watch_seconds', 'last_watched_at', 'views'])
-            ->withTimestamps();
-    }
-
+        return $this->belongsToMany(
+            CourseVideo::class,
+            'course_video_student',
+            'student_id',
+            'course_video_id'
+        )
+        ->withPivot([
+            'is_completed',
+            'watch_seconds',
+            'last_watched_at',
+            'views',
+        ])
+        ->withTimestamps();
+    }()
     public function studentProgress()
     {
         return $this->hasMany(CourseVideoStudent::class);

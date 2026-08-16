@@ -460,7 +460,7 @@
                     $classWatchedVideos = $student->watchedVideos->values();
 
                 @endphp
-                @dd($classWatchedVideos);
+                {{-- @dd($classWatchedVideos); --}}
                 {{-- Watched Videos - Courses --}}
                 <div class="col-md-6 col-xl-4">
                     <div class="card h-100 report-card border-0 shadow-sm rounded-3">
