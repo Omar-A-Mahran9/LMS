@@ -144,16 +144,19 @@ var KTDatatablesServerSide = (function () {
                     orderable: true,
                     render: function (data, type, row) {
                         return `
-            <button
-                type="button"
-                class="btn btn-sm status-toggle"
+            <select
+                class="form-select form-select-sm status-toggle"
                 data-id="${row.id}"
-                data-status="${row.is_active ? 1 : 0}"
+                style="width: 120px;"
             >
-                <span class="badge ${row.is_active ? "badge-success" : "badge-danger"}">
-                    ${row.is_active ? __("active") : __("inactive")}
-                </span>
-            </button>
+                <option value="1" ${row.is_active ? "selected" : ""}>
+                    ${__("active")}
+                </option>
+
+                <option value="0" ${!row.is_active ? "selected" : ""}>
+                    ${__("inactive")}
+                </option>
+            </select>
         `;
                     },
                 },
@@ -239,17 +242,19 @@ var KTDatatablesServerSide = (function () {
     };
     var handleStatusToggle = function () {
         $(".status-toggle")
-            .off("click")
-            .on("click", function (e) {
-                e.preventDefault();
+            .off("change")
+            .on("change", function () {
+                const select = $(this);
 
-                const button = $(this);
-                const courseId = button.data("id");
-                const currentStatus = Number(button.data("status"));
+                const courseId = select.data("id");
+                const newStatus = Number(select.val());
 
-                const newStatus = currentStatus === 1 ? 0 : 1;
+                // الأكشن اللي اتاخد
+                const action = newStatus === 1 ? "activate" : "deactivate";
 
-                button.prop("disabled", true);
+                console.log("Course ID:", courseId);
+                console.log("New Status:", newStatus);
+                console.log("Action:", action);
 
                 $.ajax({
                     url: `/dashboard/courses/${courseId}/status`,
@@ -258,6 +263,7 @@ var KTDatatablesServerSide = (function () {
                         _token: $('meta[name="csrf-token"]').attr("content"),
                         is_active: newStatus,
                     },
+
                     success: function (response) {
                         toastr.success(
                             response.message ||
@@ -266,13 +272,15 @@ var KTDatatablesServerSide = (function () {
 
                         datatable.ajax.reload(null, false);
                     },
+
                     error: function (xhr) {
                         toastr.error(
                             xhr.responseJSON?.message ||
                                 __("Something went wrong"),
                         );
 
-                        button.prop("disabled", false);
+                        // رجّع القيمة القديمة لو الـ request فشل
+                        datatable.ajax.reload(null, false);
                     },
                 });
             });
