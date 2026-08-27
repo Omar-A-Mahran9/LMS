@@ -143,17 +143,29 @@ var KTDatatablesServerSide = (function () {
                     targets: 6,
                     orderable: true,
                     render: function (data, type, row) {
+                        const isActive = Number(row.is_active) === 1;
+
                         return `
             <select
-                class="form-select form-select-sm status-toggle"
+                class="form-select form-select-sm status-toggle ${
+                    isActive ? "status-active" : "status-inactive"
+                }"
                 data-id="${row.id}"
-                style="width: 120px;"
+                style="
+                    width: 110px;
+                    min-width: 110px;
+                    border: none;
+                    font-weight: 600;
+                    cursor: pointer;
+                    padding: 5px 30px 5px 10px;
+                    border-radius: 6px;
+                "
             >
-                <option value="1" ${row.is_active ? "selected" : ""}>
+                <option value="1" ${isActive ? "selected" : ""}>
                     ${__("active")}
                 </option>
 
-                <option value="0" ${!row.is_active ? "selected" : ""}>
+                <option value="0" ${!isActive ? "selected" : ""}>
                     ${__("inactive")}
                 </option>
             </select>

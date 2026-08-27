@@ -459,6 +459,31 @@
         </div>
     </form>
 @endsection
+@push('styles')
+    <style>
+        .status-toggle {
+            transition: all 0.2s ease;
+        }
+
+        .status-toggle.status-active {
+            background-color: #e8fff3;
+            color: #50cd89;
+        }
+
+        .status-toggle.status-inactive {
+            background-color: #fff5f8;
+            color: #f1416c;
+        }
+
+        .status-toggle:focus {
+            box-shadow: none;
+        }
+
+        .status-toggle:hover {
+            opacity: 0.85;
+        }
+    </style>
+@endpush
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
