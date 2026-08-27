@@ -10,7 +10,6 @@ use App\Models\Admin;
 use App\Models\Category;
 use App\Models\CategorySubCategory;
 use App\Models\Course;
-
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -18,202 +17,218 @@ class CourseController extends Controller
     /**
      * Display a listing of the resource.
      */
-public function index(Request $request)
-{
-            $this->authorize('view_courses');
+    public function index(Request $request)
+    {
+        $this->authorize('view_courses');
 
-    // Count total courses
-    $count_addon = Course::count();
+        // Count total courses
+        $count_addon = Course::count();
 
-    // Example static visited site count (you may want to make this dynamic)
-    $visited_site = 10000;
+        // Example static visited site count (you may want to make this dynamic)
+        $visited_site = 10000;
 
-    // If instructors are needed on the page, fetch get
-    $instructors = Admin::where('type','instructor')->get(); // or whatever your instructor model is
-    // Get only published categories that are parent-level or subcategories if needed
-    $categories = Category::where('is_publish', 1)
-        ->get();
-    $subcategories = CategorySubCategory::where('is_publish', 1)
-        ->get();
+        // If instructors are needed on the page, fetch get
+        $instructors = Admin::where('type', 'instructor')->get(); // or whatever your instructor model is
+        // Get only published categories that are parent-level or subcategories if needed
+        $categories = Category::where('is_publish', 1)
+            ->get();
+        $subcategories = CategorySubCategory::where('is_publish', 1)
+            ->get();
 
-    if ($request->ajax()) {
-    $andsFilters = [];
+        if ($request->ajax()) {
+            $andsFilters = [];
 
-    if ($request->filled('filter_combined')) {
-        $value = $request->filter_combined;
+            if ($request->filled('filter_combined')) {
+                $value = $request->filter_combined;
 
-        if (Str::startsWith($value, 'category_')) {
-            $categoryId = Str::after($value, 'category_');
-            $andsFilters[] = ['category_id', '=', $categoryId];
-        } elseif ($value === 'courses_only') {
-            $andsFilters[] = ['category_id', '=', null]; // only courses (no category)
-        } elseif ($value === 'classes_only') {
-            $andsFilters[] = ['category_id', '!=', null]; // only classes (have category)
+                if (Str::startsWith($value, 'category_')) {
+                    $categoryId = Str::after($value, 'category_');
+                    $andsFilters[] = ['category_id', '=', $categoryId];
+                } elseif ($value === 'courses_only') {
+                    $andsFilters[] = ['category_id', '=', null]; // only courses (no category)
+                } elseif ($value === 'classes_only') {
+                    $andsFilters[] = ['category_id', '!=', null]; // only classes (have category)
+                }
+                // 'all' = no filter applied
+            }
+
+            return response()->json(getModelData(
+                model: new Course(),
+                relations: ['instructor' => ['id', 'name']],
+                andsFilters: $andsFilters,
+            ));
+        } else {
+            // Return the main view with data
+            return view('dashboard.courses.index', compact('categories', 'visited_site', 'instructors', 'subcategories'));
         }
-        // 'all' = no filter applied
     }
+    public function updateStatus(Request $request, Course $course)
+    {
+        $request->validate([
+            'is_active' => ['required', 'boolean'],
+        ]);
 
-    return response()->json(getModelData(
-        model: new Course(),
-        relations: ['instructor' => ['id', 'name']],
-        andsFilters: $andsFilters,
-        
-    ));
-    }else {
-        // Return the main view with data
-        return view('dashboard.courses.index', compact('categories', 'visited_site', 'instructors','subcategories'));
+        $course->update([
+            'is_active' => $request->boolean('is_active'),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => $course->is_active
+                ? __('Course activated successfully')
+                : __('Course deactivated successfully'),
+            'is_active' => $course->is_active,
+        ]);
     }
-}
+    public function getCourses($categoryId)
+    {
+        if ($categoryId === 'all') {
+            $courses = Course::all();
+        } else {
+            $courses = Course::where('category_id', $categoryId)->get();
+        }
 
-public function getCourses($categoryId)
-{
-    if ($categoryId === 'all') {
-        $courses = Course::all();
-    } else {
-        $courses =Course::where('category_id', $categoryId)->get();
-    }
-
-    return response()->json($courses);
-}
-
-
-public function store(StoreCourseRequest $request)
-{
-    $this->authorize('create_courses');
-
-     $data = $request->validated();
-
-    // Handle image uploads
-    if ($request->hasFile('image')) {
-        $data['image'] = uploadImageToDirectory($request->file('image'), 'courses');
-    }
-
-    if ($request->hasFile('slide_image')) {
-        $data['slide_image'] = uploadImageToDirectory($request->file('slide_image'), 'courses/slides');
-    }
-
-    // If course is free, set price to 0
-    if ($request->filled('is_free') && $request->boolean('is_free')) {
-        $data['price'] = 0;
-    }
-
-    // If course doesn't have a discount, remove discount field
-    if (!$request->boolean('have_discount')) {
-        $data['discount_percentage'] = null;
-    }
-
-    // Handle boolean flags
-    $data['is_free'] = $request->boolean('is_free');
-    $data['have_discount'] = $request->boolean('have_discount');
-    $data['is_enrollment_open'] = $request->boolean('is_enrollment_open');
-    $data['show_in_home'] = $request->boolean('show_in_home');
-    $data['featured'] = $request->boolean('featured');
-    $data['certificate_available'] = $request->boolean('certificate_available');
-    $data['is_class'] = $request->boolean('is_class');
-
-    // Create course
-    $course =Course::create($data);
-
-    // Attach subcategories if any
-    if ($request->filled('subcategory_ids')) {
-        $course->subCategories()->sync($request->input('subcategory_ids'));
+        return response()->json($courses);
     }
 
 
-}
+    public function store(StoreCourseRequest $request)
+    {
+        $this->authorize('create_courses');
+
+        $data = $request->validated();
+
+        // Handle image uploads
+        if ($request->hasFile('image')) {
+            $data['image'] = uploadImageToDirectory($request->file('image'), 'courses');
+        }
+
+        if ($request->hasFile('slide_image')) {
+            $data['slide_image'] = uploadImageToDirectory($request->file('slide_image'), 'courses/slides');
+        }
+
+        // If course is free, set price to 0
+        if ($request->filled('is_free') && $request->boolean('is_free')) {
+            $data['price'] = 0;
+        }
+
+        // If course doesn't have a discount, remove discount field
+        if (!$request->boolean('have_discount')) {
+            $data['discount_percentage'] = null;
+        }
+
+        // Handle boolean flags
+        $data['is_free'] = $request->boolean('is_free');
+        $data['have_discount'] = $request->boolean('have_discount');
+        $data['is_enrollment_open'] = $request->boolean('is_enrollment_open');
+        $data['show_in_home'] = $request->boolean('show_in_home');
+        $data['featured'] = $request->boolean('featured');
+        $data['certificate_available'] = $request->boolean('certificate_available');
+        $data['is_class'] = $request->boolean('is_class');
+
+        // Create course
+        $course = Course::create($data);
+
+        // Attach subcategories if any
+        if ($request->filled('subcategory_ids')) {
+            $course->subCategories()->sync($request->input('subcategory_ids'));
+        }
 
 
-
-
-public function update(UpdateCourseRequest $request, Course $course)
-{
-    $this->authorize('update_courses');
-
-    $data = $request->validated();
-
-    // Remove subcategory_ids from $data to avoid mass assignment
-    // unset($data['subcategory_ids']);
-
-    // Handle image upload
-    if ($request->hasFile('image')) {
-        $data['image'] = uploadImageToDirectory($request->file('image'), 'courses');
     }
 
-    // Handle slide image upload
-    if ($request->hasFile('slide_image')) {
-        $data['slide_image'] = uploadImageToDirectory($request->file('slide_image'), 'courses/slides');
+
+
+
+    public function update(UpdateCourseRequest $request, Course $course)
+    {
+        $this->authorize('update_courses');
+
+        $data = $request->validated();
+
+        // Remove subcategory_ids from $data to avoid mass assignment
+        // unset($data['subcategory_ids']);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $data['image'] = uploadImageToDirectory($request->file('image'), 'courses');
+        }
+
+        // Handle slide image upload
+        if ($request->hasFile('slide_image')) {
+            $data['slide_image'] = uploadImageToDirectory($request->file('slide_image'), 'courses/slides');
+        }
+
+        // If course is free, set price to 0
+        if ($request->filled('is_free') && $request->boolean('is_free')) {
+            $data['price'] = 0;
+        }
+
+        // If no discount, set discount to null
+        if (!$request->boolean('have_discount')) {
+            $data['discount_percentage'] = null;
+        }
+
+        // Normalize boolean flags
+        $data['is_free'] = $request->boolean('is_free');
+        $data['have_discount'] = $request->boolean('have_discount');
+        $data['is_enrollment_open'] = $request->boolean('is_enrollment_open');
+        $data['show_in_home'] = $request->boolean('show_in_home');
+        $data['featured'] = $request->boolean('featured');
+        $data['certificate_available'] = $request->boolean('certificate_available');
+
+        // Update course data
+        $course->update($data);
+
+        // Sync valid subcategories
+        if ($request->filled('subcategory_ids')) {
+            $subcategoryIds = $request->input('subcategory_ids', []);
+            $validSubcategoryIds = Category::whereIn('id', $subcategoryIds)->pluck('id')->toArray();
+            $course->subCategories()->sync($validSubcategoryIds);
+        } else {
+            $course->subCategories()->detach();
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => __('Course updated successfully.'),
+            'data' => $course,
+        ]);
     }
 
-    // If course is free, set price to 0
-    if ($request->filled('is_free') && $request->boolean('is_free')) {
-        $data['price'] = 0;
+
+    public function show(Course $course)
+    {
+        $this->authorize('view_courses');
+
+        $course->load([
+            'category',
+            'subCategories',
+            'instructor',
+        ])->loadCount([
+            'enrollments', // total enrollments
+            'sections',    // for section-based courses
+            'classes',     // for class-based courses
+
+            // Enrollment counts by status
+            'enrollments as approved_enrollments_count' => function ($q) {
+                $q->where('status', 'approved');
+            },
+            'enrollments as pending_enrollments_count' => function ($q) {
+                $q->where('status', 'pending');
+            },
+            'enrollments as rejected_enrollments_count' => function ($q) {
+                $q->where('status', 'rejected');
+            },
+        ]);
+
+        return view('dashboard.courses.show', compact('course'));
     }
-
-    // If no discount, set discount to null
-    if (!$request->boolean('have_discount')) {
-        $data['discount_percentage'] = null;
-    }
-
-    // Normalize boolean flags
-    $data['is_free'] = $request->boolean('is_free');
-    $data['have_discount'] = $request->boolean('have_discount');
-    $data['is_enrollment_open'] = $request->boolean('is_enrollment_open');
-    $data['show_in_home'] = $request->boolean('show_in_home');
-    $data['featured'] = $request->boolean('featured');
-    $data['certificate_available'] = $request->boolean('certificate_available');
-
-    // Update course data
-    $course->update($data);
-
-    // Sync valid subcategories
-    if ($request->filled('subcategory_ids')) {
-        $subcategoryIds = $request->input('subcategory_ids', []);
-        $validSubcategoryIds = Category::whereIn('id', $subcategoryIds)->pluck('id')->toArray();
-        $course->subCategories()->sync($validSubcategoryIds);
-    } else {
-        $course->subCategories()->detach();
-    }
-
-    return response()->json([
-        'status' => true,
-        'message' => __('Course updated successfully.'),
-        'data' => $course,
-    ]);
-}
-
-
-public function show(Course $course)
-{
-    $this->authorize('view_courses');
-
-    $course->load([
-        'category',
-        'subCategories',
-        'instructor',
-    ])->loadCount([
-        'enrollments', // total enrollments
-        'sections',    // for section-based courses
-        'classes',     // for class-based courses
-
-        // Enrollment counts by status
-        'enrollments as approved_enrollments_count' => function ($q) {
-            $q->where('status', 'approved');
-        },
-        'enrollments as pending_enrollments_count' => function ($q) {
-            $q->where('status', 'pending');
-        },
-        'enrollments as rejected_enrollments_count' => function ($q) {
-            $q->where('status', 'rejected');
-        },
-    ]);
-
-    return view('dashboard.courses.show', compact('course'));
-}
 
 
     public function destroy($id)
     {
-        $course=Course::find($id);
+        $course = Course::find($id);
         $this->authorize('delete_courses');
         $course->delete();
         return response(["Course deleted successfully"]);

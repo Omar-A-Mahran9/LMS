@@ -140,22 +140,21 @@ var KTDatatablesServerSide = (function () {
                     },
                 },
                 {
-                    targets: 6, // This is the "Status" column
+                    targets: 6,
+                    orderable: true,
                     render: function (data, type, row) {
-                        if (row.is_active) {
-                            return `
-                                     <span class="badge badge-success">${__(
-                                         "active",
-                                     )}</span>
-
-                            `;
-                        } else {
-                            return `
-                                     <span class="badge badge-danger">${__(
-                                         "inactive",
-                                     )}</span>
-                             `;
-                        }
+                        return `
+            <button
+                type="button"
+                class="btn btn-sm status-toggle"
+                data-id="${row.id}"
+                data-status="${row.is_active ? 1 : 0}"
+            >
+                <span class="badge ${row.is_active ? "badge-success" : "badge-danger"}">
+                    ${row.is_active ? __("active") : __("inactive")}
+                </span>
+            </button>
+        `;
                     },
                 },
 
@@ -235,9 +234,49 @@ var KTDatatablesServerSide = (function () {
             });
             KTMenu.createInstances();
             handlePreviewAttachments();
+            handleStatusToggle();
         });
     };
+    var handleStatusToggle = function () {
+        $(".status-toggle")
+            .off("click")
+            .on("click", function (e) {
+                e.preventDefault();
 
+                const button = $(this);
+                const courseId = button.data("id");
+                const currentStatus = Number(button.data("status"));
+
+                const newStatus = currentStatus === 1 ? 0 : 1;
+
+                button.prop("disabled", true);
+
+                $.ajax({
+                    url: `/dashboard/courses/${courseId}/status`,
+                    type: "PATCH",
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr("content"),
+                        is_active: newStatus,
+                    },
+                    success: function (response) {
+                        toastr.success(
+                            response.message ||
+                                __("Status updated successfully"),
+                        );
+
+                        datatable.ajax.reload(null, false);
+                    },
+                    error: function (xhr) {
+                        toastr.error(
+                            xhr.responseJSON?.message ||
+                                __("Something went wrong"),
+                        );
+
+                        button.prop("disabled", false);
+                    },
+                });
+            });
+    };
     var handleEditRows = () => {
         const editButtons = document.querySelectorAll(
             '[data-kt-docs-table-filter="edit_row"]',
@@ -393,6 +432,8 @@ var KTDatatablesServerSide = (function () {
             initDatatable();
             handleSearchDatatable();
             initToggleToolbar();
+            handleStatusToggle();
+
             handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
             deleteSelectedRowsWithURL({

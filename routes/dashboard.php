@@ -45,7 +45,8 @@ Route::resource('lives', 'LiveController')->except(['create', 'edit']);
 Route::get('/categories/{id}/courses', [CourseController::class, 'getCourses']);
 Route::put('contact-us/{contact}/reply', [ContactRequestController::class, 'reply'])->name('contact.reply');
 Route::get('contact-us/{contact}/reply', [ContactRequestController::class, 'showReplyForm'])->name('contact.reply_form');
-
+Route::patch('courses/{course}/status', [CourseController::class, 'updateStatus'])
+    ->name('courses.update-status');
 Route::resource('courses', 'CourseController')->except(['create', 'edit']);
 Route::resource('videos', 'CourseVideoController')->except(['create', 'edit']);
 Route::get('classes/{classId}/videos', 'CourseVideoController@getvideosbyclasses');
