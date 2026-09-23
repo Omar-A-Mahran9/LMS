@@ -29,21 +29,19 @@ class SectionResource extends JsonResource
         $hasAttemptedHomework = false;
         $homeworkAttemptLimitReached = false;
 
-        // Check quiz attempts
+        // Check quiz attempts: the section only unlocks after a submitted attempt that answered
+        // at least Quiz::REQUIRED_ANSWERED_PERCENT of the questions
+        $quizPassed = false;
+        $openQuizAttempt = null;
         if ($studentId && $activeQuiz) {
+            $quizStatus = $activeQuiz->accessStatusFor($studentId);
+            $quizPassed = $quizStatus['passed'];
+            $openQuizAttempt = $quizStatus['open_attempt'];
+            $quizAttemptLimitReached = $quizStatus['limit_reached'];
+
             $hasAttemptedQuiz = $activeQuiz->attempts()
                 ->where('student_id', $studentId)
                 ->exists();
-
-            if ($activeQuiz->attempt_count !== null) {
-                $usedAttempts = $activeQuiz->attempts()
-                    ->where('student_id', $studentId)
-                    ->count();
-
-                if ($usedAttempts >= $activeQuiz->attempt_count) {
-                    $quizAttemptLimitReached = true;
-                }
-            }
         }
 
         // Check homework attempts
@@ -80,7 +78,10 @@ class SectionResource extends JsonResource
             'has_quizzes'    => (!$quizAttemptLimitReached && $this->quizzes()->exists() && $activeQuiz && $activeQuiz->questions()->exists()
 ) ? true : false,
             'has_homeworks'  => (!$homeworkAttemptLimitReached && $this->homeworks()->exists() && $activeHomework && $activeHomework->questions()->exists()) ? true : false,
-            'quiz_required'  => (!$quizAttemptLimitReached && !$hasAttemptedQuiz && $activeQuiz && $activeQuiz->questions()->exists()) ? $this->quiz_required : 0,
+            'quiz_required'  => (!$quizAttemptLimitReached && !$quizPassed && $activeQuiz && $activeQuiz->questions()->exists()) ? $this->quiz_required : 0,
+            'quiz_in_progress'        => (bool) $openQuizAttempt,
+            'quiz_answered_percent'   => $openQuizAttempt?->answered_percent ?? 0,
+            'quiz_required_percent'   => \App\Models\Quiz::REQUIRED_ANSWERED_PERCENT,
 
             // IDs and attempts
             'quiz_id'            => !$quizAttemptLimitReached ? $activeQuiz?->id : null,

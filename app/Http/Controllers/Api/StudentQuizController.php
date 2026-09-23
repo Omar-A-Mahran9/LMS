@@ -57,33 +57,26 @@ if ($code) {
    if ($quiz->questions->isEmpty()) {
         return $this->failure(__('Quiz does not contain any questions.'));
     }
-    if ($quiz->attempt_count !== null) {
-        $usedAttempts = QuizAttempt::where('quiz_id', $quizId)
-            ->where('student_id', $studentId)
-            // ->whereNotNull('submitted_at')
-            ->count();
 
-        if ($studentId !== null && $usedAttempts >= $quiz->attempt_count) {
-            return $this->failure(__('You have reached the maximum number of attempts.'));
-        }
-    }
-
-    $quiz->increment('attempt');
-
-    $attempt = QuizAttempt::where('quiz_id', $quizId)
-        ->where('student_id', $studentId)
-        ->whereNull('submitted_at')
-        ->first();
-
-    if ($attempt && $quiz->duration_minutes) {
-        if ($attempt->started_at->addMinutes($quiz->duration_minutes)->isPast()) {
-            $attempt->answers()->delete();
-            // $attempt->delete();
-            $attempt = null;
-        }
+    // Resume an unfinished attempt instead of opening a new one (time-expired ones get graded here)
+    $attempt = null;
+    if ($studentId !== null) {
+        $attempt = $quiz->accessStatusFor($studentId)['open_attempt'];
     }
 
     if (!$attempt) {
+        if ($studentId !== null && $quiz->attempt_count !== null) {
+            $usedAttempts = QuizAttempt::where('quiz_id', $quizId)
+                ->where('student_id', $studentId)
+                ->count();
+
+            if ($usedAttempts >= $quiz->attempt_count) {
+                return $this->failure(__('You have reached the maximum number of attempts.'));
+            }
+        }
+
+        $quiz->increment('attempt');
+
         $attempt = QuizAttempt::create([
             'quiz_id' => $quizId,
             'student_id' => $studentId,
@@ -91,199 +84,126 @@ if ($code) {
             'started_at' => now(),
         ]);
     }
+    $attempt->setRelation('quiz', $quiz);
 
     return $this->success('', [
         'attempt' => [
             'attempt_id' => $attempt->id,
             'student_id' => $studentId,
             'started_at' => $attempt->started_at->format('H:i:s'),
+            'remaining_seconds' => $attempt->remainingSeconds(),
+            'answered_percent' => $attempt->answered_percent,
+            'required_percent' => Quiz::REQUIRED_ANSWERED_PERCENT,
+            // Previously saved answers so the student continues where they stopped
+            'saved_answers' => $attempt->answers()->get()->map(fn ($a) => [
+                'id' => $a->quiz_question_id,
+                'answer' => $a->quiz_answer_id ?? $a->answer_text,
+            ])->values(),
         ],
         'quiz' => new QuizResource($quiz),
     ]);
 }
 
 
-
-
-public function submitQuiz(Request $request, $quizAttemptId)
+// Autosave the student's answers while solving, so leaving the page doesn't lose them
+public function saveProgress(Request $request, $quizAttemptId)
 {
-        $studentId = auth()->id();
-
-    $attempt = QuizAttempt::with('quiz.questions.answers')->findOrFail($quizAttemptId);
-   if ($studentId !== null && !$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
-        return $this->failure('You are not enrolled in this course.');
-    }
-    // Check if quiz duration expired
-    if ($attempt->quiz->duration_minutes && $attempt->started_at) {
-        $expiryTime = \Carbon\Carbon::parse($attempt->started_at)->addMinutes($attempt->quiz->duration_minutes);
-        if (now()->greaterThan($expiryTime)) {
-
-            $score = 0;
-            $totalPoints = $attempt->quiz->questions->sum('points');
-
-            $scoredQuestionIds = [];
-
-            foreach ($attempt->answers as $answer) {
-                $question = $attempt->quiz->questions->firstWhere('id', $answer->quiz_question_id);
-                if (!$question) continue;
-
-                // Avoid scoring the same question multiple times
-                if (in_array($question->id, $scoredQuestionIds)) {
-                    continue;
-                }
-
-                if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-                    $correctAnswer = $question->answers->firstWhere('is_correct', 1);
-                    if ($correctAnswer && $answer->quiz_answer_id == $correctAnswer->id) {
-                        $score += $question->points;
-                        $scoredQuestionIds[] = $question->id;
-                    }
-                } elseif ($question->type === 'short_answer') {
-                    if ($this->checkAnswer($question, $answer->answer_text)) {
-                        $score += $question->points;
-                        $scoredQuestionIds[] = $question->id;
-                    }
-                }
-            }
-
-            $scoreText = "{$score}/{$totalPoints}";
-
-            return $this->success(
-                'The quiz time has expired. You cannot submit your answers.',
-                [
-                    'course_id'=>$attempt->quiz?$attempt->quiz?->course->id:null,
-                    'class_id'=>$attempt->quiz?$attempt->quiz?->class->id:null,
-
-                    'score' => $score,
-                    'total_points' => $totalPoints,
-                    'score_text' => $scoreText,
-                ]
-            );
-        }
+    $attempt = $this->findOwnedAttempt($quizAttemptId);
+    if (!$attempt) {
+        return $this->failure(__('Quiz attempt not found or access denied.'));
     }
 
+    if ($attempt->isSubmitted()) {
+        return $this->failure(__('This quiz attempt has already been submitted.'));
+    }
 
-    // Validate answers input as array of objects with id and answer (answer can be nullable)
+    if ($attempt->isExpired()) {
+        $attempt->finalize();
+        return $this->failure(__('The quiz time has expired.'));
+    }
+
     $data = $request->validate([
         'answers' => 'required|array',
         'answers.*.id' => 'required|integer|exists:quiz_questions,id',
         'answers.*.answer' => 'nullable',
     ]);
 
-    // Map answers array to associative [question_id => answer]
-    $answersAssoc = collect($data['answers'])->mapWithKeys(fn($item) => [$item['id'] => $item['answer']])->toArray();
+    $attempt->storeAnswers(collect($data['answers'])->mapWithKeys(fn ($item) => [$item['id'] => $item['answer'] ?? null])->toArray());
 
-    // Check all questions answered
-    $expectedQuestionIds = $attempt->quiz->questions->pluck('id')->toArray();
-    $submittedQuestionIds = array_keys($answersAssoc);
-    $missingQuestionIds = array_diff($expectedQuestionIds, $submittedQuestionIds);
+    return $this->success('', [
+        'answered_count' => $attempt->answered_count,
+        'answered_percent' => $attempt->answered_percent,
+        'required_percent' => Quiz::REQUIRED_ANSWERED_PERCENT,
+    ]);
+}
 
-    if (!empty($missingQuestionIds)) {
-        $missingWithCorrectAnswers = [];
 
-        foreach ($missingQuestionIds as $missingId) {
-            $question = $attempt->quiz->questions->firstWhere('id', $missingId);
+public function submitQuiz(Request $request, $quizAttemptId)
+{
+    $studentId = auth()->id();
 
-            if ($question) {
-                if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-                    $correctAnswer = $question->answers->firstWhere('is_correct', 1);
-                    $correctAnswerId = $correctAnswer ? $correctAnswer->id : null;
-                    $missingWithCorrectAnswers[] = [
-                        'id' => $missingId,
-                        'answer' => $correctAnswerId,
-                    ];
-                } elseif ($question->type === 'short_answer') {
-                    $correctAnswerText = $question->correct_answer ?? null;
-                    $missingWithCorrectAnswers[] = [
-                        'id' => $missingId,
-                        'answer' => $correctAnswerText,
-                    ];
-                } else {
-                    $missingWithCorrectAnswers[] = [
-                        'id' => $missingId,
-                        'answer' => null,
-                    ];
-                }
-            } else {
-                $missingWithCorrectAnswers[] = [
-                    'id' => $missingId,
-                    'answer' => null,
-                ];
-            }
-        }
+    $attempt = $this->findOwnedAttempt($quizAttemptId);
+    if (!$attempt) {
+        return $this->failure(__('Quiz attempt not found or access denied.'));
+    }
 
+    if ($studentId !== null && !$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
+        return $this->failure('You are not enrolled in this course.');
+    }
+
+    if ($attempt->isSubmitted()) {
+        return $this->failure(__('This quiz attempt has already been submitted.'));
+    }
+
+    $data = $request->validate([
+        'answers' => 'nullable|array',
+        'answers.*.id' => 'required|integer|exists:quiz_questions,id',
+        'answers.*.answer' => 'nullable',
+    ]);
+
+    // Few seconds of tolerance both ways: the client timer auto-submits at 0:00 and may be slightly off
+    $expired = $attempt->isExpired(-5);
+
+    // Once the time is really over, nothing new is accepted: only what was autosaved gets graded
+    if (!$attempt->isExpired(30) && !empty($data['answers'])) {
+        $attempt->storeAnswers(collect($data['answers'])->mapWithKeys(fn ($item) => [$item['id'] => $item['answer'] ?? null])->toArray());
+    } else {
+        $attempt->refreshProgress();
+    }
+
+    if (!$expired && $attempt->answered_percent < Quiz::REQUIRED_ANSWERED_PERCENT) {
         return response()->json([
-            'message' => __('You must answer all questions before submitting.'),
-            'missing_questions' => $missingWithCorrectAnswers,
+            'message' => __('You must answer at least :percent% of the questions before submitting.', ['percent' => Quiz::REQUIRED_ANSWERED_PERCENT]),
+            'answered_percent' => $attempt->answered_percent,
+            'required_percent' => Quiz::REQUIRED_ANSWERED_PERCENT,
         ], 422);
     }
 
-    $score = 0;
+    $attempt->finalize();
 
-    foreach ($attempt->quiz->questions as $question) {
-        $studentAnswer = $answersAssoc[$question->id] ?? null;
+    $totalPoints = (int) $attempt->quiz->questions()->sum('points');
 
-        // Validate multiple choice and true/false answers only if not null
-        if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-            $validAnswerIds = $question->answers->pluck('id')->toArray();
+    return $this->success($expired ? __('The quiz time has expired.') : __('Quiz submitted successfully'), [
+        'score' => $attempt->score,
+        'course_id' => $attempt->quiz?->course?->id,
+        'class_id' => $attempt->quiz?->class?->id,
+        'total_points' => $totalPoints,
+        'score_text' => "{$attempt->score}/{$totalPoints}",
+        'answered_percent' => $attempt->answered_percent,
+        'required_percent' => Quiz::REQUIRED_ANSWERED_PERCENT,
+        // false => the class is still locked (e.g. time ran out below the required %)
+        'class_unlocked' => $attempt->meetsRequiredPercent(),
+    ]);
+}
 
-            if ($studentAnswer !== null && !in_array($studentAnswer, $validAnswerIds)) {
-                return $this->failure(__("Invalid answer submitted for question ID {$question->id}."));
-            }
-        }
-
-        $attemptAnswer = new QuizAttemptAnswer([
-            'quiz_question_id' => $question->id,
-        ]);
-
-        if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-            if (is_numeric($studentAnswer)) {
-                $attemptAnswer->quiz_answer_id = $studentAnswer;
-                $answerText = $question->answers->firstWhere('id', $studentAnswer)?->answer_en;
-                if ($this->checkAnswer($question, $answerText)) {
-                    $score += $question->points;
-                }
-            }
-      } elseif ($question->type === 'short_answer') {
-            $attemptAnswer->answer_text = $studentAnswer;
-
-            $correctAnswer = $question->expected_answer;
-        if ($correctAnswer) {
-            $normalizedStudent = $this->normalizeAnswer($studentAnswer);
-            $normalizedCorrect = $this->normalizeAnswer($correctAnswer);
-
-            similar_text($normalizedStudent, $normalizedCorrect, $percent);
-
-            // dd($normalizedStudent, $normalizedCorrect, $percent);
-
-            if ($percent >= 90) {
-                $score += $question->points;
-            }
-
-                $attemptAnswer->answer_percent=$percent;
-            }
-        }
-
-
-        $attempt->answers()->save($attemptAnswer);
+private function findOwnedAttempt($quizAttemptId): ?QuizAttempt
+{
+    $attempt = QuizAttempt::with('quiz')->find($quizAttemptId);
+    if (!$attempt || $attempt->student_id != auth()->id()) {
+        return null;
     }
-    $totalPoints = $attempt->quiz->questions->sum('points');
 
-    $attempt->submitted_at = now();
-    $attempt->score = $score;
-    $attempt->save();
-
-        // Prepare score text like "earnedPoints/totalPoints"
-        $scoreText = "{$score}/{$totalPoints}";
-
-        return $this->success(__('Quiz submitted successfully'), [
-            'score' => $score,
-             'course_id'=>$attempt->quiz?$attempt->quiz?->course->id:null,
-            'class_id'=>$attempt->quiz?$attempt->quiz?->class?->id:null,
-
-            'total_points' => $totalPoints,
-            'score_text' => $scoreText,
-        ]);
+    return $attempt;
 }
 
 

@@ -61,4 +61,39 @@ class Quiz extends Model
         return $this->questions->sum('points');
     }
 
+    // Minimum % of questions a student must answer (and submit) before a quiz-required class unlocks
+    public const REQUIRED_ANSWERED_PERCENT = 75;
+
+    /**
+     * Where the student stands with this quiz:
+     *  - passed:          a submitted attempt answered >= REQUIRED_ANSWERED_PERCENT
+     *  - open_attempt:    an unfinished attempt the student should continue (null if none)
+     *  - limit_reached:   no attempts left and nothing open to continue
+     */
+    public function accessStatusFor($studentId): array
+    {
+        $status = ['passed' => false, 'open_attempt' => null, 'limit_reached' => false];
+        if (!$studentId) {
+            return $status;
+        }
+
+        $attempts = $this->attempts()->where('student_id', $studentId)->get();
+
+        // Time ran out on an open attempt: grade what was saved so it counts as a normal submission
+        foreach ($attempts as $attempt) {
+            if (!$attempt->isSubmitted() && $attempt->isExpired()) {
+                $attempt->setRelation('quiz', $this);
+                $attempt->finalize();
+            }
+        }
+
+        $status['passed'] = $attempts->contains(fn ($a) => $a->meetsRequiredPercent());
+        $status['open_attempt'] = $attempts->first(fn ($a) => !$a->isSubmitted());
+        $status['limit_reached'] = !$status['open_attempt']
+            && $this->attempt_count !== null
+            && $attempts->count() >= $this->attempt_count;
+
+        return $status;
+    }
+
 }

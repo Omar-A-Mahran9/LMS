@@ -144,6 +144,7 @@ Route::middleware(['optional.auth'])->group(function () {
     Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
     Route::get('quiz/{id}', 'CourseController@getQuizById');
     Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);
+    Route::post('student-quizzes/{quizAttemptId}/save', [StudentQuizController::class, 'saveProgress']);
     Route::post('student-quizzes/{quizAttemptId}/submit', [StudentQuizController::class, 'submitQuiz']);
     Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
 });
