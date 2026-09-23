@@ -28,6 +28,8 @@ class QuestionResource extends JsonResource
 
             'expected_answer' => $this->expected_answer,  // might be NULL for multiple_choice/true_false
             'type' => $this->type,
+            // > 1 => the student can pick this many options
+            'max_selections' => $this->maxSelections(),
             'points' => $this->points,
         ];
     }

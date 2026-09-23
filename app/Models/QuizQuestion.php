@@ -30,6 +30,26 @@ class QuizQuestion extends Model
     {
         return $this->hasMany(QuizAnswer::class, 'quiz_question_id');
     }
+    // How many options the student may pick: a multiple choice question with several
+    // correct answers (set in the dashboard) allows picking that many
+    public function maxSelections(): int
+    {
+        if ($this->type !== 'multiple_choice') {
+            return 1;
+        }
+
+        return max(1, $this->answers->where('is_correct', 1)->count());
+    }
+
+    // Right only when the picked options are exactly the correct ones
+    public function isCorrectSelection(array $selectedIds): bool
+    {
+        $correctIds = $this->answers->where('is_correct', 1)->pluck('id')->map(fn ($id) => (int) $id)->sort()->values()->all();
+        $selectedIds = collect($selectedIds)->map(fn ($id) => (int) $id)->unique()->sort()->values()->all();
+
+        return !empty($selectedIds) && $selectedIds === $correctIds;
+    }
+
     public function readingPassage()
     {
         return $this->belongsTo(ReadingPassage::class);

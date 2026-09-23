@@ -23,6 +23,7 @@ use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\CourseVideo;
 use App\Models\Government;
+use App\Models\QuizAttempt;
 use App\Models\Student_rate;
  use App\Models\NewsLetter;
 
@@ -35,100 +36,121 @@ class HomeController extends Controller
 {
 public function topHeroesByCategory(Request $request)
 {
-    $categoryId = $request->get('category_id');
-    $classId = $request->get('class_id');
-    $quizId = $request->get('quiz_id');
+    $categoryId = $request->integer('category_id') ?: null;
+    $classId = $request->integer('class_id') ?: null;
+    $quizId = $request->integer('quiz_id') ?: null;
+    $limit = 10;
 
     $category = Category::where('is_publish', 1)
-        ->whereNull('parent_id')
         ->when($categoryId, fn($q) => $q->where('id', $categoryId))
-        ->with([
-            'courses.classes.quizzes.attempts.student',
-            'courses.classes.quizzes.questions'
-        ])
         ->first();
 
-    if (!$category) {
-        return $this->failure('Category not found');
-    }
+    $topStudents = collect();
 
-    $studentStats = [];
+    // 1) كويزات كورسات الصف (المرتبطة بالكورس مباشرة أو عن طريق الحصص)
+    if ($category) {
+        $courseIds = $category->courses()->pluck('id');
 
-    foreach ($category->courses as $course) {
-        foreach ($course->classes as $class) {
+        $topStudents = $this->rankHeroes(
+            QuizAttempt::whereHas('quiz', function ($q) use ($courseIds, $classId, $quizId) {
+                $q->where(function ($q) use ($courseIds) {
+                    $q->whereIn('course_id', $courseIds)
+                        ->orWhereHas('class', fn($c) => $c->whereIn('course_id', $courseIds));
+                })
+                    ->when($classId, fn($q) => $q->where('class_id', $classId))
+                    ->when($quizId, fn($q) => $q->where('id', $quizId));
+            }),
+            $limit
+        );
 
-            // تصفية حسب الكلاس
-            if ($classId && $class->id != $classId) {
-                continue;
-            }
-
-            foreach ($class->quizzes as $quiz) {
-
-                // تصفية حسب الكويز
-                if ($quizId && $quiz->id != $quizId) {
-                    continue;
-                }
-
-                $quizFullMark = $quiz->questions->sum('points') ?? 100;
-
-                // أخذ أفضل محاولة لكل طالب
-                $bestAttempts = $quiz->attempts
-                    ->groupBy('student_id')
-                    ->map(fn($attempts) => $attempts->sortByDesc('score')->first());
-
-                foreach ($bestAttempts as $attempt) {
-                    $student = $attempt->student;
-                    if (!$student) continue;
-
-                    // تجاهل بيانات الاختبار
-                    if (
-                        str_contains(strtolower($student->first_name), 'test') ||
-                        str_contains(strtolower($student->last_name), 'test') ||
-                        str_contains(strtolower($student->email ?? ''), 'test')
-                    ) {
-                        continue;
-                    }
-
-                    $studentId = $student->id;
-
-                    if (!isset($studentStats[$studentId])) {
-                        $studentStats[$studentId] = [
-                            'total_score' => 0,
-                            'total_possible' => 0,
-                            'attempts' => 0,
-                            'student' => $student,
-                        ];
-                    }
-
-                    $studentStats[$studentId]['total_score'] += $attempt->score;
-                    $studentStats[$studentId]['total_possible'] = $quizFullMark;
-                    $studentStats[$studentId]['attempts'] += 1;
-                }
-            }
+        // 2) لو مفيش: كل كويزات طلاب الصف ده
+        if ($topStudents->isEmpty()) {
+            $topStudents = $this->rankHeroes(
+                QuizAttempt::whereHas('student', fn($q) => $q->where('category_id', $category->id)),
+                $limit
+            );
         }
     }
 
-    $topStudents = collect($studentStats)
-    ->filter(fn($data) => $data['attempts'] > 0 && $data['total_score'] == $data['total_possible'])
-    ->sortByDesc(fn($data) => $data['total_score']) // Sort by highest score
-    ->values()
-    ->map(function ($item) {
-        return [
-            'student_id' => $item['student']->id,
-            'name' => $item['student']->first_name . " " . $item['student']->last_name,
-            'image' => $item['student']->full_image_path,
-            'category' => $item['student']->category->name ?? 'N/A',
-            'attempts' => $item['attempts'],
-            'average_score' => $item['total_possible'], // Consider renaming if this isn't the average
-            'full_score' => $item['total_score'],
-        ];
-    });
-
+    // 3) لو لسه مفيش: الأوائل على مستوى المنصة كلها
+    if ($topStudents->isEmpty()) {
+        $topStudents = $this->rankHeroes(QuizAttempt::query(), $limit);
+    }
 
     return $this->success('', [
         'image' => getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
         'topStudents' => $topStudents,
     ]);
+}
+
+/**
+ * ترتيب الطلاب: أفضل محاولة لكل طالب في كل كويز، ثم مجموع الدرجات / مجموع الدرجات النهائية
+ * والترتيب بالنسبة المئوية ثم مجموع الدرجات.
+ */
+protected function rankHeroes($attemptsQuery, int $limit = 10)
+{
+    $attempts = $attemptsQuery
+        ->whereNotNull('score')
+        ->with([
+            'student.category',
+            'quiz' => fn($q) => $q->withSum('questions as full_mark', 'points'),
+        ])
+        ->get()
+        ->filter(fn($attempt) => $attempt->student && $attempt->quiz && !$this->isTestStudent($attempt->student));
+
+    $stats = $attempts
+        ->groupBy('student_id')
+        ->map(function ($studentAttempts) {
+            $student = $studentAttempts->first()->student;
+            $score = 0;
+            $possible = 0;
+
+            foreach ($studentAttempts->groupBy('quiz_id') as $quizAttempts) {
+                $best = $quizAttempts->sortByDesc('score')->first();
+                $score += (int) $best->score;
+                // لو الكويز مفيهوش درجات للأسئلة، نعتبر الدرجة النهائية = درجة الطالب عشان منقسمش على صفر
+                $possible += max((int) $best->quiz->full_mark, (int) $best->score);
+            }
+
+            return [
+                'student' => $student,
+                'score' => $score,
+                'full_score' => $possible,
+                'percentage' => $possible > 0 ? round($score / $possible * 100, 2) : 0,
+                'quizzes_count' => $studentAttempts->pluck('quiz_id')->unique()->count(),
+                'attempts' => $studentAttempts->count(),
+            ];
+        });
+
+    // عشان طالب حل كويز واحد بس ميسبقش طالب حل كويزات كتير بنسبة عالية:
+    // اللي حل على الأقل نص عدد كويزات أكتر طالب بيتقدم الأول
+    $minQuizzes = max(1, (int) ceil($stats->max('quizzes_count') / 2));
+
+    return $stats
+        ->sort(fn($a, $b) => [$b['quizzes_count'] >= $minQuizzes, $b['percentage'], $b['score']]
+            <=> [$a['quizzes_count'] >= $minQuizzes, $a['percentage'], $a['score']])
+        ->take($limit)
+        ->values()
+        ->map(fn($item, $index) => [
+            'rank' => $index + 1,
+            'student_id' => $item['student']->id,
+            'name' => trim($item['student']->first_name . ' ' . $item['student']->last_name),
+            'image' => $item['student']->full_image_path,
+            'category' => $item['student']->category->name ?? 'N/A',
+            'attempts' => $item['attempts'],
+            'quizzes_count' => $item['quizzes_count'],
+            'score' => $item['score'],
+            'average_score' => $item['score'], // kept for older clients
+            'full_score' => $item['full_score'],
+            'percentage' => $item['percentage'],
+        ]);
+}
+
+protected function isTestStudent($student): bool
+{
+    return str_contains(strtolower($student->first_name ?? ''), 'test')
+        || str_contains(strtolower($student->last_name ?? ''), 'test')
+        || str_contains(strtolower($student->email ?? ''), 'test');
 }
 
 

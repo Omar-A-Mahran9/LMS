@@ -92,12 +92,10 @@ if ($code) {
             'student_id' => $studentId,
             'started_at' => $attempt->started_at->format('H:i:s'),
             'remaining_seconds' => $attempt->remainingSeconds(),
-            'answered_percent' => $attempt->answered_percent,
-            'required_percent' => Quiz::REQUIRED_ANSWERED_PERCENT,
             // Previously saved answers so the student continues where they stopped
             'saved_answers' => $attempt->answers()->get()->map(fn ($a) => [
                 'id' => $a->quiz_question_id,
-                'answer' => $a->quiz_answer_id ?? $a->answer_text,
+                'answer' => $a->selected_answer_ids ?: ($a->quiz_answer_id ?? $a->answer_text),
             ])->values(),
         ],
         'quiz' => new QuizResource($quiz),
@@ -130,11 +128,7 @@ public function saveProgress(Request $request, $quizAttemptId)
 
     $attempt->storeAnswers(collect($data['answers'])->mapWithKeys(fn ($item) => [$item['id'] => $item['answer'] ?? null])->toArray());
 
-    return $this->success('', [
-        'answered_count' => $attempt->answered_count,
-        'answered_percent' => $attempt->answered_percent,
-        'required_percent' => Quiz::REQUIRED_ANSWERED_PERCENT,
-    ]);
+    return $this->success('');
 }
 
 
@@ -173,9 +167,8 @@ public function submitQuiz(Request $request, $quizAttemptId)
 
     if (!$expired && $attempt->answered_percent < Quiz::REQUIRED_ANSWERED_PERCENT) {
         return response()->json([
-            'message' => __('You must answer at least :percent% of the questions before submitting.', ['percent' => Quiz::REQUIRED_ANSWERED_PERCENT]),
-            'answered_percent' => $attempt->answered_percent,
-            'required_percent' => Quiz::REQUIRED_ANSWERED_PERCENT,
+            // The required % stays internal: never sent to the student
+            'message' => __('You must answer more questions before submitting.'),
         ], 422);
     }
 
@@ -189,8 +182,6 @@ public function submitQuiz(Request $request, $quizAttemptId)
         'class_id' => $attempt->quiz?->class?->id,
         'total_points' => $totalPoints,
         'score_text' => "{$attempt->score}/{$totalPoints}",
-        'answered_percent' => $attempt->answered_percent,
-        'required_percent' => Quiz::REQUIRED_ANSWERED_PERCENT,
         // false => the class is still locked (e.g. time ran out below the required %)
         'class_unlocked' => $attempt->meetsRequiredPercent(),
     ]);
@@ -271,13 +262,14 @@ $studentId = auth()->id();
 
             $studentAnswer = null;
             $isCorrect = false;
+            $selectedIds = [];
 
             if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-                $selectedId = $attemptAnswer?->quiz_answer_id;
+                $selectedIds = $attemptAnswer?->selectedIds() ?? [];
 
-                if ($attemptAnswer?->quiz_answer_id) {
+                if ($selectedIds) {
                     // Find the selected answer object for student answer
-                    $selectedAnswer = $question->answers->firstWhere('id', $attemptAnswer->quiz_answer_id);
+                    $selectedAnswer = $question->answers->firstWhere('id', $selectedIds[0]);
                     if ($selectedAnswer) {
                         $studentAnswer = [
                             'id' => $selectedAnswer->id,
@@ -286,10 +278,8 @@ $studentId = auth()->id();
                     }
                 }
 
-                // Check if student's selected answer id is in correct answers
-                $isCorrect = $correctAnswers && collect($correctAnswers)
-                    ->pluck('id')
-                    ->contains($attemptAnswer?->quiz_answer_id);
+                // Right only when exactly the correct option(s) were picked
+                $isCorrect = $question->isCorrectSelection($selectedIds);
             } elseif ($question->type === 'short_answer') {
                 // For short answer, student_answer is the text typed, with id null
                 $studentAnswerText = $attemptAnswer?->answer_text ?? null;
@@ -320,14 +310,14 @@ $studentId = auth()->id();
             $results[] = [
                 'question_id'      => $question->id,
                 'question_type'      => $question->type,
-                'answer_percent' => round($attemptAnswer->answer_percent) . '%',
+                'answer_percent' => round((float) $attemptAnswer?->answer_percent) . '%',
 
                 'question'         => $question->question,
                 'question_answers' => $question->answers->map(fn($ans) => [
                                                 'id' => $ans->id,
                                                 'answer' => $ans->answer_en,
                                                 'is_correct' => (bool) $ans->is_correct, // optional
-                                                'is_selected'=> $ans->id === $selectedId,
+                                                'is_selected'=> in_array($ans->id, $selectedIds),
 
                                             ])->values()->toArray(),
                 'student_answer'   => $studentAnswer,

@@ -84,11 +84,20 @@ class QuizAttempt extends Model
                 continue;
             }
 
-            $data = ['quiz_answer_id' => null, 'answer_text' => null, 'answer_percent' => null];
+            $data = ['quiz_answer_id' => null, 'selected_answer_ids' => null, 'answer_text' => null, 'answer_percent' => null];
 
             if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-                if (is_numeric($value) && $question->answers->contains('id', (int) $value)) {
-                    $data['quiz_answer_id'] = (int) $value;
+                // A single id, or a list of ids for questions with several correct answers
+                $ids = collect(is_array($value) ? $value : [$value])
+                    ->filter(fn ($id) => is_numeric($id) && $question->answers->contains('id', (int) $id))
+                    ->map(fn ($id) => (int) $id)
+                    ->unique()
+                    ->take($question->maxSelections())
+                    ->values();
+
+                if ($ids->isNotEmpty()) {
+                    $data['quiz_answer_id'] = $ids->first();
+                    $data['selected_answer_ids'] = $question->maxSelections() > 1 ? $ids->all() : null;
                 }
             } elseif ($question->type === 'short_answer') {
                 $data['answer_text'] = is_string($value) && trim($value) !== '' ? $value : null;
@@ -135,7 +144,7 @@ class QuizAttempt extends Model
             }
 
             if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-                if ($saved->quiz_answer_id && $question->answers->where('is_correct', 1)->contains('id', $saved->quiz_answer_id)) {
+                if ($question->isCorrectSelection($saved->selectedIds())) {
                     $score += $question->points;
                 }
             } elseif ($question->type === 'short_answer' && $question->expected_answer) {

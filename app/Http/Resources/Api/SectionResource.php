@@ -80,8 +80,6 @@ class SectionResource extends JsonResource
             'has_homeworks'  => (!$homeworkAttemptLimitReached && $this->homeworks()->exists() && $activeHomework && $activeHomework->questions()->exists()) ? true : false,
             'quiz_required'  => (!$quizAttemptLimitReached && !$quizPassed && $activeQuiz && $activeQuiz->questions()->exists()) ? $this->quiz_required : 0,
             'quiz_in_progress'        => (bool) $openQuizAttempt,
-            'quiz_answered_percent'   => $openQuizAttempt?->answered_percent ?? 0,
-            'quiz_required_percent'   => \App\Models\Quiz::REQUIRED_ANSWERED_PERCENT,
 
             // IDs and attempts
             'quiz_id'            => !$quizAttemptLimitReached ? $activeQuiz?->id : null,

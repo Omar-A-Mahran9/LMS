@@ -120,8 +120,6 @@ class ClassDetailsResource extends JsonResource
             'quiz_required'  => (!$quizAttemptLimitReached && !$quizPassed && $activeQuiz && $activeQuiz->questions()->exists()&& auth('api')->check()) ? $this->quiz_required : 0,
             // Student opened the quiz before without finishing it => show "continue the exam"
             'quiz_in_progress'        => (bool) $openQuizAttempt,
-            'quiz_answered_percent'   => $openQuizAttempt?->answered_percent ?? 0,
-            'quiz_required_percent'   => \App\Models\Quiz::REQUIRED_ANSWERED_PERCENT,
         // 'quiz_required' => (
         //     !$quizAttemptLimitReached &&
         //     !$hasAttemptedQuiz &&
