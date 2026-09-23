@@ -34,6 +34,17 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+// الموسم الدراسي بيبدأ في شهر يوليو (أول ما الكورسات بتبدأ)، والأبطال بيتصفروا مع بداية كل موسم
+protected const ACADEMIC_YEAR_START_MONTH = 7;
+
+// بداية الموسم الحالي: لو إحنا قبل يوليو يبقى الموسم بدأ يوليو السنة اللي فاتت
+protected function academicYearStart(): Carbon
+{
+    $start = now()->startOfYear()->month(self::ACADEMIC_YEAR_START_MONTH);
+
+    return $start->isFuture() ? $start->subYear() : $start;
+}
+
 public function topHeroesByCategory(Request $request)
 {
     $categoryId = $request->integer('category_id') ?: null;
@@ -77,8 +88,11 @@ public function topHeroesByCategory(Request $request)
         $topStudents = $this->rankHeroes(QuizAttempt::query(), $limit);
     }
 
+    $yearStart = $this->academicYearStart();
+
     return $this->success('', [
         'image' => getImagePathFromDirectory(setting('contact_banner'), 'Settings'),
+        'academic_year' => $yearStart->year . '/' . ($yearStart->year + 1),
         'topStudents' => $topStudents,
     ]);
 }
@@ -89,8 +103,10 @@ public function topHeroesByCategory(Request $request)
  */
 protected function rankHeroes($attemptsQuery, int $limit = 10)
 {
+    // طلبة الموسم الحالي بس: امتحانات السنة اللي فاتت متتحسبش
     $attempts = $attemptsQuery
         ->whereNotNull('score')
+        ->where('created_at', '>=', $this->academicYearStart())
         ->with([
             'student.category',
             'quiz' => fn($q) => $q->withSum('questions as full_mark', 'points'),
