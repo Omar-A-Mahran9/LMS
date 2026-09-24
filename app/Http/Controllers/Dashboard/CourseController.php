@@ -64,6 +64,8 @@ class CourseController extends Controller
     }
     public function updateStatus(Request $request, Course $course)
     {
+        $this->authorize('update_courses');
+
         $request->validate([
             'is_active' => ['required', 'boolean'],
         ]);
@@ -228,8 +230,8 @@ class CourseController extends Controller
 
     public function destroy($id)
     {
-        $course = Course::find($id);
         $this->authorize('delete_courses');
+        $course = Course::findOrFail($id);
         $course->delete();
         return response(["Course deleted successfully"]);
 

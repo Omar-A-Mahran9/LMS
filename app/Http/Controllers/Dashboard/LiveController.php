@@ -46,7 +46,7 @@ class LiveController extends Controller
 
   public function update(UpdateLiveRequest $request,  $id)
 {
-    $live=Live::find($id);
+    $live=Live::findOrFail($id);
     $this->authorize('update_lives');
 
     $validated = $request->validated();
@@ -73,11 +73,14 @@ class LiveController extends Controller
     {
         $this->authorize('view_lives');
 
-        $live = Live::with(['course:id,title_en,title_ar', 'class:id,title_en,title_ar'])->findOrFail($id);
-        $courses = Course::select('id', 'title_en', 'title_ar')->get();
-        $classes = CourseClass::select('id', 'title_en', 'title_ar')->get();
+        $live = Live::findOrFail($id);
 
-        return view('dashboard.lives.show', compact('live', 'courses', 'classes'));
+        // The live's content (quizzes, homework, videos) is managed from its class page
+        if ($live->class_id) {
+            return redirect()->route('dashboard.classes.show', $live->class_id);
+        }
+
+        return redirect()->route('dashboard.lives.index');
     }
 
     public function destroy($id)

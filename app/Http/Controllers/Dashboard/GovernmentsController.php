@@ -25,6 +25,7 @@ class GovernmentsController extends Controller
 
     public function store(StoreGovernmentsRequest $request)
     {
+        $this->authorize('create_governments');
         $data = $request->validated();
         Government::create($data);
 
@@ -33,6 +34,7 @@ class GovernmentsController extends Controller
 
     public function update(UpdateGovernmentsRequest $request, Government $government)
     {
+        $this->authorize('update_governments');
         $data = $request->validated();
         $government->update($data);
 

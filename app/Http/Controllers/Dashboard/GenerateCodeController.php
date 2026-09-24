@@ -30,6 +30,8 @@ class GenerateCodeController extends Controller
 
 public function store(Request $request)
 {
+    $this->authorize('create_generateCode');
+
     $request->validate([
         'class_id'    => 'required|exists:classes,id',
         'code'        => 'nullable|string|unique:class_access_codes,code',
@@ -73,16 +75,32 @@ public function store(Request $request)
         }
     }
 
-
+    return response()->json([
+        'status'  => true,
+        'message' => __('Codes generated successfully'),
+        'count'   => count($codes),
+    ]);
 }
 public function exportPDF(Request $request)
 {
+    $this->authorize('view_generateCode');
+
     $classId = $request->get('class_id');
 
     $query = ClassAccessCode::with('class')->where('is_active', 1);
 
     if ($classId) {
         $query->where('class_id', $classId);
+    }
+
+    // A PDF of thousands of codes runs the server out of memory: ask for a class first
+    if (!$classId && $query->count() > 1000) {
+        return response(
+            '<div dir="rtl" style="font-family:Tahoma,Arial;padding:40px;text-align:center">'
+            . '<h3>' . e(__('There are too many codes to export at once. Choose a class first, then export.')) . '</h3>'
+            . '<a href="javascript:window.close()">' . e(__('Close')) . '</a></div>',
+            422
+        );
     }
 
     $codes = $query->get();
@@ -94,6 +112,8 @@ public function exportPDF(Request $request)
 
 public function update(Request $request, ClassAccessCode $generateCode)
 {
+    $this->authorize('update_generateCode');
+
     $request->validate([
         'class_id'    => 'required|exists:classes,id',
         'code'        => 'nullable|string|unique:class_access_codes,code,' . $generateCode->id,
@@ -120,6 +140,8 @@ public function update(Request $request, ClassAccessCode $generateCode)
 
     public function destroy(ClassAccessCode $generateCode)
     {
+        $this->authorize('delete_generateCode');
+
         $generateCode->delete();
 
         return response()->json(['status' => true, 'message' => 'تم حذف الكود بنجاح.']);
@@ -128,6 +150,8 @@ public function update(Request $request, ClassAccessCode $generateCode)
 
 public function show(ClassAccessCode $generateCode)
 {
+    $this->authorize('show_generateCode');
+
     $generateCode->load(['class', 'logs.student']);
 
     return view('dashboard.codes.show', [

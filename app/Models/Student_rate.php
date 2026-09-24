@@ -36,6 +36,11 @@ class Student_rate extends Model
     }
     public function getFullImagePathAttribute()
     {
+        // The dashboard uploads rating images to Images/Customers; older ones may be under Students
+        if ($this->image && file_exists(public_path("storage/Images/Customers/{$this->image}"))) {
+            return getImagePathFromDirectory($this->image, 'Customer', 'default.svg');
+        }
+
         return getImagePathFromDirectory($this->image, 'Students', 'default.svg');
     }
     public function getAudioFullPathAttribute()

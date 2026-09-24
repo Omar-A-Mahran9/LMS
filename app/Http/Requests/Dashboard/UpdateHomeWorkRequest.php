@@ -26,8 +26,6 @@ class UpdateHomeWorkRequest extends FormRequest
      */
     public function rules()
     {
-  $homework = request()->route('homework');
-     // Manually resolve the CourseVideo model
    return [
          'course_id' => 'required|exists:courses,id',
         'course_section_id' => 'nullable|exists:course_sections,id',
@@ -41,13 +39,11 @@ class UpdateHomeWorkRequest extends FormRequest
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('course_videos', 'title_ar')->ignore($homework->id)
         ],
         'title_en' => [
             'required',
             'max:255',
             new NotNumbersOnly(),
-            Rule::unique('course_videos', 'title_en')->ignore($homework->id)
         ],
 
     'description_ar' => ['required', new NotNumbersOnly()],

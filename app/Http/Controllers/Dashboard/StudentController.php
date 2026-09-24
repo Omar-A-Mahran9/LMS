@@ -135,24 +135,20 @@ class StudentController extends Controller
 
     public function blocked(Request $request, Student $student)
     {
-        // $this->authorize('delete_students');
-        if ($student->block_flag === 0) {
-            $student->update([
-                'block_flag' => true
-            ]);
-            return response(["Student blocked successfully"]);
-        }
-        if ($student->block_flag === 1) {
-            $student->update([
-                'block_flag' => false
-            ]);
-            return response(["Student un blocked successfully"]);
-        }
+        $this->authorize('block_students');
+
+        // block_flag isn't cast, so it can come back as "0"/"1" strings: compare loosely
+        $blocked = !(bool) $student->block_flag;
+        $student->update(['block_flag' => $blocked]);
+
+        return response([$blocked ? "Student blocked successfully" : "Student un blocked successfully"]);
     }
 
 
     public function reportPdf(Student $student)
     {
+        $this->authorize('view_students');
+
         $student->load([
             'government',
             'category',

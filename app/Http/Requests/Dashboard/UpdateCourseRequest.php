@@ -57,7 +57,7 @@ class UpdateCourseRequest extends FormRequest
     'video_url' => ['nullable', 'url'],
 
     // SEO
-    'slug' => ['nullable', 'alpha_dash', 'unique:courses,slug'],
+    'slug' => ['nullable', 'alpha_dash', Rule::unique('courses', 'slug')->ignore($course instanceof \App\Models\Course ? $course->id : $course)],
     'meta_title' => ['nullable', 'string', 'max:255'],
     'meta_description' => ['nullable', 'string'],
 

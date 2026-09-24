@@ -12,10 +12,13 @@ use App\Models\CourseSection;
 use App\Models\HomeWork;
 
 use App\Models\HomeWorkQuestion;
+use App\Traits\SyncsQuestionAnswers;
 use Illuminate\Http\Request;
 
 class HomeWorkQuestionController extends Controller
 {
+    use SyncsQuestionAnswers;
+
    public function index(Request $request)
     {
         $this->authorize('view_homework');
@@ -109,7 +112,7 @@ class HomeWorkQuestionController extends Controller
 public function update(UpdateQuestionHomeWorkRequest $request, $id)
 {
     $this->authorize('update_homework');
-        $question=HomeWorkQuestion::find($id);
+        $question=HomeWorkQuestion::findOrFail($id);
 
     // Update base fields
     $question->update([
@@ -120,37 +123,15 @@ public function update(UpdateQuestionHomeWorkRequest $request, $id)
         'points'      => $request->points ?? 1,
     ]);
 
-    // Delete old answers
-    $question->answers()->delete();
+    $this->syncQuestionAnswers($question, $request);
 
-    // Handle each type
-    if ($request->type === 'multiple_choice') {
-        foreach ($request->answers as $answerData) {
-            $question->answers()->create([
-                'answer_ar'  => $answerData['text_ar'],
-                'answer_en'  => $answerData['text_en'],
-                'is_correct' => isset($answerData['is_correct']) && $answerData['is_correct'],
-            ]);
-        }
-    } elseif ($request->type === 'true_false') {
-        $correct = $request->correct_tf === 'true';
-
-        $question->answers()->createMany([
-            ['answer_ar' => 'صحيح', 'answer_en' => 'True',  'is_correct' => $correct],
-            ['answer_ar' => 'خطأ',  'answer_en' => 'False', 'is_correct' => !$correct],
-        ]);
-    } elseif ($request->type === 'short_answer') {
-        $question->expected_answer = $request->short_answer;
-        $question->save(); // update expected_answer only
-    }
-
-
+    return response()->json(['message' => __('question updated successfully.')]);
 }
 
 
     public function destroy($id)
     {
-        $question=HomeWorkQuestion::find($id);
+        $question=HomeWorkQuestion::findOrFail($id);
         $this->authorize('delete_homework');
 
         $question->delete();

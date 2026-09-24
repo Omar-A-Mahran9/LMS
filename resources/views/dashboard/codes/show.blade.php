@@ -7,7 +7,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title">{{ __('Code') }}: <strong>{{ $code->code }}</strong></h5>
-                <p><strong>{{ __('Class') }}:</strong> {{ $code->class->title_ar ?? '-' }}</p>
+                <p><strong>{{ __('Class') }}:</strong> {{ $code->class->title_ar ?? $code->bundle->title_ar ?? '-' }}</p>
                 <p><strong>{{ __('Usage Limit') }}:</strong> {{ $code->usage_limit ?? __('Unlimited') }}</p>
                 <p><strong>{{ __('Used Count') }}:</strong> {{ $code->used_count }}</p>
                 <p><strong>{{ __('Single Use') }}:</strong> {{ $code->single_use ? __('Yes') : __('No') }}</p>

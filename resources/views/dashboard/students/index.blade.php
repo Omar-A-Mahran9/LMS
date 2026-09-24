@@ -80,6 +80,7 @@
                 </div>
                 <!--end::Search-->
                 <!--begin::Toolbar-->
+                @can('create_students')
                 <div class="d-flex justify-content-end" id="add_btn" data-bs-toggle="modal" data-bs-target="#crud_modal"
                     data-kt-docs-table-toolbar="base">
                     <!--begin::Add customer-->
@@ -95,9 +96,10 @@
                                     fill="currentColor"></rect>
                             </svg>
                         </span>
-                        <!--end::Svg Icon-->{{ __('Add customer') }}</button> -
+                        <!--end::Svg Icon-->{{ __('Add Student') }}</button>
                     <!--end::Add customer-->
                 </div>
+                @endcan
                 <!--end::Toolbar-->
                 <!--begin::Group actions-->
                 <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
@@ -149,7 +151,7 @@
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="form_title">{{ __('Add new customer') }}</h5>
+                        <h5 class="modal-title" id="form_title">{{ __('Add new student') }}</h5>
                         <!--begin::Close-->
                         <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                             aria-label="Close">
@@ -362,7 +364,7 @@
             $("#add_btn").click(function(e) {
                 e.preventDefault();
 
-                $("#form_title").text(__('Add new customer'));
+                $("#form_title").text(__('Add new student'));
                 $("[name='_method']").remove();
                 $("#crud_form").trigger('reset');
                 $("#crud_form").attr('action', `/dashboard/students`);

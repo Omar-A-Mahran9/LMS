@@ -1234,8 +1234,19 @@
         $(document).ready(function() {
 
             // دالة موحدة لتنظيف أي نموذج
+            // نحفظ رابط الإضافة الأصلي لكل فورم عشان بعد التعديل زرار الإضافة ميعدلش العنصر القديم
+            $('form.ajax-form').each(function() {
+                $(this).attr('data-store-action', $(this).attr('action'));
+            });
+
             function resetForm(formId, modalId) {
                 const $form = $(formId);
+
+                // رجوع الفورم لوضع الإضافة (إلغاء PUT ورابط التعديل)
+                $form.find('input[name="_method"]').remove();
+                if ($form.attr('data-store-action')) {
+                    $form.attr('action', $form.attr('data-store-action'));
+                }
 
                 // إعادة ضبط الحقول
                 $form[0].reset();

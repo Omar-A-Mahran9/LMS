@@ -32,6 +32,16 @@ class Live extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function class()
+    {
+        return $this->belongsTo(CourseClass::class, 'class_id');
+    }
+
     public function getTitleAttribute()
     {
         return app()->getLocale() === 'ar' ? $this->title_ar : $this->title_en;

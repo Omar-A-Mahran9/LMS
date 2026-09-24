@@ -62,7 +62,7 @@ public function update(UpdateCategoryRequest $request, $id)
     $type = $request->input('type');
     $data = $request->except('parent_id', 'category_type', 'type');
 
-    if ($request->has('image')) {
+    if ($request->hasFile('image')) {
         $data['image'] = uploadImageToDirectory($request->file('image'), "Categories");
     }
 
@@ -116,7 +116,7 @@ public function destroy(Request $request, $id)
     {
         $this->authorize('delete_categories');
 
-        CategorySubCategory::whereIn('id', $request->selected_items_ids)->delete();
+        Category::whereIn('id', $request->selected_items_ids)->delete();
 
         return response(["selected categories deleted successfully"]);
     }
@@ -125,7 +125,7 @@ public function destroy(Request $request, $id)
     {
         $this->authorize('delete_categories');
 
-        CategorySubCategory::withTrashed()->whereIn('id', $request->selected_items_ids)->restore();
+        Category::withTrashed()->whereIn('id', $request->selected_items_ids)->restore();
 
         return response(["selected categories restored successfully"]);
     }

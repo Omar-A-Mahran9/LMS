@@ -23,7 +23,7 @@ class StudentsRatesController extends Controller
          $count_Student_rate = Student_rate::count(); // Get the count of blogs
          $visited_site=10000;
          if ($request->ajax()){
-         $data = getModelData(model: new Student_rate(), relations: ['customer' => ['id', 'full_name']]);
+         $data = getModelData(model: new Student_rate(), relations: ['category' => ['id', 'name_ar', 'name_en']]);
 
             return response($data);
          }
@@ -66,8 +66,10 @@ class StudentsRatesController extends Controller
     }
 
 
-    public function update(Request $request, Student_rate $Student_rate)
+    public function update(Request $request, $students_rate)
     {
+        // the route parameter is {students_rate}, so implicit binding never matched $Student_rate
+        $Student_rate = Student_rate::findOrFail($students_rate);
         $this->authorize('update_students_rate');
 
         $data = $request->validate([
@@ -76,10 +78,18 @@ class StudentsRatesController extends Controller
             'rate'      => 'required|numeric|min:1|max:5',
             'status'    => 'required|in:pending,reject,approve',
             'category_id' => 'required|exists:categories,id',
-            'text'        => 'required_without:audio|string|max:2000',
-            'audio' => 'required_without:text|file|mimes:mp3,wav,ogg|max:10240',
+            'text'        => 'nullable|string|max:2000',
+            'audio' => 'nullable|file|mimes:mp3,wav,ogg|max:10240',
 
         ]);
+
+        // On edit, an already uploaded audio counts: only require text when there's no audio at all
+        if (empty($data['text']) && !$request->hasFile('audio') && !$Student_rate->audio) {
+            return response()->json([
+                'message' => __('The text field is required when audio is not present.'),
+                'errors'  => ['text' => [__('The text field is required when audio is not present.')]],
+            ], 422);
+        }
 
         // Replace image if uploaded
         if ($request->hasFile('image')) {
@@ -103,7 +113,7 @@ class StudentsRatesController extends Controller
 
     public function destroy( $students_rates)
     {
-         $customrRate=Student_rate::find($students_rates);
+         $customrRate=Student_rate::findOrFail($students_rates);
         $this->authorize('delete_students_rate');
 
         $customrRate->delete();

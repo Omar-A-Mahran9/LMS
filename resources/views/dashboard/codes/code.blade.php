@@ -64,7 +64,7 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $code->code }}</td>
                     <td>https://mohamed-elnagar.com/classes-by-code</td>
-                    <td>{{ $code->class->title_ar ?? '-' }}</td>
+                    <td>{{ $code->class->title_ar ?? $code->bundle->title_ar ?? '-' }}</td>
                     <td>{{ $code->usage_limit ?? 'غير محدود' }}</td>
                     <td>{{ $code->single_use ? 'نعم' : 'لا' }}</td>
                 </tr>

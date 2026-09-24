@@ -52,8 +52,15 @@ public function show($contact_id)
     }
 
 
+public function showReplyForm($id)
+{
+    return redirect()->route('dashboard.contact-requests.show', $id);
+}
+
 public function reply(Request $request, $id)
 {
+    $this->authorize('update_contact_us');
+
     $contact = Contact_us::findOrFail($id);
     // if audio uploaded
     if ($request->hasFile('reply')) {

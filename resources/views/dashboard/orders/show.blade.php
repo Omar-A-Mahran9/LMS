@@ -36,7 +36,7 @@
                                                     <i class="fa-regular fa-calendar fs-4 me-2"></i>{{ __('Created at') }}
                                                 </div>
                                             </td>
-                                            <td class="fw-bold text-end">{{ $order->created_at->format('d-m-Y') }}</td>
+                                            <td class="fw-bold text-end">{{ $order->created_at?->format('d-m-Y') }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-muted">
@@ -113,8 +113,8 @@
                                 <h2>{{ __('Book Details') }}</h2>
                             </div>
 
-                            @if ($order->book->attachment)
-                                <a href="{{ $order->book->full_attachment_path }}" target="_blank"
+                            @if ($order->book?->attachment)
+                                <a href="{{ $order->book?->full_attachment_path }}" target="_blank"
                                     class="btn btn-sm btn-primary">
                                     <i class="fa-solid fa-file-download me-1"></i>
                                     {{ __('Download Attachment') }}
@@ -129,7 +129,7 @@
                         <div class="row">
                             <!--begin::Image-->
                             <div class="col-md-2 text-start">
-                                <img src="{{ $order->book->full_image_path }}" alt="Book Image"
+                                <img src="{{ $order->book?->full_image_path }}" alt="Book Image"
                                     class="img-fluid rounded w-150px h-150px object-fit-cover" />
                             </div>
                             <!--end::Image-->
@@ -143,21 +143,21 @@
                                             <tbody class="fw-semibold text-gray-600">
                                                 <tr>
                                                     <td class="text-muted">{{ __('Title') }}</td>
-                                                    <td class="text-end text-dark">{{ $order->book->title_en }}</td>
+                                                    <td class="text-end text-dark">{{ $order->book?->title_en }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="text-muted">{{ __('Price') }}</td>
-                                                    <td class="text-end text-dark">{{ $order->book->price }}
+                                                    <td class="text-end text-dark">{{ $order->book?->price }}
                                                         {{ __('SAR') }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="text-muted">{{ __('Created At') }}</td>
                                                     <td class="text-end text-dark">
-                                                        {{ $order->book->created_at->format('Y-m-d') }}</td>
+                                                        {{ $order->book?->created_at?->format('Y-m-d') }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="text-muted">{{ __('Description') }}</td>
-                                                    <td class="text-end text-dark">{!! $order->book->description_en !!}</td>
+                                                    <td class="text-end text-dark">{!! $order->book?->description_en !!}</td>
                                                 </tr>
 
                                             </tbody>

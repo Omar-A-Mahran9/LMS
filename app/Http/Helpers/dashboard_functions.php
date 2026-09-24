@@ -265,16 +265,15 @@ if (!function_exists('getClassIfUrlContains')) {
 if (!function_exists('abilities')) {
     function abilities()
     {
-        if (is_null(cache()->get('abilities'))) {
-            $abilities = Cache::remember('abilities', 60, function () {
-                return auth('admin')->user()->abilities();
-            });
-        } else {
-            $abilities = cache()->get('abilities');
+        $admin = auth('admin')->user();
+
+        if (!$admin) {
+            return collect();
         }
 
-
-        return $abilities;
+        // Cached per admin: a single shared key made every admin get the permissions
+        // of whoever was cached first for 60 seconds.
+        return Cache::remember('abilities_' . $admin->id, 60, fn () => $admin->abilities());
     }
 }
 

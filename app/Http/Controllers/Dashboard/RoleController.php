@@ -35,6 +35,8 @@ class RoleController extends Controller
 
     public function admins(Role $role, Request $request)
     {
+        $this->authorize('show_roles');
+
         $role->load('admins:id,name,email,phone,image,created_at');
 
         $adminsCount = $role->admins->count();
@@ -77,8 +79,8 @@ class RoleController extends Controller
         $this->authorize('update_roles');
 
         $data = $request->validate([
-            "name_ar" => ['required', 'string', 'max:255', 'unique:roles,id,' . $role['id'], new NotNumbersOnly()],
-            "name_en" => ['required', 'string', 'max:255', 'unique:roles,id,' . $role['id'], new NotNumbersOnly()],
+            "name_ar" => ['required', 'string', 'max:255', 'unique:roles,name_ar,' . $role['id'], new NotNumbersOnly()],
+            "name_en" => ['required', 'string', 'max:255', 'unique:roles,name_en,' . $role['id'], new NotNumbersOnly()],
             'abilities' => ['required', 'array', 'min:1'],
         ]);
 
@@ -94,6 +96,8 @@ class RoleController extends Controller
 
     public function destroy(Request $request, Role $role)
     {
+        $this->authorize('delete_roles');
+
         if ($request->ajax() && ($role->id !== 1 && $role->id !== 2))
             $role->delete();
     }

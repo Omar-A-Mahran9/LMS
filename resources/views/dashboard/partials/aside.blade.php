@@ -92,10 +92,10 @@
                 @endcan
     @can('view_books')
                     <x-dashboard.aside-item :slug="'books'" :route="route('dashboard.books.index')" :title="__('Books')">
-                        <i class="fas fa-tv fs-2"></i>
+                        <i class="fas fa-book fs-2"></i>
                     </x-dashboard.aside-item>
                 @endcan
-                @can('view_questions')
+                @can('view_classes')
                     <x-dashboard.aside-item :slug="'classes'" :route="route('dashboard.classes.index')" :title="__('Classes')">
                         <i class="fas fa-school fs-2"></i>
                     </x-dashboard.aside-item>
@@ -133,13 +133,11 @@
                 @endcan
 
                 {{-- Bundles --}}
-                {{-- @can('view_bundle') --}}
-                <x-dashboard.aside-item :slug="'bundles'" :route="route('dashboard.bundles.index')" :title="__('Bundles')">
-
-                    <i class="ki-outline ki-package fs-2"></i>
-
-                </x-dashboard.aside-item>
-                {{-- @endcan --}}
+                @can('view_bundle')
+                    <x-dashboard.aside-item :slug="'bundles'" :route="route('dashboard.bundles.index')" :title="__('Bundles')">
+                        <i class="ki-outline ki-package fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
 
                 @can('view_orders')
                     <x-dashboard.aside-item :slug="'orders'" :route="route('dashboard.orders.index')" :title="__('Orders')">

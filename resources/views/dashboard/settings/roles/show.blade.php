@@ -149,7 +149,7 @@
                                     <!--begin::Wrapper-->
                                 </div>
                                 @endforelse
-                                {{ $admins->links('vendor.pagination.bootstrap-5') }}
+                                {{ $admins->links('pagination::bootstrap-5') }}
                                 <!-- end   :: Datatable -->
                             </div>
                         <!--end::Card body-->

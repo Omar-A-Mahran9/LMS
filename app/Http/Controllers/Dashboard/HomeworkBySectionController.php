@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreQuizRequest;
-use App\Http\Requests\Dashboard\UpdateQuizRequest;
+use App\Http\Requests\Dashboard\UpdateHomeWorkRequest;
 use App\Models\HomeWork;
-use App\Models\Quiz;
 use Illuminate\Http\Request;
 
 class HomeworkBySectionController extends Controller
@@ -23,7 +22,7 @@ public function index(Request $request, $sectionId)
                 ));
             } else {
                 // Return Blade view with variables
-                return view('dashboard.homework.index');
+                return redirect()->route('dashboard.homeworks.index');
             }
         }
 
@@ -41,6 +40,7 @@ public function store(StoreQuizRequest $request, $sectionId)
     $validated = $request->validated();
     $validated['section_id'] = $sectionId;
     $validated['is_active'] = $request->boolean('is_active');
+    unset($validated['have_reading_passages']); // not a homework column
 
     HomeWork::create($validated);
 
@@ -48,16 +48,16 @@ public function store(StoreQuizRequest $request, $sectionId)
 }
 
 
-public function update(UpdateQuizRequest $request, $sectionId, Quiz $quiz)
+public function update(UpdateHomeWorkRequest $request, $sectionId, $homeworkId)
 {
-    $this->authorize('update_quizzes');
+    $this->authorize('update_homework');
 
+    $homework = HomeWork::findOrFail($homeworkId);
     $validated = $request->validated();
     $validated['is_active'] = $request->boolean('is_active');
+    $homework->update($validated);
 
-    $quiz->update($validated);
-
-    return response()->json(['message' => __('Quiz updated successfully.')]);
+    return response()->json(['message' => __('homework updated successfully.')]);
 }
 
 public function destroy($sectionId, $homeworkId)

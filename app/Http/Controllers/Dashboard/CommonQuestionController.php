@@ -15,6 +15,7 @@ class CommonQuestionController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('view_CommonQuestion');
          $count_CommonQuestion = CommonQuestion::count(); // Get the count of blogs
          $visited_site=10000;
          if ($request->ajax())
@@ -25,6 +26,7 @@ class CommonQuestionController extends Controller
 
     public function store(StoreCommonQuestionRequest $request)
     {
+        $this->authorize('create_CommonQuestion');
         $data = $request->validated();
 
         $CommonQuestion = CommonQuestion::create($data);

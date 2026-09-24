@@ -984,5 +984,27 @@
 
     "Customer": "العميل",
     "Enter your full name, which consists of your first and last name": "أدخل الاسم الكامل ويتكون من الاسم الأول واسم العائلة",
-    "Description not entered": "لم يتم إدخال الوصف"
+    "Description not entered": "لم يتم إدخال الوصف",
+    "Add Student": "إضافة طالب",
+    "Add new student": "إضافة طالب جديد",
+    "Edit homework": "تعديل الواجب",
+    "Something went wrong, please try again": "حدث خطأ، حاول مرة أخرى",
+    "Choose class to export": "اختر الحصة للتصدير",
+    "Export PDF": "تصدير PDF",
+    "This student is already enrolled in this course.": "الطالب مشترك بالفعل في هذا الكورس.",
+    "You can't delete your own account": "لا يمكنك حذف حسابك",
+    "Book deleted successfully.": "تم حذف الكتاب بنجاح.",
+    "Bundle deleted successfully": "تم حذف الباقة بنجاح",
+    "Codes generated successfully": "تم توليد الأكواد بنجاح",
+    "Enrollment created successfully.": "تم إضافة الاشتراك بنجاح.",
+    "Profile updated successfully": "تم تحديث الملف الشخصي بنجاح",
+    "Email updated successfully": "تم تحديث البريد الإلكتروني بنجاح",
+    "Password updated successfully": "تم تغيير كلمة المرور بنجاح",
+    "Item has been restored successfully": "تم استرجاع العنصر بنجاح",
+    "question updated successfully.": "تم تعديل السؤال بنجاح.",
+    "homework updated successfully.": "تم تعديل الواجب بنجاح.",
+    "There are too many codes to export at once. Choose a class first, then export.": "عدد الأكواد كبير جداً للتصدير مرة واحدة. اختر الحصة أولاً ثم اضغط تصدير.",
+    "There are too many codes to export at once. Open a bundle and export its codes.": "عدد الأكواد كبير جداً للتصدير مرة واحدة. افتح الباقة وصدّر أكوادها.",
+    "The text field is required when audio is not present.": "يجب كتابة نص التقييم إذا لم يكن هناك تسجيل صوتي.",
+    "Status updated successfully.": "تم تحديث الحالة بنجاح."
 }

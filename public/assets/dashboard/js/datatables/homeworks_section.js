@@ -4,6 +4,8 @@ var homeworkdatatable;
 var KTDatatablesHomeworkServerSide = (function () {
     if (typeof sectionId !== "undefined" && sectionId) {
         var dbTable = `sections/${sectionId}/homeworks`;
+    } else if (typeof classId !== "undefined" && classId) {
+        var dbTable = `classes/${classId}/homeworks`;
     } else {
         var dbTable = "homeworks";
     }
@@ -82,14 +84,14 @@ var KTDatatablesHomeworkServerSide = (function () {
                         if (row.is_active) {
                             return `
                                      <span class="badge badge-success">${__(
-                                         "active"
+                                         "active",
                                      )}</span>
 
                             `;
                         } else {
                             return `
                                      <span class="badge badge-danger">${__(
-                                         "inactive"
+                                         "inactive",
                                      )}</span>
                              `;
                         }
@@ -175,7 +177,7 @@ var KTDatatablesHomeworkServerSide = (function () {
 
     var handleEditRows = () => {
         const editButtons = document.querySelectorAll(
-            '[data-kt-docs-table-filter="edit_row_homework"]'
+            '[data-kt-docs-table-filter="edit_row_homework"]',
         );
 
         editButtons.forEach((btn) => {
@@ -185,53 +187,37 @@ var KTDatatablesHomeworkServerSide = (function () {
                 let currentBtnIndex = $(editButtons).index(btn);
                 let data = homeworkdatatable.row(currentBtnIndex).data();
 
-                // Set form title
-                $("#form_title").text(__("Edit Course"));
+                // The homework modal uses different field ids on each page (and some pages also
+                // have a quiz modal), so fill the fields by name inside the homework form only.
+                let $form = $("#crud_form_homework");
+                if (!$form.length) $form = $("#crud_homework").closest("form");
+                const $modal = $form.find(".modal").first();
 
-                // Titles
-                $("#title_ar_inp").val(data.title_ar);
-                $("#title_en_inp").val(data.title_en);
+                $modal.find(".modal-title").first().text(__("Edit homework"));
 
-                if (tinymce.get("description_ar_inp")) {
-                    tinymce
-                        .get("description_ar_inp")
-                        .setContent(data.description_ar);
-                }
+                $form.find('[name="title_ar"]').val(data.title_ar);
+                $form.find('[name="title_en"]').val(data.title_en);
 
-                if (tinymce.get("description_en_inp")) {
-                    tinymce
-                        .get("description_en_inp")
-                        .setContent(data.description_en);
-                }
+                ["ar", "en"].forEach((lang) => {
+                    const id = $form.find(`textarea[name="description_${lang}"]`).attr("id");
+                    if (id && tinymce.get(id)) {
+                        tinymce.get(id).setContent(data[`description_${lang}`] ?? "");
+                    }
+                });
 
-                // Relationships
-                $("#course_section_id_inp")
-                    .val(data.course_section_id)
-                    .trigger("change");
+                $form.find('select[name="course_id"]').val(data.course_id).trigger("change");
+                $form.find('[name="duration_minutes"]').val(data.duration_minutes);
+                $form.find('[name="attempt_count"]').val(data.attempt_count);
+                $form.find('input[type="checkbox"][name="is_active"]').prop("checked", !!data.is_active);
 
-                // Relationships
-                $("#course_id_inp").val(data.course_id).trigger("change");
-
-                $("#duration_minutes_inp").val(data.duration_minutes);
-                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-
-                // Flags
-                $("#is_active_switch").prop("checked", data.is_active);
-
-                // Reset form method & action
-                $("#crud_form_homework").attr(
-                    "action",
-                    `/dashboard/homeworkzes/${data.id}`
-                );
+                $form.attr("action", `/dashboard/homeworks/${data.id}`);
 
                 // Remove previous _method input if any, then add PUT
-                $("#crud_form_homework").find('input[name="_method"]').remove();
-                $("#crud_form_homework").prepend(
-                    `<input type="hidden" name="_method" value="PUT">`
-                );
+                $form.find('input[name="_method"]').remove();
+                $form.prepend(`<input type="hidden" name="_method" value="PUT">`);
 
                 // Show modal
-                $("#crud_homework").modal("show");
+                $modal.modal("show");
             });
         });
     };

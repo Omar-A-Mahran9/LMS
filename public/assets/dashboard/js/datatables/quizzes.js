@@ -228,6 +228,7 @@ var KTDatatablesServerSidequiz = (function () {
                 $("#course_id_inp").val(data.course_id).trigger("change");
 
                 $("#duration_minutes_inp").val(data.duration_minutes);
+                $("#attempt_count_inp").val(data.attempt_count);
                 // Reset checkboxes by title attribute if they have it (otherwise use IDs)
 
                 // Flags

@@ -67,8 +67,8 @@ public function update(UpdateBookRequest $request, Book $book)
 
     // Handle image upload if a new one is provided
     if ($request->hasFile('image')) {
+        deleteImageFromDirectory($book->image, 'books');
         $data['image'] = uploadImageToDirectory($request->file('image'), 'books');
-                        deleteImageFromDirectory('books',$book->image);
         // Optional: Delete old image file if needed
         // Storage::delete($book->image);
     }
@@ -94,6 +94,7 @@ public function update(UpdateBookRequest $request, Book $book)
     // Handle boolean flags
     $data['is_free'] = $request->boolean('is_free');
     $data['have_discount'] = $request->boolean('have_discount');
+    $data['is_featured'] = $request->boolean('is_featured');
 
     // Update the book
     $book->update($data);
@@ -103,7 +104,7 @@ public function update(UpdateBookRequest $request, Book $book)
 public function destroy( $id)
 {
     $this->authorize('delete_books');
-    $books=Book::find($id);
+    $books=Book::findOrFail($id);
     // Optionally delete the associated image file
     if ($books->image) {
         deleteImageFromDirectory($books->image, 'books'); // This should be your helper function to delete a file
@@ -113,7 +114,7 @@ public function destroy( $id)
 
     return response()->json([
         'status' => true,
-        'message' => __('Course class deleted successfully.'),
+        'message' => __('Book deleted successfully.'),
     ]);
 }
 

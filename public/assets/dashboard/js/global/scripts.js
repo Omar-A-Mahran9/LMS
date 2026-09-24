@@ -449,7 +449,7 @@ let submitForm = (form) => {
                 displayValidationMessages(response.responseJSON.errors, form);
             else if (response.status === 403) unauthorizedAlert();
             else if (response.status === 419) window.location.reload();
-            else errorAlert(response.responseJSON.message, 5000);
+            else errorAlert(response.responseJSON?.message ?? __("Something went wrong, please try again"), 5000);
 
             if (form.data("error-callback") !== undefined)
                 window[form.data("error-callback")](response.status, response);

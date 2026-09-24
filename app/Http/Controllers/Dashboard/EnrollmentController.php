@@ -82,6 +82,8 @@ public function index(Request $request)
 
 public function getCoursesForStudent($studentId)
 {
+    $this->authorize('view_enrollments');
+
     // Find all courses that the student is NOT enrolled in
     $enrolledCourseIds = Enrollment::where('student_id', $studentId)->pluck('course_id')->toArray();
 
@@ -98,6 +100,8 @@ public function getCoursesForStudent($studentId)
 
 public function changeStatus(Request $request, $id)
 {
+    $this->authorize('update_enrollments');
+
     $request->validate([
         'status' => 'required|in:pending,approved,rejected'
     ]);
@@ -115,6 +119,8 @@ public function changeStatus(Request $request, $id)
 
 public function store(Request $request)
 {
+    $this->authorize('create_enrollments');
+
     // Validate request
     $validated = $request->validate([
         'student_id' => 'required|exists:students,id',
@@ -122,6 +128,13 @@ public function store(Request $request)
         'payment_method' => 'required|in:wallet_transfer,pay_in_center,contact_with_support',
         'is_active' => 'nullable|boolean',
     ]);
+
+    if (Enrollment::where('student_id', $validated['student_id'])->where('course_id', $validated['course_id'])->exists()) {
+        return response()->json([
+            'message' => __('This student is already enrolled in this course.'),
+            'errors'  => ['course_id' => [__('This student is already enrolled in this course.')]],
+        ], 422);
+    }
 
     // Set default for is_active if not provided (checkbox unchecked)
     $validated['is_active'] = $request->has('is_active') ? (bool) $validated['is_active'] : false;
@@ -135,15 +148,18 @@ public function store(Request $request)
         // Add other fields if necessary
     ]);
 
-    $course = Course::findOrFail($enrollment->course_id);
-
-
+    return response()->json([
+        'success' => true,
+        'message' => __('Enrollment created successfully.'),
+    ]);
 }
 
 
 
 public function update(Request $request, string $id)
 {
+    $this->authorize('update_enrollments');
+
     // Find the enrollment
     $enrollment = Enrollment::findOrFail($id);
 
@@ -223,6 +239,8 @@ public function destroy($id)
 
 public function toggleStatus(Request $request)
 {
+    $this->authorize('update_enrollments');
+
      $enrollment = DB::table('course_student')
         ->where('student_id', $request->student_id)
         ->where('course_id', $request->course_id)

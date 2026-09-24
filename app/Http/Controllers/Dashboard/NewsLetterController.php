@@ -10,6 +10,7 @@ class NewsLetterController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('view_newsletter');
         //$this->authorize('view_newsletter');
 
         if ( $request->ajax() )

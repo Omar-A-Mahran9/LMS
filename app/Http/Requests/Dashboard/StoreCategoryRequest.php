@@ -31,7 +31,7 @@ class StoreCategoryRequest extends FormRequest
         return [
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp',
             "name_ar" => ["required", "string:255", new NotNumbersOnly(), "unique:categories,name_ar", new ExistButDeleted(new CategorySubCategory())],
-            "name_en" => ["required", "string:255", new NotNumbersOnly(), "unique:categories,name_ar", new ExistButDeleted(new CategorySubCategory())],
+            "name_en" => ["required", "string:255", new NotNumbersOnly(), "unique:categories,name_en", new ExistButDeleted(new CategorySubCategory())],
             "description_ar" => ["required", "string:255", new NotNumbersOnly()],
             "description_en" => ["required", "string:255", new NotNumbersOnly()],
             'meta_tag_key_words' => ["nullable", "string:255", new NotNumbersOnly()],

@@ -32,12 +32,19 @@
                         {{ __('Add Access Code') }}
                     </button>
                 </div>
-                <div>
-                    <a href="{{ route('dashboard.generateCode.exportPDF') }}" class="btn btn-secondary ms-3"
-                        target="_blank">
+                <div class="d-flex align-items-center ms-3">
+                    {{-- اختيار الصف قبل تصدير الأكواد (تصدير كل الأكواد مرة واحدة تقيل جداً على السيرفر) --}}
+                    <select id="class_filter" class="form-select form-select-solid w-200px" data-control="select2"
+                        data-placeholder="{{ __('Choose class to export') }}">
+                        <option></option>
+                        @foreach ($classes as $class)
+                            <option value="{{ $class->id }}">{{ $class->title }}</option>
+                        @endforeach
+                    </select>
+                    <a href="{{ route('dashboard.generateCode.exportPDF') }}" class="btn btn-secondary ms-3 btn-export-pdf"
+                        target="_blank" title="{{ __('Export PDF') }}">
                         <i class="fas fa-file-pdf me-2"></i>
                     </a>
-
                 </div>
             </div>
 

@@ -29,7 +29,7 @@ class AdminController extends Controller
     {
         $data = $request->validated();
 
-        if ($request->has('image'))
+        if ($request->hasFile('image'))
             $data['image'] = uploadImageToDirectory($request->file('image'), "Admins");
 
         $admin = Admin::create($data);
@@ -45,7 +45,7 @@ class AdminController extends Controller
     {
         $data = $request->validated();
 
-        if ($request->has('image'))
+        if ($request->hasFile('image'))
             $data['image'] = updateModelImage($admin, $request->file('image'), "Admins");
 
         $admin->update($data);
@@ -56,6 +56,8 @@ class AdminController extends Controller
     public function destroy(Request $request, Admin $admin)
     {
         $this->authorize('delete_admins');
+        abort_if($admin->id == 1, 403, "!لا يمكن حذف الحساب الرئيسى");
+        abort_if($admin->id == auth('admin')->id(), 403, __("You can't delete your own account"));
 
         if ($request->ajax())
             $admin->delete();

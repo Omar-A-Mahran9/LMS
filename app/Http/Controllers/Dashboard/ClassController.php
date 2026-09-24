@@ -81,7 +81,7 @@ class ClassController extends Controller
     public function update(UpdateClassRequest $request, $id)
     {
         $this->authorize('update_classes');
-        $courseClass = CourseClass::find($id);
+        $courseClass = CourseClass::findOrFail($id);
         $validated = $request->validated();
 
         // Handle image update
@@ -134,7 +134,7 @@ class ClassController extends Controller
     public function destroy($id)
     {
         $this->authorize('delete_classes');
-        $courseVideo = CourseClass::find($id);
+        $courseVideo = CourseClass::findOrFail($id);
         // Optionally delete the associated image file
         if ($courseVideo->image) {
             deleteImageFromDirectory($courseVideo->image, 'courses_classes'); // This should be your helper function to delete a file

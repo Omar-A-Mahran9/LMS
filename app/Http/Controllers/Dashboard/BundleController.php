@@ -39,6 +39,8 @@ class BundleController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create_bundle');
+
         $request->validate([
             'title_ar'         => 'required|string|max:255',
             'title_en'         => 'required|string|max:255',
@@ -156,6 +158,8 @@ class BundleController extends Controller
 
     public function update(Request $request, Bundle $bundle)
     {
+        $this->authorize('update_bundle');
+
         $request->validate([
 
             'title_ar' => 'required|string|max:255',
@@ -261,29 +265,51 @@ class BundleController extends Controller
 
     public function exportPDF(Request $request)
     {
-        $classId = $request->get('class_id');
+        $this->authorize('view_bundle');
 
-        $query = ClassAccessCode::with('class')->where('is_active', 1);
+        // bundle codes (this used to query class codes through a class that wasn't imported)
+        $bundleId = $request->get('bundle_id');
 
-        if ($classId) {
-            $query->where('class_id', $classId);
+        $query = BundleAccessCode::with('bundle')->where('is_active', 1);
+
+        if ($bundleId) {
+            $query->where('bundle_id', $bundleId);
+        }
+
+        if (!$bundleId && $query->count() > 1000) {
+            return response(
+                '<div dir="rtl" style="font-family:Tahoma,Arial;padding:40px;text-align:center">'
+                . '<h3>' . e(__('There are too many codes to export at once. Open a bundle and export its codes.')) . '</h3>'
+                . '<a href="javascript:window.close()">' . e(__('Close')) . '</a></div>',
+                422
+            );
         }
 
         $codes = $query->get();
 
         $pdf = Pdf::loadView('dashboard.codes.code', compact('codes'));
 
-        return $pdf->download('access_codes_report.pdf');
+        return $pdf->download('bundle_codes_report.pdf');
     }
-    public function destroy(ClassAccessCode $generateCode)
-    {
-        $generateCode->delete();
 
-        return response()->json(['status' => true, 'message' => 'تم حذف الكود بنجاح.']);
+    public function destroy(Bundle $bundle)
+    {
+        $this->authorize('delete_bundle');
+
+        // codes and class links are removed by the foreign keys (cascade)
+        if ($bundle->image) {
+            deleteImageFromDirectory($bundle->image, 'bundles');
+        }
+
+        $bundle->delete();
+
+        return response()->json(['status' => true, 'message' => __('Bundle deleted successfully')]);
     }
 
     public function show(Bundle $bundle)
     {
+        $this->authorize('show_bundle');
+
         $bundle->load([
             'classes',
             'codes' => function ($query) {
@@ -308,6 +334,8 @@ class BundleController extends Controller
 
     public function showCode(BundleAccessCode $generateCode)
     {
+        $this->authorize('show_bundle');
+
         $generateCode->load(['bundle', 'logs.student']);
         return view('dashboard.codes.show', ['code' => $generateCode]);
     }

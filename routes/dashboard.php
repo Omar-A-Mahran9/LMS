@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\API\BookOrderController;
 use App\Http\Controllers\Dashboard\BundleController;
 use App\Http\Controllers\Dashboard\ContactRequestController;
 use App\Http\Controllers\Dashboard\CourseController;
@@ -26,8 +25,6 @@ Route::delete("students/delete-selected", "StudentController@deleteSelected");
 Route::delete("cities/delete-selected", "GovernmentsController@deleteSelected");
 Route::get("cities/restore-selected", "GovernmentsController@restoreSelected");
 Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected");
-Route::delete("Course/delete-selected", "CourseController@deleteSelected");
-Route::get("Course/restore-selected", "CourseController@restoreSelected");
 Route::delete("Course/delete-selected", "CourseController@deleteSelected");
 Route::get("Course/restore-selected", "CourseController@restoreSelected");
 Route::delete("whyus/delete-selected", "WhyusController@deleteSelected");
@@ -58,7 +55,7 @@ Route::get('quizzes/{quiz}/has-passages', [QuizController::class, 'hasPassages']
 Route::resource('classes', 'ClassController')->except(['create', 'edit']);
 Route::resource('sections', 'SectionController')->except(['create', 'edit']);
 
-Route::resource('books', 'BookController')->except(['create', 'edit']);
+Route::resource('books', 'BookController')->except(['create', 'edit', 'show']);
 Route::resource('generateCode', 'GenerateCodeController')->except(['create', 'edit']);
 
 Route::get('generate-codes/export/pdf', [GenerateCodeController::class, 'exportPDF'])
@@ -92,26 +89,23 @@ Route::resource('sections.homeworks', HomeworkBySectionController::class);
 Route::resource('homeworks', 'HomeWorkController')->except(['create', 'edit']);
 Route::resource('questions', 'QuestionController')->except(['create', 'edit']);
 Route::resource('homeworks-questions', 'HomeWorkQuestionController')->except(['create', 'edit']);
-Route::resource('CommonQuestion', 'CommonQuestionController')->except(['create', 'edit']);
+Route::resource('CommonQuestion', 'CommonQuestionController')->except(['create', 'edit', 'show']);
 /** begin resources routes **/
 Route::resource('admins', 'AdminController')->except(['create', 'edit']);
-Route::resource('booking', 'BookingController')->except(['create', 'edit']);
-Route::resource('brands', 'BrandController')->except(['create', 'edit']);
 Route::resource('enrollments', 'EnrollmentController')->except(['create', 'edit']);
 Route::resource('orders', 'OrderController')->except(['create', 'edit']);
 
 Route::get('/enrollments/courses-for-student/{student}', [EnrollmentController::class, 'getCoursesForStudent']);
 Route::post('/enrollments/{id}/status', [EnrollmentController::class, 'changeStatus']);
-Route::post('/orders/{id}/status', [BookOrderController::class, 'changeStatus']);
+Route::post('/orders/{id}/status', 'OrderController@changeStatus');
 
 
-Route::resource('governments', 'GovernmentsController')->except(['create', 'edit']);
+Route::resource('governments', 'GovernmentsController')->except(['create', 'edit', 'show']);
 Route::resource('categories', 'CategoryController')->except(['create', 'edit']);
-Route::resource('maincategories', 'MainCategoryController')->except(['create', 'edit']);
 
 Route::resource('contact-requests', 'ContactRequestController')->except(['create', 'edit', 'store', 'update']);
 Route::resource('students', 'StudentController')->except(['create', 'edit']);
-Route::resource('students_rate', 'StudentsRatesController')->except(['create', 'edit']);
+Route::resource('students_rate', 'StudentsRatesController')->except(['create', 'edit', 'show']);
 
 Route::get('students/blocking/{student}', 'StudentController@blocked')->name('students.blocked');
 Route::get('students/blocked-selected', 'StudentController@blockedSelected');
@@ -152,13 +146,7 @@ Route::get('trash/{modelName}/{id}/restore', 'TrashController@restore')->name('t
 Route::get('trash/{modelName?}', 'TrashController@index')->name('trash');
 Route::get('trash/{modelName}/{id}', 'TrashController@restore');
 Route::get('/language/{lang}', function (Request $request) {
-    session()->put('locale', $request->lang);
+    session()->put('locale', in_array($request->lang, ['ar', 'en']) ? $request->lang : 'ar');
     return redirect()->back();
 })->name('change-language');
-/** notifications routes **/
-Route::post('/save-token', 'NotificationController@saveToken')->name('save-token');
-Route::post('/send-notification', 'NotificationController@sendNotification')->name('send.notification');
-Route::get('notifications/{id}/mark_as_read', 'NotificationController@markAsRead')->name('notifications.mark_as_read');
-Route::get('notifications/{type}/load-more/{next}', 'NotificationController@loadMore')->name('notifications.load_more');
-Route::get('notifications/mark-all-as-read', 'NotificationController@markAllAsRead')->name('notifications.mark_all_as_read');
 Route::post('/fetch-data', 'DashboardController@ordersTransaction')->name('fetch.data');

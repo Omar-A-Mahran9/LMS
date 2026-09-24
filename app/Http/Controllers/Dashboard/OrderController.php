@@ -48,6 +48,24 @@ public function show(BookOrder $order)
     ]);
 }
 
+public function changeStatus(Request $request, $id)
+{
+    $this->authorize('update_orders');
+
+    $request->validate([
+        'status' => 'required|in:pending,approved,rejected'
+    ]);
+
+    $order = BookOrder::findOrFail($id);
+    $order->status = $request->status;
+    $order->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => __('Status updated successfully.'),
+    ]);
+}
+
 
 
 
