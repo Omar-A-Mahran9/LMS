@@ -53,7 +53,7 @@ class WhyusController extends Controller
          $whyus = Whyus::findOrFail($id);
          $whyus->delete();
 
-         return response(["message" => "Whyus deleted successfully"], 200);
+         return response(["message" => __("Whyus deleted successfully")], 200);
      }
 
      public function deleteSelected(Request $request)
@@ -63,12 +63,12 @@ class WhyusController extends Controller
          $ids = $request->selected_items_ids;
 
          if (empty($ids)) {
-             return response(["message" => "No items selected for deletion"], 400);
+             return response(["message" => __("No items selected for deletion")], 400);
          }
 
          Whyus::whereIn('id', $ids)->delete();
 
-         return response(["message" => "Selected services deleted successfully"], 200);
+         return response(["message" => __("Selected services deleted successfully")], 200);
      }
 
      public function restoreSelected(Request $request)
@@ -78,12 +78,12 @@ class WhyusController extends Controller
          $ids = $request->selected_items_ids;
 
          if (empty($ids)) {
-             return response(["message" => "No items selected for restoration"], 400);
+             return response(["message" => __("No items selected for restoration")], 400);
          }
 
          Whyus::withTrashed()->whereIn('id', $ids)->restore();
 
-         return response(["message" => "Selected services restored successfully"], 200);
+         return response(["message" => __("Selected services restored successfully")], 200);
      }
 
 }

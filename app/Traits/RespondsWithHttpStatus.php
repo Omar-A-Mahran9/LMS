@@ -37,7 +37,7 @@ trait RespondsWithHttpStatus
     protected function validationFailure($errors, $status = Response::HTTP_UNPROCESSABLE_ENTITY)
     {
         return response([
-            'message' => "The given data was invalid.",
+            'message' => __("The given data was invalid."),
             "errors" => $errors
         ], $status);
     }

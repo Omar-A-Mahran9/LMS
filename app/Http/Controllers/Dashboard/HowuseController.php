@@ -57,7 +57,7 @@ class HowuseController extends Controller
          $howuse = Howuse::findOrFail($id);
          $howuse->delete();
 
-         return response(["message" => "howuse deleted successfully"], 200);
+         return response(["message" => __("howuse deleted successfully")], 200);
      }
 
      public function deleteSelected(Request $request)
@@ -67,12 +67,12 @@ class HowuseController extends Controller
          $ids = $request->selected_items_ids;
 
          if (empty($ids)) {
-             return response(["message" => "No items selected for deletion"], 400);
+             return response(["message" => __("No items selected for deletion")], 400);
          }
 
          Howuse::whereIn('id', $ids)->delete();
 
-         return response(["message" => "Selected services deleted successfully"], 200);
+         return response(["message" => __("Selected services deleted successfully")], 200);
      }
 
      public function restoreSelected(Request $request)
@@ -82,12 +82,12 @@ class HowuseController extends Controller
          $ids = $request->selected_items_ids;
 
          if (empty($ids)) {
-             return response(["message" => "No items selected for restoration"], 400);
+             return response(["message" => __("No items selected for restoration")], 400);
          }
 
          Howuse::withTrashed()->whereIn('id', $ids)->restore();
 
-         return response(["message" => "Selected services restored successfully"], 200);
+         return response(["message" => __("Selected services restored successfully")], 200);
      }
 
 }

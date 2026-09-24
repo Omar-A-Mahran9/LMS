@@ -46,7 +46,7 @@
                     data-kt-docs-table-toolbar="base">
                     <!--begin::Add customer-->
                     <button type="button" class="btn btn-primary" data-bs-toggle="tooltip"
-                        data-bs-original-title="Coming Soon" data-kt-initialized="1">
+                        data-bs-original-title="{{ __('Add') }}" data-kt-initialized="1">
                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                         <span class="svg-icon svg-icon-2">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -137,7 +137,7 @@
                                         <label for="title_inp"
                                             class="form-label fs-6 fw-bold mb-3 required">{{ __('Title') }}</label>
                                         <input id="title_inp" type="text" name="title"
-                                            class="form-control form-control-solid" placeholder="e.g. Professor">
+                                            class="form-control form-control-solid" placeholder="{{ __('e.g. Professor') }}">
                                         <div class="fv-plugins-message-container invalid-feedback" id="title">
                                         </div>
                                     </div>
@@ -149,7 +149,7 @@
                                         <label for="bio_inp"
                                             class="form-label fs-6 fw-bold mb-3">{{ __('Bio') }}</label>
                                         <textarea name="bio" id="bio_inp" class="form-control form-control-solid" rows="3"
-                                            placeholder="Short biography..."></textarea>
+                                            placeholder="{{ __('Short biography...') }}"></textarea>
                                         <div class="fv-plugins-message-container invalid-feedback" id="bio">
                                         </div>
                                     </div>

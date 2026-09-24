@@ -87,7 +87,7 @@
                         </iframe>
                     </div>
                 @else
-                    <p>Invalid YouTube URL</p>
+                    <p>{{ __('Invalid YouTube URL') }}</p>
                 @endif
 
 

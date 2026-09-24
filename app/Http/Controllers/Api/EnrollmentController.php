@@ -27,7 +27,7 @@ class EnrollmentController extends Controller
             ->first();
 
         if ($enrollment) {
-            return $this->success('Already enrolled.', [
+            return $this->success(__('Already enrolled.'), [
                 'is_enrolled' => true,
                 'status' => $enrollment->status,
                 'payment_type' => $enrollment->payment_type,
@@ -44,7 +44,7 @@ class EnrollmentController extends Controller
             'updated_at' => now(),
         ]);
 
-        return $this->success('Student enrolled successfully.', [
+        return $this->success(__('Student enrolled successfully.'), [
             'is_enrolled' => true,
             'status' => 'pending',
             'payment_type' => $request->payment_type,
@@ -78,7 +78,7 @@ class EnrollmentController extends Controller
         }
 
         return $this->success('',[
-            'message' => 'Student enrolled successfully.',
+            'message' => __('Student enrolled successfully.'),
         ]);
     }
     public function enrollmentStatus($course_id)

@@ -30,7 +30,7 @@ class VerificationController extends Controller
 
         $user->token()->revoke();
         $token = $user->createToken('Personal access token to apis')->accessToken;
-        return $this->success("verified successfully", ['token' => $token, "user" => new UserResource($user)]);
+        return $this->success(__("verified successfully"), ['token' => $token, "user" => new UserResource($user)]);
     }
 
     public function changeEmail(Request $request)
@@ -44,7 +44,7 @@ class VerificationController extends Controller
 
         $user->token()->revoke();
         $token = $user->createToken('Personal access token to apis')->accessToken;
-        return $this->success("verified successfully", ['token' => $token, "user" => new UserResource($user)]);
+        return $this->success(__("verified successfully"), ['token' => $token, "user" => new UserResource($user)]);
     }
 
     public function sendOTP(Request $request)
@@ -57,7 +57,7 @@ class VerificationController extends Controller
 
         $user->sendOTP();
 
-        return $this->success("otp sent successfully", $user->otp);
+        return $this->success(__("otp sent successfully"), $user->otp);
     }
 
 }

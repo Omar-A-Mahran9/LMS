@@ -50,7 +50,7 @@ class AuthController extends Controller
     //         $tokenResult->accessToken->expires_at = now()->addHours(24);
     //         $tokenResult->accessToken->save();
 
-    //         return $this->success("logged in successfully", [
+    //         return $this->success(__("logged in successfully"), [
     //             'token' => $tokenResult->plainTextToken,
     //             'user'  => new StudentResource($student),
     //         ]);
@@ -98,7 +98,7 @@ class AuthController extends Controller
             // if ($student->devices()->count() >= 1) {
             //     return response()->json([
             //         'status' => false,
-            //         'message' => 'You have reached maximum allowed device'
+            //         'message' => __('You have reached maximum allowed device')
             //     ], 403);
             // }
 
@@ -115,7 +115,7 @@ class AuthController extends Controller
 
         $tokenResult = $student->createToken('Personal access token to apis');
 
-        return $this->success("logged in successfully", [
+        return $this->success(__("logged in successfully"), [
             'token' => $tokenResult->plainTextToken,
             'user' => new StudentResource($student),
         ]);
@@ -145,7 +145,7 @@ class AuthController extends Controller
         $tokenResult->accessToken->save();
 
 
-        return $this->success("logged in successfully", ['token' => $tokenResult->plainTextToken,  "student" => new StudentResource($student)]);
+        return $this->success(__("logged in successfully"), ['token' => $tokenResult->plainTextToken,  "student" => new StudentResource($student)]);
     }
 
 
@@ -197,7 +197,7 @@ class AuthController extends Controller
         // $token = $student->createToken('Personal Access Token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Registration successful',
+            'message' => __('Registration successful'),
             // 'token' => $token,
             'student' => new StudentResource($student),
         ], 201);
@@ -210,7 +210,7 @@ class AuthController extends Controller
         $token = $request->user()->token();
         $token->revoke();
 
-        return $this->success('You have been successfully logged out!');
+        return $this->success(__('You have been successfully logged out!'));
     }
 
 }

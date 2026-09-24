@@ -43,7 +43,7 @@ class CourseController extends Controller
         if ($filter === 'my' && !Auth::guard('api')->check()) {
             $empty = Course::whereRaw('0=1')->paginate($perPage); // empty pagination
             $resource = CoursesDetailsResource::collection($empty)->response()->getData(true);
-            return $this->successWithPagination('No courses found.', $resource);
+            return $this->successWithPagination(__('No courses found.'), $resource);
         }
         $query = Course::query()
             ->where('is_active', 1)
@@ -83,7 +83,7 @@ class CourseController extends Controller
         $courses = $query->paginate($perPage);
         $resource = CoursesDetailsResource::collection($courses)->response()->getData(true);
 
-        return $this->successWithPagination('Courses retrieved successfully.', $resource);
+        return $this->successWithPagination(__('Courses retrieved successfully.'), $resource);
     }
 
 
@@ -102,7 +102,7 @@ class CourseController extends Controller
         if (
             !$course
         ) {
-            return $this->failure('Course not found or full');
+            return $this->failure(__('Course not found or full'));
         }
 
         // Track views
@@ -125,7 +125,7 @@ class CourseController extends Controller
         $studentId = auth('api')->user()->id;
         if (!$student) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => __('Unauthorized')
             ], 401);
         }
 
@@ -141,7 +141,7 @@ class CourseController extends Controller
             ->first();
 
         if (!$courseExists) {
-            return $this->failure('Course not found or unauthorized.');
+            return $this->failure(__('Course not found or unauthorized.'));
         }
         $perPage = $request->query('per_page', 10);
         $classes = CourseClass::where('course_id', $id)
@@ -152,7 +152,7 @@ class CourseController extends Controller
         ->paginate($perPage);
 
         if ($classes->isEmpty()) {
-            return $this->failure('Class not found or unpublished');
+            return $this->failure(__('Class not found or unpublished'));
         }
 
         $resource = ClassesDetailsResource::collection($classes)->response()->getData(true);
@@ -164,7 +164,7 @@ class CourseController extends Controller
     {
         $class = CourseClass::where('is_active', 1)->find($id);
         if (!$class) {
-            return $this->failure('Class not found or unpublished');
+            return $this->failure(__('Class not found or unpublished'));
         }
 
         $student = auth()->user(); // assumes sanctum or jwt auth
@@ -194,7 +194,7 @@ class CourseController extends Controller
     {
         $class = CourseClass::where('is_active', 1)->find($id);
         if (!$class) {
-            return $this->failure('Class not found or unpublished');
+            return $this->failure(__('Class not found or unpublished'));
         }
 
         return $this->success('', new ClassDetailsResource($class));
@@ -205,7 +205,7 @@ class CourseController extends Controller
     {
         $data = Quiz::find($id);
         if (!$data) {
-            return $this->failure('Quiz not found or unpublished');
+            return $this->failure(__('Quiz not found or unpublished'));
         }
 
         return $this->success('', new QuizResource($data));
@@ -224,7 +224,7 @@ class CourseController extends Controller
             ->first();
 
         if (!$class) {
-            return $this->failure('Class not found or unpublished');
+            return $this->failure(__('Class not found or unpublished'));
         }
 
         // Check if student is enrolled in the course
@@ -238,7 +238,7 @@ class CourseController extends Controller
             ->first();
 
         if ($studentId !== null && !$course) {
-            return $this->failure('Course not found or unauthorized.');
+            return $this->failure(__('Course not found or unauthorized.'));
         }
 
         // Optionally track class view (like section)
@@ -259,7 +259,7 @@ class CourseController extends Controller
         // Format each video using the resource
 
 
-        return $this->success('Class videos loaded', [
+        return $this->success(__('Class videos loaded'), [
             // 'course_data' => [
             //     'course_id'           => $course->id,
             //     'course_title'        => $course->title,
@@ -295,7 +295,7 @@ class CourseController extends Controller
             ->first();
 
         if (!$courseExists) {
-            return $this->failure('Course not found or unauthorized.');
+            return $this->failure(__('Course not found or unauthorized.'));
         }
         $sections = Section::with([
             // Videos and progress
@@ -325,7 +325,7 @@ class CourseController extends Controller
             return new SectionResource($section, $studentId);
         });
 
-        return $this->success('Sections with videos', [
+        return $this->success(__('Sections with videos'), [
             'course_data' => [
             'course_id'           => $courseExists->id,
             'course_title'        => $courseExists->title,
@@ -359,7 +359,7 @@ class CourseController extends Controller
                 ->first();
 
             if (!$course) {
-                return $this->failure('Course not found or unauthorized.');
+                return $this->failure(__('Course not found or unauthorized.'));
             }
             // إعداد البيانات مثل getVideosBySections
             $courseData = [
@@ -377,12 +377,12 @@ class CourseController extends Controller
             ];
 
             return $this->success(
-                'Course access data.',
+                __('Course access data.'),
                 $courseData
             );
         }
         $this->success(
-            'Course access data.'
+            __('Course access data.')
         );
     }
 
@@ -440,7 +440,7 @@ class CourseController extends Controller
 
         $progress->save();
 
-        return $this->success('Progress updated', $progress);
+        return $this->success(__('Progress updated'), $progress);
     }
 
 
@@ -503,7 +503,7 @@ class CourseController extends Controller
             ];
         });
 
-        return $this->success('Courses list retrieved successfully.', $courses);
+        return $this->success(__('Courses list retrieved successfully.'), $courses);
     }
 
 
@@ -517,7 +517,7 @@ class CourseController extends Controller
         if ($filter === 'my' && !Auth::guard('api')->check()) {
             $empty = Course::whereRaw('0=1')->paginate($perPage); // empty pagination
             $resource = CoursesDetailsResource::collection($empty)->response()->getData(true);
-            return $this->successWithPagination('No courses found.', $resource);
+            return $this->successWithPagination(__('No courses found.'), $resource);
         }
 
         $query = Course::query()
@@ -559,7 +559,7 @@ class CourseController extends Controller
         );
 
         $resource = CoursesDetailsResource::collection($paginator)->response()->getData(true);
-        return $this->successWithPagination('Courses retrieved successfully.', $resource);
+        return $this->successWithPagination(__('Courses retrieved successfully.'), $resource);
     }
 
     public function storerate(Request $request)
@@ -758,7 +758,7 @@ public function accessBundle(Request $request)
                 ];
             });
 
-        return $this->success('Classes list retrieved successfully.', $classes);
+        return $this->success(__('Classes list retrieved successfully.'), $classes);
     }
 
     public function getAllQuizesData(Request $request)
@@ -777,7 +777,7 @@ public function accessBundle(Request $request)
                 ];
             });
 
-        return $this->success('Quizzes list retrieved successfully.', $quizzes);
+        return $this->success(__('Quizzes list retrieved successfully.'), $quizzes);
     }
 
     public function access(Request $request)
@@ -838,7 +838,7 @@ public function accessBundle(Request $request)
             ->first();
 
         if (!$class) {
-            return $this->failure('Class not found or unpublished');
+            return $this->failure(__('Class not found or unpublished'));
         }
 
         $course = Course::where('id', $class->course_id)
@@ -846,7 +846,7 @@ public function accessBundle(Request $request)
             ->first();
 
         if (!$course) {
-            return $this->failure('Course not found.');
+            return $this->failure(__('Course not found.'));
         }
 
         $isAuthorized = false;
@@ -895,7 +895,7 @@ public function accessBundle(Request $request)
     ]);
                 $isAuthorized = true;
             } else {
-                return $this->failure('Invalid or inactive access code.');
+                return $this->failure(__('Invalid or inactive access code.'));
             }
         }
 
@@ -919,7 +919,7 @@ public function accessBundle(Request $request)
             }])
             ->get();
 
-        return $this->success('Class videos loaded', [
+        return $this->success(__('Class videos loaded'), [
             'class_data' => new ClassDetailsResource($class, $studentId),
             'videos' => $videos,
         ]);
@@ -934,7 +934,7 @@ public function accessBundle(Request $request)
             ->first();
 
         if (!$class) {
-            return $this->failure('Class not found or unpublished');
+            return $this->failure(__('Class not found or unpublished'));
         }
 
         $request->validate([
@@ -1006,7 +1006,7 @@ public function accessBundle(Request $request)
             ])
             ->get();
 
-        return $this->success('Bundle class videos loaded', [
+        return $this->success(__('Bundle class videos loaded'), [
             'bundle'     => new ApiBundleResource($bundleCode->bundle),
             'class_data' => new ClassDetailsResource($class, $studentId),
             'videos'     => $videos,

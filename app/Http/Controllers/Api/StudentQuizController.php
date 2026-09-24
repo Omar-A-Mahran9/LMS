@@ -24,7 +24,7 @@ public function startQuiz(Request $request, $quizId)
     }
 
     if (!$quiz->course || !$quiz->course->is_active) {
-        return $this->failure('Quiz is not linked to an active course.');
+        return $this->failure(__('Quiz is not linked to an active course.'));
     }
 if ($code) {
     // Get all class_ids related to this course
@@ -51,7 +51,7 @@ if ($code) {
 }
 
   if ($studentId !== null && !$quiz->course->isStudentEnrolled($studentId)) {
-    return $this->failure('You are not enrolled in this course.');
+    return $this->failure(__('You are not enrolled in this course.'));
 }
 
    if ($quiz->questions->isEmpty()) {
@@ -142,7 +142,7 @@ public function submitQuiz(Request $request, $quizAttemptId)
     }
 
     if ($studentId !== null && !$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
-        return $this->failure('You are not enrolled in this course.');
+        return $this->failure(__('You are not enrolled in this course.'));
     }
 
     if ($attempt->isSubmitted()) {
@@ -227,11 +227,11 @@ $studentId = auth()->id();
     ->first();
 
     if ($studentId !== null && !$attempt) {
-        return $this->failure('Quiz attempt not found or access denied.');
+        return $this->failure(__('Quiz attempt not found or access denied.'));
     }
 
     if ($studentId !== null && !$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
-            return $this->failure('You are not enrolled in this course.');
+            return $this->failure(__('You are not enrolled in this course.'));
         }
         $results = [];
         $totalScore = 0;

@@ -86,7 +86,7 @@ public function destroy(Request $request, $id)
 
     $category = Category::withTrashed()->find($id);
     if (!$category) {
-        return response()->json(['message' => 'Category not found'], 404);
+        return response()->json(['message' => __('Category not found')], 404);
     }
 
     if (is_null($category->parent_id)) {
@@ -96,7 +96,7 @@ public function destroy(Request $request, $id)
 
     $category->delete();
 
-    return response()->json(['message' => 'Category deleted successfully']);
+    return response()->json(['message' => __('Category deleted successfully')]);
 }
 
 

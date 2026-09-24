@@ -31,7 +31,7 @@ public function startHomework(Request $request, $homeworkId)
         ->exists();
 
     if (!$isEnrolled) {
-        return $this->failure('You are not enrolled in this course.');
+        return $this->failure(__('You are not enrolled in this course.'));
     }
    if ($homework->questions->isEmpty()) {
         return $this->failure(__('homework does not contain any questions.'));
@@ -158,7 +158,7 @@ public function startHomework(Request $request, $homeworkId)
         ->first();
 
         if (!$attempt) {
-            return $this->failure('Homework attempt not found or access denied.');
+            return $this->failure(__('Homework attempt not found or access denied.'));
         }
 
         $results = [];

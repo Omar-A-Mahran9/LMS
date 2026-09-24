@@ -247,7 +247,7 @@ public function toggleStatus(Request $request)
         ->first();
 
     if (!$enrollment) {
-        return response()->json(['success' => false, 'message' => 'Enrollment not found'], 404);
+        return response()->json(['success' => false, 'message' => __('Enrollment not found')], 404);
     }
 
     DB::table('course_student')

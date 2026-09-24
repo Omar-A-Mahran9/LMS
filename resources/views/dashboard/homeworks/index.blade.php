@@ -24,7 +24,7 @@
                     data-bs-target="#crud_homework" data-kt-docs-table-toolbar="base">
                     <!--begin::Add customer-->
                     <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
-                        data-bs-original-title="Coming Soon" data-kt-initialized="1">
+                        data-bs-original-title="{{ __('Add') }}" data-kt-initialized="1">
                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                         <span class="svg-icon svg-icon-2">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"

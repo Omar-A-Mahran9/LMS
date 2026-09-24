@@ -62,7 +62,7 @@ class StudentsRatesController extends Controller
 
         Student_rate::create($data);
 
-        return response(["message" => "Rate submitted successfully"]);
+        return response(["message" => __("Rate submitted successfully")]);
     }
 
 
@@ -105,7 +105,7 @@ class StudentsRatesController extends Controller
 
         $Student_rate->update($data);
 
-        return response(["message" => "Rate updated successfully"]);
+        return response(["message" => __("Rate updated successfully")]);
     }
 
 

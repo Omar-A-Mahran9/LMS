@@ -63,7 +63,7 @@ class LiveController extends Controller
      $live->update($validated);
 
     return response()->json([
-        'message' => 'Live updated successfully',
+        'message' => __('Live updated successfully'),
         'data' => $live,
     ]);
 }

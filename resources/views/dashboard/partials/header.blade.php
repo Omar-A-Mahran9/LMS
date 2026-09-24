@@ -5,7 +5,7 @@
     <!--begin::Header container-->
     <div class="app-container container-fluid d-flex align-items-stretch flex-stack mt-lg-8" id="kt_app_header_container">
         <!--begin::Sidebar toggle-->
-        <div class="d-flex align-items-center d-block d-lg-none ms-n3" title="Show sidebar menu">
+        <div class="d-flex align-items-center d-block d-lg-none ms-n3" title="{{ __('Show sidebar menu') }}">
             <div class="btn btn-icon btn-active-color-primary w-35px h-35px me-1" id="kt_app_sidebar_mobile_toggle">
                 <i class="ki-outline ki-abstract-14 fs-2"></i>
             </div>
@@ -39,7 +39,7 @@
                     data-kt-menu-permanent="true" data-kt-menu-placement="bottom-start">
                     <!--begin::Tablet and mobile search toggle-->
                     <div data-kt-search-element="toggle"
-                        class="search-toggle-mobile d-flex d-lg-none align-items-center">
+                        class="search-toggle-mobile d-none align-items-center">
                         <div class="d-flex">
                             <i class="ki-outline ki-magnifier fs-1"></i>
                         </div>

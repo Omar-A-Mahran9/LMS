@@ -55,7 +55,7 @@
                                 <!--begin::Label-->
                                 <label class="col-lg-4 col-form-label fw-semibold fs-6">
                                     <span class="required">{{ __('Phone') }}</span>
-                                    <span class="ms-1" data-bs-toggle="tooltip" title="Phone number must be active">
+                                    <span class="ms-1" data-bs-toggle="tooltip" title="{{ __('Phone number must be active') }}">
                                         <i class="ki-outline ki-information-5 text-gray-500 fs-6"></i>
                                     </span>
                                 </label>

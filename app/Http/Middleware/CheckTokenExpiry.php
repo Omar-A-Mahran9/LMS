@@ -22,7 +22,7 @@ class CheckTokenExpiry
             $token->delete();
 
             return response()->json([
-                'message' => 'Your session has expired. Please log in again.',
+                'message' => __('Your session has expired. Please log in again.'),
             ], 401);
         }
 

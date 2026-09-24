@@ -105,7 +105,7 @@
                                 data-bs-target="#videoModal" data-kt-docs-table-toolbar="base">
 
                                 <button type="button" class="btn btn-primary w-100" id="add_video_btn"
-                                    data-bs-toggle="tooltip" data-bs-original-title="Coming Soon" data-kt-initialized="1">
+                                    data-bs-toggle="tooltip" data-bs-original-title="{{ __('Add') }}" data-kt-initialized="1">
 
                                     <span class="svg-icon svg-icon-2">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -205,7 +205,7 @@
 
                                     @if (!$quizExists)
                                         <button type="button" class="btn btn-primary" id="quiz_btn" data-bs-toggle="tooltip"
-                                            data-bs-original-title="Coming Soon" data-kt-initialized="1">
+                                            data-bs-original-title="{{ __('Add') }}" data-kt-initialized="1">
 
                                             <span class="svg-icon svg-icon-2">
 
@@ -358,7 +358,7 @@
                                         data-kt-docs-table-toolbar="base">
 
                                         <button type="button" class="btn btn-primary w-100" data-bs-toggle="tooltip"
-                                            data-bs-original-title="Coming Soon" data-kt-initialized="1">
+                                            data-bs-original-title="{{ __('Add') }}" data-kt-initialized="1">
 
                                             <span class="svg-icon svg-icon-2">
 

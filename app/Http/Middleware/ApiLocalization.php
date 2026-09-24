@@ -41,7 +41,7 @@ class ApiLocalization
         // check the languages defined is supported
         if (!array_key_exists($locale, $this->app->config->get('app.supported_languages'))) {
             // respond with error
-            return abort(403, 'Language not supported.');
+            return abort(403, __('Language not supported.'));
         }
 
         // set the local language

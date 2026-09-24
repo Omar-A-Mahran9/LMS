@@ -219,98 +219,67 @@ public function myCourses(Request $request)
 
 public function studentStatistics()
 {
-    $user = auth('api')->user();
-    $student=Student::find($user->id);
-    // جميع المحاولات الخاصة بالطالب
-    $attempts = $student->quizAttempts()->with('quiz')->get();
+    $student = Student::find(auth('api')->id());
 
-    $totalQuizzes = $attempts->groupBy('quiz_id')->count();
-    $successCount = $attempts->filter(function ($attempt) {
-        return $attempt->score >= 50; // حسب النجاح المطلوب
-    })->groupBy('quiz_id')->count();
-
-    $successRate = $totalQuizzes > 0
-        ? round(($successCount / $totalQuizzes) * 100, 2)
-        : 0;
-
-    // أعلى محاولة
-    $highestAttempt = $attempts->sortByDesc('score')->first();
-    $highestScore = $highestAttempt?->score;
-    $highestQuizTitle = $highestAttempt?->quiz?->title;
-
-    // أقل محاولة
-    $lowestAttempt = $attempts->sortBy('score')->first();
-    $lowestScore = $lowestAttempt?->score;
-    $lowestQuizTitle = $lowestAttempt?->quiz?->title;
-
-    // متوسط وقت الحل
-    $totalSolvingSeconds = $attempts->filter(function ($a) {
-        return $a->submitted_at && $a->started_at;
-    })->sum(function ($a) {
-        return $a->submitted_at->diffInSeconds($a->started_at);
-    });
-
-    $solvedCount = $attempts->filter(fn($a) => $a->submitted_at && $a->started_at)->count();
-    $totalSolvingTime = $student->quizAttempts()
-        ->whereNotNull('started_at')
+    // Only submitted attempts count (an exam still in progress isn't a score of 0)
+    $attempts = $student->quizAttempts()
         ->whereNotNull('submitted_at')
+        ->with(['quiz' => fn ($q) => $q->withSum('questions as full_mark', 'points')])
+        ->orderBy('submitted_at')
         ->get()
-        ->reduce(function ($carry, $attempt) {
-            return $carry + $attempt->submitted_at->diffInSeconds($attempt->started_at);
-        }, 0);
+        ->filter(fn ($a) => $a->quiz);
 
-    $attemptCountForTime = $student->quizAttempts()
-        ->whereNotNull('started_at')
-        ->whereNotNull('submitted_at')
-        ->count();
-
-    $averageSolvingTimeInSeconds = $attemptCountForTime > 0
-        ? (int) round($totalSolvingTime / $attemptCountForTime)
+    $percentOf = fn ($attempt) => $attempt->quiz->full_mark > 0
+        ? round($attempt->score / $attempt->quiz->full_mark * 100, 1)
         : 0;
 
+    // Best attempt per exam, in the order the exams were taken
+    $bestPerQuiz = $attempts->groupBy('quiz_id')
+        ->map(fn ($quizAttempts) => $quizAttempts->sortByDesc('score')->first())
+        ->sortBy('submitted_at')
+        ->values();
 
+    // Passing an exam = 50% of its full mark on the best attempt
+    $totalQuizzes = $bestPerQuiz->count();
+    $successCount = $bestPerQuiz->filter(fn ($a) => $percentOf($a) >= 50)->count();
+    $successRate = $totalQuizzes > 0 ? round($successCount / $totalQuizzes * 100, 1) : 0;
 
+    $highestAttempt = $bestPerQuiz->sortByDesc(fn ($a) => $percentOf($a))->first();
+    $lowestAttempt = $bestPerQuiz->sortBy(fn ($a) => $percentOf($a))->first();
 
-    // مقارنة الأداء مع باقي الطلاب في نفس الكورسات
-    $enrolledCourseIds = $student->courses()->pluck('courses.id');
+    // Average solving time in minutes: this student vs everyone who took the same exams
+    $minutesExpr = 'TIMESTAMPDIFF(SECOND, started_at, submitted_at) / 60';
+    $quizIds = $bestPerQuiz->pluck('quiz_id');
+    $studentMinutes = $student->quizAttempts()->whereNotNull('submitted_at')->whereNotNull('started_at')
+        ->avg(DB::raw($minutesExpr));
+    $overallMinutes = QuizAttempt::whereIn('quiz_id', $quizIds)->whereNotNull('submitted_at')->whereNotNull('started_at')
+        ->avg(DB::raw($minutesExpr));
 
-    $averageScoresInCourses = QuizAttempt::whereHas('quiz', function ($q) use ($enrolledCourseIds) {
-        $q->whereIn('course_id', $enrolledCourseIds);
-    })->whereNotNull('score')->avg('score');
+    // Performance: % of classmates (same exams) whose average result is below this student's
+    $performancePercentage = null;
+    if ($quizIds->isNotEmpty()) {
+        $fullMarks = Quiz::whereIn('id', $quizIds)->withSum('questions as full_mark', 'points')->pluck('full_mark', 'id');
+        $averages = QuizAttempt::whereIn('quiz_id', $quizIds)
+            ->whereNotNull('submitted_at')
+            ->get(['student_id', 'quiz_id', 'score'])
+            ->groupBy('student_id')
+            ->map(fn ($rows) => $rows->avg(fn ($r) => ($fullMarks[$r->quiz_id] ?? 0) > 0 ? $r->score / $fullMarks[$r->quiz_id] * 100 : 0));
 
-    $studentAverageScore = $attempts->avg('score') ?? 0;
-    $performancePercentage = $averageScoresInCourses > 0
-    ? round(($studentAverageScore / $averageScoresInCourses) * 100, 2)
-    : null;
-
-
-    // تحضير بيانات الرسم البياني
-    $chartLabels = [];
-    $chartScores = [];
-    $maxScores = [];
-
-    foreach ($attempts as $attempt) {
-        $quiz = $attempt->quiz;
-        if (!$quiz) continue;
-
-        $quizTitle = $quiz->title ?? 'Unnamed Quiz';
-        $courseTitle = $quiz->course?->title ?? 'Unknown Course';
-        $label = "$quizTitle";
-
-        $chartLabels[] = $label;
-        $chartScores[] = $attempt->score ?? 0;
-        $maxScores[] = $quiz->questions->sum('points') ?: 100; // الحد الأعلى
+        $mine = $averages->pull($student->id);
+        if ($mine !== null && $averages->isNotEmpty()) {
+            $performancePercentage = round($averages->filter(fn ($avg) => $avg < $mine)->count() / $averages->count() * 100);
+        }
     }
 
-    // أعلى درجة من جميع الكويزات لاستخدامها كمقياس Y
-    // أعلى درجة من جميع الكويزات لاستخدامها كمقياس Y
-    $maxPossibleScore = count($maxScores) > 0 ? max($maxScores) : 100;
-    $studentName = $student->first_name ?? 'Student';
-    $yAxisSteps = [];
-    $step = 15;
-    for ($i = 0; $i <= $maxPossibleScore; $i += $step) {
-        $yAxisSteps[] = $i;
-    }
+    // Chart: result (%) of each exam; short labels for the axis, full details for the tooltip
+    $chartPoints = $bestPerQuiz->map(fn ($a) => [
+        'title' => $a->quiz->title,
+        'short_title' => $this->shortQuizLabel($a->quiz->title),
+        'score' => (int) $a->score,
+        'total_score' => (int) $a->quiz->full_mark,
+        'percentage' => $percentOf($a),
+        'date' => $a->submitted_at?->format('Y-m-d'),
+    ]);
 
     return response()->json([
         'success_rate' => [
@@ -318,40 +287,45 @@ public function studentStatistics()
             'success_quizzes' => $successCount,
             'total_quizzes' => $totalQuizzes,
         ],
-            'highest_score' => [
-            'quiz_title' => $highestQuizTitle,
-            'score' => $highestScore,
-            'total_score' => $highestAttempt?->quiz?->questions->sum('points') ?? 0,
+        'highest_score' => [
+            'quiz_title' => $highestAttempt?->quiz?->title,
+            'score' => $highestAttempt?->score,
+            'total_score' => (int) ($highestAttempt?->quiz?->full_mark ?? 0),
         ],
-
-    'lowest_score' => [
-    'quiz_title' => $lowestQuizTitle,
-    'score' => $lowestScore,
-    'total_score' => $lowestAttempt?->quiz?->questions->sum('points') ?? 0,
-    ],
-
-        'timing_comparison'=>[
-     'student_average_score' => round($studentAverageScore, 2),
-        'overall_average_score_in_courses' => round($averageScoresInCourses, 2),
+        'lowest_score' => [
+            'quiz_title' => $lowestAttempt?->quiz?->title,
+            'score' => $lowestAttempt?->score,
+            'total_score' => (int) ($lowestAttempt?->quiz?->full_mark ?? 0),
+        ],
+        // Minutes (the keys keep their old names for the frontend)
+        'timing_comparison' => [
+            'student_average_score' => round((float) $studentMinutes, 1),
+            'overall_average_score_in_courses' => round((float) $overallMinutes, 1),
         ],
         'performance_comparison' => [
-
-        'performance_percentage' => $performancePercentage,
-    ],
-
-
-    'chart_data' => [
-    'labels' => $chartLabels,
-    'datasets' => [
-        [
-            'label' => $studentName,
-            'backgroundColor' => '#2C3E94', // or use dynamic if needed
-            'data' => $chartScores,
+            'performance_percentage' => $performancePercentage,
         ],
-    ],
-    ],
-
+        'chart_data' => [
+            'labels' => $chartPoints->pluck('short_title'),
+            'datasets' => [
+                [
+                    'label' => 'نتيجتك %',
+                    'data' => $chartPoints->pluck('percentage'),
+                ],
+            ],
+            'points' => $chartPoints,
+        ],
     ]);
+}
+
+// "امتحان المحاضره الرابعة (present simple ...)" => "المحاضره الرابعة": readable on the chart axis
+private function shortQuizLabel(?string $title): string
+{
+    $label = trim(preg_replace('/\s+/u', ' ', (string) $title));
+    $label = preg_replace('/^امتحان\s+/u', '', $label);
+    $label = trim(preg_split('/[(:\-–|]/u', $label)[0]) ?: $label;
+
+    return \Illuminate\Support\Str::limit($label, 24);
 }
 
 public function myQuestion()
