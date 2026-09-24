@@ -1,242 +1,323 @@
- <!-- =========================================================
+ 
+<!-- =========================================================
      Sidebar
-========================================================= -->
-<div id="kt_app_sidebar"
+========================================================== -->
+
+<div
+    id="kt_app_sidebar"
     class="app-sidebar flex-column mt-lg-4 ps-2 pe-2 ps-lg-7 pe-lg-4"
+
     data-kt-drawer="true"
     data-kt-drawer-name="app-sidebar"
     data-kt-drawer-activate="{default: true, lg: false}"
     data-kt-drawer-overlay="true"
     data-kt-drawer-width="250px"
     data-kt-drawer-direction="start"
-    data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
+    data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle"
+>
 
-    <!-- =====================================================
+
+    {{-- =====================================================
          Sidebar Logo
-    ====================================================== -->
-    <div class="app-sidebar-logo flex-shrink-0 d-none d-md-flex flex-center align-items-center"
-        id="kt_app_sidebar_logo">
+    ====================================================== --}}
+
+    <div
+        id="kt_app_sidebar_logo"
+        class="app-sidebar-logo flex-shrink-0 d-none d-md-flex flex-center align-items-center"
+    >
 
         <a href="{{ route('dashboard.index') }}">
-            <img
-                alt="Logo"
-                src="{{ asset('placeholder_images/Logo.svg') }}"
-                class="h-50px d-none d-sm-inline app-sidebar-logo-default theme-light-show"
-            />
 
+            {{-- Light Mode --}}
             <img
-                alt="Logo"
                 src="{{ asset('placeholder_images/Logo.svg') }}"
+                alt="{{ setting('website_name') }}"
+                class="h-50px d-none d-sm-inline app-sidebar-logo-default theme-light-show"
+            >
+
+            {{-- Dark Mode --}}
+            <img
+                src="{{ asset('placeholder_images/Logo.svg') }}"
+                alt="{{ setting('website_name') }}"
                 class="h-50px theme-dark-show"
-            />
+            >
+
         </a>
 
-        <!-- Mobile Aside Toggle -->
-        <div class="d-flex align-items-center d-lg-none ms-n3 me-1"
-            title="{{ __('Show aside menu') }}">
 
-            <div class="btn btn-icon btn-active-color-primary w-30px h-30px"
-                id="kt_aside_mobile_toggle">
+        {{-- Mobile Toggle --}}
+        <div
+            class="d-flex align-items-center d-lg-none ms-n3 me-1"
+            title="{{ __('Show aside menu') }}"
+        >
 
+            <div
+                id="kt_aside_mobile_toggle"
+                class="btn btn-icon btn-active-color-primary w-30px h-30px"
+            >
                 <i class="ki-outline ki-abstract-14 fs-1"></i>
             </div>
+
         </div>
+
     </div>
 
 
-    <!-- =====================================================
+    {{-- =====================================================
          Sidebar Menu
-    ====================================================== -->
+    ====================================================== --}}
+
     <div class="app-sidebar-menu flex-column-fluid">
 
-        <div id="kt_app_sidebar_menu_wrapper"
+        <div
+            id="kt_app_sidebar_menu_wrapper"
             class="hover-scroll-overlay-y my-5"
+
             data-kt-scroll="true"
             data-kt-scroll-activate="true"
             data-kt-scroll-height="auto"
             data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer"
             data-kt-scroll-wrappers="#kt_app_sidebar_menu"
-            data-kt-scroll-offset="5px">
+            data-kt-scroll-offset="5px"
+        >
 
-            <div class="menu menu-column menu-rounded menu-sub-indention fw-bold px-6 bg-transparent"
+            <div
                 id="kt_app_sidebar_menu"
+                class="menu menu-column menu-rounded menu-sub-indention fw-bold px-6 bg-transparent"
+
                 data-kt-menu="true"
-                data-kt-menu-expand="false">
+                data-kt-menu-expand="false"
+            >
 
 
-                <!-- =================================================
+                {{-- =================================================
                      Main
-                ================================================== -->
+                ================================================== --}}
+
                 <div class="menu-item">
+
                     <div class="menu-content pt-2 pb-2">
+
                         <span class="menu-heading text-muted text-uppercase fs-8 fw-bold">
                             {{ __('Main') }}
                         </span>
+
                     </div>
+
                 </div>
+
 
                 <x-dashboard.aside-item
                     :slug="'/'"
                     :route="route('dashboard.index')"
-                    :title="__('Dashboard')">
+                    :title="__('Dashboard')"
+                >
                     <i class="ki-outline ki-category fs-2"></i>
                 </x-dashboard.aside-item>
 
 
-                <!-- =================================================
-                     Users & Students
-                ================================================== -->
+                {{-- =================================================
+                     Users
+                ================================================== --}}
+
                 @if(
                     auth()->user()->can('view_admins') ||
                     auth()->user()->can('view_students')
                 )
+
                     <div class="menu-item">
+
                         <div class="menu-content pt-6 pb-2">
+
                             <span class="menu-heading text-muted text-uppercase fs-8 fw-bold">
                                 {{ __('Users') }}
                             </span>
+
                         </div>
+
                     </div>
+
                 @endif
 
 
                 @can('view_admins')
+
                     <x-dashboard.aside-item
                         :slug="'admins'"
                         :route="route('dashboard.admins.index')"
-                        :title="__('Admins')">
+                        :title="__('Admins')"
+                    >
                         <i class="ki-outline ki-security-user fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_students')
+
                     <x-dashboard.aside-item
                         :slug="'students'"
                         :route="route('dashboard.students.index')"
-                        :title="__('Students')">
+                        :title="__('Students')"
+                    >
                         <i class="ki-outline ki-people fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
-                <!-- =================================================
+                {{-- =================================================
                      Academic
-                ================================================== -->
+                ================================================== --}}
+
                 @if(
                     auth()->user()->can('view_categories') ||
+                    auth()->user()->can('view_governments') ||
                     auth()->user()->can('view_courses') ||
                     auth()->user()->can('view_lives') ||
                     auth()->user()->can('view_books') ||
                     auth()->user()->can('view_classes') ||
                     auth()->user()->can('view_sections') ||
                     auth()->user()->can('view_questions') ||
-                    auth()->user()->can('view_enrollments') ||
-                    auth()->user()->can('view_governments')
+                    auth()->user()->can('view_enrollments')
                 )
+
                     <div class="menu-item">
+
                         <div class="menu-content pt-6 pb-2">
+
                             <span class="menu-heading text-muted text-uppercase fs-8 fw-bold">
                                 {{ __('Academic') }}
                             </span>
+
                         </div>
+
                     </div>
+
                 @endif
 
 
                 @can('view_categories')
+
                     <x-dashboard.aside-item
                         :slug="'categories'"
                         :route="route('dashboard.categories.index', ['type' => 'parent'])"
-                        :title="__('Categories')">
+                        :title="__('Categories')"
+                    >
                         <i class="ki-outline ki-category fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_governments')
+
                     <x-dashboard.aside-item
                         :slug="'governments'"
                         :route="route('dashboard.governments.index')"
-                        :title="__('Governments')">
+                        :title="__('Governments')"
+                    >
                         <i class="ki-outline ki-map fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_courses')
+
                     <x-dashboard.aside-item
                         :slug="'courses'"
                         :route="route('dashboard.courses.index')"
-                        :title="__('Courses')">
-                        <i class="ki-outline ki-plus fs-2"></i>
+                        :title="__('Courses')"
+                    >
+                        <i class="ki-outline ki-book fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_lives')
+
                     <x-dashboard.aside-item
                         :slug="'lives'"
                         :route="route('dashboard.lives.index')"
-                        :title="__('Lives')">
+                        :title="__('Lives')"
+                    >
                         <i class="fas fa-tv fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_books')
+
                     <x-dashboard.aside-item
                         :slug="'books'"
                         :route="route('dashboard.books.index')"
-                        :title="__('Books')">
+                        :title="__('Books')"
+                    >
                         <i class="fas fa-book fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_classes')
+
                     <x-dashboard.aside-item
                         :slug="'classes'"
                         :route="route('dashboard.classes.index')"
-                        :title="__('Classes')">
+                        :title="__('Classes')"
+                    >
                         <i class="fas fa-school fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_sections')
+
                     <x-dashboard.aside-item
                         :slug="'sections'"
                         :route="route('dashboard.sections.index')"
-                        :title="__('Sections')">
+                        :title="__('Sections')"
+                    >
                         <i class="ki-outline ki-note fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_questions')
+
                     <x-dashboard.aside-item
                         :slug="'questions'"
                         :route="route('dashboard.questions.index')"
-                        :title="__('Questions')">
+                        :title="__('Questions')"
+                    >
                         <i class="ki-outline ki-question fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_enrollments')
+
                     <x-dashboard.aside-item
                         :slug="'enrollments'"
                         :route="route('dashboard.enrollments.index')"
-                        :title="__('Enrollments')">
+                        :title="__('Enrollments')"
+                    >
                         <i class="fas fa-receipt fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
-                <!-- =================================================
+                {{-- =================================================
                      Content & Communication
-                ================================================== -->
+                ================================================== --}}
+
                 @if(
                     auth()->user()->can('view_sliders') ||
                     auth()->user()->can('view_contact_us') ||
@@ -244,257 +325,336 @@
                     auth()->user()->can('view_newsletter') ||
                     auth()->user()->can('view_CommonQuestion')
                 )
+
                     <div class="menu-item">
+
                         <div class="menu-content pt-6 pb-2">
+
                             <span class="menu-heading text-muted text-uppercase fs-8 fw-bold">
                                 {{ __('Content & Communication') }}
                             </span>
+
                         </div>
+
                     </div>
+
                 @endif
 
 
                 @can('view_sliders')
+
                     <x-dashboard.aside-item
                         :slug="'sliders'"
                         :route="route('dashboard.sliders.index')"
-                        :title="__('Sliders')">
+                        :title="__('Sliders')"
+                    >
                         <i class="ki-outline ki-slider-horizontal-2 fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_contact_us')
+
                     <x-dashboard.aside-item
                         :slug="'contact-requests'"
                         :route="route('dashboard.contact-requests.index')"
-                        :title="__('Contact us')">
+                        :title="__('Contact us')"
+                    >
                         <i class="ki-outline ki-phone fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_notifications')
+
                     <x-dashboard.aside-item
                         :slug="'notifications'"
                         :route="route('dashboard.notifications.index')"
-                        :title="__('Student notifications')">
+                        :title="__('Student notifications')"
+                    >
                         <i class="ki-outline ki-notification-on fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_newsletter')
+
                     <x-dashboard.aside-item
                         :slug="'newsletter'"
                         :route="route('dashboard.newsletter.index')"
-                        :title="__('Newsletter')">
+                        :title="__('Newsletter')"
+                    >
                         <i class="ki-outline ki-book-square fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_CommonQuestion')
+
                     <x-dashboard.aside-item
                         :slug="'CommonQuestion'"
                         :route="route('dashboard.CommonQuestion.index')"
-                        :title="__('Common Question')">
+                        :title="__('Common Question')"
+                    >
                         <i class="ki-outline ki-question fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
-                <!-- =================================================
+                {{-- =================================================
                      Commerce
-                ================================================== -->
+                ================================================== --}}
+
                 @if(
                     auth()->user()->can('view_bundle') ||
                     auth()->user()->can('view_orders') ||
                     auth()->user()->can('view_generateCode')
                 )
+
                     <div class="menu-item">
+
                         <div class="menu-content pt-6 pb-2">
+
                             <span class="menu-heading text-muted text-uppercase fs-8 fw-bold">
                                 {{ __('Commerce') }}
                             </span>
+
                         </div>
+
                     </div>
+
                 @endif
 
 
                 @can('view_bundle')
+
                     <x-dashboard.aside-item
                         :slug="'bundles'"
                         :route="route('dashboard.bundles.index')"
-                        :title="__('Bundles')">
+                        :title="__('Bundles')"
+                    >
                         <i class="ki-outline ki-package fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_orders')
+
                     <x-dashboard.aside-item
                         :slug="'orders'"
                         :route="route('dashboard.orders.index')"
-                        :title="__('Orders')">
+                        :title="__('Orders')"
+                    >
                         <i class="ki-outline ki-parcel fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
 
 
                 @can('view_generateCode')
+
                     <x-dashboard.aside-item
                         :slug="'generateCode'"
                         :route="route('dashboard.generateCode.index')"
-                        :title="__('Generate Code')">
+                        :title="__('Generate Code')"
+                    >
                         <i class="ki-outline ki-code fs-2"></i>
                     </x-dashboard.aside-item>
-                @endcan
 
-
-                <!-- =================================================
-                     Reports
-                ================================================== -->
-                @can('view_students_rate')
-                    <div class="menu-item">
-                        <div class="menu-content pt-6 pb-2">
-                            <span class="menu-heading text-muted text-uppercase fs-8 fw-bold">
-                                {{ __('Reports') }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <x-dashboard.aside-item
-                        :slug="'students_rate'"
-                        :route="route('dashboard.students_rate.index')"
-                        :title="__('Students Rate')">
-                        <i class="ki-outline ki-star fs-2"></i>
-                    </x-dashboard.aside-item>
-                @endcan
-
-
-                <!-- =================================================
-                     System
-                ================================================== -->
-                @can('view_roles')
-                    <div class="menu-item">
-                        <div class="menu-content pt-6 pb-2">
-                            <span class="menu-heading text-muted text-uppercase fs-8 fw-bold">
-                                {{ __('System') }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <x-dashboard.aside-item
-                        :slug="'settings'"
-                        :route="route('dashboard.settings.roles.index')"
-                        :title="__('Settings')">
-                        <i class="ki-outline ki-rescue fs-2"></i>
-                    </x-dashboard.aside-item>
                 @endcan
 
 
                 {{-- =================================================
-                     Recycle Bin
+                     Reports
                 ================================================== --}}
-                {{--
-                @can('view_recycle_bin')
+
+                @can('view_students_rate')
+
+                    <div class="menu-item">
+
+                        <div class="menu-content pt-6 pb-2">
+
+                            <span class="menu-heading text-muted text-uppercase fs-8 fw-bold">
+                                {{ __('Reports') }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
                     <x-dashboard.aside-item
-                        :slug="'trash'"
-                        :route="route('dashboard.trash')"
-                        :title="__('Recycle Bin')">
-                        <i class="ki-outline ki-trash fs-2"></i>
+                        :slug="'students_rate'"
+                        :route="route('dashboard.students_rate.index')"
+                        :title="__('Students Rate')"
+                    >
+                        <i class="ki-outline ki-star fs-2"></i>
                     </x-dashboard.aside-item>
+
                 @endcan
-                --}}
+
+
+                {{-- =================================================
+                     System
+                ================================================== --}}
+
+                @can('view_roles')
+
+                    <div class="menu-item">
+
+                        <div class="menu-content pt-6 pb-2">
+
+                            <span class="menu-heading text-muted text-uppercase fs-8 fw-bold">
+                                {{ __('System') }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <x-dashboard.aside-item
+                        :slug="'settings'"
+                        :route="route('dashboard.settings.roles.index')"
+                        :title="__('Settings')"
+                    >
+                        <i class="ki-outline ki-rescue fs-2"></i>
+                    </x-dashboard.aside-item>
+
+                @endcan
+
 
             </div>
+
         </div>
+
     </div>
 
 
-    <!-- =====================================================
+    {{-- =====================================================
          Sidebar Footer
-    ====================================================== -->
-    <div class="app-sidebar-footer d-flex align-items-center px-8 pb-10"
-        id="kt_app_sidebar_footer">
+    ====================================================== --}}
+
+    <div
+        id="kt_app_sidebar_footer"
+        class="app-sidebar-footer d-flex align-items-center px-8 pb-10"
+    >
 
         <div>
 
-            <!-- User Info -->
-            <div class="d-flex align-items-center"
+            {{-- User Information --}}
+            <div
+                class="d-flex align-items-center"
+
                 data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                 data-kt-menu-overflow="true"
-                data-kt-menu-placement="{{ isArabic() ? 'top-end' : 'top-start' }}">
+                data-kt-menu-placement="{{ isArabic() ? 'top-end' : 'top-start' }}"
+            >
 
                 <div class="d-flex flex-center cursor-pointer symbol symbol-circle symbol-40px">
+
                     <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+
                         <div class="symbol-label fs-2 fw-semibold text-primary">
-                            {{ substr(auth()->user()->name, 0, 2) }}
+
+                            {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+
                         </div>
+
                     </div>
+
                 </div>
 
+
                 <div class="d-flex flex-column align-items-start justify-content-center ms-3">
+
                     <span class="text-gray-500 fs-8 fw-semibold">
                         {{ __('Hello') }}
                     </span>
 
-                    <a href="#"
-                        class="text-gray-800 fs-7 fw-bold text-hover-primary">
+                    <span class="text-gray-800 fs-7 fw-bold">
                         {{ auth()->user()->name }}
-                    </a>
+                    </span>
+
                 </div>
 
             </div>
 
 
-            <!-- User Menu -->
-            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800
-                menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
-                data-kt-menu="true">
+            {{-- User Dropdown --}}
+            <div
+                class="menu menu-sub menu-sub-dropdown menu-column menu-rounded
+                       menu-gray-800 menu-state-bg menu-state-color
+                       fw-semibold py-4 fs-6 w-275px"
 
+                data-kt-menu="true"
+            >
 
-                <!-- Profile -->
+                {{-- Profile --}}
                 <div class="menu-item px-5 my-1">
-                    <a href="{{ route('dashboard.profile-info') }}"
-                        class="menu-link px-5">
+
+                    <a
+                        href="{{ route('dashboard.profile-info') }}"
+                        class="menu-link px-5"
+                    >
                         {{ __('Profile') }}
                     </a>
+
                 </div>
 
 
-                <!-- Theme -->
-                <div class="menu-item px-5"
+                {{-- Theme --}}
+                <div
+                    class="menu-item px-5"
+
                     data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                     data-kt-menu-placement="left-start"
-                    data-kt-menu-offset="-15px, 0">
+                    data-kt-menu-offset="-15px, 0"
+                >
 
                     <a href="#" class="menu-link px-5">
 
                         <span class="menu-title position-relative">
+
                             {{ __('Mode') }}
 
                             <span class="ms-5 position-absolute translate-middle-y top-50 end-0">
+
                                 <i class="ki-outline ki-night-day theme-light-show fs-2"></i>
+
                                 <i class="ki-outline ki-moon theme-dark-show fs-2"></i>
+
                             </span>
+
                         </span>
 
                     </a>
 
 
-                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded
-                        menu-title-gray-700 menu-icon-gray-500 menu-active-bg
-                        menu-state-color fw-semibold py-4 fs-base w-150px"
+                    <div
+                        class="menu menu-sub menu-sub-dropdown menu-column
+                               menu-rounded menu-title-gray-700 menu-icon-gray-500
+                               menu-active-bg menu-state-color
+                               fw-semibold py-4 fs-base w-150px"
+
                         data-kt-menu="true"
-                        data-kt-element="theme-mode-menu">
+                        data-kt-element="theme-mode-menu"
+                    >
 
                         <div class="menu-item px-3 my-0">
-                            <a href="#"
+
+                            <a
+                                href="#"
                                 class="menu-link px-3 py-2"
                                 data-kt-element="mode"
-                                data-kt-value="light">
+                                data-kt-value="light"
+                            >
 
                                 <span class="menu-icon">
                                     <i class="ki-outline ki-night-day fs-2"></i>
@@ -503,15 +663,20 @@
                                 <span class="menu-title">
                                     {{ __('Light') }}
                                 </span>
+
                             </a>
+
                         </div>
 
 
                         <div class="menu-item px-3 my-0">
-                            <a href="#"
+
+                            <a
+                                href="#"
                                 class="menu-link px-3 py-2"
                                 data-kt-element="mode"
-                                data-kt-value="dark">
+                                data-kt-value="dark"
+                            >
 
                                 <span class="menu-icon">
                                     <i class="ki-outline ki-moon fs-2"></i>
@@ -520,15 +685,20 @@
                                 <span class="menu-title">
                                     {{ __('Dark') }}
                                 </span>
+
                             </a>
+
                         </div>
 
 
                         <div class="menu-item px-3 my-0">
-                            <a href="#"
+
+                            <a
+                                href="#"
                                 class="menu-link px-3 py-2"
                                 data-kt-element="mode"
-                                data-kt-value="system">
+                                data-kt-value="system"
+                            >
 
                                 <span class="menu-icon">
                                     <i class="ki-outline ki-screen fs-2"></i>
@@ -537,117 +707,155 @@
                                 <span class="menu-title">
                                     {{ __('System') }}
                                 </span>
+
                             </a>
+
                         </div>
 
                     </div>
+
                 </div>
 
 
-                <!-- Language -->
-                <div class="menu-item px-5"
+                {{-- Language --}}
+                <div
+                    class="menu-item px-5"
+
                     data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                     data-kt-menu-placement="right-end"
-                    data-kt-menu-offset="-15px, 0">
+                    data-kt-menu-offset="-15px, 0"
+                >
 
-                    <a href="{{ route('dashboard.change-language', 'en') }}"
-                        class="menu-link px-5">
+                    <a
+                        href="{{ route('dashboard.change-language', isArabic() ? 'en' : 'ar') }}"
+                        class="menu-link px-5"
+                    >
 
                         <span class="menu-title position-relative">
 
                             {{ __('Language') }}
 
-                            <span class="fs-8 rounded bg-light px-3 py-2 position-absolute
-                                translate-middle-y top-50 end-0">
+                            <span
+                                class="fs-8 rounded bg-light px-3 py-2
+                                       position-absolute translate-middle-y top-50 end-0"
+                            >
 
                                 @if (isArabic())
+
                                     {{ __('Arabic') }}
 
                                     <img
-                                        class="w-15px h-15px rounded-1 ms-2"
                                         src="{{ asset('assets/dashboard/media/flags/saudi-arabia.svg') }}"
-                                        alt="Arabic"
-                                    />
+                                        class="w-15px h-15px rounded-1 ms-2"
+                                        alt="{{ __('Arabic') }}"
+                                    >
+
                                 @else
+
                                     {{ __('English') }}
 
                                     <img
-                                        class="w-15px h-15px rounded-1 ms-2"
                                         src="{{ asset('assets/dashboard/media/flags/united-states.svg') }}"
-                                        alt="English"
-                                    />
+                                        class="w-15px h-15px rounded-1 ms-2"
+                                        alt="{{ __('English') }}"
+                                    >
+
                                 @endif
 
                             </span>
 
                         </span>
+
                     </a>
 
 
                     <div class="menu-sub menu-sub-dropdown w-175px py-4">
 
-                        <!-- English -->
+                        {{-- English --}}
                         <div class="menu-item px-3">
-                            <a href="{{ route('dashboard.change-language', 'en') }}"
-                                class="menu-link d-flex px-5 @if (!isArabic()) active @endif">
+
+                            <a
+                                href="{{ route('dashboard.change-language', 'en') }}"
+                                class="menu-link d-flex px-5 @if (!isArabic()) active @endif"
+                            >
 
                                 <span class="symbol symbol-20px me-4">
+
                                     <img
-                                        class="rounded-1"
                                         src="{{ asset('assets/dashboard/media/flags/united-states.svg') }}"
-                                        alt="English"
-                                    />
+                                        class="rounded-1"
+                                        alt="{{ __('English') }}"
+                                    >
+
                                 </span>
 
                                 {{ __('English') }}
+
                             </a>
+
                         </div>
 
 
-                        <!-- Arabic -->
+                        {{-- Arabic --}}
                         <div class="menu-item px-3">
-                            <a href="{{ route('dashboard.change-language', 'ar') }}"
-                                class="menu-link d-flex px-5 @if (isArabic()) active @endif">
+
+                            <a
+                                href="{{ route('dashboard.change-language', 'ar') }}"
+                                class="menu-link d-flex px-5 @if (isArabic()) active @endif"
+                            >
 
                                 <span class="symbol symbol-20px me-4">
+
                                     <img
-                                        class="rounded-1"
                                         src="{{ asset('assets/dashboard/media/flags/saudi-arabia.svg') }}"
-                                        alt="Arabic"
-                                    />
+                                        class="rounded-1"
+                                        alt="{{ __('Arabic') }}"
+                                    >
+
                                 </span>
 
                                 {{ __('Arabic') }}
+
                             </a>
+
                         </div>
 
                     </div>
+
                 </div>
 
 
-                <!-- Logout -->
+                {{-- Logout --}}
                 <div class="menu-item px-5">
 
-                    <form id="logout-form"
+                    <form
+                        id="logout-form"
                         method="POST"
-                        action="{{ route('admin.logout') }}">
+                        action="{{ route('admin.logout') }}"
+                    >
 
                         @csrf
 
-                        <a href="javascript:void(0)"
-                            onclick="document.getElementById('logout-form').submit()"
-                            class="menu-link px-5">
-
+                        <button
+                            type="submit"
+                            class="menu-link border-0 bg-transparent w-100 text-start px-5"
+                        >
                             {{ __('Sign Out') }}
+                        </button>
 
-                        </a>
                     </form>
 
                 </div>
 
             </div>
+
         </div>
+
     </div>
 
 </div>
-<!--end::Sidebar-->
+
+<!-- =========================================================
+     End Sidebar
+========================================================== -->
+
