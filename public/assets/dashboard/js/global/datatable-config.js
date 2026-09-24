@@ -194,14 +194,15 @@ var toggleToolbars = function () {
     let count = countCheckboxes(allCheckboxes);
     let checkedState = count > 0;
 
-    // Toggle toolbars
+    // Toggle toolbars (either one can be missing, e.g. the "add" button hidden by a permission;
+    // throwing here stopped the rest of the draw handler, so the row action menus never opened)
     if (checkedState) {
-        selectedCount.innerHTML = count;
-        toolbarBase.classList.add("d-none");
-        toolbarSelected.classList.remove("d-none");
+        if (selectedCount) selectedCount.innerHTML = count;
+        toolbarBase?.classList.add("d-none");
+        toolbarSelected?.classList.remove("d-none");
     } else {
-        toolbarBase.classList.remove("d-none");
-        toolbarSelected.classList.add("d-none");
+        toolbarBase?.classList.remove("d-none");
+        toolbarSelected?.classList.add("d-none");
     }
 };
 
@@ -217,6 +218,7 @@ var deleteSelectedRowsWithURL = function ({ url, restoreUrl }) {
     const deleteSelected = document.querySelector(
         '[data-kt-docs-table-select="delete_selected"]'
     );
+    if (!deleteSelected) return; // no bulk delete button on this page
 
     deleteSelected.addEventListener("click", function () {
         /** get selected Rows id **/

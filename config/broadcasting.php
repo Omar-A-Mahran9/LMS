@@ -45,6 +45,9 @@ return [
             ],
             'client_options' => [
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
+                // Notifications are pushed inside the admin's request: never let a slow Pusher hold it up
+                'timeout' => 5,
+                'connect_timeout' => 3,
             ],
         ],
 

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\StudentNotificationCreated;
 use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\Enrollment;
@@ -95,7 +96,35 @@ class StudentNotifier
             $notification->students()->sync($ids);
         }
 
+        self::broadcast($notification);
+
         return $notification;
+    }
+
+    /**
+     * Pushes the notification to the students' open pages right away (Pusher).
+     * Skipped when broadcasting isn't configured; the site then picks it up on its next check.
+     * A Pusher problem must never stop the notification from being saved.
+     */
+    public static function broadcast(StudentNotification $notification): void
+    {
+        if (!self::realtimeEnabled()) {
+            return;
+        }
+
+        try {
+            broadcast(new StudentNotificationCreated($notification));
+        } catch (\Throwable $e) {
+            report($e);
+        }
+    }
+
+    public static function realtimeEnabled(): bool
+    {
+        return config('broadcasting.default') === 'pusher'
+            && config('broadcasting.connections.pusher.key')
+            && config('broadcasting.connections.pusher.secret')
+            && config('broadcasting.connections.pusher.app_id');
     }
 
     /** Website page for a course (same routes the site already uses). */

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Events\StudentNotificationCreated;
 use App\Models\StudentNotification;
+use App\Services\StudentNotifier;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -38,7 +40,37 @@ class NotificationController extends Controller
 
     public function unreadCount()
     {
-        return $this->success('', ['unread_count' => $this->unread(auth('api')->user())]);
+        $student = auth('api')->user();
+
+        return $this->success('', [
+            'unread_count' => $this->unread($student),
+            'realtime'     => $this->realtimeConfig($student),
+        ]);
+    }
+
+    /**
+     * What the site needs to listen for new notifications live (Pusher public key + this student's
+     * channels). The key is public by design; the secret never leaves the server.
+     */
+    private function realtimeConfig($student): array
+    {
+        if (!StudentNotifier::realtimeEnabled()) {
+            return ['enabled' => false];
+        }
+
+        $channels = [StudentNotificationCreated::channelFor(StudentNotification::TARGET_ALL)];
+        if ($student->category_id) {
+            $channels[] = StudentNotificationCreated::channelFor(StudentNotification::TARGET_CATEGORIES, $student->category_id);
+        }
+        $channels[] = StudentNotificationCreated::channelFor(StudentNotification::TARGET_STUDENTS, $student->id);
+
+        return [
+            'enabled'  => true,
+            'key'      => config('broadcasting.connections.pusher.key'),
+            'cluster'  => config('broadcasting.connections.pusher.options.cluster'),
+            'event'    => 'notification.created',
+            'channels' => $channels,
+        ];
     }
 
     public function markAsRead($id)
