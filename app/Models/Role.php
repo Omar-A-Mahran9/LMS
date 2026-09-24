@@ -71,6 +71,8 @@ class Role extends Model
 
         'lives',
 
+        'notifications',
+
     ];
 
     protected static function booted()

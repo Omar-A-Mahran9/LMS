@@ -6,6 +6,13 @@ const __ = (word) => {
 
 let translations = {
     ar: {
+        "Message": "رسالة",
+        "New class": "حصة جديدة",
+        "New course": "كورس جديد",
+        "Grades": "الصفوف",
+        "student(s)": "طالب",
+        "All students": "كل الطلاب",
+        "Automatic": "تلقائي",
         "Edit homework": "تعديل الواجب",
         "Something went wrong, please try again": "حدث خطأ، حاول مرة أخرى",
         "Add new why us": "اضافة لماذا نحن",

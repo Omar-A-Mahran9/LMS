@@ -114,6 +114,11 @@ Route::get('students/blocked-selected', 'StudentController@blockedSelected');
 Route::resource('sliders', 'SliderController');
 
 Route::resource('newsletter', 'NewsLetterController')->only(['index', 'destroy']);
+
+/** student notifications (messages from the dashboard + automatic new class / course notifications) **/
+Route::get('notifications/students-search', 'StudentNotificationController@searchStudents')->name('notifications.students-search');
+Route::delete('notifications/delete-selected', 'StudentNotificationController@deleteSelected');
+Route::resource('notifications', 'StudentNotificationController')->only(['index', 'store', 'destroy']);
 Route::get('profile-info', 'ProfileController@profileInfo')->name('profile-info');
 Route::put('update-profile-info', 'ProfileController@updateProfileInfo')->name('update-profile-info');
 Route::put('update-profile-email', 'ProfileController@updateProfileEmail')->name('update-profile-email');

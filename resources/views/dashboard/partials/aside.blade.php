@@ -145,6 +145,12 @@
                     </x-dashboard.aside-item>
                 @endcan
 
+                @can('view_notifications')
+                    <x-dashboard.aside-item :slug="'notifications'" :route="route('dashboard.notifications.index')" :title="__('Student notifications')">
+                        <i class="ki-outline ki-notification-on fs-2"></i>
+                    </x-dashboard.aside-item>
+                @endcan
+
                 @can('view_newsletter')
                     <x-dashboard.aside-item :slug="'newsletter'" :route="route('dashboard.newsletter.index')" :title="__('Newsletter')">
                         <i class="ki-outline ki-book-square fs-1"></i>

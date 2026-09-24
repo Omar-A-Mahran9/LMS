@@ -18,6 +18,22 @@ class CourseClass extends Model
         'updated_at' => 'date:Y-m-d',
     ];
 
+    protected static function booted(): void
+    {
+        // Notify students when a class goes live (created active, or activated later).
+        // A notification problem must never block saving the class.
+        $notify = function (self $model) {
+            try {
+                \App\Services\StudentNotifier::newClass($model);
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        };
+
+        static::created(fn(self $model) => $model->is_active && $notify($model));
+        static::updated(fn(self $model) => $model->wasChanged('is_active') && $model->is_active && $notify($model));
+    }
+
 
 
 

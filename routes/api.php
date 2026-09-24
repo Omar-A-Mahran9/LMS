@@ -72,6 +72,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('stats', [ProfileController::class, 'studentStatistics'])->name('stats');
     Route::get('my-question', [ProfileController::class, 'myQuestion'])->name('courses');
 
+    // student notifications (new classes / courses / messages from the dashboard)
+    Route::get('notifications', 'NotificationController@index');
+    Route::get('notifications/unread-count', 'NotificationController@unreadCount');
+    Route::post('notifications/read-all', 'NotificationController@markAllAsRead');
+    Route::post('notifications/{id}/read', 'NotificationController@markAsRead')->whereNumber('id');
+
 });
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {

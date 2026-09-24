@@ -46,6 +46,11 @@ class Student extends Authenticatable
         return $this->belongsTo(Category::class);
     }
 
+    public function readNotifications()
+    {
+        return $this->belongsToMany(StudentNotification::class, 'student_notification_reads')->withPivot('read_at');
+    }
+
     public function government()
     {
         return $this->belongsTo(Government::class);
