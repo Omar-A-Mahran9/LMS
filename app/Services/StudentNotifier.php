@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Course;
 use App\Models\CourseClass;
+use App\Models\Enrollment;
 use App\Models\StudentNotification;
 
 class StudentNotifier
@@ -49,6 +50,35 @@ class StudentNotifier
             'link'      => self::courseLink($course),
             'course_id' => $course->id,
         ], StudentNotification::TARGET_ALL);
+    }
+
+    /** The student's subscription to a course was activated from the dashboard: goes to that student only. */
+    public static function subscriptionActivated(Enrollment $enrollment): ?StudentNotification
+    {
+        $course = $enrollment->course()->withoutGlobalScopes()->first();
+        if (!$course || !$enrollment->student_id) {
+            return null;
+        }
+
+        // Clicking approve / activate a few times in a row should still send one notification
+        $recentlySent = StudentNotification::where('type', StudentNotification::TYPE_SUBSCRIPTION)
+            ->where('course_id', $course->id)
+            ->where('created_at', '>=', now()->subMinutes(10))
+            ->whereHas('students', fn ($q) => $q->where('students.id', $enrollment->student_id))
+            ->exists();
+        if ($recentlySent) {
+            return null;
+        }
+
+        return self::send([
+            'type'      => StudentNotification::TYPE_SUBSCRIPTION,
+            'title_ar'  => 'تم تفعيل اشتراكك في ' . $course->title_ar,
+            'title_en'  => 'Your subscription to ' . $course->title_en . ' is active',
+            'body_ar'   => 'اشتراكك اتفعّل، تقدر تبدأ تتفرج على الحصص وتحل الامتحانات دلوقتي.',
+            'body_en'   => 'Your subscription is active. You can start watching the classes now.',
+            'link'      => self::courseLink($course),
+            'course_id' => $course->id,
+        ], StudentNotification::TARGET_STUDENTS, [$enrollment->student_id]);
     }
 
     /**

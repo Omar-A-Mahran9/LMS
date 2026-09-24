@@ -10,6 +10,7 @@ class StudentNotification extends Model
     public const TYPE_NEW_CLASS  = 'new_class';
     public const TYPE_NEW_COURSE = 'new_course';
     public const TYPE_MESSAGE    = 'message';
+    public const TYPE_SUBSCRIPTION = 'subscription'; // the student's subscription was activated
 
     public const TARGET_ALL        = 'all';
     public const TARGET_CATEGORIES = 'categories';

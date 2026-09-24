@@ -9,6 +9,7 @@ let translations = {
         "Message": "رسالة",
         "New class": "حصة جديدة",
         "New course": "كورس جديد",
+        "Subscription activated": "تفعيل اشتراك",
         "Grades": "الصفوف",
         "student(s)": "طالب",
         "All students": "كل الطلاب",

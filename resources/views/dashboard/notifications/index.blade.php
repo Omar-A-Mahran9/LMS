@@ -32,6 +32,7 @@
                 <i class="ki-outline ki-information-5 fs-2tx text-primary me-4"></i>
                 <div class="fs-6 text-gray-700">
                     {{ __('Students are notified automatically when a new class is published (only the students of that class\'s grade) and when a new course is published (all students). Notifications appear on the website in the bell icon.') }}
+                    {{ __('A student is also notified when their subscription is activated.') }}
                 </div>
             </div>
             <!--end::Notice-->
@@ -50,8 +51,13 @@
                         <option value="message">{{ __('Messages') }}</option>
                         <option value="new_class">{{ __('New class') }}</option>
                         <option value="new_course">{{ __('New course') }}</option>
+                        <option value="subscription">{{ __('Subscription activated') }}</option>
                     </select>
                 </div>
+
+                <!-- datatable-config.js toggles this "base" toolbar with the "selected" one below;
+                     without it every table draw threw "Cannot read properties of null (reading 'classList')" -->
+                <div data-kt-docs-table-toolbar="base"></div>
 
                 <!--begin::Group actions-->
                 <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">

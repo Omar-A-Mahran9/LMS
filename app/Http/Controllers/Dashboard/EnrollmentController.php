@@ -241,7 +241,8 @@ public function toggleStatus(Request $request)
 {
     $this->authorize('update_enrollments');
 
-     $enrollment = DB::table('course_student')
+    // Through the model (not DB::table) so activating it notifies the student
+    $enrollment = Enrollment::withTrashed()
         ->where('student_id', $request->student_id)
         ->where('course_id', $request->course_id)
         ->first();
@@ -250,10 +251,7 @@ public function toggleStatus(Request $request)
         return response()->json(['success' => false, 'message' => __('Enrollment not found')], 404);
     }
 
-    DB::table('course_student')
-        ->where('student_id', $request->student_id)
-        ->where('course_id', $request->course_id)
-        ->update(['is_active' => $request->status === 'active' ? 1 : 0]);
+    $enrollment->update(['is_active' => $request->status === 'active' ? 1 : 0]);
 
     return response()->json(['success' => true]);
 }

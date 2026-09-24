@@ -17,6 +17,32 @@ class Enrollment extends Model
     ];
     protected $table = 'course_student'; // This is the pivot table name
 
+    // A subscription gives access when it's approved AND active (same check the API uses)
+    public function isActiveSubscription(bool $original = false): bool
+    {
+        $status = $original ? $this->getOriginal('status') : $this->status;
+        $isActive = $original ? $this->getOriginal('is_active') : $this->is_active;
+
+        return $status === 'approved' && (bool) $isActive;
+    }
+
+    protected static function booted()
+    {
+        // Notify the student (with the site's notification sound) when the dashboard activates
+        // their subscription, whichever action did it: approve, activate toggle, create or edit
+        static::saved(function (Enrollment $enrollment) {
+            $wasActive = !$enrollment->wasRecentlyCreated && $enrollment->isActiveSubscription(true);
+
+            if (!$wasActive && $enrollment->isActiveSubscription()) {
+                try {
+                    \App\Services\StudentNotifier::subscriptionActivated($enrollment);
+                } catch (\Throwable $e) {
+                    report($e); // never block the enrollment update because of a notification
+                }
+            }
+        });
+    }
+
 
     public function course()
     {

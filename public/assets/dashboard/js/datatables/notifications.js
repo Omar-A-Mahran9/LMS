@@ -13,6 +13,7 @@ var KTDatatablesServerSide = (function () {
             message: ["badge-light-primary", __("Message")],
             new_class: ["badge-light-success", __("New class")],
             new_course: ["badge-light-warning", __("New course")],
+            subscription: ["badge-light-info", __("Subscription activated")],
         };
         const [cls, label] = types[type] ?? ["badge-light", type];
         return `<span class="badge ${cls}">${label}</span>`;

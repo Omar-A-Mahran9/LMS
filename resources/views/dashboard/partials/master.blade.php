@@ -338,10 +338,8 @@
     </script>
 
 
-    {{-- =========================================================
-         Page Scripts
-    ========================================================== --}}
-    @stack('scripts')
+    {{-- Page scripts (@stack('scripts')) are printed once, inside dashboard.partials.foot above.
+         Printing the stack here too loaded every page script twice ("Cannot reinitialise DataTable"). --}}
 
 </body>
 
