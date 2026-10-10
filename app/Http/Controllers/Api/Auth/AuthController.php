@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Models\User;
-use App\Rules\IsActive;
-use App\Rules\PasswordNumberAndLetter;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -84,6 +81,13 @@ class AuthController extends Controller
         if (!Hash::check($request->password, $student->password)) {
             return $this->validationFailure([
                 'password' => [__("Password mismatch")],
+            ]);
+        }
+
+        // Students blocked from the dashboard must not get a new token
+        if ((bool) $student->block_flag) {
+            return $this->validationFailure([
+                'login' => [__('Your account is blocked. Please contact support.')],
             ]);
         }
 

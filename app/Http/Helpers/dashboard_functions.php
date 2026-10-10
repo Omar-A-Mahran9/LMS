@@ -93,19 +93,6 @@ if (!function_exists('updateModelImage')) {
 }
 
 
-if (!function_exists('formatNumber')) {
-    function formatNumber($number)
-    {
-        if ($number >= 1000 && $number < 1000000) {
-            return number_format($number / 1000, 3);
-        } elseif ($number >= 1000000) {
-            return number_format($number / 1000000, 3);
-        } else {
-            return $number;
-        }
-    }
-}
-
 if (!function_exists('deleteImageFromDirectory')) {
 
     function deleteImageFromDirectory($imageName, $model)
@@ -214,6 +201,11 @@ if (!function_exists('streamCertificatePdf')) {
 if (!function_exists('getOrGeneratePublicCertificateUrl')) {
     function getOrGeneratePublicCertificateUrl($student, $course)
     {
+        // A certificate (and its public, verifiable link) only once the student meets the rules
+        if (!$student || !$course->isCertificateEligible($student->id)) {
+            return null;
+        }
+
         $certificate = Certificate::where('student_id', $student->id)
             ->where('course_id', $course->id)
             ->first();
@@ -227,27 +219,6 @@ if (!function_exists('getOrGeneratePublicCertificateUrl')) {
     }
 }
 
-
-
-if (!function_exists('isTabActive')) {
-
-    function isTabActive($path)
-    {
-        if (request()->routeIs($path))
-            return 'active';
-    }
-}
-
-
-if (!function_exists('isTabOpen')) {
-
-    function isTabOpen($path)
-    {
-
-        if (request()->segment(2) === $path)
-            return 'menu-item-open';
-    }
-}
 
 
 if (!function_exists('getClassIfUrlContains')) {
@@ -274,18 +245,6 @@ if (!function_exists('abilities')) {
         // Cached per admin: a single shared key made every admin get the permissions
         // of whoever was cached first for 60 seconds.
         return Cache::remember('abilities_' . $admin->id, 60, fn () => $admin->abilities());
-    }
-}
-
-if (!function_exists('getFullPathOfImagesFromDirectory')) {
-    function getFullPathOfImagesFromDirectory($images, $directory)
-    {
-        $updatedImages = [];
-        foreach ($images as $image) {
-            array_push($updatedImages, getImagePathFromDirectory($image, $directory));
-        }
-
-        return $updatedImages;
     }
 }
 
@@ -394,22 +353,6 @@ if (!function_exists('getModelData')) {
     }
 }
 
-if (!function_exists('generateRandomCode')) {
-    function generateRandomCode($length)
-    {
-        $allCharacters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        $code = '';
-        for ($i = 0; $i < $length; $i++) {
-            $code .= $allCharacters[rand(0, strlen($allCharacters) - 1)];
-        }
-
-        return $code;
-    }
-
-
-
-
 if (!function_exists('generateCertificateRecord')) {
     function generateCertificateRecord($student, $course)
     {
@@ -425,24 +368,3 @@ if (!function_exists('generateCertificateRecord')) {
         ]);
     }
 }
-
-
-if (!function_exists('uploadCertificatePdfFromPath')) {
-    function uploadCertificatePdfFromPath($filePath, $filename, $model)
-    {
-        $model    = Str::plural($model);
-        $model    = Str::ucfirst($model);
-        $path     = "attachments/$model";
-        $newName  = 'lms_' . time() . '_' . $filename;
-
-        // استخدام File object للرفع
-        $file = new \Illuminate\Http\File($filePath);
-        Storage::disk('public')->putFileAs($path, $file, $newName);
-
-        return $newName;
-    }
-}
-
-}
-
-

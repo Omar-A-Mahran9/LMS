@@ -8,7 +8,6 @@ use App\Http\Controllers\Api\LivesController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\StudentHomeworkController;
 use App\Http\Controllers\Api\StudentQuizController;
-use App\Http\Controllers\CertificateController as ControllersCertificateController;
 use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\SectionVideoController;
 use Illuminate\Http\Request;
@@ -31,6 +30,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('certificate/{id}', [CertificateController::class, 'publicDownload'])
     ->name('certificate.public');
+// Public: this is the page the certificate QR code opens
+Route::get('certificate/verify/{id}', [CertificateController::class, 'verify'])
+    ->name('certificates.verify');
 
 Route::middleware(['auth:api'])->group(function () {
     Route::post('Ask_us', 'ContactUsController@store');
@@ -55,8 +57,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('enroll-class', [EnrollmentController::class, 'enroll_class']);
     Route::get('enrollment-status/{course_id}', [EnrollmentController::class, 'enrollmentStatus']);
     Route::get('books/{id}', 'BookController@show');
-    Route::get('certificate/verify/{id}', [CertificateController::class, 'verify'])
-    ->name('certificates.verify');
     Route::get('certificates/{course}', [CertificateController::class, 'download'])
         ->name('student.certificates.download');
 

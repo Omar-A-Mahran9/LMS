@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreVideoRequest;
 use App\Http\Requests\Dashboard\UpdateVideoRequest;
 use App\Models\Course;
-use App\Models\CourseSection;
 use App\Models\CourseVideo;
 use App\Models\Quiz;
 use Illuminate\Http\Request;

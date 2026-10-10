@@ -3,11 +3,9 @@
 namespace App\Http\Resources\Api;
 
 use App\Models\CourseVideoStudent;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class CoursesFeaturedResource extends JsonResource
 {

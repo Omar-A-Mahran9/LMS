@@ -141,6 +141,11 @@ class StudentController extends Controller
         $blocked = !(bool) $student->block_flag;
         $student->update(['block_flag' => $blocked]);
 
+        // End the sessions the student already has, not only future logins
+        if ($blocked) {
+            $student->tokens()->delete();
+        }
+
         return response([$blocked ? "Student blocked successfully" : "Student un blocked successfully"]);
     }
 

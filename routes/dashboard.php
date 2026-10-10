@@ -21,7 +21,6 @@ Route::get("admins/restore-selected", "AdminController@restoreSelected");
 Route::delete("categories/delete-selected", "CategoryController@deleteSelected");
 Route::get("categories/restore-selected", "CategoryController@restoreSelected");
 Route::delete("contact-requests/delete-selected", "ContactRequestController@deleteSelected");
-Route::delete("students/delete-selected", "StudentController@deleteSelected");
 Route::delete("cities/delete-selected", "GovernmentsController@deleteSelected");
 Route::get("cities/restore-selected", "GovernmentsController@restoreSelected");
 Route::delete("newsletter/delete-selected", "NewsLetterController@deleteSelected");
@@ -68,32 +67,26 @@ Route::resource('bundles', 'BundleController')->except(['create', 'edit']);
 Route::get('bundles/export/pdf', [BundleController::class, 'exportPDF'])
     ->name('bundles.exportPDF');
 
-Route::post('bundles/{bundle}/generate-codes', [BundleController::class, 'generateCodes'])
-    ->name('bundles.generateCodes');
-
 Route::get('codes/{generateCode}', [BundleController::class, 'showCode'])
     ->name('codes.show');
-
-Route::post('bundles/redeem-code', [BundleController::class, 'redeemCode'])
-    ->name('bundles.redeemCode');
 
 
 
 Route::resource('quizzes', 'QuizController')->except(['create', 'edit']);
-Route::resource('classes.quizzes', QuizByClassController::class);
-Route::resource('sections.quizzes', QuizBySectionController::class);
+Route::resource('classes.quizzes', QuizByClassController::class)->only(['index', 'store', 'update', 'destroy']);
+Route::resource('sections.quizzes', QuizBySectionController::class)->only(['index', 'store', 'update', 'destroy']);
 
-Route::resource('classes.homeworks', HomeworkByClassController::class);
-Route::resource('sections.homeworks', HomeworkBySectionController::class);
+Route::resource('classes.homeworks', HomeworkByClassController::class)->only(['index', 'store', 'update', 'destroy']);
+Route::resource('sections.homeworks', HomeworkBySectionController::class)->only(['index', 'store', 'update', 'destroy']);
 
-Route::resource('homeworks', 'HomeWorkController')->except(['create', 'edit']);
-Route::resource('questions', 'QuestionController')->except(['create', 'edit']);
-Route::resource('homeworks-questions', 'HomeWorkQuestionController')->except(['create', 'edit']);
+Route::resource('homeworks', 'HomeWorkController')->except(['create', 'edit', 'show']);
+Route::resource('questions', 'QuestionController')->except(['create', 'edit', 'show']);
+Route::resource('homeworks-questions', 'HomeWorkQuestionController')->except(['create', 'edit', 'show']);
 Route::resource('CommonQuestion', 'CommonQuestionController')->except(['create', 'edit', 'show']);
 /** begin resources routes **/
-Route::resource('admins', 'AdminController')->except(['create', 'edit']);
-Route::resource('enrollments', 'EnrollmentController')->except(['create', 'edit']);
-Route::resource('orders', 'OrderController')->except(['create', 'edit']);
+Route::resource('admins', 'AdminController')->except(['create', 'edit', 'show']);
+Route::resource('enrollments', 'EnrollmentController')->except(['create', 'edit', 'show']);
+Route::resource('orders', 'OrderController')->only(['index', 'show']);
 
 Route::get('/enrollments/courses-for-student/{student}', [EnrollmentController::class, 'getCoursesForStudent']);
 Route::post('/enrollments/{id}/status', [EnrollmentController::class, 'changeStatus']);
@@ -101,14 +94,13 @@ Route::post('/orders/{id}/status', 'OrderController@changeStatus');
 
 
 Route::resource('governments', 'GovernmentsController')->except(['create', 'edit', 'show']);
-Route::resource('categories', 'CategoryController')->except(['create', 'edit']);
+Route::resource('categories', 'CategoryController')->except(['create', 'edit', 'show']);
 
 Route::resource('contact-requests', 'ContactRequestController')->except(['create', 'edit', 'store', 'update']);
 Route::resource('students', 'StudentController')->except(['create', 'edit']);
 Route::resource('students_rate', 'StudentsRatesController')->except(['create', 'edit', 'show']);
 
 Route::get('students/blocking/{student}', 'StudentController@blocked')->name('students.blocked');
-Route::get('students/blocked-selected', 'StudentController@blockedSelected');
 
 
 Route::resource('sliders', 'SliderController');
@@ -132,7 +124,7 @@ Route::prefix('settings')->name('settings.')->group(function () {
     Route::match(['get', 'post'], 'general/mobile-app', 'SettingController@mobileApp')->name('general.mobile_app');
     Route::match(['get', 'post'], 'general/tax', 'SettingController@tax')->name('general.tax');
 
-    Route::resource('roles', 'RoleController');
+    Route::resource('roles', 'RoleController')->except(['create', 'edit']); // no create/edit pages: done in a modal
     Route::get('role/{role}/admins', 'RoleController@admins');
 
     Route::match(['get', 'post'], 'home-content/main', 'HomeController@index')->name('home-content');
@@ -154,4 +146,3 @@ Route::get('/language/{lang}', function (Request $request) {
     session()->put('locale', in_array($request->lang, ['ar', 'en']) ? $request->lang : 'ar');
     return redirect()->back();
 })->name('change-language');
-Route::post('/fetch-data', 'DashboardController@ordersTransaction')->name('fetch.data');

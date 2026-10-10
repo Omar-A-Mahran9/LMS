@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Dashboard\StoreBlogRequest;
 use App\Http\Requests\Dashboard\StoreWhyusRequest;
-use App\Http\Requests\Dashboard\UpdateBlogRequest;
 use App\Http\Requests\Dashboard\UpdateWhyusRequest;
 use App\Models\Whyus;
 use Illuminate\Http\Request;

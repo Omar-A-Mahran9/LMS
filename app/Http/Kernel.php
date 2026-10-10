@@ -70,7 +70,6 @@ class Kernel extends HttpKernel
         'set_locale' => \App\Http\Middleware\SetLocale::class,
         'json.response' => \App\Http\Middleware\ForceJsonResponse::class,
         'cors' => \App\Http\Middleware\Cors::class,
-        'oto.token' => \App\Http\Middleware\OtoAccessToken::class,
             'optional.auth' => \App\Http\Middleware\OptionalAuth::class,
 
     ];

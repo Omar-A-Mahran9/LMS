@@ -2,11 +2,8 @@
 
 namespace App\Http\Requests\Dashboard;
 
-use App\Models\CourseClass;
-use App\Models\CourseVideo;
 use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateClassRequest extends FormRequest
 {

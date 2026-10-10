@@ -162,8 +162,9 @@ class QuizAttempt extends Model
         $this->refreshProgress($questions);
     }
 
+    // Letters and digits of any language (Arabic answers used to be reduced to "" and never match)
     public static function normalizeAnswer($text): string
     {
-        return preg_replace('/[^a-z0-9]+/i', '', strtolower(trim((string) $text)));
+        return preg_replace('/[^\p{L}\p{N}]+/u', '', mb_strtolower(trim((string) $text)));
     }
 }

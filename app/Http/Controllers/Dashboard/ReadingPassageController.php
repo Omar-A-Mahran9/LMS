@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Dashboard\StoreCourseRequest;
 use App\Http\Requests\Dashboard\StoreReadingPassageRequest;
-use App\Http\Requests\Dashboard\UpdateAddonRequest;
 use App\Http\Requests\Dashboard\UpdateCourseRequest;
 use App\Models\Admin;
 use App\Models\Category;

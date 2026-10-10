@@ -3,10 +3,8 @@
 namespace App\Http\Requests\Dashboard;
 
 use App\Models\CategorySubCategory;
-use App\Models\SubCategory;
 use App\Rules\NotNumbersOnly;
 use App\Rules\ExistButDeleted;
-use App\Rules\UniqueCategoryName;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCategoryRequest extends FormRequest

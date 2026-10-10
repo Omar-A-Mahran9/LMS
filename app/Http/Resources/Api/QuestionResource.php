@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Api;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,7 +25,7 @@ class QuestionResource extends JsonResource
                 ];
             }),
 
-            'expected_answer' => $this->expected_answer,  // might be NULL for multiple_choice/true_false
+            // expected_answer is the correct answer of short answer questions: never sent before submitting
             'type' => $this->type,
             // > 1 => the student can pick this many options
             'max_selections' => $this->maxSelections(),

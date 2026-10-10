@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Dashboard;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use anlutro\LaravelSettings\Facades\Setting;
 use App\Http\Requests\Dashboard\UpdateSettingsRequest;
-use App\Models\GiftCard;
 
 class SettingController extends Controller
 {

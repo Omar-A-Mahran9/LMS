@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Scopes\SortingScope;
-use App\Traits\SMSTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
@@ -13,7 +12,6 @@ class Student extends Authenticatable
 {
     use HasFactory;
     use HasApiTokens;
-    use SMSTrait;
 
     protected $appends = [ 'full_image_path'];
     protected $guarded = ["password_confirmation"];

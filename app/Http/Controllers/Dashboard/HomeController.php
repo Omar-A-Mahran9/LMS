@@ -4,10 +4,6 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\UpdateHomeSettingsRequest;
-use App\Models\PaymentMethod;
-use App\Models\PaymentWay;
-use App\Rules\NotNumbersOnly;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {

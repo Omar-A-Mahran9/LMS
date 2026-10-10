@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\BookOrder;
-use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {

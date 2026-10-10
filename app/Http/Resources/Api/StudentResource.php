@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Api;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StudentResource extends JsonResource
@@ -25,8 +24,9 @@ class StudentResource extends JsonResource
                 'name'=>$this->government? $this->government->name:null,
             ],
              'category' => [
-                'id'=>$this->category->id,
-                'name'=>$this->category->name
+                // the grade can be missing or soft-deleted from the dashboard
+                'id'=>$this->category?->id,
+                'name'=>$this->category?->name
 
             ],
 

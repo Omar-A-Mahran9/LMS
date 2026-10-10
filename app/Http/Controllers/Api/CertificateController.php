@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Certificate;
 use App\Models\Course;
-use App\Models\CourseVideoStudent;
-use App\Models\QuizAttempt;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class CertificateController extends Controller
@@ -38,32 +36,12 @@ class CertificateController extends Controller
         }
 
         // ✅ Check if all course videos completed
-        $videoIds = $course->videos->pluck('id');
-        $completedVideos = CourseVideoStudent::whereIn('course_video_id', $videoIds)
-            ->where('student_id', $student->id)
-            ->where('is_completed', true)
-            ->count();
-
-        if ($videoIds->count() > 0 && $completedVideos < $videoIds->count()) {
+        if (!$course->hasCompletedAllVideos($student->id)) {
             return $this->failure(__('You must complete all course videos to receive a certificate.'));
         }
 
        // التحقق من النجاح في كل الامتحانات
-        $failedQuizzes = [];
-        $quizzes = $course->quizzes;
-
-        foreach ($quizzes as $quiz) {
-            $totalScore = $quiz->questions()->sum('points');
-            $bestScore = QuizAttempt::where('quiz_id', $quiz->id)
-                ->where('student_id', $student->id)
-                ->max('score');
-
-            $required = $totalScore * 0.5;
-
-            if ($bestScore < $required) {
-                $failedQuizzes[] = $quiz->title ?? "Quiz ID: {$quiz->id}";
-            }
-        }
+        $failedQuizzes = $course->failedQuizzesFor($student->id);
 
         if (count($failedQuizzes)) {
             return response()->json([

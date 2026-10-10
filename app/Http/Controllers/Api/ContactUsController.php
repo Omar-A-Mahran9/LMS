@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreContact_usRequest;
 use App\Models\Contact_us;
-use Illuminate\Http\Request;
 
 class ContactUsController extends Controller
 {

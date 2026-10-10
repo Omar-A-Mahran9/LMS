@@ -5,7 +5,6 @@ namespace App\Http\Requests\Dashboard;
 use App\Models\CourseVideo;
 use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateVideoRequest extends FormRequest
 {

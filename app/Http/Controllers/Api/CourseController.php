@@ -12,7 +12,6 @@ use App\Http\Resources\Api\CoursesDetailsResource;
 use App\Http\Resources\Api\CourseStatusResource;
 use App\Http\Resources\Api\QuizResource;
 use App\Http\Resources\Api\SectionResource;
-use App\Http\Resources\BundleResource;
 use App\Models\Bundle;
 use App\Models\BundleAccessCode;
 use App\Models\Category;
@@ -31,7 +30,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
@@ -167,6 +165,11 @@ class CourseController extends Controller
             return $this->failure(__('Class not found or unpublished'));
         }
 
+        // The class details include the video links: only for students enrolled in the course
+        if ($denied = $this->denyUnlessEnrolled($class->course)) {
+            return $denied;
+        }
+
         $student = auth()->user(); // assumes sanctum or jwt auth
 
         if ($student) {
@@ -197,6 +200,10 @@ class CourseController extends Controller
             return $this->failure(__('Class not found or unpublished'));
         }
 
+        if ($denied = $this->denyUnlessEnrolled($class->course)) {
+            return $denied;
+        }
+
         return $this->success('', new ClassDetailsResource($class));
 
     }
@@ -208,8 +215,29 @@ class CourseController extends Controller
             return $this->failure(__('Quiz not found or unpublished'));
         }
 
+        // The full question paper: only for students enrolled in the course
+        if ($denied = $this->denyUnlessEnrolled($data->course)) {
+            return $denied;
+        }
+
         return $this->success('', new QuizResource($data));
 
+    }
+
+    // null when the logged-in student has an approved, active enrollment in the course
+    private function denyUnlessEnrolled(?Course $course)
+    {
+        $studentId = auth('api')->id();
+
+        if (!$studentId) {
+            return $this->failure(__('Unauthorized'), 401);
+        }
+
+        if (!$course || !$course->is_active || !$course->isStudentEnrolled($studentId)) {
+            return $this->failure(__('Course not found or unauthorized.'));
+        }
+
+        return null;
     }
 
 
@@ -237,7 +265,8 @@ class CourseController extends Controller
             })
             ->first();
 
-        if ($studentId !== null && !$course) {
+        // Guests too: classes opened with a code go through videos_by_classes_with_code
+        if (!$course) {
             return $this->failure(__('Course not found or unauthorized.'));
         }
 
@@ -343,8 +372,9 @@ class CourseController extends Controller
     public function checkCourseAccess($id)
     {
         if (auth()) {
-            $studentId = auth()->id();
-            $student = Auth::user();
+            // This route has no auth middleware: read the bearer token explicitly (the default guard is the web session)
+            $studentId = auth('api')->id();
+            $student = auth('api')->user();
 
             // تحقق من وجود الكورس وكونه مفعلاً ومسجلاً فيه الطالب مع الموافقة
             $course = Course::where('id', $id)
@@ -396,6 +426,9 @@ class CourseController extends Controller
 
         $video = CourseVideo::findOrFail($id);
         $student = auth()->user();
+        if (!$student) {
+            return $this->failure(__('Unauthorized'), 401);
+        }
 
         $progress = CourseVideoStudent::firstOrNew([
             'course_video_id' => $video->id,
@@ -699,12 +732,10 @@ public function accessBundle(Request $request)
         return $this->failure(__('This code has already been used'));
     }
 
-    if ($code->usage_limit && $code->used_count >= $code->usage_limit) {
+    // زيادة عدد مرات الاستخدام (limits + validity dates re-checked atomically)
+    if (!$code->consumeUse()) {
         return $this->failure(__('This access code has expired or reached its usage limit.'));
     }
-
-    // زيادة عدد مرات الاستخدام
-    $code->increment('used_count');
 
     return $this->success(
         __('Bundle activated successfully'),
@@ -874,16 +905,10 @@ public function accessBundle(Request $request)
                 ->first();
 
             if ($accessCode) {
-                // Check usage limits
-                if (
-                    ($accessCode->single_use && $accessCode->used_count >= 1) ||
-                    ($accessCode->usage_limit !== null && $accessCode->used_count >= $accessCode->usage_limit)
-                ) {
+                // Check usage limits and count this use in one atomic step
+                if (!$accessCode->consumeUse()) {
                     return $this->failure(__('This access code has expired or reached its usage limit.'));
                 }
-
-                // Increment usage count
-                $accessCode->increment('used_count');
                 ClassAccessLog::create([
         'student_id' => auth('api')->id(), // or null if not logged in
         'class_id' => $class->id,
@@ -953,11 +978,7 @@ public function accessBundle(Request $request)
         }
 
         // Check usage
-        if (
-            ($bundleCode->single_use && $bundleCode->used_count >= 1) ||
-            ($bundleCode->usage_limit !== null &&
-            $bundleCode->used_count >= $bundleCode->usage_limit)
-        ) {
+        if (!$bundleCode->canBeUsed()) {
             return $this->failure(__('This access code has expired or reached its usage limit.'));
         }
 
@@ -971,7 +992,9 @@ public function accessBundle(Request $request)
         }
 
         // Increment usage
-        $bundleCode->increment('used_count');
+        if (!$bundleCode->consumeUse()) {
+            return $this->failure(__('This access code has expired or reached its usage limit.'));
+        }
 
         // Optional Log
         /*

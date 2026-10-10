@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Carbon\Carbon;
 use Illuminate\Foundation\Application;
 
 class ApiLocalization

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Dashboard;
 
-use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreVideoRequest extends FormRequest

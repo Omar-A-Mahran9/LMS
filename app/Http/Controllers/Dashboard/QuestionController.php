@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreQuestionRequest;
-use App\Http\Requests\Dashboard\StoreQuizRequest;
 use App\Http\Requests\Dashboard\UpdateQuestionRequest;
-use App\Http\Requests\Dashboard\UpdateQuizRequest;
 use App\Models\Course;
 use App\Models\CourseSection;
 use App\Models\Quiz;

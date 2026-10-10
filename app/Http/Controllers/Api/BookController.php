@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Dashboard\StoreBookRequest;
-use App\Http\Requests\Dashboard\UpdateBookRequest;
 use App\Http\Resources\Api\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;

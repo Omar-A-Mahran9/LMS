@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Category;
-use App\Models\SubCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\CategorySubCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreCategoryRequest;

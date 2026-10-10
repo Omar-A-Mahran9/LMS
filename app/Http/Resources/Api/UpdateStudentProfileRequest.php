@@ -4,7 +4,6 @@ namespace App\Http\Resources\Api;
 
 use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateStudentProfileRequest extends FormRequest
 {

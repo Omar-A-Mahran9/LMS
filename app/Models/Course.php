@@ -244,6 +244,54 @@ class Course extends Model
             ->exists();
     }
 
+    /*
+    | Certificate rules (used by the certificate download and every certificate link):
+    | enrolled, every course video completed and at least 50% in every course quiz
+    */
+    public function hasCompletedAllVideos($studentId): bool
+    {
+        $videoIds = $this->videos()->pluck('id');
+
+        if ($videoIds->isEmpty()) {
+            return true;
+        }
+
+        $completed = CourseVideoStudent::whereIn('course_video_id', $videoIds)
+            ->where('student_id', $studentId)
+            ->where('is_completed', true)
+            ->count();
+
+        return $completed >= $videoIds->count();
+    }
+
+    // Titles of the quizzes the student hasn't passed yet
+    public function failedQuizzesFor($studentId): array
+    {
+        $failed = [];
+
+        foreach ($this->quizzes as $quiz) {
+            $totalScore = $quiz->questions()->sum('points');
+            $bestScore = QuizAttempt::where('quiz_id', $quiz->id)
+                ->where('student_id', $studentId)
+                ->max('score');
+
+            if ($bestScore < $totalScore * 0.5) {
+                $failed[] = $quiz->title ?? "Quiz ID: {$quiz->id}";
+            }
+        }
+
+        return $failed;
+    }
+
+    public function isCertificateEligible($studentId): bool
+    {
+        return $studentId
+            && $this->certificate_available
+            && $this->isStudentEnrolled($studentId)
+            && $this->hasCompletedAllVideos($studentId)
+            && empty($this->failedQuizzesFor($studentId));
+    }
+
 
     // Course.php
 

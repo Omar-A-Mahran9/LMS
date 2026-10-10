@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\BookResource;
 use App\Http\Resources\Api\CategoryResource;
-use App\Http\Resources\Api\ClassDetailsResource;
 use App\Http\Resources\Api\ClassesDetailsResource;
 use App\Http\Resources\Api\GovernmentsResource;
 use App\Http\Resources\Api\CommonQuestionResource;
@@ -28,7 +27,6 @@ use App\Models\Student_rate;
  use App\Models\NewsLetter;
 
 use App\Models\Slider;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -341,23 +339,6 @@ $courses = Course::where('is_active', 1)
     ]);
     }
 
-protected function convertToIframe($url)
-{
-    // If already iframe, just return it
-    if (Str::contains($url, '<iframe')) {
-        return $url;
-    }
-
-    // Fallback iframe using q param (not perfect, but works)
-    return '<iframe
-                src="https://www.google.com/maps?q=' . urlencode($url) . '&output=embed"
-                width="600"
-                height="450"
-                style="border:0;"
-                allowfullscreen=""
-                loading="lazy">
-            </iframe>';
-}
 
 
     public function newsLetter(Request $request)

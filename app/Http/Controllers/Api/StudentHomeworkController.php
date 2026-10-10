@@ -8,6 +8,7 @@ use App\Models\HomeWork;
 use App\Models\HomeWorkAttempt;
 use App\Models\HomeWorkAttemptAnswer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StudentHomeworkController extends Controller
 {
@@ -89,7 +90,10 @@ public function startHomework(Request $request, $homeworkId)
     // Submit homework
     public function submitHomework(Request $request, $attemptId)
     {
-        $attempt = HomeworkAttempt::with('homework.questions.answers')->findOrFail($attemptId);
+        // Only the student's own attempt
+        $attempt = HomeworkAttempt::with('homework.questions.answers')
+            ->where('student_id', auth()->id())
+            ->findOrFail($attemptId);
 
         $data = $request->validate([
             'answers' => 'required|array',
@@ -109,33 +113,48 @@ public function startHomework(Request $request, $homeworkId)
             ], 422);
         }
 
-        $score = 0;
-        foreach ($attempt->homework->questions as $question) {
-            $studentAnswer = $answersAssoc[$question->id] ?? null;
-
-            $answerRecord = new HomeWorkAttemptAnswer([
-                'home_work_question_id' => $question->id,
-            ]);
-
-            if (in_array($question->type, ['multiple_choice', 'true_false'])) {
-                $answerRecord->home_work_answer_id = $studentAnswer;
-                $answerText = $question->answers->firstWhere('id', $studentAnswer)?->answer_en;
-                if ($this->checkAnswer($question, $answerText)) {
-                    $score += $question->points;
-                }
-            } elseif ($question->type === 'short_answer') {
-                $answerRecord->answer_text = $studentAnswer;
-                if ($this->checkAnswer($question, $studentAnswer)) {
-                    $score += $question->points;
-                }
+        $score = DB::transaction(function () use ($attempt, $answersAssoc) {
+            // Lock the attempt: a double click / second tab must not grade it twice
+            $locked = HomeworkAttempt::whereKey($attempt->id)->lockForUpdate()->first();
+            if ($locked->submitted_at) {
+                return null;
             }
 
-            $attempt->answers()->save($answerRecord);
-        }
+            $score = 0;
+            foreach ($attempt->homework->questions as $question) {
+                $studentAnswer = $answersAssoc[$question->id] ?? null;
 
-        $attempt->score = $score;
-        $attempt->submitted_at = now();
-        $attempt->save();
+                $answerRecord = new HomeWorkAttemptAnswer([
+                    'home_work_question_id' => $question->id,
+                ]);
+
+                if (in_array($question->type, ['multiple_choice', 'true_false'])) {
+                    // Only an option of this question counts (anything else is stored as unanswered)
+                    $selected = is_numeric($studentAnswer) ? $question->answers->firstWhere('id', (int) $studentAnswer) : null;
+                    $answerRecord->home_work_answer_id = $selected?->id;
+                    if ($selected && $selected->is_correct) {
+                        $score += $question->points;
+                    }
+                } elseif ($question->type === 'short_answer') {
+                    $answerRecord->answer_text = $studentAnswer;
+                    if ($this->checkAnswer($question, $studentAnswer)) {
+                        $score += $question->points;
+                    }
+                }
+
+                $attempt->answers()->save($answerRecord);
+            }
+
+            $locked->score = $score;
+            $locked->submitted_at = now();
+            $locked->save();
+
+            return $score;
+        });
+
+        if ($score === null) {
+            return $this->failure(__('This homework attempt has already been submitted.'));
+        }
 
         $totalPoints = $attempt->homework->questions->sum('points');
 

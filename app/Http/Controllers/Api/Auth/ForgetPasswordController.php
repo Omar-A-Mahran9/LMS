@@ -5,16 +5,30 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Models\Student;
 use App\Rules\PasswordNumberAndLetter;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use App\Http\Resources\Api\StudentResource;
 use App\Mail\SendOtpMail;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
 class ForgetPasswordController extends Controller
 {
+    // Wrong guesses allowed per OTP before it is thrown away (the code is only 4 digits)
+    private const MAX_OTP_ATTEMPTS = 5;
+
+    // How long a verified OTP lets the student set a new password
+    private const RESET_WINDOW_MINUTES = 15;
+
+    private function failedAttemptsKey(Student $student): string
+    {
+        return "otp_failed_attempts_{$student->id}";
+    }
+
+    private function resetAllowedKey(Student $student): string
+    {
+        return "password_reset_verified_{$student->id}";
+    }
+
 public function sendOtp(Request $request)
 {
     $request->validate([
@@ -42,6 +56,7 @@ public function sendOtp(Request $request)
 
     // Generate and save OTP
     $otp = $student->sendOTP();
+    Cache::forget($this->failedAttemptsKey($student));
 
     if (!empty($student->email) && filter_var($student->email, FILTER_VALIDATE_EMAIL)) {
         Mail::to($student->email)->send(new SendOtpMail($otp, $student));
@@ -60,7 +75,6 @@ public function sendOtp(Request $request)
     $remainingSeconds = $now->diffInSeconds($expiresAt, false);
 
     return $this->success(__("OTP sent successfully."), [
-        'otp'               => $otp, // remove in production
         'remaining_seconds' => $remainingSeconds,
         'via'               => $loginType,
     ]);
@@ -85,7 +99,15 @@ public function sendOtp(Request $request)
             return $this->failure(__('This user does not exist.'));
         }
 
-        if ($student->otp !== $request->otp) {
+        if (is_null($student->otp) || (string) $student->otp !== $request->otp) {
+            $attempts = Cache::increment($this->failedAttemptsKey($student));
+
+            if ($attempts >= self::MAX_OTP_ATTEMPTS) {
+                // Too many wrong guesses: the student has to request a new code
+                $student->update(['otp' => null, 'otp_expiration' => null]);
+                Cache::forget($this->failedAttemptsKey($student));
+            }
+
             return $this->failure(__('The OTP is incorrect.'));
         }
 
@@ -97,6 +119,8 @@ public function sendOtp(Request $request)
             'otp' => null,
             'otp_expiration' => null,
         ]);
+        Cache::forget($this->failedAttemptsKey($student));
+        Cache::put($this->resetAllowedKey($student), true, now()->addMinutes(self::RESET_WINDOW_MINUTES));
 
         return $this->success(__('Verified successfully'), [
             'student' => new StudentResource($student),
@@ -127,6 +151,7 @@ public function reSendOtp(Request $request)
 
     // Re-send OTP
     $otp = $student->sendOTP();
+    Cache::forget($this->failedAttemptsKey($student));
     if (!empty($student->email) && filter_var($student->email, FILTER_VALIDATE_EMAIL)) {
         Mail::to($student->email)->send(new SendOtpMail($otp, $student));
     } else {
@@ -142,7 +167,6 @@ public function reSendOtp(Request $request)
     $remainingSeconds = $now->diffInSeconds($expiresAt, false);
 
     return $this->success(__("OTP re-sent successfully."), [
-        'otp' => $otp, // 🚨 Remove in production
         'remaining_seconds' => $remainingSeconds,
         'via' => $fieldType,
     ]);
@@ -174,8 +198,9 @@ public function changePassword(Request $request)
         return $this->failure(__("This user does not exist."));
     }
 
-    // تأكد أن OTP تم التحقق منه (أي تم مسحه من السجل)
-    if (!is_null($student->otp) && !is_null($student->otp_expiration)) {
+    // Only right after a successful verify-otp for this student, and only once
+    // (an empty otp column alone proves nothing: it is also empty for anyone who never asked for a code)
+    if (!Cache::pull($this->resetAllowedKey($student))) {
         return $this->failure(__("You must verify the OTP before changing the password."));
     }
 

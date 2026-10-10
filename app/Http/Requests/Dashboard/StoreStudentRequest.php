@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests\Dashboard;
 
-use App\Models\Student;
-use App\Rules\ExistButDeleted;
 use App\Rules\NotNumbersOnly;
 use Illuminate\Foundation\Http\FormRequest;
 

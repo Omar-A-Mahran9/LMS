@@ -8,7 +8,6 @@
         "php": "^8.1",
         "anlutro/l4-settings": "^1.3",
         "barryvdh/laravel-dompdf": "^3.1",
-        "barryvdh/laravel-snappy": "^1.0",
         "davejamesmiller/laravel-breadcrumbs": "5.x",
         "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^10.10",
@@ -34,9 +33,7 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files" : [
-            "app/Http/Helpers/dashboard_functions.php",
-            "app/Http/Helpers/global_functions.php",
-            "app/Http/Helpers/home_functions.php"
+            "app/Http/Helpers/dashboard_functions.php"
         ]
     },
     "autoload-dev": {

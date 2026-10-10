@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Dashboard\StoreContactRequest;
-use App\Http\Requests\Dashboard\UpdateContactRequest;
 use App\Models\Contact_us;
-use App\Models\ContactRequest;
 use Illuminate\Http\Request;
 
 class ContactRequestController extends Controller

@@ -7,7 +7,6 @@ use App\Http\Resources\Api\QuizResource;
 use App\Models\ClassAccessCode;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
-use App\Models\QuizAttemptAnswer;
 use Illuminate\Http\Request;
 
 class StudentQuizController extends Controller
@@ -198,23 +197,6 @@ private function findOwnedAttempt($quizAttemptId): ?QuizAttempt
 }
 
 
-
-private function checkAnswer($question, $studentAnswer)
-    {
-        switch ($question->type) {
-            case 'true_false':
-            case 'multiple_choice':
-                $correctAnswers = $question->answers->where('is_correct', 1)->pluck('answer_en')->map(fn($a) => strtolower(trim($a)))->toArray();
-                return in_array(strtolower(trim($studentAnswer)), $correctAnswers);
-
-            case 'short_answer':
-                return strtolower(trim($studentAnswer)) === strtolower(trim($question->expected_answer));
-
-            default:
-                return false;
-        }
-    }
-
 public function results($studentQuizId)
 {
 $studentId = auth()->id();
@@ -226,7 +208,7 @@ $studentId = auth()->id();
     ->where('student_id', auth()->id())
     ->first();
 
-    if ($studentId !== null && !$attempt) {
+    if (!$attempt) {
         return $this->failure(__('Quiz attempt not found or access denied.'));
     }
 
@@ -344,9 +326,10 @@ $studentId = auth()->id();
 }
 
 
+// Same normalization as the grading in QuizAttempt::finalize, so results match the stored score
 function normalizeAnswer($text)
 {
-    return preg_replace('/[^a-z0-9]+/i', '', strtolower(trim($text)));
+    return QuizAttempt::normalizeAnswer($text);
 }
 
 
