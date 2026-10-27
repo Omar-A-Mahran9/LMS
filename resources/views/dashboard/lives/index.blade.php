@@ -93,6 +93,8 @@
                         </th>
                         <th>{{ __('Title') }}</th>
                         <th>{{ __('Image') }}</th>
+                        <th>{{ __('Start Time') }}</th>
+                        <th>{{ __('Live status') }}</th>
                         <th>{{ __('Status') }}</th>
                         <th>{{ __('Created at') }}</th>
 
@@ -157,12 +159,13 @@
                                     data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
                                     <option value=""></option>
                                     @foreach ($classes as $class)
-                                        <option value="{{ $class->id }}">
+                                        <option value="{{ $class->id }}" data-course="{{ $class->course_id }}">
                                             {{ $class->title }}
                                         </option>
                                     @endforeach
                                 </select>
                                 <div class="invalid-feedback" id="class_id"></div>
+                                <div class="form-text">{{ __('The live appears inside this class page for its students') }}</div>
                             </div>
                         </div>
 
@@ -204,18 +207,22 @@
                             <div class="col-4">
                                 <label for="platform_inp" class="form-label">{{ __('Platform') }}</label>
                                 <select data-control="select2" name="platform" id="platform_inp" class="form-select">
-                                    <option value="zoom">Zoom</option>
                                     <option value="youtube">YouTube</option>
+                                    <option value="zoom">Zoom</option>
+                                    <option value="google_meet">Google Meet</option>
+                                    <option value="facebook">Facebook</option>
                                     <option value="twitch">Twitch</option>
+                                    <option value="other">{{ __('Other link') }}</option>
                                 </select>
                                 <div class="invalid-feedback" id="platform"></div>
                             </div>
 
                             <div class="col-8">
-                                <label for="embed_url_inp" class="form-label">{{ __('Embed URL') }}</label>
+                                <label for="embed_url_inp" class="form-label">{{ __('Live link') }}</label>
                                 <input type="url" name="embed_url" id="embed_url_inp" class="form-control"
-                                    placeholder="{{ __('Paste YouTube/Zoom/Twitch Embed URL') }}">
+                                    placeholder="https://">
                                 <div class="invalid-feedback" id="embed_url"></div>
+                                <div class="form-text" id="embed_url_hint"></div>
                             </div>
                         </div>
 
@@ -236,7 +243,8 @@
                         <div class="row mb-4">
                             <div class="col-4">
                                 <label for="stream_key_inp" class="form-label">{{ __('Stream Key') }}</label>
-                                <input type="text" name="stream_key" id="stream_key_inp" class="form-control">
+                                <input type="text" name="stream_key" id="stream_key_inp" class="form-control" autocomplete="off">
+                                <div class="form-text">{{ __('For your reference only, never shown to students') }}</div>
                                 <div class="invalid-feedback" id="stream_key"></div>
                             </div>
                             <div class="col-4">
@@ -254,12 +262,12 @@
                         {{-- Date & Duration --}}
                         <div class="row mb-4">
                             <div class="col-4">
-                                <label for="start_time_inp" class="form-label">{{ __('Start Time') }}</label>
+                                <label for="start_time_inp" class="form-label">{{ __('Start Time') }} <span class="text-muted fs-8">({{ __('Egypt time') }})</span></label>
                                 <input type="datetime-local" name="start_time" id="start_time_inp" class="form-control">
                                 <div class="invalid-feedback" id="start_time"></div>
                             </div>
                             <div class="col-4">
-                                <label for="end_time_inp" class="form-label">{{ __('End Time') }}</label>
+                                <label for="end_time_inp" class="form-label">{{ __('End Time') }} <span class="text-muted fs-8">({{ __('or the duration') }})</span></label>
                                 <input type="datetime-local" name="end_time" id="end_time_inp" class="form-control">
                                 <div class="invalid-feedback" id="end_time"></div>
                             </div>
@@ -286,7 +294,7 @@
                             </div>
                             <div class="col-4 d-flex align-items-center">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="is_recorded" type="checkbox" value="1">
+                                    <input class="form-check-input" name="is_recorded" type="checkbox" value="1" id="is_recorded_switch">
                                     <span class="form-check-label">{{ __('Record Session') }}</span>
                                 </label>
                             </div>
@@ -334,172 +342,94 @@
         });
     </script>
     <script>
+        // Platform-specific help and fields
+        const liveHints = {
+            youtube: "{{ __('Paste the YouTube live link (youtube.com/live/... or watch?v=...). It plays inside the class page with the live chat.') }}",
+            zoom: "{{ __('Paste the Zoom invite link. Students get a join button that opens Zoom, with the meeting ID and password.') }}",
+            google_meet: "{{ __('Paste the Google Meet link. Students get a join button that opens Meet.') }}",
+            facebook: "{{ __('Paste the Facebook live video link. It plays inside the class page.') }}",
+            twitch: "{{ __('Paste the Twitch channel link. Students get a button that opens it.') }}",
+            other: "{{ __('Any live link. Students get a button that opens it.') }}",
+        };
+
+        function toggleLiveFields() {
+            const platform = $("#platform_inp").val();
+            const isMeeting = platform === 'zoom' || platform === 'google_meet';
+
+            $("#embed_url_hint").text(liveHints[platform] || '');
+            $("#meeting_id_inp, #password_inp").closest('.col-4').toggle(isMeeting);
+            $("#stream_key_inp").closest('.col-4').toggle(!isMeeting);
+            // YouTube chat is added automatically; other platforms can paste a chat link
+            $("#chat_embed_url_container").toggle($("#chat_enabled_switch").is(':checked') && platform !== 'youtube');
+        }
+
+        // Only the classes of the chosen course
+        const allClassOptions = $("#class_id_inp option[data-course]").clone();
+
+        function filterClasses(keepValue) {
+            const courseId = String($("#course_id_inp").val() || '');
+            const current = keepValue ?? $("#class_id_inp").val();
+            $("#class_id_inp option[data-course]").remove();
+            allClassOptions.filter((i, option) => !courseId || String($(option).data('course')) === courseId)
+                .clone().appendTo("#class_id_inp");
+            $("#class_id_inp").val($("#class_id_inp option[value='" + current + "']").length ? current : '')
+                .trigger('change.select2');
+        }
+
+        // Duration <-> end time
+        function toLocalInput(date) {
+            const pad = n => String(n).padStart(2, '0');
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        }
+
+        function syncEndFromDuration() {
+            const start = $("#start_time_inp").val();
+            const minutes = parseInt($("#duration_minutes_inp").val(), 10);
+            if (start && minutes > 0) {
+                $("#end_time_inp").val(toLocalInput(new Date(new Date(start).getTime() + minutes * 60000)));
+            }
+        }
+
+        function syncDurationFromEnd() {
+            const start = $("#start_time_inp").val();
+            const end = $("#end_time_inp").val();
+            if (start && end && new Date(end) > new Date(start)) {
+                $("#duration_minutes_inp").val(Math.round((new Date(end) - new Date(start)) / 60000));
+            }
+        }
+
         $(document).ready(function() {
+            $("#platform_inp").on('change', toggleLiveFields);
+            $("#chat_enabled_switch").on('change', toggleLiveFields);
+            $("#course_id_inp").on('change', () => filterClasses());
+            $("#duration_minutes_inp, #start_time_inp").on('change', syncEndFromDuration);
+            $("#end_time_inp").on('change', syncDurationFromEnd);
+            toggleLiveFields();
+
             $("#add_btn").click(function(e) {
                 e.preventDefault();
 
-                // Remove method override inputs (_method) used for PUT/PATCH on edit
-                $("[title='_method']").remove();
-
-                // Reset the form fields
+                $("#crud_form").find('input[name="_method"]').remove();
                 $("#crud_form")[0].reset();
-
-
-                // Reset image previews to placeholder (assuming your image wrapper has this class)
                 $('.image-input-wrapper').css('background-image', "url('/placeholder_images/default.svg')");
 
-                // Clear validation errors and invalid classes
                 $("#crud_form").find('.invalid-feedback').text('');
                 $("#crud_form").find('.is-invalid').removeClass('is-invalid');
 
-                // Reset TinyMCE editors content if present
                 if (typeof tinymce !== 'undefined') {
                     tinymce.editors.forEach(editor => editor.setContent(''));
                 }
 
-                // Reset checkboxes by title attribute if they have it (otherwise use IDs)
-                $("#is_active_switch", "#is_preview_switch", "#quiz_required_switch")
-                    .prop('checked', false);
+                $("#course_id_inp").val('').trigger('change');
+                $("#platform_inp").val('youtube').trigger('change');
+                $("#is_active_switch, #chat_enabled_switch").prop('checked', true);
+                $("#is_recorded_switch").prop('checked', false);
+                toggleLiveFields();
 
                 $("#crud_form").attr('action', "{{ route('dashboard.lives.store') }}");
-
-                // Reset modal title
                 $("#form_title").text("{{ __('Add new live') }}");
-
-                // Optionally, reset date inputs
-                $("#start_date_inp, #end_date_inp").val('');
-
-                // Open modal if you want to show it on "Add"
                 $("#crud_modal").modal('show');
             });
         });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const platformSelect = document.getElementById('platform');
-            const meetingIdField = document.getElementById('meeting_id').closest('.col-4');
-            const passwordField = document.getElementById('password').closest('.col-4');
-            const streamKeyField = document.getElementById('stream_key').closest('.col-4');
-
-            function toggleFields() {
-                const platform = platformSelect.value;
-
-                if (platform === 'zoom') {
-                    meetingIdField.style.display = 'block';
-                    passwordField.style.display = 'block';
-                    streamKeyField.style.display = 'none';
-                } else if (platform === 'youtube' || platform === 'twitch') {
-                    meetingIdField.style.display = 'none';
-                    passwordField.style.display = 'none';
-                    streamKeyField.style.display = 'block';
-                } else {
-                    // Hide all if unknown platform
-                    meetingIdField.style.display = 'none';
-                    passwordField.style.display = 'none';
-                    streamKeyField.style.display = 'none';
-                }
-            }
-
-            // Initial toggle
-            toggleFields();
-
-            // Listen for change
-            platformSelect.addEventListener('change', toggleFields);
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            const chatToggle = document.querySelector('input[name="chat_enabled"]');
-            const chatUrlContainer = document.getElementById('chat_embed_url_container');
-            const chatUrlInput = document.getElementById('chat_embed_url_inp_inp');
-
-            function toggleChatUrl() {
-                if (chatToggle.checked) {
-                    chatUrlContainer.style.display = 'block';
-                } else {
-                    chatUrlContainer.style.display = 'none';
-                    chatUrlInput.value = ''; // Optional: clear input when hidden
-                }
-            }
-
-            // Initial check on page load
-            toggleChatUrl();
-
-            // Toggle on change
-            chatToggle.addEventListener('change', toggleChatUrl);
-        });
-    </script>
-    <script>
-        document.getElementById('embed_url_inp').addEventListener('change', function() {
-            let url = this.value.trim();
-
-            if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                let videoId = null;
-
-                let match = url.match(/(?:live\/|v=|youtu\.be\/)([A-Za-z0-9_\-]+)/);
-                if (match) {
-                    videoId = match[1];
-                }
-
-                if (videoId) {
-                    // Fill Embed URL
-                    document.getElementById('embed_url_inp').value =
-                        `https://www.youtube.com/embed/${videoId}?autoplay=0`;
-                    // Fill Chat Embed URL
-                    document.getElementById('chat_embed_url_inp').value =
-                        `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${location.hostname}`;
-
-                    // Fetch video details
-                    fetchYoutubeData(videoId);
-                }
-            }
-        });
-
-        function fetchYoutubeData(videoId) {
-            const apiKey = "YOUR_YOUTUBE_API_KEY";
-            fetch(
-                    `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,liveStreamingDetails,contentDetails&key=${apiKey}`
-                    )
-                .then(res => res.json())
-                .then(data => {
-                    if (data.items.length > 0) {
-                        let video = data.items[0];
-
-                        let start = null;
-                        let end = null;
-                        let durationMinutes = null;
-
-                        // Start time
-                        if (video.liveStreamingDetails?.scheduledStartTime) {
-                            start = new Date(video.liveStreamingDetails.scheduledStartTime);
-                            document.getElementById('start_time_inp').value = start.toISOString().slice(0, 16);
-                        }
-
-                        // End time from YouTube API if provided
-                        if (video.liveStreamingDetails?.scheduledEndTime) {
-                            end = new Date(video.liveStreamingDetails.scheduledEndTime);
-                            document.getElementById('end_time_inp').value = end.toISOString().slice(0, 16);
-                        }
-
-                        // Duration from contentDetails
-                        if (video.contentDetails?.duration) {
-                            durationMinutes = convertISO8601DurationToMinutes(video.contentDetails.duration);
-                            document.getElementById('duration_minutes_inp').value = durationMinutes;
-                        }
-
-                        // If no end time from API, calculate from start + duration
-                        if (!end && start && durationMinutes) {
-                            end = new Date(start.getTime() + durationMinutes * 60000);
-                            document.getElementById('end_time_inp').value = end.toISOString().slice(0, 16);
-                        }
-                    }
-                });
-        }
-
-        function convertISO8601DurationToMinutes(duration) {
-            let match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?/);
-            let hours = parseInt(match[1] || 0);
-            let minutes = parseInt(match[2] || 0);
-            return hours * 60 + minutes;
-        }
     </script>
 @endpush

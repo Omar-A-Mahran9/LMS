@@ -175,6 +175,7 @@
                     auth()->user()->can('view_governments') ||
                     auth()->user()->can('view_courses') ||
                     auth()->user()->can('view_lives') ||
+                    auth()->user()->can('view_free_videos') ||
                     auth()->user()->can('view_books') ||
                     auth()->user()->can('view_classes') ||
                     auth()->user()->can('view_sections') ||
@@ -244,6 +245,19 @@
                         :title="__('Lives')"
                     >
                         <i class="fas fa-tv fs-2"></i>
+                    </x-dashboard.aside-item>
+
+                @endcan
+
+
+                @can('view_free_videos')
+
+                    <x-dashboard.aside-item
+                        :slug="'free-videos'"
+                        :route="route('dashboard.free-videos.index')"
+                        :title="__('Free videos')"
+                    >
+                        <i class="fas fa-play-circle fs-2"></i>
                     </x-dashboard.aside-item>
 
                 @endcan
@@ -320,6 +334,7 @@
 
                 @if(
                     auth()->user()->can('view_sliders') ||
+                    auth()->user()->can('view_banners') ||
                     auth()->user()->can('view_contact_us') ||
                     auth()->user()->can('view_notifications') ||
                     auth()->user()->can('view_newsletter') ||
@@ -349,6 +364,19 @@
                         :title="__('Sliders')"
                     >
                         <i class="ki-outline ki-slider-horizontal-2 fs-2"></i>
+                    </x-dashboard.aside-item>
+
+                @endcan
+
+
+                @can('view_banners')
+
+                    <x-dashboard.aside-item
+                        :slug="'banners'"
+                        :route="route('dashboard.banners.index')"
+                        :title="__('Banners & offers')"
+                    >
+                        <i class="ki-outline ki-discount fs-2"></i>
                     </x-dashboard.aside-item>
 
                 @endcan

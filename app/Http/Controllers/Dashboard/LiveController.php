@@ -8,6 +8,7 @@ use App\Http\Requests\Dashboard\UpdateLiveRequest;
 use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\Live;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LiveController extends Controller
@@ -16,7 +17,6 @@ class LiveController extends Controller
     {
         $this->authorize('view_lives');
 
-        $courseId = $request->input('course_id');
         $courses = Course::with('category')->select('id', 'title_en', 'title_ar', 'category_id')->get();
         $classes=CourseClass::with('course')->select('id', 'title_en', 'title_ar', 'course_id')->get();
 
@@ -32,32 +32,28 @@ class LiveController extends Controller
     {
         $this->authorize('create_lives');
 
-        $validated = $request->validated();
+        $validated = $this->prepareData($request, $request->validated());
 
-        $validated['chat_enabled'] = $request->boolean('chat_enabled');
-        $validated['is_recorded'] = $request->boolean('is_recorded');
-        $validated['is_active'] = $request->boolean('is_active');
         if ($request->hasFile('image')) {
             $validated['image'] = uploadImageToDirectory($request->file('image'), 'Lives');
         }
         $live = Live::create($validated);
 
-     }
+        return response()->json([
+            'message' => __('Live created successfully'),
+            'data' => $live,
+        ]);
+    }
 
   public function update(UpdateLiveRequest $request,  $id)
 {
     $live=Live::findOrFail($id);
     $this->authorize('update_lives');
 
-    $validated = $request->validated();
-
-    $validated['chat_enabled'] = $request->boolean('chat_enabled');
-    $validated['is_recorded'] = $request->boolean('is_recorded');
-    $validated['is_active'] = $request->boolean('is_active');
+    $validated = $this->prepareData($request, $request->validated());
 
     if ($request->hasFile('image')) {
-        // Optional: delete old image if needed
-        deleteImageFromDirectory($live->image,'Lives'); // Only if you want to delete the old image
+        deleteImageFromDirectory($live->image,'Lives');
         $validated['image'] = uploadImageToDirectory($request->file('image'), 'Lives');
     }
      $live->update($validated);
@@ -94,5 +90,30 @@ class LiveController extends Controller
             'status' => true,
             'message' => __('Live session deleted successfully.'),
         ]);
+    }
+
+    /**
+     * Flags from the switches, and the end time / duration filled from each other
+     * (60 minutes when both are empty). Times are kept as entered (Egypt time).
+     */
+    private function prepareData(Request $request, array $validated): array
+    {
+        $validated['chat_enabled'] = $request->boolean('chat_enabled');
+        $validated['is_recorded'] = $request->boolean('is_recorded');
+        $validated['is_active'] = $request->boolean('is_active');
+
+        $start = Carbon::parse($validated['start_time']);
+        $validated['start_time'] = $start->format('Y-m-d H:i:s');
+
+        if (!empty($validated['end_time'])) {
+            $end = Carbon::parse($validated['end_time']);
+            $validated['duration_minutes'] = (int) $start->diffInMinutes($end);
+        } else {
+            $validated['duration_minutes'] = $validated['duration_minutes'] ?? 60;
+            $end = $start->copy()->addMinutes($validated['duration_minutes']);
+        }
+        $validated['end_time'] = $end->format('Y-m-d H:i:s');
+
+        return $validated;
     }
 }

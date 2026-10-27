@@ -33,6 +33,37 @@ use Illuminate\Support\Facades\Cache;
 
 class CourseController extends Controller
 {
+    /**
+     * Shared course list filters: search, category_id, price=free|paid|discount, certificate=1,
+     * sort=newest|oldest|popular|price_asc|price_desc (default newest).
+     */
+    private function applyCourseFilters($query, Request $request)
+    {
+        $search = trim((string) $request->query('search', ''));
+        $finalPrice = 'CASE WHEN is_free = 1 THEN 0 WHEN have_discount = 1 AND discount_percentage > 0'
+            . ' THEN price * (1 - discount_percentage / 100) ELSE price END';
+
+        return $query
+            ->when($search !== '', function ($q) use ($search) {
+                $like = '%' . addcslashes($search, '%_\\') . '%';
+                $q->where(fn($w) => $w->where('title_ar', 'like', $like)->orWhere('title_en', 'like', $like));
+            })
+            ->when($request->integer('category_id'), fn($q, $id) => $q->where('category_id', $id))
+            ->when($request->query('price') === 'free', fn($q) => $q->where('is_free', 1))
+            ->when($request->query('price') === 'paid', fn($q) => $q->where('is_free', 0))
+            ->when($request->query('price') === 'discount', fn($q) => $q->where('is_free', 0)
+                ->where('have_discount', 1)->where('discount_percentage', '>', 0))
+            ->when($request->boolean('certificate'), fn($q) => $q->where('certificate_available', 1))
+            ->when($request->query('sort', 'newest'), function ($q, $sort) use ($finalPrice) {
+                match ($sort) {
+                    'oldest'     => $q->oldest('id'),
+                    'popular'    => $q->orderByDesc('views')->latest('id'),
+                    'price_asc'  => $q->orderByRaw("$finalPrice asc")->latest('id'),
+                    'price_desc' => $q->orderByRaw("$finalPrice desc")->latest('id'),
+                    default      => $q->latest('id'),
+                };
+            });
+    }
     public function getCoursesByCategory(Request $request)
     {
         $categoryId = $request->query('category_id');
@@ -59,6 +90,8 @@ class CourseController extends Controller
 
             $query->where('category_id', $category->id);
         }
+
+        $this->applyCourseFilters($query, $request);
 
         if (Auth::guard('api')->check()) {
             $student = Auth::guard('api')->user();
@@ -120,7 +153,7 @@ class CourseController extends Controller
     public function getClassesByCoursesId(Request $request, $id)
     {
         $student = auth('api')->user();
-        $studentId = auth('api')->user()->id;
+        $studentId = $student?->id;
         if (!$student) {
             return response()->json([
                 'message' => __('Unauthorized')
@@ -142,14 +175,24 @@ class CourseController extends Controller
             return $this->failure(__('Course not found or unauthorized.'));
         }
         $perPage = $request->query('per_page', 10);
+        $search = trim((string) $request->query('search', ''));
         $classes = CourseClass::where('course_id', $id)
         ->where('is_active', 1)
-        ->whereHas('videos', function ($q) {
-            $q->where('is_active', 1);
+        ->when($search !== '', function ($q) use ($search) {
+            $like = '%' . addcslashes($search, '%_\\') . '%';
+            $q->where(fn($w) => $w->where('title_ar', 'like', $like)->orWhere('title_en', 'like', $like));
+        })
+        // Course order by default (first class first); newest on request
+        ->when($request->query('sort') === 'newest', fn($q) => $q->latest('id'), fn($q) => $q->oldest('id'))
+        // A class shows once it has videos, or a live coming before its videos are added
+        ->where(function ($q) {
+            $q->whereHas('videos', fn($v) => $v->where('is_active', 1))
+              ->orWhereHas('lives', fn($l) => $l->where('is_active', 1)->current());
         })
         ->paginate($perPage);
 
-        if ($classes->isEmpty()) {
+        // A search with no match is an empty list, not an error
+        if ($classes->isEmpty() && $search === '') {
             return $this->failure(__('Class not found or unpublished'));
         }
 
@@ -560,6 +603,8 @@ class CourseController extends Controller
         // ->whereDate('start_date', '<=',  $today)
         // ->whereDate('end_date', '>=',  $today);
 
+        $this->applyCourseFilters($query, $request);
+
         if (Auth::guard('api')->check()) {
             $student = Auth::guard('api')->user();
 
@@ -749,6 +794,8 @@ public function accessBundle(Request $request)
         $perPage    = $request->query('per_page', 10);
         $categoryId = $request->query('category_id');
         $courseId   = $request->query('course_id');
+        $search     = trim((string) $request->query('search', ''));
+        $sort       = $request->query('sort', 'newest'); // newest | oldest | popular
 
         $classes = CourseClass::where('is_active', 1)
             ->when($categoryId, function ($query) use ($categoryId) {
@@ -759,7 +806,17 @@ public function accessBundle(Request $request)
             ->when($courseId, function ($query) use ($courseId) {
                 $query->where('course_id', $courseId);
             })
-            ->with('course')
+            ->when($search !== '', function ($query) use ($search) {
+                $like = '%' . addcslashes($search, '%_\\') . '%';
+                $query->where(function ($q) use ($like) {
+                    $q->where('title_ar', 'like', $like)
+                        ->orWhere('title_en', 'like', $like);
+                });
+            })
+            ->when($sort === 'oldest', fn($query) => $query->oldest('id'))
+            ->when($sort === 'popular', fn($query) => $query->orderByDesc('views')->latest('id'))
+            ->when(!in_array($sort, ['oldest', 'popular']), fn($query) => $query->latest('id'))
+            ->with('course.category')
             ->paginate($perPage);
 
         return $this->successWithPagination(

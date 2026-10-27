@@ -38,6 +38,8 @@ Route::get('students/{student}/report/pdf', [StudentController::class, 'reportPd
 Route::post('enrollments/toggle-status', [EnrollmentController::class, 'toggleStatus'])
     ->name('enrollments.toggleStatus');
 Route::resource('lives', 'LiveController')->except(['create', 'edit']);
+Route::delete('free-videos/delete-selected', 'FreeVideoController@deleteSelected');
+Route::resource('free-videos', 'FreeVideoController')->except(['create', 'edit', 'show']);
 Route::get('/categories/{id}/courses', [CourseController::class, 'getCourses']);
 Route::put('contact-us/{contact}/reply', [ContactRequestController::class, 'reply'])->name('contact.reply');
 Route::get('contact-us/{contact}/reply', [ContactRequestController::class, 'showReplyForm'])->name('contact.reply_form');
@@ -104,6 +106,11 @@ Route::get('students/blocking/{student}', 'StudentController@blocked')->name('st
 
 
 Route::resource('sliders', 'SliderController');
+
+/** banners / offers shown on the website **/
+Route::delete('banners/delete-selected', 'BannerController@deleteSelected');
+Route::post('banners/{banner}/toggle', 'BannerController@toggle')->name('banners.toggle');
+Route::resource('banners', 'BannerController')->except(['show']);
 
 Route::resource('newsletter', 'NewsLetterController')->only(['index', 'destroy']);
 

@@ -6,6 +6,7 @@ use App\Events\StudentNotificationCreated;
 use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\Enrollment;
+use App\Models\Live;
 use App\Models\StudentNotification;
 
 class StudentNotifier
@@ -51,6 +52,42 @@ class StudentNotifier
             'link'      => self::courseLink($course),
             'course_id' => $course->id,
         ], StudentNotification::TARGET_ALL);
+    }
+
+    /**
+     * New live (بث مباشر): goes to the students of the course's grade, once per live.
+     * Lives that already ended are not announced.
+     */
+    public static function newLive(Live $live): ?StudentNotification
+    {
+        if (!$live->is_active || $live->notified_at || $live->status === Live::STATUS_ENDED) {
+            return null;
+        }
+
+        $course = $live->course;
+        if (!$course || !$course->is_active) {
+            return null;
+        }
+
+        $categoryIds = self::courseCategoryIds($course);
+        $when = $live->startsAt()?->locale('ar')->translatedFormat('l j F - h:i A');
+
+        $notification = self::send([
+            'type'      => StudentNotification::TYPE_LIVE,
+            'title_ar'  => 'بث مباشر: ' . $live->title_ar,
+            'title_en'  => 'Live: ' . $live->title_en,
+            'body_ar'   => $live->status === Live::STATUS_LIVE
+                ? 'البث المباشر شغال دلوقتي في ' . $course->title_ar . '، ادخل انضم.'
+                : 'في بث مباشر في ' . $course->title_ar . ($when ? ' يوم ' . $when : '') . '، متفوتهوش.',
+            'body_en'   => 'A live session in ' . $course->title_en . ($live->startsAt() ? ' on ' . $live->startsAt()->format('D j M - h:i A') : '') . '.',
+            'link'      => $live->class_id ? "/lessons/{$live->class_id}" : self::courseLink($course),
+            'course_id' => $course->id,
+            'class_id'  => $live->class_id,
+        ], $categoryIds ? StudentNotification::TARGET_CATEGORIES : StudentNotification::TARGET_ALL, $categoryIds);
+
+        $live->forceFill(['notified_at' => now()])->saveQuietly();
+
+        return $notification;
     }
 
     /** The student's subscription to a course was activated from the dashboard: goes to that student only. */

@@ -70,6 +70,10 @@ class Role extends Model
 
         'lives',
 
+        'free_videos',
+
+        'banners',
+
         'notifications',
 
     ];

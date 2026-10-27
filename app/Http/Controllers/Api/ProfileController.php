@@ -217,6 +217,33 @@ public function myCourses(Request $request)
     return $this->success('', CoursesDetailsResource::collection($courses));
 }
 
+/** Every subscription request of the student (pending / approved / rejected), newest first. */
+public function mySubscriptions()
+{
+    $student = Student::find(auth('api')->id());
+
+    $courses = $student->courses()
+        ->with('category')
+        ->where('courses.is_active', 1)
+        ->orderByDesc('course_student.created_at')
+        ->get();
+
+    return $this->success('', $courses->map(fn ($course) => [
+        'id'            => $course->id,
+        'title'         => $course->title,
+        'image'         => $course->full_image_path,
+        'is_class'      => $course->is_class,
+        'category_name' => $course->category?->name,
+        'status'        => [
+            'key'   => $course->pivot->status,
+            'value' => __($course->pivot->status),
+        ],
+        'is_active'     => (bool) $course->pivot->is_active,
+        'payment_type'  => $course->pivot->payment_type,
+        'requested_at'  => optional($course->pivot->created_at)->format('Y-m-d'),
+    ])->values());
+}
+
 public function studentStatistics()
 {
     $student = Student::find(auth('api')->id());

@@ -103,6 +103,12 @@ public function lives()
     return $this->hasMany(Live::class, 'class_id');
 }
 
+/** The live on air now, else the next one coming (null when there is none). */
+public function currentLive(): ?Live
+{
+    return $this->lives()->published()->current()->soonestFirst()->first();
+}
+
 
 }
 

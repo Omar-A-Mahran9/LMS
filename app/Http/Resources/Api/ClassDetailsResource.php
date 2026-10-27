@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api;
 
+use App\Models\Live;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -77,12 +78,12 @@ class ClassDetailsResource extends JsonResource
                 }
             }
         }
-      $hasLive = $this->lives()
-            ->where('is_active', 1)
-            ->exists();
-      $liveIds = $this->lives()
-        ->where('is_active', true)
-        ->pluck('id'); // 👈 get all active live IDs
+        // This resource is only returned after the access checks (enrolled / class code),
+        // so it carries the full live details with the stream / meeting links
+        $live = $this->currentLive();
+        $liveIds = $this->lives()
+            ->where('is_active', true)
+            ->pluck('id');
         return [
             "id" => $this->id,
             'next_class_id' => $nextClass?->id,
@@ -90,8 +91,9 @@ class ClassDetailsResource extends JsonResource
             'title' => $this->title,
             'short_title'        => $this->short_title,
                         'course_id'        => $this->course_id,
-            'has_live'=>$hasLive,
-                        'live_ids'=>$liveIds,
+            'has_live'=> $live?->status === Live::STATUS_LIVE,
+            'live' => $live ? new LiveResource($live) : null,
+            'live_ids'=>$liveIds,
 
             'description'  => $this->description,
             'started_at' => $this->course->start_date,

@@ -35,6 +35,7 @@ class RoleSeeder extends Seeder
             'recycle_bin' => ['unused_actions' => [1, 2, 3], 'extra_actions' => ['restore']],
             'contact_us' => ['unused_actions' => [1, 2, 4], 'extra_actions' => []],
             'students' => ['unused_actions' => [1, 2, 4], 'extra_actions' => ['block']],
+            'banners' => ['unused_actions' => [1], 'extra_actions' => []],
         ];
 
 

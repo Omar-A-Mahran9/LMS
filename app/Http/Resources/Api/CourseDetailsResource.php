@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Api;
 
 use App\Models\CourseVideoStudent;
+use App\Models\Live;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
@@ -28,15 +29,15 @@ class CourseDetailsResource extends JsonResource
         ->count();
 
         $isCompleted = $this->videos->count() > 0 && $completedCount === $this->videos->count();
-  $hasLive = $this->lives()
-            ->where('is_active', true)
-            ->exists();
+        // Live hint on the course card: on air now, or the next one coming
+        $live = $this->currentLive();
 
         return [
             "id" => $this->id,
             'image' => $this->full_image_path,
             'video_url' => base64_encode(convertToYoutubeEmbed($this->video_url)),
-            'has_live'=> $hasLive,
+            'has_live'=> $live?->status === Live::STATUS_LIVE,
+            'live' => $live ? new LivesResource($live) : null,
             'title' => $this->title,
             'description' => $this->description,
             'note' => $this->note,

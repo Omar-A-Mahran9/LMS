@@ -144,6 +144,9 @@ let translations = {
         "experience years": "سنين الخبرة",
         "Edit Class": "تعديل الحصة",
         "Edit Book": "تعديل الكتاب",
+        "Edit free video": "تعديل الفيديو المجاني",
+        "All grades": "كل الصفوف",
+        "Featured": "مميز",
 
         "No results found": "لا يوجد نتائج",
         "Searching…": "جار البحث ...",
@@ -270,5 +273,13 @@ let translations = {
         "": "",
         "": "",
         "": "",
+        "Running": "يعمل الآن",
+        "Scheduled": "مجدول",
+        "Expired": "منتهي",
+        "Disabled": "متوقف",
+        "Always": "دائمًا",
+        "From": "من",
+        "To": "إلى",
+        "Countdown": "عداد تنازلي",
     },
 };

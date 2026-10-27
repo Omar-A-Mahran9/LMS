@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Api;
 
 use App\Models\CourseVideoStudent;
+use App\Models\Live;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
@@ -26,13 +27,13 @@ class CoursesDetailsResource extends JsonResource
         $progressPercentage = $totalVideos > 0
             ? round(($completedCount / $totalVideos) * 100)
             : 0;
-  $hasLive = $this->lives()
-            ->where('is_active', true)
-            ->exists();
+        // Live hint on the course card: on air now, or the next one coming
+        $live = $this->currentLive();
 
         return [
             'id' => $this->id,
-                        'has_live'=> $hasLive,
+            'has_live'=> $live?->status === Live::STATUS_LIVE,
+            'live' => $live ? new LivesResource($live) : null,
 
             'image' => $this->full_image_path,
             'video_url' => base64_encode(convertToYoutubeEmbed($this->video_url)),

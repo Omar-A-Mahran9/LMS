@@ -69,6 +69,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('quizzes-results', [ProfileController::class, 'quizzesResults'])->name('quizzes.results');
     Route::get('homework-results', [ProfileController::class, 'homeworksResults'])->name('homeworks.results');
     Route::get('my-courses', [ProfileController::class, 'myCourses'])->name('courses');
+    Route::get('my-subscriptions', [ProfileController::class, 'mySubscriptions'])->name('subscriptions');
     Route::get('stats', [ProfileController::class, 'studentStatistics'])->name('stats');
     Route::get('my-question', [ProfileController::class, 'myQuestion'])->name('courses');
 
@@ -126,6 +127,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('general', 'GeneralInvokableController');
     Route::get('lives', 'LivesController@index');
     Route::get('lives/{id}', [LivesController::class, 'show']);
+    // Free videos / tips: open to everyone
+    Route::get('free-videos', 'FreeVideoController@index');
+    Route::get('free-videos/{id}', 'FreeVideoController@show')->whereNumber('id');
 
     Route::get('categories', 'HomeController@getCategory');
     Route::get('footer', 'HomeController@getfooter');
@@ -153,4 +157,8 @@ Route::middleware(['optional.auth'])->group(function () {
     Route::post('student-quizzes/{quizAttemptId}/save', [StudentQuizController::class, 'saveProgress']);
     Route::post('student-quizzes/{quizAttemptId}/submit', [StudentQuizController::class, 'submitQuiz']);
     Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
+
+    // Banners / offers: guests and students see different ones
+    Route::get('banners', 'BannerController@index');
+    Route::post('banners/{id}/click', 'BannerController@click')->whereNumber('id')->middleware('throttle:30,1');
 });

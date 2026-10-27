@@ -24,6 +24,8 @@ var KTDatatablesServerSide = (function () {
                 { data: "id" },
                 { data: "title" },
                 { data: "image" },
+                { data: "start_time" },
+                { data: "status" },
                 { data: "is_active" },
                 { data: "created_at" },
                 { data: null },
@@ -79,7 +81,32 @@ var KTDatatablesServerSide = (function () {
                 },
 
                 {
-                    targets: 3, // This is the "Status" column
+                    targets: 3,
+                    render: function (data, type, row) {
+                        return `<div class="d-flex flex-column">
+                                    <span>${(row.start_time || "").slice(0, 16)}</span>
+                                    <span class="text-muted fs-8">${(row.platform || "").replace("_", " ")}</span>
+                                </div>`;
+                    },
+                },
+
+                {
+                    targets: 4,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        const badges = {
+                            live: ["danger", __("On air now")],
+                            starting_soon: ["warning", __("Starting soon")],
+                            upcoming: ["primary", __("Upcoming")],
+                            ended: ["secondary", __("Ended")],
+                        };
+                        const [color, label] = badges[row.status] || ["secondary", row.status || ""];
+                        return `<span class="badge badge-light-${color}">${label}</span>`;
+                    },
+                },
+
+                {
+                    targets: 5, // This is the "Status" column
                     render: function (data, type, row) {
                         if (row.is_active) {
                             return `
@@ -179,20 +206,22 @@ var KTDatatablesServerSide = (function () {
                 let data = datatable.row(currentBtnIndex).data();
 
                 // Set form title
-                $("#form_title").text(__("Edit Class"));
+                $("#form_title").text(__("Edit live"));
+                $("#crud_form").find(".invalid-feedback").text("");
+                $("#crud_form").find(".is-invalid").removeClass("is-invalid");
 
                 $(".image-input-wrapper").css(
                     "background-image",
                     `url('${data.full_image_path}')`
                 );
-                $("#start_time_inp").val(data.start_time);
-                $("#end_time_inp").val(data.end_time);
+
+                // Relationships (the class list follows the course)
+                $("#course_id_inp").val(data.course_id).trigger("change");
+                filterClasses(data.class_id ?? "");
 
                 // Titles
                 $("#title_ar_inp").val(data.title_ar);
                 $("#title_en_inp").val(data.title_en);
-                $("#embed_url_inp").val(data.embed_url);
-                $("#chat_embed_url_inp").val(data.chat_embed_url);
 
                 if (tinymce.get("description_ar_inp")) {
                     tinymce
@@ -206,18 +235,25 @@ var KTDatatablesServerSide = (function () {
                         .setContent(data.description_en || "");
                 }
 
-                // Video URL
-                $("#video_url_inp").val(data.video_url);
+                // Platform & links
+                $("#platform_inp").val(data.platform).trigger("change");
+                $("#embed_url_inp").val(data.embed_url);
+                $("#chat_embed_url_inp").val(data.chat_embed_url);
+                $("#stream_key_inp").val(data.stream_key);
+                $("#meeting_id_inp").val(data.meeting_id);
+                $("#password_inp").val(data.password);
 
-                // Reset file input (clear any previously selected file)
-                $("#attachment_inp").val("");
-                // Relationships
-                $("#course_id_inp").val(data.course_id).trigger("change");
-                $("#class_id_inp").val(data.class_id).trigger("change");
+                // Times are stored as "Y-m-d H:i:s", the inputs need "Y-m-dTH:i"
+                const toInput = (value) => (value || "").replace(" ", "T").slice(0, 16);
+                $("#start_time_inp").val(toInput(data.start_time));
+                $("#end_time_inp").val(toInput(data.end_time));
+                $("#duration_minutes_inp").val(data.duration_minutes);
 
                 // Flags
-                $("#is_active_switch").prop("checked", data.is_active);
-                $("#chat_enabled_switch").prop("checked", data.chat_enabled);
+                $("#is_active_switch").prop("checked", !!data.is_active);
+                $("#chat_enabled_switch").prop("checked", !!data.chat_enabled);
+                $("#is_recorded_switch").prop("checked", !!data.is_recorded);
+                toggleLiveFields();
 
                 // Reset form method & action
                 $("#crud_form").attr("action", `/dashboard/lives/${data.id}`);

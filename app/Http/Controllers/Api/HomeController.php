@@ -8,6 +8,7 @@ use App\Http\Resources\Api\CategoryResource;
 use App\Http\Resources\Api\ClassesDetailsResource;
 use App\Http\Resources\Api\GovernmentsResource;
 use App\Http\Resources\Api\CommonQuestionResource;
+use App\Http\Resources\Api\FreeVideoResource;
 
 use App\Http\Resources\Api\CoursesFeaturedResource;
 use Illuminate\Support\Str;
@@ -21,6 +22,7 @@ use App\Models\Category;
 use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\CourseVideo;
+use App\Models\FreeVideo;
 use App\Models\Government;
 use App\Models\QuizAttempt;
 use App\Models\Student_rate;
@@ -335,6 +337,11 @@ $courses = Course::where('is_active', 1)
             'courses' => CoursesFeaturedResource::collection($courses),
 
             'Books' =>BookResource::collection($books),
+
+            // Free videos / tips marked for the home page
+            'free_videos' => FreeVideoResource::collection(
+                FreeVideo::published()->where('is_featured', true)->with('category')->sorted()->take(6)->get()
+            ),
 
     ]);
     }
