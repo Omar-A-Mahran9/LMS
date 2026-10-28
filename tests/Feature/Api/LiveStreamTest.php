@@ -101,6 +101,26 @@ class LiveStreamTest extends ApiTestCase
         $this->assertNoSecrets($response->getContent());
     }
 
+    public function test_public_live_is_open_to_guests_on_its_own_page(): void
+    {
+        $live = $this->makeLive($this->makeCourse(), null, [
+            'start_time' => $this->cairo(-5), 'end_time' => $this->cairo(55), 'is_public' => 1,
+        ]);
+
+        $this->getJson('/api/lives')->assertOk()
+            ->assertJsonPath('data.0.is_public', true)
+            ->assertJsonPath('data.0.link', "/lives/{$live->id}");
+
+        $response = $this->getJson("/api/lives/{$live->id}")->assertOk()
+            ->assertJsonPath('data.can_join', true)
+            ->assertJsonPath('data.join_url', self::ZOOM_URL);
+        $this->assertStringNotContainsString('STREAMKEY-NEVER-SHARED', $response->getContent());
+
+        // Before the join window the links stay hidden, even when public
+        $later = $this->makeLive($this->makeCourse(), null, ['is_public' => 1]);
+        $this->getJson("/api/lives/{$later->id}")->assertOk()->assertJsonPath('data.join_url', null);
+    }
+
     public function test_student_not_enrolled_or_pending_cannot_open_live_details(): void
     {
         $course = $this->makeCourse();

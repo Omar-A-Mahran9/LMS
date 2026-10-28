@@ -30,6 +30,7 @@ class Live extends Model
         'created_at' => 'date:Y-m-d',
         'updated_at' => 'date:Y-m-d',
         'notified_at' => 'datetime',
+        'is_public' => 'boolean',
     ];
 
     protected $appends = [

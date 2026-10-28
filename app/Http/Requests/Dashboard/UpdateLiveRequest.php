@@ -58,6 +58,8 @@ class UpdateLiveRequest extends FormRequest
 
             'is_recorded' => 'sometimes|boolean',
             'is_active' => 'sometimes|boolean',
+            // Everyone (guests too) can watch it on the live's public page
+            'is_public' => 'sometimes|boolean',
         ];
     }
 

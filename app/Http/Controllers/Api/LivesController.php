@@ -44,10 +44,14 @@ class LivesController extends Controller
         return $this->success('', LivesResource::collection($lives));
     }
 
-    /** Live details with the stream / meeting links: enrolled students only. */
+    /** Live details with the stream / meeting links: enrolled students only, or everyone for a public live. */
     public function show($id)
     {
         $live = Live::published()->with(['course', 'class'])->findOrFail($id);
+
+        if ($live->is_public) {
+            return $this->success('', new LiveResource($live));
+        }
 
         $studentId = auth('api')->id();
         if (!$studentId) {

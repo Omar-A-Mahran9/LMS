@@ -80,7 +80,9 @@ class StudentNotifier
                 ? 'البث المباشر شغال دلوقتي في ' . $course->title_ar . '، ادخل انضم.'
                 : 'في بث مباشر في ' . $course->title_ar . ($when ? ' يوم ' . $when : '') . '، متفوتهوش.',
             'body_en'   => 'A live session in ' . $course->title_en . ($live->startsAt() ? ' on ' . $live->startsAt()->format('D j M - h:i A') : '') . '.',
-            'link'      => $live->class_id ? "/lessons/{$live->class_id}" : self::courseLink($course),
+            'link'      => $live->is_public
+                ? "/lives/{$live->id}"
+                : ($live->class_id ? "/lessons/{$live->class_id}" : self::courseLink($course)),
             'course_id' => $course->id,
             'class_id'  => $live->class_id,
         ], $categoryIds ? StudentNotification::TARGET_CATEGORIES : StudentNotification::TARGET_ALL, $categoryIds);

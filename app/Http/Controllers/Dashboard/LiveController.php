@@ -101,6 +101,7 @@ class LiveController extends Controller
         $validated['chat_enabled'] = $request->boolean('chat_enabled');
         $validated['is_recorded'] = $request->boolean('is_recorded');
         $validated['is_active'] = $request->boolean('is_active');
+        $validated['is_public'] = $request->boolean('is_public');
 
         $start = Carbon::parse($validated['start_time']);
         $validated['start_time'] = $start->format('Y-m-d H:i:s');

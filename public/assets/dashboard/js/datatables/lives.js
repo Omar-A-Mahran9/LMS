@@ -253,6 +253,7 @@ var KTDatatablesServerSide = (function () {
                 $("#is_active_switch").prop("checked", !!data.is_active);
                 $("#chat_enabled_switch").prop("checked", !!data.chat_enabled);
                 $("#is_recorded_switch").prop("checked", !!data.is_recorded);
+                $("#is_public_switch").prop("checked", !!data.is_public);
                 toggleLiveFields();
 
                 // Reset form method & action

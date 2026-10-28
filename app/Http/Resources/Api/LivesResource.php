@@ -31,10 +31,14 @@ class LivesResource extends JsonResource
             'class_title' => $this->class?->title,
             'category_id' => $course?->category_id,
             'category_name' => $course?->category?->name,
-            // Website page that shows the live (the class page, else the course's classes)
-            'link'        => $this->class_id
-                ? "/lessons/{$this->class_id}"
-                : ($course ? StudentNotifier::courseLink($course) : null),
+            // Open to everyone (guests too) on its own page
+            'is_public'   => (bool) $this->is_public,
+            // Website page that shows the live (public page, the class page, else the course's classes)
+            'link'        => $this->is_public
+                ? "/lives/{$this->id}"
+                : ($this->class_id
+                    ? "/lessons/{$this->class_id}"
+                    : ($course ? StudentNotifier::courseLink($course) : null)),
             'chat_enabled' => (bool) $this->chat_enabled,
             // kept for older clients
             'has_live'    => $this->status === Live::STATUS_LIVE,

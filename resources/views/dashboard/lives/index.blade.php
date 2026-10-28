@@ -308,6 +308,14 @@
                                         for="is_active_switch">{{ __('Active') }}</span>
                                 </label>
                             </div>
+
+                            <div class="col-12 d-flex flex-column mt-4">
+                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input" name="is_public" type="checkbox" value="1" id="is_public_switch">
+                                    <span class="form-check-label text-dark">{{ __('Public live (everyone can watch, no login needed)') }}</span>
+                                </label>
+                                <span class="text-muted fs-7 mt-1">{{ __('The stream link is shown to visitors on a public page') }}</span>
+                            </div>
                         </div>
                     </div>
 
@@ -423,7 +431,7 @@
                 $("#course_id_inp").val('').trigger('change');
                 $("#platform_inp").val('youtube').trigger('change');
                 $("#is_active_switch, #chat_enabled_switch").prop('checked', true);
-                $("#is_recorded_switch").prop('checked', false);
+                $("#is_recorded_switch, #is_public_switch").prop('checked', false);
                 toggleLiveFields();
 
                 $("#crud_form").attr('action', "{{ route('dashboard.lives.store') }}");

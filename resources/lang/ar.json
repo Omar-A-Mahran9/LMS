@@ -171,6 +171,8 @@
     "Stream Key": "مفتاح البث",
     "Enable Chat": "تفعبل الشات",
     "Record Session": "تسجيل المحاضرة",
+    "Public live (everyone can watch, no login needed)": "بث عام (متاح لكل الناس من غير تسجيل دخول)",
+    "The stream link is shown to visitors on a public page": "رابط البث هيظهر للزوار في صفحة عامة",
     "Meeting ID": "كود الاجتماع",
     "Chat Embed URL": "رابط الشات",
     "Select Class": "حدد الحصة",
