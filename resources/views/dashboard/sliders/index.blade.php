@@ -15,6 +15,7 @@
             <!--begin::Card title-->
             <div class="card-title m-0">
                 <h3 class="fw-bold m-0">{{ __('Sliders list') }}</h3>
+                <span class="text-muted fs-7 ms-3">{{ __('Drag a row by ☰ to change the order on the website') }}</span>
             </div>
             <!--end::Card title-->
         </div>
@@ -103,6 +104,7 @@
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/sliders.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
     <script src="{{ asset('assets/dashboard/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>

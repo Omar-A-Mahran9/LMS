@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\SortingScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -22,7 +21,8 @@ class Slider extends Model
      */
     protected static function booted(): void
     {
-        static::addGlobalScope(new SortingScope);
+        // The order set by hand in the dashboard (drag and drop), then newest first
+        static::addGlobalScope('sort_order', fn ($query) => $query->orderBy('sliders.sort_order')->orderByDesc('sliders.created_at'));
     }
     public function getTitleAttribute()
     {

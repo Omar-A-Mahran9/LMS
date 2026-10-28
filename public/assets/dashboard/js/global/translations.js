@@ -7,6 +7,8 @@ const __ = (word) => {
 let translations = {
     ar: {
         "Next": "التالي",
+        "Order saved": "تم حفظ الترتيب",
+        "Drag to reorder": "اسحب لتغيير الترتيب",
         "Submit": "إرسال",
         "Edit admin": "تعديل المشرف",
         "Status updated successfully": "تم تحديث الحالة بنجاح",

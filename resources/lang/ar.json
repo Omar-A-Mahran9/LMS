@@ -1425,5 +1425,8 @@
     "Copied": "تم النسخ",
     "codes are ready. Download them now?": "كود جاهزين. تحب تحمّلهم دلوقتي؟",
     "Later": "لاحقاً",
-    "Show": "عرض"
+    "Show": "عرض",
+    "Order saved": "تم حفظ الترتيب",
+    "Drag to reorder": "اسحب لتغيير الترتيب",
+    "Drag a row by \u2630 to change the order on the website": "اسحب أي صف من ☰ عشان تغيّر ترتيبه في الموقع"
 }

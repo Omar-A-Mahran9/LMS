@@ -23,6 +23,8 @@ var KTDatatablesServerSide = function () {
             searchDelay: searchDelay,
             processing: processing,
             serverSide: serverSide,
+            // The order is the one set by dragging the rows
+            ordering: false,
             order: [],
             stateSave: saveState,
             select: {
@@ -40,8 +42,11 @@ var KTDatatablesServerSide = function () {
                     orderable: false,
                     render: function (data) {
                         return `
-                            <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                <input class="form-check-input" type="checkbox" value="${data}" />
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="slider-drag-handle text-gray-500 fs-2" title="${__('Drag to reorder')}" style="cursor: grab;">&#x2630;</span>
+                                <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                    <input class="form-check-input" type="checkbox" value="${data}" />
+                                </div>
                             </div>`;
                     }
                 },
@@ -290,10 +295,37 @@ var KTDatatablesServerSide = function () {
         });
     }
 
+    // Drag a row by its handle: the new order of the shown rows is saved right away
+    var handleReorder = () => {
+        Sortable.create(document.querySelector('#kt_datatable tbody'), {
+            handle: '.slider-drag-handle',
+            animation: 150,
+            onEnd: function (e) {
+                if (e.oldIndex === e.newIndex) return;
+
+                let ids = $('#kt_datatable tbody tr').map(function () {
+                    return $(this).find('input[type="checkbox"]').val();
+                }).get();
+
+                $.ajax({
+                    url: `/dashboard/${dbTable}/reorder`,
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    data: { ids: ids },
+                    success: () => successAlert(__('Order saved')),
+                    error: () => errorAlert(),
+                    // redraw from the server either way, so the rows match what was saved
+                    complete: () => datatable.ajax.reload(null, false),
+                });
+            }
+        });
+    }
+
     // Public methods
     return {
         init: function () {
             initDatatable();
+            handleReorder();
             handleSearchDatatable();
             initToggleToolbar();
             // handleEditRows();

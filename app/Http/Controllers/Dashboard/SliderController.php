@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Slider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreSliderRequest;
 use App\Http\Requests\Dashboard\UpdateSliderRequest;
@@ -51,6 +52,9 @@ class SliderController extends Controller
         } else {
             $data['background'] = ''; // Optional: or store a placeholder
         }
+
+        // New sliders go last; drag them up in the list to show them earlier
+        $data['sort_order'] = Slider::withoutGlobalScopes()->max('sort_order') + 1;
 
         Slider::create($data);
 
@@ -111,5 +115,37 @@ class SliderController extends Controller
         Slider::whereIn('id', $request->selected_items_ids)->delete();
 
         return response(["selected slider deleted successfully"]);
+    }
+
+    /**
+     * Drag and drop: ids are the sliders the table shows (one page, maybe filtered) in their new order.
+     * They swap places among themselves, the sliders on other pages keep theirs.
+     */
+    public function reorder(Request $request)
+    {
+        $this->authorize('update_sliders');
+
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|distinct|exists:sliders,id',
+        ]);
+
+        $moved = array_map('intval', $request->ids);
+        $all = Slider::pluck('id')->all(); // current order
+        $queue = $moved;
+
+        foreach ($all as $i => $id) {
+            if (in_array($id, $moved, true)) {
+                $all[$i] = array_shift($queue);
+            }
+        }
+
+        DB::transaction(function () use ($all) {
+            foreach ($all as $i => $id) {
+                Slider::whereKey($id)->update(['sort_order' => $i + 1]);
+            }
+        });
+
+        return response()->json(['status' => true, 'message' => __('Order saved')]);
     }
 }

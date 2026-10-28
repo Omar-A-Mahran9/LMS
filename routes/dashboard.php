@@ -108,6 +108,9 @@ Route::resource('students_rate', 'StudentsRatesController')->except(['create', '
 Route::get('students/blocking/{student}', 'StudentController@blocked')->name('students.blocked');
 
 
+// before the resource, or sliders/{slider} catches them
+Route::post('sliders/reorder', 'SliderController@reorder')->name('sliders.reorder');
+Route::delete('sliders/delete-selected', 'SliderController@deleteSelected');
 Route::resource('sliders', 'SliderController');
 
 /** banners / offers shown on the website **/
