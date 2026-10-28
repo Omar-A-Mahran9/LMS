@@ -65,14 +65,14 @@
                             'hint' => __(':count active', ['count' => number_format($stats['books']['active'])]),
                         ],
                         [
-                            'icon' => 'ki-list-check',
+                            'icon' => 'ki-basket',
                             'color' => 'warning',
                             'value' => $stats['kpis']['book_orders'],
                             'label' => __('Book Orders'),
                             'hint' => __(':count pending', ['count' => number_format($stats['book_orders']['counts']['pending'])]),
                         ],
                         [
-                            'icon' => 'ki-cart',
+                            'icon' => 'ki-teacher',
                             'color' => 'danger',
                             'value' => $stats['kpis']['enrollments'],
                             'label' => __('Course Enrollments'),
@@ -572,9 +572,21 @@
             const isRtl = document.documentElement.getAttribute('dir') === 'rtl';
             const statuses = ['pending', 'approved', 'rejected'];
 
-            // Same digits as the cards (number_format): Western digits, thousands separator
-            const fmt = (n) => Number(n || 0).toLocaleString('en-US');
-            const pct = (part, total) => (total > 0 ? Math.round(part / total * 1000) / 10 : 0) + '%';
+            // Same digits as the cards (number_format): Western digits, thousands separator.
+            // Wrapped in a left-to-right isolate so "4 (66.7%)" doesn't flip inside Arabic text.
+            const ltr = (text) => '\u2066' + text + '\u2069';
+            const fmt = (n) => ltr(Number(n || 0).toLocaleString('en-US'));
+            const pct = (part, total) => ltr((total > 0 ? Math.round(part / total * 1000) / 10 : 0) + '%');
+            // Long grade names on two lines instead of being cut
+            const wrap = (label, max = 16) => {
+                const lines = [''];
+                String(label).split(' ').forEach((word) => {
+                    const last = lines.length - 1;
+                    if (lines[last] && (lines[last] + ' ' + word).length > max) lines.push(word);
+                    else lines[last] = lines[last] ? lines[last] + ' ' + word : word;
+                });
+                return lines.length > 1 ? lines : lines[0];
+            };
             // RTL: first item on the right
             const ordered = (list) => (isRtl ? [...list].reverse() : list);
 
@@ -639,7 +651,7 @@
                     },
                     xaxis: {
                         categories: order(labels),
-                        labels: { ...axisLabels(c), trim: true, hideOverlappingLabels: false,
+                        labels: { ...axisLabels(c), trim: false, hideOverlappingLabels: false, rotate: 0,
                             formatter: horizontal ? (v) => fmt(v) : undefined },
                         axisBorder: { show: false },
                         axisTicks: { show: false },
@@ -661,7 +673,7 @@
                     series: values,
                     colors,
                     stroke: { width: 2, colors: [c.card] },
-                    dataLabels: { enabled: true, formatter: (v) => (Math.round(v * 10) / 10) + '%', dropShadow: { enabled: false } },
+                    dataLabels: { enabled: true, formatter: (v) => ltr((Math.round(v * 10) / 10) + '%'), dropShadow: { enabled: false } },
                     legend: {
                         ...base(c, 340).legend,
                         formatter: (label, opts) => `${label}: ${fmt(values[opts.seriesIndex])} (${pct(values[opts.seriesIndex], total)})`,
@@ -691,7 +703,7 @@
                     const horizontal = rows.length > 6;
                     return bar(c, {
                         height: horizontal ? Math.max(340, rows.length * 38) : 340,
-                        labels: rows.map((r) => r.label),
+                        labels: rows.map((r) => (horizontal ? r.label : wrap(r.label))),
                         values: rows.map((r) => r.total),
                         name: t.students,
                         horizontal,

@@ -25,7 +25,7 @@ class BundleController extends Controller
     }
 
     /**
-     * Bundles on sale. Filters: category_id, course_id, search, per_page.
+     * Bundles on sale. Filters: category_id, course_id, search, sort=newest|oldest|price_asc|price_desc, per_page.
      * mine=1 (logged in): the bundles the student activated, on sale or not.
      */
     public function index(Request $request)
@@ -49,7 +49,15 @@ class BundleController extends Controller
                 $like = '%' . addcslashes($search, '%_\\') . '%';
                 $q->where(fn($s) => $s->where('title_ar', 'like', $like)->orWhere('title_en', 'like', $like));
             })
-            ->latest('id')
+            ->when($request->query('sort'), function ($q, $sort) {
+                $price = DB::raw('COALESCE(discount_price, price)');
+                match ($sort) {
+                    'oldest' => $q->oldest('id'),
+                    'price_asc' => $q->orderBy($price)->latest('id'),
+                    'price_desc' => $q->orderByDesc($price)->latest('id'),
+                    default => $q->latest('id'),
+                };
+            }, fn($q) => $q->latest('id'))
             ->paginate(min(max($request->integer('per_page', 12), 1), 50));
 
         return $this->successWithPagination('', BundleResource::collection($bundles)->response()->getData(true));

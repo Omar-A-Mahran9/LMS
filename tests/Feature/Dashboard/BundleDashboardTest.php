@@ -52,9 +52,9 @@ class BundleDashboardTest extends ApiTestCase
     {
         return [
             'draw' => 1, 'start' => 0, 'length' => 10,
-            'search' => ['value' => null],
+            'search' => ['value' => ''],
             'columns' => collect(['id', 'image_url', 'title_ar', 'classes_count', 'codes_count', 'is_active', 'created_at', null])
-                ->map(fn($c) => ['data' => $c, 'name' => null, 'search' => ['value' => null]])->all(),
+                ->map(fn($c) => ['data' => $c, 'name' => '', 'search' => ['value' => '']])->all(),
         ];
     }
 

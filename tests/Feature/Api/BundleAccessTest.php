@@ -53,6 +53,10 @@ class BundleAccessTest extends ApiTestCase
             ->assertJsonMissingPath('data.0.codes');
 
         $this->getJson("/api/bundles/{$bundle->id}")->assertOk()->assertJsonCount(1, 'data.classes');
+
+        $this->bundleWithClass(['title_en' => 'Cheap', 'title_ar' => 'Cheap', 'price' => 50]);
+        $this->getJson('/api/all_bundles?sort=price_asc')->assertOk()->assertJsonPath('data.0.title', 'Cheap');
+        $this->getJson('/api/all_bundles?search=Cheap')->assertOk()->assertJsonCount(1, 'data');
     }
 
     public function test_activating_needs_a_logged_in_student(): void
