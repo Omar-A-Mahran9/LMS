@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\QuizResource;
+use App\Models\Bundle;
 use App\Models\ClassAccessCode;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
@@ -49,7 +50,7 @@ if ($code) {
 
 }
 
-  if ($studentId !== null && !$quiz->course->isStudentEnrolled($studentId)) {
+  if ($studentId !== null && !$this->canTakeQuiz($quiz, $studentId)) {
     return $this->failure(__('You are not enrolled in this course.'));
 }
 
@@ -140,7 +141,7 @@ public function submitQuiz(Request $request, $quizAttemptId)
         return $this->failure(__('Quiz attempt not found or access denied.'));
     }
 
-    if ($studentId !== null && !$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
+    if ($studentId !== null && !$this->canTakeQuiz($attempt->quiz, $attempt->student_id)) {
         return $this->failure(__('You are not enrolled in this course.'));
     }
 
@@ -186,6 +187,12 @@ public function submitQuiz(Request $request, $quizAttemptId)
     ]);
 }
 
+// Enrolled in the course, or the quiz's class is in a bundle the student activated
+private function canTakeQuiz(Quiz $quiz, $studentId): bool
+{
+    return $quiz->course->isStudentEnrolled($studentId) || Bundle::grantsClass($studentId, $quiz->class_id);
+}
+
 private function findOwnedAttempt($quizAttemptId): ?QuizAttempt
 {
     $attempt = QuizAttempt::with('quiz')->find($quizAttemptId);
@@ -212,7 +219,7 @@ $studentId = auth()->id();
         return $this->failure(__('Quiz attempt not found or access denied.'));
     }
 
-    if ($studentId !== null && !$attempt->quiz->course->isStudentEnrolled($attempt->student_id)) {
+    if ($studentId !== null && !$this->canTakeQuiz($attempt->quiz, $attempt->student_id)) {
             return $this->failure(__('You are not enrolled in this course.'));
         }
         $results = [];

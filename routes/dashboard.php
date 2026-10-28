@@ -64,6 +64,7 @@ Route::get('generate-codes/export/pdf', [GenerateCodeController::class, 'exportP
 
 
 
+Route::delete('bundles/delete-selected', 'BundleController@deleteSelected');
 Route::resource('bundles', 'BundleController')->except(['create', 'edit']);
 
 Route::get('bundles/export/pdf', [BundleController::class, 'exportPDF'])

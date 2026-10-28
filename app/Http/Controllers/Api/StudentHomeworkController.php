@@ -29,7 +29,9 @@ public function startHomework(Request $request, $homeworkId)
         ->where('student_id', $studentId)
         ->where('status', 'approved')
         ->where('is_active', 1)
-        ->exists();
+        ->exists()
+        // or the homework's class is in a bundle the student activated
+        || \App\Models\Bundle::grantsClass($studentId, $homework->class_id);
 
     if (!$isEnrolled) {
         return $this->failure(__('You are not enrolled in this course.'));

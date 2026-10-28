@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\BundleResource as ApiBundleResource;
 use App\Http\Resources\Api\ClassDetailsResource;
 use App\Http\Resources\Api\ClassesDetailsResource;
 use App\Http\Resources\Api\GovernmentsResource;
@@ -13,7 +12,6 @@ use App\Http\Resources\Api\CourseStatusResource;
 use App\Http\Resources\Api\QuizResource;
 use App\Http\Resources\Api\SectionResource;
 use App\Models\Bundle;
-use App\Models\BundleAccessCode;
 use App\Models\Category;
 use App\Models\ClassAccessCode;
 use App\Models\ClassAccessLog;
@@ -298,18 +296,14 @@ class CourseController extends Controller
             return $this->failure(__('Class not found or unpublished'));
         }
 
-        // Check if student is enrolled in the course
+        // Students enrolled in the course, or who activated a bundle containing this class
         $course = Course::where('id', $class->course_id)
             ->where('is_active', 1)
-            ->whereHas('enrollments', function ($q) use ($studentId) {
-                $q->where('student_id', $studentId)
-                  ->where('status', 'approved')
-                  ->where('is_active', 1);
-            })
             ->first();
 
         // Guests too: classes opened with a code go through videos_by_classes_with_code
-        if (!$course) {
+        if (!$course || !$studentId
+            || (!$course->isStudentEnrolled($studentId) && !Bundle::grantsClass($studentId, $class->id))) {
             return $this->failure(__('Course not found or unauthorized.'));
         }
 
@@ -700,95 +694,6 @@ class CourseController extends Controller
         return $this->success('', new CourseStatusResource($course));
 
     }
-    public function getAllBundles(Request $request)
-    {
-        $perPage = $request->query('per_page', 10);
-
-        $categoryId = $request->query('category_id');
-
-        $courseId = $request->query('course_id');
-
-
-        $bundles = Bundle::query()
-
-            ->where('is_active', 1)
-
-            ->with([
-                'classes.course',
-                'codes'
-            ])
-
-            ->when($categoryId, function ($query) use ($categoryId) {
-
-                $query->whereHas('classes.course', function ($q) use ($categoryId) {
-
-                    $q->where(
-                        'category_id',
-                        $categoryId
-                    );
-                });
-            })
-
-            ->when($courseId, function ($query) use ($courseId) {
-
-                $query->whereHas('classes', function ($q) use ($courseId) {
-
-                    $q->where(
-                        'course_id',
-                        $courseId
-                    );
-                });
-            })
-
-            ->latest()
-
-            ->paginate($perPage);
-
-
-        return $this->successWithPagination(
-            '',
-            ApiBundleResource::collection($bundles)
-                ->response()
-                ->getData(true)
-        );
-    }
-
-public function accessBundle(Request $request)
-{
-    $request->validate([
-        'bundle_id' => 'required|exists:bundles,id',
-        'code'      => 'required|string',
-    ]);
-
-    $code = BundleAccessCode::with([
-            'bundle.classes.course',
-            'bundle.classes.lives',
-        ])
-        ->where('bundle_id', $request->bundle_id)
-        ->where('code', $request->code)
-        ->where('is_active', true)
-        ->first();
-
-    if (!$code) {
-        return $this->failure(__('Invalid or inactive code'));
-    }
-
-    if ($code->single_use && $code->used_count >= 1) {
-        return $this->failure(__('This code has already been used'));
-    }
-
-    // زيادة عدد مرات الاستخدام (limits + validity dates re-checked atomically)
-    if (!$code->consumeUse()) {
-        return $this->failure(__('This access code has expired or reached its usage limit.'));
-    }
-
-    return $this->success(
-        __('Bundle activated successfully'),
-        [
-            'bundle' => new ApiBundleResource($code->bundle),
-        ]
-    );
-}
     public function getAllClasses(Request $request)
     {
         $perPage    = $request->query('per_page', 10);
@@ -1006,92 +911,5 @@ public function accessBundle(Request $request)
             'videos' => $videos,
         ]);
     }
-
-    public function getVideosByBundleCode(Request $request, $id)
-    {
-        $studentId = Auth::id();
-
-        $class = CourseClass::where('id', $id)
-            ->where('is_active', 1)
-            ->first();
-
-        if (!$class) {
-            return $this->failure(__('Class not found or unpublished'));
-        }
-
-        $request->validate([
-            'code' => 'required|string',
-        ]);
-
-        $bundleCode = BundleAccessCode::with([
-                'bundle.classes.videos'
-            ])
-            ->where('code', $request->code)
-            ->where('is_active', 1)
-            ->first();
-
-        if (!$bundleCode) {
-            return $this->failure(__('Invalid or inactive bundle code.'));
-        }
-
-        // Check usage
-        if (!$bundleCode->canBeUsed()) {
-            return $this->failure(__('This access code has expired or reached its usage limit.'));
-        }
-
-        // Check that class belongs to bundle
-        $exists = $bundleCode->bundle->classes()
-            ->where('classes.id', $class->id)
-            ->exists();
-
-        if (!$exists) {
-            return $this->failure(__('This class does not belong to this bundle.'));
-        }
-
-        // Increment usage
-        if (!$bundleCode->consumeUse()) {
-            return $this->failure(__('This access code has expired or reached its usage limit.'));
-        }
-
-        // Optional Log
-        /*
-        BundleAccessLog::create([
-            'student_id'      => auth('api')->id(),
-            'bundle_id'       => $bundleCode->bundle_id,
-            'access_code_id'  => $bundleCode->id,
-            'device_ip'       => $request->ip(),
-            'user_agent'      => $request->userAgent(),
-        ]);
-        */
-
-        // Track view only for logged-in users
-        if ($studentId) {
-            $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
-
-            if (!Cache::has($cacheKey)) {
-                $class->increment('views');
-                Cache::put($cacheKey, true, now()->addHours(6));
-            }
-        }
-
-        // Load videos
-        $videos = $class->videos()
-            ->where('is_active', 1)
-            ->with([
-                'studentProgress' => function ($query) use ($studentId) {
-                    if ($studentId) {
-                        $query->where('student_id', $studentId);
-                    }
-                }
-            ])
-            ->get();
-
-        return $this->success(__('Bundle class videos loaded'), [
-            'bundle'     => new ApiBundleResource($bundleCode->bundle),
-            'class_data' => new ClassDetailsResource($class, $studentId),
-            'videos'     => $videos,
-        ]);
-    }
-
 
 }

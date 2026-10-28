@@ -221,7 +221,7 @@ var KTDatatablesServerSide = (function () {
         datatable.on("draw", function () {
             initToggleToolbar();
 
-            // toggleToolbars();
+            toggleToolbars();
 
             handleEditRows();
 
@@ -255,24 +255,43 @@ var KTDatatablesServerSide = (function () {
 
                 let data = datatable.row(currentBtnIndex).data();
 
+                $("#crud_form")[0].reset();
+                $("#crud_form").find(".invalid-feedback").text("");
+                $("#crud_form").find(".is-invalid").removeClass("is-invalid");
+
                 $("#form_title").text(__("Edit Bundle"));
+                $("#id_inp").val(data.id);
+
+                $(".image-input-wrapper").css(
+                    "background-image",
+                    `url('${data.full_image_path}')`,
+                );
 
                 $("#title_ar_inp").val(data.title_ar);
-
                 $("#title_en_inp").val(data.title_en);
 
                 tinymce
                     .get("description_ar_inp")
-                    .setContent(data.description_ar);
+                    .setContent(data.description_ar ?? "");
                 tinymce
                     .get("description_en_inp")
-                    .setContent(data.description_en);
-                $("#code_count_inp").val(data.codes_count);
-                $("#usage_limit_inp").val(data.usage_limit ?? "");
-                 $("#single_use_switch").prop("checked", data.single_use == 1);
+                    .setContent(data.description_en ?? "");
+
+                $("#price_inp").val(data.price);
+                $("#discount_price_inp").val(data.discount_price ?? "");
+
+                // Code settings are shared by the bundle's codes: read them from the first one
+                const firstCode = (data.codes || [])[0] || {};
+                $("#starts_at_inp").val((firstCode.starts_at || "").substring(0, 10));
+                $("#expires_at_inp").val((firstCode.expires_at || "").substring(0, 10));
+                $("#single_use_switch").prop("checked", firstCode.single_use === undefined ? true : !!firstCode.single_use);
+                $("#usage_limit_inp").val(firstCode.usage_limit ?? "");
+                $("#add_codes_inp").val("");
+                toggleUsageLimit();
+                toggleCodeCountForEdit();
 
                 $("#classes_inp")
-                    .val(data.classes.map((x) => x.id))
+                    .val((data.classes || []).map((x) => x.id))
                     .trigger("change");
 
                 $("#is_active_switch").prop("checked", data.is_active == 1);

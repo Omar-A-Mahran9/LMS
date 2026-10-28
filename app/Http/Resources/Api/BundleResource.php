@@ -9,38 +9,42 @@ class BundleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
+     * Never includes the access codes.
      */
     public function toArray(Request $request): array
     {
+        $studentId = auth('api')->id();
+
         return [
 
             'id' => $this->id,
 
-            'title' => app()->getLocale() == 'ar'
-                ? $this->title_ar
-                : $this->title_en,
+            'title' => $this->title,
 
-            'title_ar' => $this->title_ar,
-
-            'title_en' => $this->title_en,
-
-            'description_ar' => $this->description_ar,
-
-            'description_en' => $this->description_en,
+            'description' => $this->description,
 
             'image' => $this->full_image_path,
 
+            'price' => (float) $this->price,
+
+            'discount_price' => $this->discount_price !== null ? (float) $this->discount_price : null,
+
+            'final_price' => (float) $this->final_price,
+
+            'have_discount' => $this->discount_price !== null && $this->discount_price < $this->price,
+
             'is_active' => $this->is_active,
 
-            'classes_count' => $this->classes_count,
+            // The logged-in student activated it: its classes open from /lessons/{id}
+            'is_owned' => $this->isOwnedBy($studentId),
 
-            'codes_count' => $this->codes_count,
+            'classes_count' => $this->classes_count,
 
             'classes' => ClassesDetailsResource::collection(
                 $this->whenLoaded('classes')
             ),
 
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at?->format('Y-m-d'),
         ];
     }
 }

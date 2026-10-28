@@ -220,7 +220,7 @@
                             <select name="classes[]" id="classes_inp" multiple class="form-select" required
                                 data-control="select2" data-placeholder="{{ __('Select Classes') }}">
                                 @foreach ($classes as $class)
-                                    <option value="{{ $class->id }}">{{ $class->title }}</option>
+                                    <option value="{{ $class->id }}">{{ $class->title }}{{ $class->course ? ' — ' . $class->course->title : '' }}</option>
                                 @endforeach
                             </select>
                             <div class="invalid-feedback" id="classes"></div>
@@ -274,9 +274,14 @@
                                     min="1" step="1" required
                                     placeholder="{{ __('Enter number of codes (e.g. 40)') }}">
                                 <div class="invalid-feedback" id="code_count"></div>
-                                <div class="form-text" id="code_count_edit_note" style="display:none;">
-                                    {{ __('Codes already generated cannot be changed after creation.') }}
-                                </div>
+                            </div>
+                            {{-- Edit mode: the generated codes are kept, more can be added --}}
+                            <div class="col-6" id="add_codes_wrapper" style="display:none;">
+                                <label for="add_codes_inp" class="form-label">{{ __('Add more codes') }}</label>
+                                <input type="number" name="add_codes" id="add_codes_inp" class="form-control"
+                                    min="0" max="1000" step="1" placeholder="0">
+                                <div class="invalid-feedback" id="add_codes"></div>
+                                <div class="form-text">{{ __('Codes already generated cannot be changed after creation.') }}</div>
                             </div>
 
                             <div class="col-6" id="usage_limit_wrapper">
@@ -315,35 +320,27 @@
     </form>
 
     <script>
-        // toggle usage_limit عند تفعيل single_use، وإخفاء code_count في وضع التعديل
+        // usage limit only for codes that can be used more than once
+        function toggleUsageLimit() {
+            const singleUse = document.getElementById('single_use_switch').checked;
+            document.getElementById('usage_limit_wrapper').style.display = singleUse ? 'none' : '';
+            document.getElementById('usage_limit_inp').disabled = singleUse;
+        }
+
+        // create: number of codes to generate / edit: optional extra codes
+        function toggleCodeCountForEdit() {
+            const isEdit = document.getElementById('id_inp').value !== '';
+            const codeCount = document.getElementById('code_count_inp');
+            document.getElementById('code_count_wrapper').style.display = isEdit ? 'none' : '';
+            codeCount.disabled = isEdit;
+            codeCount.required = !isEdit;
+            document.getElementById('add_codes_wrapper').style.display = isEdit ? '' : 'none';
+            document.getElementById('add_codes_inp').disabled = !isEdit;
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            const singleUse = document.getElementById('single_use_switch');
-            const usageLimitWrapper = document.getElementById('usage_limit_wrapper');
-            const usageLimitInput = document.getElementById('usage_limit_inp');
-
-            function toggleUsageLimit() {
-                const disabled = singleUse.checked;
-                usageLimitWrapper.style.display = disabled ? 'none' : '';
-                usageLimitInput.disabled = disabled;
-            }
-
-            singleUse.addEventListener('change', toggleUsageLimit);
+            document.getElementById('single_use_switch').addEventListener('change', toggleUsageLimit);
             toggleUsageLimit();
-
-            // مثال: عند فتح الفورم للتعديل (id_inp مش فاضي) اخفي حقل عدد الأكواد
-            const idInput = document.getElementById('id_inp');
-            const codeCountWrapper = document.getElementById('code_count_wrapper');
-            const codeCountInput = document.getElementById('code_count_inp');
-            const editNote = document.getElementById('code_count_edit_note');
-
-            function toggleCodeCountForEdit() {
-                const isEdit = idInput.value !== '';
-                codeCountInput.disabled = isEdit;
-                codeCountInput.required = !isEdit;
-                editNote.style.display = isEdit ? '' : 'none';
-            }
-
-            // استدعِ toggleCodeCountForEdit() من دالة فتح الـ Edit بتاعتك بعد ما تحط قيمة id_inp
             toggleCodeCountForEdit();
         });
     </script>
@@ -376,8 +373,15 @@
                 e.preventDefault();
 
                 $("#crud_form")[0].reset();
-
+                $("#id_inp").val('');
                 $('#classes_inp').val(null).trigger('change');
+                $('.image-input-wrapper').css('background-image', "url('/placeholder_images/default.svg')");
+                if (typeof tinymce !== 'undefined') {
+                    tinymce.editors.forEach(editor => editor.setContent(''));
+                }
+                $("#single_use_switch, #is_active_switch").prop('checked', true);
+                toggleUsageLimit();
+                toggleCodeCountForEdit();
 
                 $("#crud_form")
                     .find('.invalid-feedback')

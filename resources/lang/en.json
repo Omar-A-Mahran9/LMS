@@ -23,5 +23,9 @@
     "Paste the Google Meet link. Students get a join button that opens Meet.": "Paste the Google Meet link. Students get a join button that opens Meet.",
     "Paste the Facebook live video link. It plays inside the class page.": "Paste the Facebook live video link. It plays inside the class page.",
     "Paste the Twitch channel link. Students get a button that opens it.": "Paste the Twitch channel link. Students get a button that opens it.",
-    "Any live link. Students get a button that opens it.": "Any live link. Students get a button that opens it."
+    "Any live link. Students get a button that opens it.": "Any live link. Students get a button that opens it.",
+    ":count active": ":count active",
+    ":count grades": ":count grades",
+    ":count pending": ":count pending",
+    "Deleted": "Deleted"
 }

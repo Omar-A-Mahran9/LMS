@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +15,13 @@ class Bundle extends Model
 
     protected $appends = [
 
+        'title',
+
+        'description',
+
         'full_image_path',
+
+        'final_price',
 
         'classes_count',
 
@@ -38,15 +45,34 @@ class Bundle extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function getTitleAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->title_ar : ($this->title_en ?: $this->title_ar);
+    }
+
+
+    public function getDescriptionAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->description_ar : ($this->description_en ?: $this->description_ar);
+    }
+
+
     public function getFullImagePathAttribute()
     {
         return asset(getImagePathFromDirectory($this->image, 'Bundles', 'default.svg'));
     }
 
 
+    /** Price the student pays: the discounted one when set. */
+    public function getFinalPriceAttribute()
+    {
+        return $this->discount_price !== null ? $this->discount_price : $this->price;
+    }
+
+
     public function getClassesCountAttribute()
     {
-        return $this->classes()->count();
+        return $this->relationLoaded('classes') ? $this->classes->count() : $this->classes()->count();
     }
 
 
@@ -82,6 +108,21 @@ class Bundle extends Model
     }
 
 
+    /** Students who activated the bundle with a code. */
+    public function activations()
+    {
+        return $this->hasMany(BundleStudent::class);
+    }
+
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'bundle_student')
+            ->withPivot(['access_code_id', 'used_at'])
+            ->withTimestamps();
+    }
+
+
     /*
     |--------------------------------------------------------------------------
     | Scopes
@@ -95,6 +136,12 @@ class Bundle extends Model
     }
 
 
+    public function scopeOwnedBy(Builder $query, $studentId): Builder
+    {
+        return $query->whereHas('activations', fn($q) => $q->where('student_id', $studentId));
+    }
+
+
     /*
     |--------------------------------------------------------------------------
     | Helpers
@@ -104,5 +151,27 @@ class Bundle extends Model
     public function isAvailable(): bool
     {
         return $this->is_active;
+    }
+
+
+    public function isOwnedBy($studentId): bool
+    {
+        return $studentId && $this->activations()->where('student_id', $studentId)->exists();
+    }
+
+
+    /**
+     * The student activated a bundle that contains this class.
+     * Students keep their bundles even when the bundle is later deactivated (stopped selling).
+     */
+    public static function grantsClass($studentId, $classId): bool
+    {
+        if (!$studentId || !$classId) {
+            return false;
+        }
+
+        return BundleStudent::where('student_id', $studentId)
+            ->whereIn('bundle_id', fn($q) => $q->select('bundle_id')->from('bundle_class')->where('class_id', $classId))
+            ->exists();
     }
 }

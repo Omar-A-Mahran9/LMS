@@ -54,7 +54,7 @@ class LivesController extends Controller
             return $this->failure(__('Unauthorized'), 401);
         }
 
-        if (!$live->course->isStudentEnrolled($studentId)) {
+        if (!$live->course->isStudentEnrolled($studentId) && !\App\Models\Bundle::grantsClass($studentId, $live->class_id)) {
             return $this->failure(__('Course not found or unauthorized.'));
         }
 

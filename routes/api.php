@@ -35,6 +35,9 @@ Route::get('certificate/verify/{id}', [CertificateController::class, 'verify'])
     ->name('certificates.verify');
 
 Route::middleware(['auth:api'])->group(function () {
+    // Bundles: activate once with a code, then the classes open from videos_by_classes/{id}
+    Route::post('access_bundle', 'BundleController@activate');
+    Route::get('videos_by_bundle_with_code/{id}', 'BundleController@classVideos')->whereNumber('id');
     Route::post('Ask_us', 'ContactUsController@store');
 
     Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');
@@ -90,9 +93,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('all_classes', 'CourseController@getAllClasses');
     Route::post('access_class', 'CourseController@access');
     Route::get('videos_by_classes_with_free/{id}', 'CourseController@getVideosByClassCode');
-    Route::get('all_bundles', 'CourseController@getAllBundles');
-    Route::post('access_bundle', 'CourseController@accessBundle');
-    Route::get('videos_by_bundle_with_code/{id}', 'CourseController@getVideosByBundleCode');
+    // Bundles on sale (is_owned when a student token is sent); activation is in the auth:api group
+    Route::get('all_bundles', 'BundleController@index');
+    Route::get('bundles/{id}', 'BundleController@show')->whereNumber('id');
     // Route::get('quiz_by_class_id/{id}', 'CourseController@getQuizClassById');
     // Route::get('quiz/{id}', 'CourseController@getQuizById');
     // Route::get('quizzes/{quizId}/start', [StudentQuizController::class, 'startQuiz']);

@@ -41,10 +41,11 @@ class BundleAccessCode extends Model
         );
     }
 
+    /** Students who activated the bundle with this code (used to read class code logs by mistake). */
     public function logs()
     {
         return $this->hasMany(
-            ClassAccessLog::class,
+            BundleStudent::class,
             'access_code_id'
         );
     }

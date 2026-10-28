@@ -134,6 +134,47 @@
             </div>
         </div>
 
+        {{-- ======================= Students who activated the bundle ======================= --}}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-gray">
+                <h5 class="mt-5">{{ __('Students who activated the bundle') }} ({{ $bundle->activations->count() }})</h5>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-bordered align-middle text-center mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>{{ __('Student') }}</th>
+                            <th>{{ __('Phone') }}</th>
+                            <th>{{ __('Code') }}</th>
+                            <th>{{ __('Activated at') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($bundle->activations as $activation)
+                            <tr>
+                                <td>
+                                    @if ($activation->student)
+                                        <a href="{{ route('dashboard.students.show', $activation->student_id) }}">
+                                            {{ $activation->student->first_name }} {{ $activation->student->last_name }}
+                                        </a>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td>{{ $activation->student?->phone ?? '-' }}</td>
+                                <td><code>{{ $bundle->codes->firstWhere('id', $activation->access_code_id)?->code ?? '-' }}</code></td>
+                                <td>{{ $activation->used_at?->format('Y-m-d H:i') ?? '-' }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">{{ __('No student activated this bundle yet') }}</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         {{-- ======================= Codes Table ======================= --}}
         <div class="card shadow-sm">
             <div class="card-header bg-white d-flex justify-content-between align-items-center flex-wrap">
@@ -153,7 +194,7 @@
                             <th>{{ __('Status') }}</th>
                             <th>{{ __('Single Use') }}</th>
                             <th>{{ __('Usage') }}</th>
-                            <th>{{ __('Logs Count') }}</th>
+                            <th>{{ __('Activations') }}</th>
                             <th>{{ __('Can Be Used') }}</th>
                             <th>{{ __('Created At') }}</th>
                             <th>{{ __('Actions') }}</th>
@@ -208,7 +249,7 @@
                                 <td>{{ $code->created_at }}</td>
                                 <td>
                                     <a href="{{ route('dashboard.codes.show', $code->id) }}"
-                                        class="btn btn-sm btn-icon btn-light-primary" title="{{ __('View Logs') }}">
+                                        class="btn btn-sm btn-icon btn-light-primary" title="{{ __('Activations') }}">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </td>

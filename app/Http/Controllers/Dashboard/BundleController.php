@@ -22,15 +22,17 @@ class BundleController extends Controller
             return response()->json(
                 getModelData(
                     model: new Bundle(),
+                    // qualified columns (the pivot table has an id too); codes need bundle_id to be matched
                     relations: [
-    'classes' => ['id', 'title_ar', 'title_en'],
-    'codes' => ['id', 'code']
-]
+                        'classes' => ['classes.id', 'classes.title_ar', 'classes.title_en'],
+                        'codes' => ['id', 'bundle_id', 'single_use', 'usage_limit', 'starts_at', 'expires_at'],
+                    ]
                 )
             );
         }
 
-        $classes = CourseClass::where('is_active', 1)->get();
+        // The course name tells apart classes with the same title
+        $classes = CourseClass::where('is_active', 1)->with('course:id,title_ar,title_en')->get();
 
         return view('dashboard.bundles.index', compact('classes'));
     }
@@ -59,8 +61,8 @@ class BundleController extends Controller
             'starts_at'        => 'nullable|date',
             'expires_at'       => 'nullable|date|after_or_equal:starts_at',
 
-            'code_count'       => 'required|integer|min:1',
-            'usage_limit'      => 'nullable|integer',
+            'code_count'       => 'required|integer|min:1|max:1000',
+            'usage_limit'      => 'nullable|integer|min:1',
 
             'single_use'       => 'nullable|boolean',
             'is_active'        => 'nullable|boolean',
@@ -116,27 +118,7 @@ class BundleController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            $count = $request->code_count;
-
-            for ($i = 0; $i < $count; $i++) {
-
-                do {
-                    $generatedCode = strtoupper(Str::random(10));
-                } while (
-                    BundleAccessCode::where('code', $generatedCode)->exists()
-                );
-
-                BundleAccessCode::create([
-                    'bundle_id'    => $bundle->id,
-                    'code'         => $generatedCode,
-                    'single_use'   => $request->boolean('single_use'),
-                    'usage_limit'  => $request->usage_limit,
-                    'used_count'   => 0,
-                    'starts_at'    => $request->starts_at,
-                    'expires_at'   => $request->expires_at,
-                    'is_active'    => $request->boolean('is_active'),
-                ]);
-            }
+            $this->generateCodes($bundle, (int) $request->code_count, $request);
 
             DB::commit();
 
@@ -176,6 +158,17 @@ class BundleController extends Controller
 
             'classes.*' => 'exists:classes,id',
 
+            'price' => 'required|numeric|min:0',
+
+            'discount_price' => 'nullable|numeric|min:0|lte:price',
+
+            'starts_at' => 'nullable|date',
+
+            'expires_at' => 'nullable|date|after_or_equal:starts_at',
+
+            // more codes for the bundle (the generated ones are kept)
+            'add_codes' => 'nullable|integer|min:0|max:1000',
+
             'usage_limit' => 'nullable|integer|min:1',
 
             'is_active' => 'nullable|boolean',
@@ -193,6 +186,10 @@ class BundleController extends Controller
         $image = $bundle->image;
 
         if ($request->hasFile('image')) {
+
+            if ($bundle->image) {
+                deleteImageFromDirectory($bundle->image, 'bundles');
+            }
 
             $image = uploadImageToDirectory(
                 $request->file('image'),
@@ -218,6 +215,10 @@ class BundleController extends Controller
             'description_en' => $request->description_en,
 
             'image' => $image,
+
+            'price' => $request->price,
+
+            'discount_price' => $request->discount_price,
 
             'is_active' => $request->boolean('is_active'),
         ]);
@@ -246,8 +247,16 @@ class BundleController extends Controller
 
             'single_use' => $request->boolean('single_use'),
 
-            'usage_limit' => $request->usage_limit,
+            'usage_limit' => $request->boolean('single_use') ? null : $request->usage_limit,
+
+            'starts_at' => $request->starts_at,
+
+            'expires_at' => $request->expires_at,
         ]);
+
+        if ($request->integer('add_codes') > 0) {
+            $this->generateCodes($bundle, $request->integer('add_codes'), $request);
+        }
 
 
         return response()->json([
@@ -261,6 +270,44 @@ class BundleController extends Controller
                 'codes'
             ]),
         ]);
+    }
+
+    public function deleteSelected(Request $request)
+    {
+        $this->authorize('delete_bundle');
+
+        $bundles = Bundle::whereIn('id', (array) $request->selected_items_ids)->get();
+        foreach ($bundles as $bundle) {
+            if ($bundle->image) {
+                deleteImageFromDirectory($bundle->image, 'bundles');
+            }
+            $bundle->delete();
+        }
+
+        return response(["selected bundles deleted successfully"]);
+    }
+
+    private function generateCodes(Bundle $bundle, int $count, Request $request): void
+    {
+        for ($i = 0; $i < $count; $i++) {
+
+            do {
+                $generatedCode = strtoupper(Str::random(10));
+            } while (
+                BundleAccessCode::where('code', $generatedCode)->exists()
+            );
+
+            BundleAccessCode::create([
+                'bundle_id'    => $bundle->id,
+                'code'         => $generatedCode,
+                'single_use'   => $request->boolean('single_use'),
+                'usage_limit'  => $request->boolean('single_use') ? null : $request->usage_limit,
+                'used_count'   => 0,
+                'starts_at'    => $request->starts_at,
+                'expires_at'   => $request->expires_at,
+                'is_active'    => $request->boolean('is_active'),
+            ]);
+        }
     }
 
     public function exportPDF(Request $request)
@@ -312,6 +359,7 @@ class BundleController extends Controller
 
         $bundle->load([
             'classes',
+            'activations.student',
             'codes' => function ($query) {
                 $query->withCount('logs')->latest();
             },

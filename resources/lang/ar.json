@@ -1367,5 +1367,18 @@
     "Countdown": "عداد تنازلي",
     "The link must start with / for a page of the website, or with http(s)://": "يجب أن يبدأ الرابط بـ / لصفحة داخل الموقع أو بـ http(s)://",
     "Set an end date to show the countdown": "حدد تاريخ الانتهاء لإظهار العداد التنازلي",
-    "Search": "بحث"
+    "Search": "بحث",
+    ":count active": ":count نشط",
+    ":count grades": ":count صفوف",
+    ":count pending": ":count قيد الانتظار",
+    "Deleted": "محذوف",
+    "Students who activated the bundle": "الطلاب اللي فعّلوا الباقة",
+    "No student activated this bundle yet": "لسه مفيش طالب فعّل الباقة",
+    "Activated at": "تاريخ التفعيل",
+    "Activations": "مرات التفعيل",
+    "Add more codes": "إضافة أكواد جديدة",
+    "Bundle not found": "الباقة غير موجودة",
+    "This bundle is not available now": "الباقة دي مش متاحة دلوقتي",
+    "You already have this bundle": "الباقة دي مفعّلة عندك بالفعل",
+    "This class does not belong to your bundles.": "الحصة دي مش ضمن باقاتك"
 }
