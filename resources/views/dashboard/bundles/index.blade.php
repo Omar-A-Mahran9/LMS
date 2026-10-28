@@ -218,7 +218,7 @@
                         <div class="mb-4">
                             <label class="form-label">{{ __('Classes') }}</label>
                             <select name="classes[]" id="classes_inp" multiple class="form-select" required
-                                data-control="select2" data-placeholder="{{ __('Select Classes') }}">
+                                data-placeholder="{{ __('Select Classes') }}">
                                 @foreach ($classes as $class)
                                     <option value="{{ $class->id }}">{{ $class->title }}{{ $class->course ? ' — ' . $class->course->title : '' }}</option>
                                 @endforeach
@@ -367,6 +367,13 @@
     </script>
     <script>
         $(document).ready(function() {
+
+            // Inside the modal select2 needs dropdownParent, or its search box can't take focus
+            $('#classes_inp').select2({
+                dropdownParent: $('#crud_modal'),
+                width: '100%',
+                closeOnSelect: false
+            });
 
             $("#add_btn").click(function(e) {
 
