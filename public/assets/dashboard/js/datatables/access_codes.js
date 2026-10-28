@@ -4,7 +4,28 @@ var datatable;
 // Class definition
 var KTDatatablesServerSide = (function () {
     let dbTable = "generateCode";
-    // Private functions
+
+    const statusBadges = {
+        unused: ["badge-light-success", __("Unused")],
+        used: ["badge-light-info", __("Partially used")],
+        exhausted: ["badge-light-secondary text-gray-700", __("Exhausted")],
+        inactive: ["badge-light-danger", __("Inactive")],
+    };
+
+    // Values of the filters bar, sent with every table request and with the PDF export
+    var currentFilters = function () {
+        let filters = {};
+        $("#codes_filters [data-filter]").each(function () {
+            let value = $(this).val();
+            if (value) filters[$(this).data("filter")] = value;
+        });
+
+        let search = $('[data-kt-docs-table-filter="search"]').val().trim();
+        if (search) filters.search = search;
+
+        return filters;
+    };
+
     var initDatatable = function () {
         datatable = $("#kt_datatable").DataTable({
             language: language,
@@ -20,18 +41,20 @@ var KTDatatablesServerSide = (function () {
             },
             ajax: {
                 url: `/dashboard/${dbTable}`,
+                data: function (params) {
+                    let filters = currentFilters();
+                    delete filters.search; // DataTables sends its own search[value]
+                    return Object.assign(params, filters);
+                },
             },
             columns: [
-                { data: "id" }, // Checkbox
-                { data: "code" }, // Code
-                { data: "https://mohamed-elnagar.com/classes-by-code" }, // Actions
-                { data: "class_id" }, // Class
-                { data: "usage_limit" ?? "-" }, // Usage Limit
-                { data: "used_count" }, // Used Count
-                { data: "is_single_use" }, // Single Use
-                { data: "is_active" }, // Active
-                { data: "created_at" }, // Created At
-                { data: null }, // Actions
+                { data: "id" },
+                { data: "code" },
+                { data: "class_id" },
+                { data: "used_count" },
+                { data: "is_active" },
+                { data: "created_at" },
+                { data: null },
             ],
             columnDefs: [
                 {
@@ -39,62 +62,53 @@ var KTDatatablesServerSide = (function () {
                     orderable: false,
                     render: function (data) {
                         return `
-                <div class="form-check form-check-sm form-check-custom form-check-solid">
-                    <input class="form-check-input" type="checkbox" value="${data}" />
-                </div>`;
+                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                <input class="form-check-input" type="checkbox" value="${data}" />
+                            </div>`;
+                    },
+                },
+                {
+                    targets: 1,
+                    render: function (data) {
+                        return `
+                            <div class="d-inline-flex align-items-center gap-2">
+                                <span class="code-text fw-bold text-gray-800 fs-5">${data}</span>
+                                <button type="button" class="btn btn-icon btn-sm btn-light btn-active-light-primary w-25px h-25px" data-copy="${data}" title="${__("Copy")}">
+                                    <i class="far fa-copy fs-7"></i>
+                                </button>
+                            </div>`;
                     },
                 },
                 {
                     targets: 2,
+                    orderable: false,
                     render: function (data, type, row) {
                         return `
-                <div class="d-flex flex-column justify-content-center">
-                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${"https://mohamed-elnagar.com/classes-by-code"}</a>
-                </div>
-            `;
+                            <div class="d-flex flex-column">
+                                <span class="text-gray-800">${row.class?.title ?? "-"}</span>
+                                <span class="text-muted fs-7">${row.class?.course?.title ?? ""}</span>
+                            </div>`;
                     },
                 },
-
                 {
                     targets: 3,
                     render: function (data, type, row) {
+                        let max = row.single_use ? 1 : row.usage_limit;
+                        let percent = max ? Math.min(100, (row.used_count / max) * 100) : 0;
+
                         return `
-                <div class="d-flex flex-column justify-content-center">
-                    <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${
-                        row.class?.title || "-"
-                    }</a>
-                </div>
-            `;
+                            <div class="d-flex flex-column align-items-center">
+                                <span class="fw-bold">${row.used_count} / ${max ?? "∞"}</span>
+                                ${max ? `<div class="progress h-4px w-75px mt-1"><div class="progress-bar bg-primary" style="width:${percent}%"></div></div>` : ""}
+                                <span class="text-muted fs-8 mt-1">${row.single_use ? __("Single Use") : max ? __("Multi use") : __("Unlimited")}</span>
+                            </div>`;
                     },
                 },
                 {
-                    targets: 4, // usage_limit
-                    render: function (data) {
-                        return data ?? "-";
-                    },
-                },
-                {
-                    targets: 6, // Single Use column
+                    targets: 4,
                     render: function (data, type, row) {
-                        return row.single_use
-                            ? `<span class="badge badge-info">${__(
-                                  "Yes"
-                              )}</span>`
-                            : `<span class="badge badge-secondary">${__(
-                                  "No"
-                              )}</span>`;
-                    },
-                },
-                {
-                    targets: 7, // Active column
-                    render: function (data, type, row) {
-                        return row.is_active
-                            ? `<span class="badge badge-success">${__(
-                                  "Active"
-                              )}</span>`
-                            : `<span class="badge badge-danger">${__(
-                                  "Inactive"
-                              )}</span>`;
+                        let [badge, label] = statusBadges[row.status] ?? ["", row.status];
+                        return `<span class="badge ${badge}">${label}</span>`;
                     },
                 },
                 {
@@ -103,137 +117,142 @@ var KTDatatablesServerSide = (function () {
                     orderable: false,
                     render: function (data, type, row) {
                         return `
-                        <div>
-                            <a href="#" class="btn btn-light btn-active-light-primary btn-sm " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
-                                <span class="svg-icon svg-icon-dark svg-icon-1 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path opacity="0.3" d="M22.1 11.5V12.6C22.1 13.2 21.7 13.6 21.2 13.7L19.9 13.9C19.7 14.7 19.4 15.5 18.9 16.2L19.7 17.2999C20 17.6999 20 18.3999 19.6 18.7999L18.8 19.6C18.4 20 17.8 20 17.3 19.7L16.2 18.9C15.5 19.3 14.7 19.7 13.9 19.9L13.7 21.2C13.6 21.7 13.1 22.1 12.6 22.1H11.5C10.9 22.1 10.5 21.7 10.4 21.2L10.2 19.9C9.4 19.7 8.6 19.4 7.9 18.9L6.8 19.7C6.4 20 5.7 20 5.3 19.6L4.5 18.7999C4.1 18.3999 4.1 17.7999 4.4 17.2999L5.2 16.2C4.8 15.5 4.4 14.7 4.2 13.9L2.9 13.7C2.4 13.6 2 13.1 2 12.6V11.5C2 10.9 2.4 10.5 2.9 10.4L4.2 10.2C4.4 9.39995 4.7 8.60002 5.2 7.90002L4.4 6.79993C4.1 6.39993 4.1 5.69993 4.5 5.29993L5.3 4.5C5.7 4.1 6.3 4.10002 6.8 4.40002L7.9 5.19995C8.6 4.79995 9.4 4.39995 10.2 4.19995L10.4 2.90002C10.5 2.40002 11 2 11.5 2H12.6C13.2 2 13.6 2.40002 13.7 2.90002L13.9 4.19995C14.7 4.39995 15.5 4.69995 16.2 5.19995L17.3 4.40002C17.7 4.10002 18.4 4.1 18.8 4.5L19.6 5.29993C20 5.69993 20 6.29993 19.7 6.79993L18.9 7.90002C19.3 8.60002 19.7 9.39995 19.9 10.2L21.2 10.4C21.7 10.5 22.1 11 22.1 11.5ZM12.1 8.59998C10.2 8.59998 8.6 10.2 8.6 12.1C8.6 14 10.2 15.6 12.1 15.6C14 15.6 15.6 14 15.6 12.1C15.6 10.2 14 8.59998 12.1 8.59998Z" fill="currentColor"/>
-                                    <path d="M17.1 12.1C17.1 14.9 14.9 17.1 12.1 17.1C9.30001 17.1 7.10001 14.9 7.10001 12.1C7.10001 9.29998 9.30001 7.09998 12.1 7.09998C14.9 7.09998 17.1 9.29998 17.1 12.1ZM12.1 10.1C11 10.1 10.1 11 10.1 12.1C10.1 13.2 11 14.1 12.1 14.1C13.2 14.1 14.1 13.2 14.1 12.1C14.1 11 13.2 10.1 12.1 10.1Z" fill="currentColor"/>
-                                    </svg>
-                                </span>
+                            <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                ${__("Actions")} <i class="fas fa-angle-down ms-1"></i>
                             </a>
-                            <!--begin::Menu-->
-                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
-                                <!--begin::Menu item-->
+                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-150px py-4" data-kt-menu="true">
                                 <div class="menu-item px-3">
-                                    <a href="javascript:;" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
-                                        ${__("Edit")}
-                                    </a>
+                                    <a href="/dashboard/${dbTable}/${row.id}" class="menu-link px-3">${__("Show")}</a>
                                 </div>
-                                <!--end::Menu item-->
-
                                 <div class="menu-item px-3">
-                                    <a href="/dashboard/generateCode/${
-                                        data.id
-                                    }" class="menu-link px-3 show_button" data-kt-docs-table-filter="show_row">
-                                        ${__("Show")}
-                                    </a>
+                                    <a href="javascript:;" class="menu-link px-3" data-kt-docs-table-filter="edit_row">${__("Edit")}</a>
                                 </div>
-
-                                   <!--end::Menu item-->
-                                ${`<!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
-                                        ${__("Delete")}
-                                    </a>
+                                    <a href="#" class="menu-link px-3 text-danger" data-kt-docs-table-filter="delete_row">${__("Delete")}</a>
                                 </div>
-                                <!--end::Menu item-->`}
-                            </div>
-                            <!--end::Menu-->
-                        </div
-                        `;
+                            </div>`;
                     },
                 },
             ],
-
-            // Add data-filter attribute
-            createdRow: function (row, data, dataIndex) {
-                // $(row).find('td:eq(4)').attr('data-filter', data.CreditCardType);
-            },
         });
 
-        // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+        // Status cards follow the same filters as the table
+        datatable.on("xhr", function (e, settings, json) {
+            if (!json?.stats) return;
+            $.each(json.stats, (status, count) => $(`[data-stat="${status}"]`).text(count));
+        });
+
         datatable.on("draw", function () {
             initToggleToolbar();
             toggleToolbars();
-            handleEditRows();
             deleteRowWithURL(`/dashboard/${dbTable}/`);
-            deleteSelectedRowsWithURL({
-                url: `/dashboard/${dbTable}/delete-selected`,
-                restoreUrl: `/dashboard/${dbTable}/restore-selected`,
-            });
+            deleteSelectedRowsWithURL({ url: `/dashboard/${dbTable}/delete-selected` });
             KTMenu.createInstances();
-            handlePreviewAttachments();
         });
     };
 
-    var handleEditRows = () => {
-        const editButtons = document.querySelectorAll(
-            '[data-kt-docs-table-filter="edit_row"]'
-        );
-        const codeCountWrapper = document.getElementById("code_count_wrapper");
-        editButtons.forEach((btn) => {
-            btn.addEventListener("click", function (e) {
-                e.preventDefault();
+    var handleFilters = function () {
+        $("#filter_class").select2({ allowClear: true, width: "100%" });
 
-                let currentBtnIndex = $(editButtons).index(btn);
-                let data = datatable.row(currentBtnIndex).data();
+        $("#codes_filters [data-filter]").on("change", function () {
+            if ($(this).data("filter") === "status") syncStatusCards();
+            datatable.draw();
+        });
 
-                // Set form title
-                $("#form_title").text(__("Edit Access Code"));
+        $(".status-card").on("click", function () {
+            $("#filter_status").val($(this).data("status")).trigger("change");
+        });
 
-                // Set form values
-                $("#class_id_inp").val(data.class_id).trigger("change");
-                $("#code_inp").val(data.code);
-                $("#usage_limit_inp").val(data.usage_limit ?? "");
-                $("#is_active_switch").prop("checked", data.is_active == 1);
-                $("#single_use_switch").prop("checked", data.single_use == 1);
+        $("#reset_filters").on("click", function () {
+            $("#codes_filters [data-filter]").val("");
+            $("#filter_class").trigger("change.select2");
+            $('[data-kt-docs-table-filter="search"]').val("");
+            syncStatusCards();
+            datatable.search("").draw();
+        });
 
-                codeCountWrapper.style.display = "none";
-
-                // Set form action
-                $("#crud_form").attr(
-                    "action",
-                    `/dashboard/generateCode/${data.id}`
-                );
-
-                // Change method to PUT
-                $("#crud_form").find('input[name="_method"]').remove();
-                $("#crud_form").prepend(
-                    `<input type="hidden" name="_method" value="PUT">`
-                );
-
-                // Show modal
-                $("#crud_modal").modal("show");
-            });
+        // The export follows the filters at the moment of the click
+        $(".btn-export-pdf").on("click", function () {
+            let params = Object.assign(currentFilters(), { layout: $(this).data("layout") });
+            $(this).attr("href", `${codesExportUrl}?${$.param(params)}`);
         });
     };
 
-    var handlePreviewAttachments = () => {
-        // Select all edit buttons
-        const previewButtons = $('[data-action="preview_attachments"]');
+    var syncStatusCards = function () {
+        let status = $("#filter_status").val();
+        $(".status-card").removeClass("active");
+        $(`.status-card[data-status="${status}"]`).addClass("active");
+    };
 
-        $.each(previewButtons, function (indexInArray, button) {
-            $(button).on("click", function (e) {
-                e.preventDefault();
+    var handleCopy = function () {
+        $("#kt_datatable").on("click", "[data-copy]", function () {
+            navigator.clipboard.writeText($(this).data("copy"));
+            showToast(__("Copied"));
+        });
+    };
 
-                let data = datatable.row(indexInArray).data();
-                $(".attachments").html("");
+    var handleForm = function () {
+        const $modal = $("#crud_modal");
+        const $form = $("#crud_form");
 
-                $(".attachments").append(`
-                    <!--begin::Overlay-->
-                    <a class="d-block overlay" data-fslightbox="lightbox-basic" href="${data.full_image_path}">
-                        <!--begin::Action-->
-                        <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                            <i class="bi bi-eye-fill text-white fs-3x"></i>
-                        </div>
-                        <!--end::Action-->
+        // Inside the modal select2 needs dropdownParent, or its search box can't take focus
+        $("#class_id_inp").select2({ dropdownParent: $modal, width: "100%" });
 
-                    </a>
-                    <!--end::Overlay-->
-                `);
-                refreshFsLightbox();
-                $("[data-fslightbox='lightbox-basic']:first").trigger("click");
-            });
+        // A single-use code has one use: the limit doesn't apply
+        const toggleUsageLimit = () => {
+            let singleUse = $("#single_use_switch").is(":checked");
+            $("#usage_limit_inp").prop("disabled", singleUse);
+            if (singleUse) $("#usage_limit_inp").val("");
+        };
+
+        // A custom code is a single code: the count only applies to auto-generated ones
+        const toggleCodeCount = () => {
+            let isEdit = $form.find('input[name="_method"]').length > 0;
+            let hasCode = $("#code_inp").val().trim() !== "";
+            $("#code_count_wrapper").toggle(!isEdit);
+            $("#code_count_inp").prop("disabled", isEdit || hasCode);
+        };
+
+        $("#single_use_switch").on("change", toggleUsageLimit);
+        $("#code_inp").on("input", toggleCodeCount);
+
+        const resetForm = () => {
+            $form[0].reset();
+            $form.find('input[name="_method"]').remove();
+            $form.find(".invalid-feedback").text("");
+            $form.find(".is-invalid").removeClass("is-invalid");
+            $("#class_id_inp").val($("#filter_class").val() || "").trigger("change");
+        };
+
+        $("#add_btn").on("click", function (e) {
+            e.preventDefault();
+            resetForm();
+            $form.attr("action", codesStoreUrl);
+            $("#form_title").text(__("Generate codes"));
+            $("#code_inp").attr("placeholder", __("Leave blank to auto-generate"));
+            toggleUsageLimit();
+            toggleCodeCount();
+            $modal.modal("show");
+        });
+
+        $("#kt_datatable").on("click", '[data-kt-docs-table-filter="edit_row"]', function (e) {
+            e.preventDefault();
+            let data = datatable.row($(this).closest("tr")).data();
+
+            resetForm();
+            $form.prepend(`<input type="hidden" name="_method" value="PUT">`);
+            $form.attr("action", `/dashboard/${dbTable}/${data.id}`);
+            $("#form_title").text(__("Edit Access Code"));
+
+            $("#class_id_inp").val(data.class_id).trigger("change");
+            $("#code_inp").val(data.code).attr("placeholder", "");
+            $("#usage_limit_inp").val(data.usage_limit ?? "");
+            $("#is_active_switch").prop("checked", !!data.is_active);
+            $("#single_use_switch").prop("checked", !!data.single_use);
+
+            toggleUsageLimit();
+            toggleCodeCount();
+            $modal.modal("show");
         });
     };
 
@@ -243,16 +262,39 @@ var KTDatatablesServerSide = (function () {
             initDatatable();
             handleSearchDatatable();
             initToggleToolbar();
-            handleEditRows();
-            deleteRowWithURL(`/dashboard/${dbTable}/`);
-            deleteSelectedRowsWithURL({
-                url: `/dashboard/${dbTable}/delete-selected`,
-                restoreUrl: `/dashboard/${dbTable}/restore-selected`,
-            });
-            handlePreviewAttachments();
+            handleFilters();
+            handleCopy();
+            handleForm();
         },
     };
 })();
+
+// After generating a batch: offer its PDF right away
+window["onCodesSaved"] = (response) => {
+    onAjaxSuccess();
+
+    if (!response?.export_url) return;
+
+    Swal.fire({
+        icon: "success",
+        title: __("Codes generated successfully"),
+        text: `${response.count} ${__("codes are ready. Download them now?")}`,
+        showDenyButton: true,
+        showCancelButton: true,
+        buttonsStyling: false,
+        confirmButtonText: __("Cards to print and cut"),
+        denyButtonText: __("Report table"),
+        cancelButtonText: __("Later"),
+        customClass: {
+            confirmButton: "btn fw-bold btn-primary",
+            denyButton: "btn fw-bold btn-light-primary",
+            cancelButton: "btn fw-bold btn-light",
+        },
+    }).then((result) => {
+        if (result.isConfirmed) window.open(`${response.export_url}&layout=cards`, "_blank");
+        else if (result.isDenied) window.open(`${response.export_url}&layout=table`, "_blank");
+    });
+};
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {

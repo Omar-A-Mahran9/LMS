@@ -50,11 +50,9 @@
 
                 <div>
 
-                    <a href="{{ route('dashboard.bundles.exportPDF') }}" class="btn btn-secondary ms-3" target="_blank">
-
-                        <i class="fas fa-file-pdf me-2"></i>
-
-                    </a>
+                    <button type="button" class="btn btn-light-primary ms-3" onclick="openCodesExport()">
+                        <i class="fas fa-file-pdf me-2"></i>{{ __('Export codes PDF') }}
+                    </button>
 
                 </div>
 
@@ -299,6 +297,15 @@
                             <label class="form-check-label" for="is_active_switch">{{ __('Active') }}</label>
                         </div>
 
+                        {{-- Off: a student opens the bundle with the code alone, no account needed --}}
+                        <div class="form-check form-switch mb-4">
+                            <input type="hidden" name="requires_login" value="0">
+                            <input class="form-check-input" type="checkbox" name="requires_login" id="requires_login_switch"
+                                value="1" checked>
+                            <label class="form-check-label" for="requires_login_switch">{{ __('Login required to use the code') }}</label>
+                            <div class="form-text">{{ __('Turn it off so anyone with the code can attend without an account.') }}</div>
+                        </div>
+
                     </div>
 
                     <div class="modal-footer">
@@ -319,7 +326,70 @@
         </div>
     </form>
 
+    {{-- Codes PDF: one bundle or all, table or cards to print --}}
+    <div class="modal fade" tabindex="-1" id="codes_export_modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <form class="modal-content" id="codes_export_form" action="{{ route('dashboard.bundles.exportPDF') }}"
+                method="get" target="_blank">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('Export codes PDF') }}</h5>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-5">
+                        <label class="form-label" for="export_bundle_inp">{{ __('Bundle') }}</label>
+                        <select name="bundle_id" id="export_bundle_inp" class="form-select">
+                            <option value="">{{ __('All bundles') }}</option>
+                            @foreach ($bundles as $item)
+                                <option value="{{ $item->id }}">{{ $item->title_ar }} ({{ $item->codes_count }} {{ __('codes') }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="form-label">{{ __('Layout') }}</label>
+                        <div class="d-flex gap-6">
+                            <label class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" name="layout" value="table" checked>
+                                <span class="form-check-label">{{ __('Table (follow-up report)') }}</span>
+                            </label>
+                            <label class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" name="layout" value="cards">
+                                <span class="form-check-label">{{ __('Cards to print and hand out') }}</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <label class="form-check form-switch form-check-custom form-check-solid">
+                        <input class="form-check-input" type="checkbox" name="status" value="available">
+                        <span class="form-check-label">{{ __('Only the codes that can still be used') }}</span>
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ __('Close') }}</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-download me-2"></i>{{ __('Download') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // From the header (all bundles) or a bundle's menu (that bundle)
+        function openCodesExport(bundleId = '') {
+            document.getElementById('export_bundle_inp').value = bundleId;
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('codes_export_modal')).show();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('codes_export_form').addEventListener('submit', function() {
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('codes_export_modal')).hide();
+            });
+        });
+
         // usage limit only for codes that can be used more than once
         function toggleUsageLimit() {
             const singleUse = document.getElementById('single_use_switch').checked;
@@ -386,7 +456,7 @@
                 if (typeof tinymce !== 'undefined') {
                     tinymce.editors.forEach(editor => editor.setContent(''));
                 }
-                $("#single_use_switch, #is_active_switch").prop('checked', true);
+                $("#single_use_switch, #is_active_switch, #requires_login_switch").prop('checked', true);
                 toggleUsageLimit();
                 toggleCodeCountForEdit();
 

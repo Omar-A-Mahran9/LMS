@@ -57,6 +57,19 @@ class BundleAccessCode extends Model
     |--------------------------------------------------------------------------
     */
 
+    /** unused / used / exhausted / inactive: the codes PDF shows it */
+    public function getStatusAttribute(): string
+    {
+        $max = $this->single_use ? 1 : $this->usage_limit;
+
+        return match (true) {
+            !$this->is_active => 'inactive',
+            $max !== null && $this->used_count >= $max => 'exhausted',
+            $this->used_count > 0 => 'used',
+            default => 'unused',
+        };
+    }
+
     public function canBeUsed(): bool
     {
         if (!$this->is_active) {
@@ -78,15 +91,16 @@ class BundleAccessCode extends Model
         }
 
         // Validity window set when the codes were generated
+        return $this->isWithinValidity();
+    }
+
+    public function isWithinValidity(): bool
+    {
         if ($this->starts_at && $this->starts_at->isFuture()) {
             return false;
         }
 
-        if ($this->expires_at && $this->expires_at->isPast()) {
-            return false;
-        }
-
-        return true;
+        return !($this->expires_at && $this->expires_at->isPast());
     }
 
     /**

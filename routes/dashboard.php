@@ -58,6 +58,7 @@ Route::resource('classes', 'ClassController')->except(['create', 'edit']);
 Route::resource('sections', 'SectionController')->except(['create', 'edit']);
 
 Route::resource('books', 'BookController')->except(['create', 'edit', 'show']);
+Route::delete('generateCode/delete-selected', 'GenerateCodeController@deleteSelected');
 Route::resource('generateCode', 'GenerateCodeController')->except(['create', 'edit']);
 
 Route::get('generate-codes/export/pdf', [GenerateCodeController::class, 'exportPDF'])

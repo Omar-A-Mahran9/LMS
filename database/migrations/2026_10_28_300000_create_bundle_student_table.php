@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('bundle_student', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bundle_id')->constrained('bundles')->cascadeOnDelete();
-            $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
+            $table->foreignId('student_id')->nullable()->constrained('students')->cascadeOnDelete(); // null: a guest (bundle without login)
             $table->foreignId('access_code_id')->nullable()->constrained('bundle_access_codes')->nullOnDelete();
             $table->string('device_ip', 45)->nullable();
             $table->string('user_agent')->nullable();

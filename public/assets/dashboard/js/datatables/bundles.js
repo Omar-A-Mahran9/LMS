@@ -200,6 +200,15 @@ var KTDatatablesServerSide = (function () {
                                 </div>
 
                                 <div class="menu-item px-3">
+                                    <a href="javascript:;"
+                                        class="menu-link px-3"
+                                        onclick="openCodesExport(${row.id})">
+
+                                        ${__("Export codes")}
+                                    </a>
+                                </div>
+
+                                <div class="menu-item px-3">
                                     <a href="#"
                                         class="menu-link px-3"
                                         data-kt-docs-table-filter="delete_row">
@@ -295,6 +304,7 @@ var KTDatatablesServerSide = (function () {
                     .trigger("change");
 
                 $("#is_active_switch").prop("checked", data.is_active == 1);
+                $("#requires_login_switch").prop("checked", data.requires_login === undefined ? true : !!data.requires_login);
 
                 $("#crud_form").attr(
                     "action",

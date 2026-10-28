@@ -35,9 +35,6 @@ Route::get('certificate/verify/{id}', [CertificateController::class, 'verify'])
     ->name('certificates.verify');
 
 Route::middleware(['auth:api'])->group(function () {
-    // Bundles: activate once with a code, then the classes open from videos_by_classes/{id}
-    Route::post('access_bundle', 'BundleController@activate');
-    Route::get('videos_by_bundle_with_code/{id}', 'BundleController@classVideos')->whereNumber('id');
     Route::post('Ask_us', 'ContactUsController@store');
 
     Route::get('classes_by_courses_id/{id}', 'CourseController@getClassesByCoursesId');
@@ -160,6 +157,11 @@ Route::middleware(['optional.auth'])->group(function () {
     Route::post('student-quizzes/{quizAttemptId}/save', [StudentQuizController::class, 'saveProgress']);
     Route::post('student-quizzes/{quizAttemptId}/submit', [StudentQuizController::class, 'submitQuiz']);
     Route::get('student-quizzes/{studentQuizId}/results', [StudentQuizController::class, 'results']);
+
+    // Bundles: activate once with a code, then the classes open from videos_by_classes/{id}.
+    // Guests too when the bundle doesn't require login (they send ?code= to videos_by_bundle_with_code)
+    Route::post('access_bundle', 'BundleController@activate')->middleware('throttle:20,1');
+    Route::get('videos_by_bundle_with_code/{id}', 'BundleController@classVideos')->whereNumber('id');
 
     // Banners / offers: guests and students see different ones
     Route::get('banners', 'BannerController@index');

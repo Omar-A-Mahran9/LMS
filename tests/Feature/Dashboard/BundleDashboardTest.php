@@ -93,6 +93,39 @@ class BundleDashboardTest extends ApiTestCase
         $this->assertDatabaseCount('bundle_access_codes', 0);
     }
 
+    public function test_codes_pdf_for_one_bundle_or_all_as_a_table_or_cards(): void
+    {
+        $class = $this->makeClass($this->makeCourse());
+        $this->post('/dashboard/bundles', $this->payload([$class->id], ['title_ar' => 'باقة أ']), ['Accept' => 'application/json'])->assertOk();
+        $this->post('/dashboard/bundles', $this->payload([$class->id], ['title_ar' => 'باقة ب', 'code_count' => 2]), ['Accept' => 'application/json'])->assertOk();
+        [$first, $second] = Bundle::orderBy('id')->get();
+        $first->codes()->first()->update(['used_count' => 1]); // single use: used up
+
+        // What the PDF template is given
+        $data = null;
+        \Illuminate\Support\Facades\View::composer('dashboard.codes.code', function ($view) use (&$data) {
+            $data = $view->getData();
+        });
+
+        $response = $this->get("/dashboard/bundles/export/pdf?bundle_id={$first->id}&layout=cards");
+        $response->assertOk()->assertHeader('content-type', 'application/pdf');
+        $this->assertStringStartsWith('%PDF', $response->getContent());
+        $this->assertSame($first->codes()->orderBy('id')->pluck('code')->all(), $data['codes']->pluck('code')->all());
+        $this->assertSame('cards', $data['layout']);
+        $this->assertSame('أكواد باقة: باقة أ', $data['title']);
+        $this->assertStringEndsWith("/bundles/{$first->id}", $data['url']);
+        $this->assertSame(['exhausted', 'unused', 'unused'], $data['codes']->pluck('status')->all());
+
+        // Only the usable ones
+        $this->get("/dashboard/bundles/export/pdf?bundle_id={$first->id}&status=available")->assertOk();
+        $this->assertCount(2, $data['codes']);
+
+        // All bundles, grouped by bundle
+        $this->get('/dashboard/bundles/export/pdf')->assertOk();
+        $this->assertSame([$first->id, $first->id, $first->id, $second->id, $second->id], $data['codes']->pluck('bundle_id')->all());
+        $this->assertSame('table', $data['layout']);
+    }
+
     public function test_discount_cannot_be_more_than_the_price(): void
     {
         $class = $this->makeClass($this->makeCourse());

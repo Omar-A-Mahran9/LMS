@@ -5,9 +5,19 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="mb-0">{{ __('Bundle Details') }}</h2>
-            <a href="{{ route('dashboard.bundles.index') }}" class="btn btn-outline-secondary btn-sm">
-                <i class="fas fa-arrow-right"></i> {{ __('Back to Bundles') }}
-            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ route('dashboard.bundles.exportPDF', ['bundle_id' => $bundle->id]) }}" target="_blank"
+                    class="btn btn-light-primary btn-sm">
+                    <i class="fas fa-file-pdf"></i> {{ __('Codes PDF (table)') }}
+                </a>
+                <a href="{{ route('dashboard.bundles.exportPDF', ['bundle_id' => $bundle->id, 'layout' => 'cards', 'status' => 'available']) }}"
+                    target="_blank" class="btn btn-light-primary btn-sm">
+                    <i class="fas fa-print"></i> {{ __('Codes cards to print') }}
+                </a>
+                <a href="{{ route('dashboard.bundles.index') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-right"></i> {{ __('Back to Bundles') }}
+                </a>
+            </div>
         </div>
 
         {{-- ======================= Bundle Info Card ======================= --}}

@@ -166,4 +166,60 @@ class BundleAccessTest extends ApiTestCase
         $this->getJson("/api/quizzes/{$quiz->id}/start")->assertOk();
         $this->getJson("/api/homeworks/{$homework->id}/start")->assertOk();
     }
+
+    public function test_guest_opens_a_bundle_without_login_with_the_code_alone(): void
+    {
+        [$bundle, $class] = $this->bundleWithClass(['requires_login' => 0]);
+        $code = $this->code($bundle);
+
+        $this->getJson("/api/bundles/{$bundle->id}")->assertOk()->assertJsonPath('data.requires_login', false);
+
+        // not activated yet: the code alone does not open the class
+        $this->getJson("/api/videos_by_bundle_with_code/{$class->id}?code={$code->code}")->assertStatus(400);
+
+        $this->activate($bundle, $code)->assertOk();
+        $this->assertSame(1, $code->fresh()->used_count);
+        $this->assertDatabaseHas('bundle_student', ['bundle_id' => $bundle->id, 'student_id' => null, 'access_code_id' => $code->id]);
+
+        // the guest comes back with the same code: nothing more is used up
+        $this->activate($bundle, $code)->assertOk();
+        $this->getJson("/api/videos_by_bundle_with_code/{$class->id}?code={$code->code}")
+            ->assertOk()->assertJsonPath('data.class_data.id', $class->id);
+        $this->assertSame(1, $code->fresh()->used_count);
+
+        // no code, a wrong one, or a class outside the bundle
+        $this->getJson("/api/videos_by_bundle_with_code/{$class->id}")->assertStatus(400);
+        $this->getJson("/api/videos_by_bundle_with_code/{$class->id}?code=WRONG")->assertStatus(400);
+        $otherClass = $this->makeClass($this->makeCourse());
+        $this->getJson("/api/videos_by_bundle_with_code/{$otherClass->id}?code={$code->code}")->assertStatus(400);
+    }
+
+    public function test_guest_code_stops_working_when_deactivated_or_expired_or_login_is_required_again(): void
+    {
+        [$bundle, $class] = $this->bundleWithClass(['requires_login' => 0]);
+        $code = $this->code($bundle);
+        $this->activate($bundle, $code)->assertOk();
+        $url = "/api/videos_by_bundle_with_code/{$class->id}?code={$code->code}";
+
+        $code->update(['expires_at' => now()->subDay()]);
+        $this->getJson($url)->assertStatus(400);
+        $code->update(['expires_at' => null, 'is_active' => 0]);
+        $this->getJson($url)->assertStatus(400);
+        $code->update(['is_active' => 1]);
+        $this->getJson($url)->assertOk();
+
+        $bundle->update(['requires_login' => 1]);
+        $this->getJson($url)->assertStatus(400);
+        $this->activate($bundle, $code)->assertUnauthorized();
+    }
+
+    public function test_logged_in_student_still_owns_a_bundle_without_login(): void
+    {
+        [$bundle, $class] = $this->bundleWithClass(['requires_login' => 0]);
+        $code = $this->code($bundle);
+        $this->actingAsStudent($this->makeStudent());
+
+        $this->activate($bundle, $code)->assertOk()->assertJsonPath('data.bundle.is_owned', true);
+        $this->getJson("/api/videos_by_classes/{$class->id}")->assertOk();
+    }
 }

@@ -75,7 +75,10 @@ class BundleController extends Controller
         return $this->success('', new BundleResource($bundle));
     }
 
-    /** Activate a bundle with one of its codes (logged-in students). The code is used once, here. */
+    /**
+     * Activate a bundle with one of its codes. The code is used once, here.
+     * Bundles that don't require login: guests activate too, then send the code with each class (?code=).
+     */
     public function activate(Request $request)
     {
         $request->validate([
@@ -90,8 +93,12 @@ class BundleController extends Controller
             return $this->failure(__('Bundle not found'), 404);
         }
 
+        if (!$student && $bundle->requires_login) {
+            return $this->failure(__('Please log in to use this code'), 401);
+        }
+
         // Already activated: nothing is used up again
-        if ($bundle->isOwnedBy($student->id)) {
+        if ($student && $bundle->isOwnedBy($student->id)) {
             return $this->success(__('You already have this bundle'), [
                 'bundle' => new BundleResource($bundle->load(['classes' => $this->classesQuery()])),
             ]);
@@ -109,6 +116,13 @@ class BundleController extends Controller
             return $this->failure(__('Invalid or inactive code'));
         }
 
+        // A guest who already activated this code comes back with it: nothing is used up again
+        if (!$student && $code->isWithinValidity() && $code->logs()->whereNull('student_id')->exists()) {
+            return $this->success(__('Bundle activated successfully'), [
+                'bundle' => new BundleResource($bundle->load(['classes' => $this->classesQuery()])),
+            ]);
+        }
+
         if ($code->single_use && $code->used_count >= 1) {
             return $this->failure(__('This code has already been used'));
         }
@@ -121,7 +135,7 @@ class BundleController extends Controller
 
             BundleStudent::create([
                 'bundle_id' => $bundle->id,
-                'student_id' => $student->id,
+                'student_id' => $student?->id,
                 'access_code_id' => $code->id,
                 'device_ip' => $request->ip(),
                 'user_agent' => substr((string) $request->userAgent(), 0, 255),
@@ -143,8 +157,9 @@ class BundleController extends Controller
     /**
      * A class of a bundle the student activated (kept for older clients: the website opens
      * the class from /lessons/{id}, which accepts bundle owners too). The code is no longer needed.
+     * Guests of bundles that don't require login send the activated code (?code=).
      */
-    public function classVideos($id)
+    public function classVideos(Request $request, $id)
     {
         $studentId = auth('api')->id();
 
@@ -153,14 +168,17 @@ class BundleController extends Controller
             return $this->failure(__('Class not found or unpublished'));
         }
 
-        if (!Bundle::grantsClass($studentId, $class->id)) {
+        if (!Bundle::grantsClass($studentId, $class->id)
+            && !Bundle::grantsClassByCode($request->query('code'), $class->id)) {
             return $this->failure(__('This class does not belong to your bundles.'));
         }
 
-        $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
-        if (!Cache::has($cacheKey)) {
-            $class->increment('views');
-            Cache::put($cacheKey, true, now()->addHours(6));
+        if ($studentId) {
+            $cacheKey = "class_viewed_{$class->id}_student_{$studentId}";
+            if (!Cache::has($cacheKey)) {
+                $class->increment('views');
+                Cache::put($cacheKey, true, now()->addHours(6));
+            }
         }
 
         return $this->success(__('Bundle class videos loaded'), [

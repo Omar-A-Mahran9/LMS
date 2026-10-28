@@ -35,6 +35,9 @@ class BundleResource extends JsonResource
 
             'is_active' => $this->is_active,
 
+            // false: the code alone opens the bundle, no account needed
+            'requires_login' => $this->requires_login,
+
             // The logged-in student activated it: its classes open from /lessons/{id}
             'is_owned' => $this->isOwnedBy($studentId),
 

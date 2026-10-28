@@ -12,6 +12,11 @@ class Bundle extends Model
 
     protected $guarded = [];
 
+    // Codes need a logged-in student unless the bundle is set otherwise
+    protected $attributes = [
+        'requires_login' => true,
+    ];
+
 
     protected $appends = [
 
@@ -32,6 +37,8 @@ class Bundle extends Model
     protected $casts = [
 
         'is_active' => 'boolean',
+
+        'requires_login' => 'boolean',
 
         'created_at' => 'date:Y-m-d',
 
@@ -151,6 +158,28 @@ class Bundle extends Model
     public function isAvailable(): bool
     {
         return $this->is_active;
+    }
+
+
+    /**
+     * A guest (no account) opens this class with a code: the bundle doesn't require login,
+     * contains the class, and the code was activated on it and is still active and in its dates.
+     */
+    public static function grantsClassByCode(?string $code, $classId): bool
+    {
+        if (!$code || !$classId) {
+            return false;
+        }
+
+        $accessCode = BundleAccessCode::where('code', trim($code))
+            ->where('is_active', 1)
+            ->whereHas('bundle', fn($q) => $q->where('requires_login', 0)
+                ->whereHas('classes', fn($c) => $c->where('classes.id', $classId)))
+            ->first();
+
+        return $accessCode
+            && $accessCode->isWithinValidity()
+            && $accessCode->logs()->whereNull('student_id')->exists();
     }
 
 

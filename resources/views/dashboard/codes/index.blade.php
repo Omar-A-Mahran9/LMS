@@ -6,77 +6,134 @@
     <link
         href="{{ asset('assets/dashboard/plugins/custom/datatables/datatables.bundle' . (isArabic() ? '.rtl' : '') . '.css') }}"
         rel="stylesheet" type="text/css" />
+    <style>
+        .code-text {
+            font-family: 'DejaVu Sans Mono', SFMono-Regular, Menlo, Consolas, monospace;
+            letter-spacing: 1px;
+            direction: ltr;
+        }
+
+        .status-card {
+            cursor: pointer;
+            transition: box-shadow .15s, border-color .15s;
+            border: 1px dashed var(--bs-gray-300);
+        }
+
+        .status-card:hover {
+            box-shadow: 0 0 0 1px var(--bs-gray-400);
+        }
+
+        .status-card.active {
+            border: 1px solid var(--bs-primary);
+            box-shadow: 0 0 0 1px var(--bs-primary);
+        }
+    </style>
 @endpush
 
 @section('content')
+    @php
+        $classLabel = fn($class) => $class->title . ($class->course ? ' — ' . $class->course->title : '');
+        $statuses = [
+            'all' => ['label' => __('All codes'), 'color' => 'primary'],
+            'unused' => ['label' => __('Unused'), 'color' => 'success'],
+            'used' => ['label' => __('Partially used'), 'color' => 'info'],
+            'exhausted' => ['label' => __('Exhausted'), 'color' => 'secondary'],
+            'inactive' => ['label' => __('Inactive'), 'color' => 'danger'],
+        ];
+    @endphp
+
+    {{-- Status cards: counts follow the filters below, a click filters the table by that status --}}
+    <div class="row g-3 mb-5">
+        @foreach ($statuses as $key => $status)
+            <div class="col">
+                <div class="card status-card h-100 {{ $key === 'all' ? 'active' : '' }}" data-status="{{ $key === 'all' ? '' : $key }}">
+                    <div class="card-body py-4 px-5">
+                        <div class="fs-2hx fw-bold text-{{ $status['color'] }}" data-stat="{{ $key }}">—</div>
+                        <div class="fw-semibold text-gray-600">{{ $status['label'] }}</div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
     <div class="card mb-5 mb-x-10">
-        <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-            data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+        <div class="card-header border-0 pt-5">
             <div class="card-title m-0">
                 <h3 class="fw-bold m-0">{{ __('Access Codes List') }}</h3>
             </div>
 
-            <div class="d-flex justify-content-center flex-wrap mb-5 mt-5">
-                <div class="d-flex justify-content-end  " id="add_btn" data-bs-toggle="modal" data-bs-target="#crud_modal"
-                    data-kt-docs-table-toolbar="base">
-                    <button type="button" class="btn btn-primary w-100">
-                        <span class="svg-icon svg-icon-2">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1"
-                                    transform="rotate(-90 11.364 20.364)" fill="currentColor"></rect>
-                                <rect x="4.36396" y="11.364" width="16" height="2" rx="1"
-                                    fill="currentColor"></rect>
-                            </svg>
-                        </span>
-                        {{ __('Add Access Code') }}
+            <div class="card-toolbar gap-3">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-light-primary dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="fas fa-file-pdf me-2"></i>{{ __('Export PDF') }}
                     </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item btn-export-pdf" data-layout="table" href="#"
+                                target="_blank">{{ __('Report table') }}</a></li>
+                        <li><a class="dropdown-item btn-export-pdf" data-layout="cards" href="#"
+                                target="_blank">{{ __('Cards to print and cut') }}</a></li>
+                    </ul>
                 </div>
-                <div class="d-flex align-items-center ms-3">
-                    {{-- اختيار الصف قبل تصدير الأكواد (تصدير كل الأكواد مرة واحدة تقيل جداً على السيرفر) --}}
-                    <select id="class_filter" class="form-select form-select-solid w-200px" data-control="select2"
-                        data-placeholder="{{ __('Choose class to export') }}">
-                        <option></option>
-                        @foreach ($classes as $class)
-                            <option value="{{ $class->id }}">{{ $class->title }}</option>
-                        @endforeach
-                    </select>
-                    <a href="{{ route('dashboard.generateCode.exportPDF') }}" class="btn btn-secondary ms-3 btn-export-pdf"
-                        target="_blank" title="{{ __('Export PDF') }}">
-                        <i class="fas fa-file-pdf me-2"></i>
-                    </a>
-                </div>
-            </div>
 
+                <button type="button" class="btn btn-primary" id="add_btn">
+                    <i class="fas fa-plus me-2"></i>{{ __('Generate codes') }}
+                </button>
+            </div>
         </div>
 
-        <div class="card-body">
-            <div class="d-flex flex-stack flex-wrap mb-5">
-                <div class="d-flex align-items-center position-relative my-1 mb-2 mb-md-0">
-                    <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
-                                transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
-                            <path
-                                d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                fill="currentColor"></path>
-                        </svg>
-                    </span>
-                    <input type="text" data-kt-docs-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Search Access Codes') }}">
-                </div>
-
-                <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
-                    <div class="fw-bold me-5">
-                        <span class="me-2" data-kt-docs-table-select="selected_count"></span>{{ __('Selected') }}
+        <div class="card-body pt-4">
+            {{-- Filters: the table, the cards and the PDF export all follow them --}}
+            <div class="row g-3 mb-5" id="codes_filters">
+                <div class="col-md-3">
+                    <div class="position-relative">
+                        <i class="fas fa-search position-absolute top-50 translate-middle-y ms-4 text-gray-500"></i>
+                        <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid ps-12"
+                            placeholder="{{ __('Search by code or class') }}">
                     </div>
-                    <button type="button" class="btn btn-danger"
-                        data-kt-docs-table-select="delete_selected">{{ __('Delete') }}</button>
+                </div>
+                <div class="col-md-3">
+                    <select id="filter_class" class="form-select form-select-solid" data-filter="class_id"
+                        data-placeholder="{{ __('All classes') }}" data-allow-clear="true">
+                        <option></option>
+                        @foreach ($classes as $class)
+                            <option value="{{ $class->id }}">{{ $classLabel($class) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select id="filter_status" class="form-select form-select-solid" data-filter="status">
+                        <option value="">{{ __('All statuses') }}</option>
+                        @foreach (array_slice($statuses, 1, null, true) as $key => $status)
+                            <option value="{{ $key }}">{{ $status['label'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group input-group-solid">
+                        <input type="date" class="form-control form-control-solid" data-filter="date_from"
+                            title="{{ __('Created from') }}">
+                        <span class="input-group-text">→</span>
+                        <input type="date" class="form-control form-control-solid" data-filter="date_to"
+                            title="{{ __('Created to') }}">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-light w-100" id="reset_filters" title="{{ __('Reset') }}">
+                        <i class="fas fa-undo p-0"></i>
+                    </button>
                 </div>
             </div>
 
-            <table id="kt_datatable" class="table align-middle text-center table-row-dashed fs-6 gy-5">
+            <div class="d-flex justify-content-end align-items-center d-none mb-4" data-kt-docs-table-toolbar="selected">
+                <div class="fw-bold me-5">
+                    <span class="me-2" data-kt-docs-table-select="selected_count"></span>{{ __('Selected') }}
+                </div>
+                <button type="button" class="btn btn-danger"
+                    data-kt-docs-table-select="delete_selected">{{ __('Delete') }}</button>
+            </div>
+
+            <table id="kt_datatable" class="table align-middle text-center table-row-dashed fs-6 gy-4">
                 <thead>
                     <tr class="text-gray-400 fw-bold fs-7 text-uppercase gs-0">
                         <th class="w-10px pe-2">
@@ -86,12 +143,9 @@
                             </div>
                         </th>
                         <th>{{ __('Code') }}</th>
-                        <th>{{ __('URL') }}</th>
                         <th>{{ __('Class') }}</th>
-                        <th>{{ __('Usage Limit') }}</th>
-                        <th>{{ __('Used Count') }}</th>
-                        <th>{{ __('Single Use') }}</th>
-                        <th>{{ __('Active') }}</th>
+                        <th>{{ __('Usage') }}</th>
+                        <th>{{ __('Status') }}</th>
                         <th>{{ __('Created At') }}</th>
                         <th class="min-w-100px">{{ __('Actions') }}</th>
                     </tr>
@@ -102,80 +156,74 @@
         </div>
     </div>
 
-    <form id="crud_form" class="ajax-form w-75" action="{{ route('dashboard.generateCode.store') }}" method="post"
-        enctype="multipart/form-data" data-success-callback="onAjaxSuccess" data-error-callback="onAjaxError">
+    <form id="crud_form" class="ajax-form" action="{{ route('dashboard.generateCode.store') }}" method="post"
+        data-success-callback="onCodesSaved" data-error-callback="onAjaxError">
         @csrf
         <div class="modal fade" tabindex="-1" id="crud_modal">
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="form_title">{{ __('Add Access Code') }}</h5>
+                        <h5 class="modal-title" id="form_title">{{ __('Generate codes') }}</h5>
                         <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ki-outline ki-cross fs-1"></i></div>
                     </div>
 
                     <div class="modal-body">
-                        <div class="mb-4">
-                            <label for="class_id_inp" class="form-label">{{ __('Class') }}</label>
-                            <select name="class_id" id="class_id_inp" class="form-select" data-control="select2"
-                                data-placeholder="{{ __('Select class') }}" data-dir="{{ isArabic() ? 'rtl' : 'ltr' }}">
-                                <option value="" selected></option>
-
+                        <div class="mb-5">
+                            <label for="class_id_inp" class="form-label required">{{ __('Class') }}</label>
+                            <select name="class_id" id="class_id_inp" class="form-select"
+                                data-placeholder="{{ __('Select class') }}">
+                                <option value=""></option>
                                 @foreach ($classes as $class)
-                                    <option value="{{ $class->id }}">{{ $class->title }}</option>
+                                    <option value="{{ $class->id }}">{{ $classLabel($class) }}</option>
                                 @endforeach
                             </select>
                             <div class="invalid-feedback" id="class_id"></div>
                         </div>
 
-                        <div class="row mb-4">
-                            <div class="col-10">
+                        <div class="row mb-5">
+                            <div class="col-md-6" id="code_count_wrapper">
+                                <label for="code_count_inp" class="form-label">{{ __('Number of Codes to Generate') }}</label>
+                                <input type="number" name="code_count" id="code_count_inp" class="form-control"
+                                    min="1" max="1000" value="1">
+                                <div class="form-text">{{ __('Up to 1000 codes at once') }}</div>
+                                <div class="invalid-feedback" id="code_count"></div>
+                            </div>
+                            <div class="col-md-6" id="code_wrapper">
                                 <label for="code_inp" class="form-label">{{ __('Access Code') }}</label>
-                                <input type="text" name="code" id="code_inp" class="form-control"
+                                <input type="text" name="code" id="code_inp" class="form-control code-text"
                                     placeholder="{{ __('Leave blank to auto-generate') }}">
                                 <div class="invalid-feedback" id="code"></div>
                             </div>
-
-                            <div class="col-2 d-flex align-items-center mt-4">
-                                <label class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="is_active" type="checkbox" value="1"
-                                        id="is_active_switch" checked>
-                                    <span class="form-check-label text-dark"
-                                        for="is_active_switch">{{ __('Active') }}</span>
-                                </label>
-                            </div>
                         </div>
 
-                        <div class="row mb-4">
-                            <div class="col-10">
+                        <div class="row mb-5 align-items-end">
+                            <div class="col-md-6">
                                 <label for="usage_limit_inp" class="form-label">{{ __('Usage Limit') }}</label>
                                 <input type="number" name="usage_limit" id="usage_limit_inp" class="form-control"
                                     min="1" placeholder="{{ __('Leave blank for unlimited') }}">
                                 <div class="invalid-feedback" id="usage_limit"></div>
                             </div>
-
-                            <div class="col-2 d-flex align-items-center mt-4">
+                            <div class="col-md-6 d-flex gap-8 pb-3">
                                 <label class="form-check form-switch form-check-custom form-check-solid">
+                                    {{-- hidden 0 so that switching it off is actually saved --}}
+                                    <input type="hidden" name="single_use" value="0">
                                     <input class="form-check-input" name="single_use" type="checkbox" value="1"
                                         id="single_use_switch" checked>
-                                    <span class="form-check-label text-dark"
-                                        for="single_use_switch">{{ __('Single Use') }}</span>
+                                    <span class="form-check-label text-dark">{{ __('Single Use') }}</span>
+                                </label>
+                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                    <input type="hidden" name="is_active" value="0">
+                                    <input class="form-check-input" name="is_active" type="checkbox" value="1"
+                                        id="is_active_switch" checked>
+                                    <span class="form-check-label text-dark">{{ __('Active') }}</span>
                                 </label>
                             </div>
                         </div>
-                        <div class="mb-4" id="code_count_wrapper" style="display: none;">
-                            <label for="code_count_inp"
-                                class="form-label">{{ __('Number of Codes to Generate') }}</label>
-                            <input type="number" name="code_count" id="code_count_inp" class="form-control"
-                                min="1" placeholder="{{ __('Enter number of codes (e.g. 40)') }}">
-                            <div class="invalid-feedback" id="code_count"></div>
-                        </div>
-
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light"
-                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ __('Close') }}</button>
                         <button type="submit" class="btn btn-primary">
                             <span class="indicator-label">{{ __('Save') }}</span>
                             <span class="indicator-progress">
@@ -190,53 +238,12 @@
 @endsection
 
 @push('scripts')
+    <script>
+        const codesExportUrl = "{{ route('dashboard.generateCode.exportPDF') }}";
+        const codesStoreUrl = "{{ route('dashboard.generateCode.store') }}";
+    </script>
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/access_codes.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
-
-    <script>
-        $(document).ready(function() {
-            $("#add_btn").click(function(e) {
-                e.preventDefault();
-                $("[title='_method']").remove();
-                $("#crud_form")[0].reset();
-                $('#class_id_inp').val('').trigger('change');
-
-                $("#crud_form").find('.invalid-feedback').text('');
-                $("#crud_form").find('.is-invalid').removeClass('is-invalid');
-                $("#crud_form").attr('action', "{{ route('dashboard.generateCode.store') }}");
-                $("#form_title").text("{{ __('Add Access Code') }}");
-                $("#crud_modal").modal('show');
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const codeInput = document.getElementById('code_inp');
-            const codeCountWrapper = document.getElementById('code_count_wrapper');
-
-            function toggleCodeCountField() {
-                if (codeInput.value.trim() === '') {
-                    codeCountWrapper.style.display = 'block';
-                } else {
-                    codeCountWrapper.style.display = 'none';
-                }
-            }
-
-            codeInput.addEventListener('input', toggleCodeCountField);
-            toggleCodeCountField(); // Run on page load too
-        });
-
-        $('#class_filter').on('change', function() {
-            let selectedClass = $(this).val();
-            let url = '{{ route('dashboard.generateCode.exportPDF') }}';
-
-            if (selectedClass) {
-                url += '?class_id=' + selectedClass;
-            }
-
-            $('.btn-export-pdf').attr('href', url);
-        });
-    </script>
 @endpush

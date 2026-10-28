@@ -21,7 +21,7 @@ class ClassAccessLog extends Model
 
     public function class()
     {
-        return $this->belongsTo(CourseClass::class, 'course_class_id');
+        return $this->belongsTo(CourseClass::class, 'class_id');
     }
 
 

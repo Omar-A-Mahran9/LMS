@@ -13,6 +13,8 @@ use Illuminate\Support\Str;
 
 class BundleController extends Controller
 {
+    private const MAX_CODES_PER_PDF = 2000;
+
     public function index(Request $request)
     {
         $this->authorize('view_bundle');
@@ -34,7 +36,10 @@ class BundleController extends Controller
         // The course name tells apart classes with the same title
         $classes = CourseClass::where('is_active', 1)->with('course:id,title_ar,title_en')->get();
 
-        return view('dashboard.bundles.index', compact('classes'));
+        // The codes export picks one bundle
+        $bundles = Bundle::select('id', 'title_ar', 'title_en')->withCount('codes')->latest('id')->get();
+
+        return view('dashboard.bundles.index', compact('classes', 'bundles'));
     }
 
 
@@ -66,6 +71,7 @@ class BundleController extends Controller
 
             'single_use'       => 'nullable|boolean',
             'is_active'        => 'nullable|boolean',
+            'requires_login'   => 'nullable|boolean',
         ]);
 
         DB::beginTransaction();
@@ -102,6 +108,7 @@ class BundleController extends Controller
                 'price'           => $request->price,
                 'discount_price'  => $request->discount_price,
                 'is_active'       => $request->boolean('is_active'),
+                'requires_login'  => $request->boolean('requires_login', true),
             ]);
 
             /*
@@ -174,6 +181,8 @@ class BundleController extends Controller
             'is_active' => 'nullable|boolean',
 
             'single_use' => 'nullable|boolean',
+
+            'requires_login' => 'nullable|boolean',
         ]);
 
 
@@ -221,6 +230,8 @@ class BundleController extends Controller
             'discount_price' => $request->discount_price,
 
             'is_active' => $request->boolean('is_active'),
+
+            'requires_login' => $request->boolean('requires_login', true),
         ]);
 
 
@@ -310,33 +321,51 @@ class BundleController extends Controller
         }
     }
 
+    /**
+     * Codes PDF: one bundle (bundle_id) or all of them, as a table or as cards to cut and hand out
+     * (layout=cards), all the codes or only the ones still usable (status=available).
+     */
     public function exportPDF(Request $request)
     {
         $this->authorize('view_bundle');
 
-        // bundle codes (this used to query class codes through a class that wasn't imported)
-        $bundleId = $request->get('bundle_id');
+        // The PDF is handed to students: always Arabic, whatever the dashboard language
+        app()->setLocale('ar');
 
-        $query = BundleAccessCode::with('bundle')->where('is_active', 1);
+        $bundle = $request->filled('bundle_id') ? Bundle::findOrFail($request->integer('bundle_id')) : null;
+        $onlyAvailable = $request->get('status') === 'available';
 
-        if ($bundleId) {
-            $query->where('bundle_id', $bundleId);
-        }
+        $query = BundleAccessCode::with('bundle:id,title_ar,title_en')
+            ->when($bundle, fn ($q) => $q->where('bundle_id', $bundle->id));
 
-        if (!$bundleId && $query->count() > 1000) {
+        // Thousands of rows run dompdf out of memory
+        if (($total = $query->count()) > self::MAX_CODES_PER_PDF) {
             return response(
                 '<div dir="rtl" style="font-family:Tahoma,Arial;padding:40px;text-align:center">'
-                . '<h3>' . e(__('There are too many codes to export at once. Open a bundle and export its codes.')) . '</h3>'
+                . '<h3>' . e(__('There are too many codes to export at once (:count). Export the codes of one bundle.', ['count' => $total])) . '</h3>'
                 . '<a href="javascript:window.close()">' . e(__('Close')) . '</a></div>',
                 422
             );
         }
 
-        $codes = $query->get();
+        $codes = $query->orderBy('bundle_id')->orderBy('id')->get()
+            ->when($onlyAvailable, fn ($codes) => $codes->filter->canBeUsed()->values());
 
-        $pdf = Pdf::loadView('dashboard.codes.code', compact('codes'));
+        $filters = array_filter([
+            'الباقة' => $bundle?->title_ar ?? 'كل الباقات',
+            'الأكواد' => $onlyAvailable ? 'المتاحة للاستخدام فقط' : null,
+        ]);
 
-        return $pdf->download('bundle_codes_report.pdf');
+        $pdf = Pdf::loadView('dashboard.codes.code', [
+            'codes'   => $codes,
+            'layout'  => $request->get('layout') === 'cards' ? 'cards' : 'table',
+            'title'   => $bundle ? 'أكواد باقة: ' . $bundle->title_ar : 'أكواد الباقات',
+            'filters' => $filters,
+            // Students activate a bundle code on the bundle's page
+            'url'     => rtrim(config('app.website_url'), '/') . '/bundles' . ($bundle ? "/{$bundle->id}" : ''),
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->download(($bundle ? "bundle_{$bundle->id}_codes_" : 'bundles_codes_') . now()->format('Y-m-d_His') . '.pdf');
     }
 
     public function destroy(Bundle $bundle)
