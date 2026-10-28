@@ -95,6 +95,16 @@ let translations = {
         "Edit Course": "تعديل الكورس",
 
         Edit: "تعديل",
+        // Lives
+        "Edit live": "تعديل البث",
+        "On air now": "على الهواء الآن",
+        "Starting soon": "هيبدأ قريب",
+        "Upcoming": "قادم",
+        "Ended": "انتهى",
+        "Public": "عام",
+        "Copy public link": "نسخ رابط البث العام",
+        "Link copied": "تم نسخ الرابط",
+        "Other link": "رابط آخر",
         per_hour: "رحلة بالساعة",
         per_trip: "رحلة",
         Show: "التفاصيل",

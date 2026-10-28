@@ -1,6 +1,14 @@
 "use strict";
 
 var datatable;
+const platformLabels = {
+    youtube: "YouTube",
+    zoom: "Zoom",
+    google_meet: "Google Meet",
+    facebook: "Facebook",
+    twitch: "Twitch",
+    other: __("Other link"),
+};
 // Class definition
 var KTDatatablesServerSide = (function () {
     let dbTable = "lives";
@@ -10,7 +18,8 @@ var KTDatatablesServerSide = (function () {
             language: language,
             processing: processing,
             serverSide: serverSide,
-            order: [],
+            // Newest lives first
+            order: [[3, "desc"]],
             stateSave: saveState,
             select: {
                 style: "multi",
@@ -49,6 +58,7 @@ var KTDatatablesServerSide = (function () {
                                 <!--begin::Info-->
                                 <div class="d-flex flex-column justify-content-center">
                                     <a href="javascript:;" class="mb-1 text-gray-800 text-hover-primary">${row.title}</a>
+                                    ${row.is_public ? `<span class="badge badge-light-info align-self-center">${__("Public")}</span>` : ""}
                                 </div>
                                 <!--end::Info-->
                             </div>
@@ -84,8 +94,8 @@ var KTDatatablesServerSide = (function () {
                     targets: 3,
                     render: function (data, type, row) {
                         return `<div class="d-flex flex-column">
-                                    <span>${(row.start_time || "").slice(0, 16)}</span>
-                                    <span class="text-muted fs-8">${(row.platform || "").replace("_", " ")}</span>
+                                    <span dir="ltr">${(row.start_time || "").slice(0, 16)}</span>
+                                    <span class="text-muted fs-8">${platformLabels[row.platform] || row.platform || ""}</span>
                                 </div>`;
                     },
                 },
@@ -149,6 +159,12 @@ var KTDatatablesServerSide = (function () {
                                 </div>
                                 <!--end::Menu item-->
 
+                                ${data.is_public ? `<div class="menu-item px-3">
+                                    <a href="javascript:;" class="menu-link px-3" data-action="copy_public_link" data-url="${websiteUrl}/lives/${data.id}">
+                                        ${__("Copy public link")}
+                                    </a>
+                                </div>` : ""}
+
                                 ${data.class_id ? `<div class="menu-item px-3">
                                     <a href="/dashboard/classes/${
                                         data.class_id
@@ -190,6 +206,11 @@ var KTDatatablesServerSide = (function () {
             });
             KTMenu.createInstances();
             handlePreviewAttachments();
+        });
+
+        $("#kt_datatable").on("click", '[data-action="copy_public_link"]', function (e) {
+            e.preventDefault();
+            navigator.clipboard.writeText($(this).data("url")).then(() => successAlert(__("Link copied")));
         });
     };
 

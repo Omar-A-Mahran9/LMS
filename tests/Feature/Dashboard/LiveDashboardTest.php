@@ -181,6 +181,39 @@ class LiveDashboardTest extends ApiTestCase
         $this->assertSame(0, Live::count());
     }
 
+    public function test_youtube_needs_the_link_of_the_live_video(): void
+    {
+        $this->actingAs($this->admin(), 'admin');
+
+        $youtube = ['platform' => 'youtube', 'meeting_id' => '', 'password' => ''];
+        $this->postJson('/dashboard/lives', $this->form($youtube + ['embed_url' => 'https://www.youtube.com/@MohamedElnagar/live']))
+            ->assertStatus(422)->assertJsonValidationErrors('embed_url');
+        $this->postJson('/dashboard/lives', $this->form($youtube + ['embed_url' => 'https://www.youtube.com/live/dQw4w9WgXcQ?si=abc']))
+            ->assertOk();
+
+        $this->assertSame('dQw4w9WgXcQ', Live::sole()->youtubeId());
+    }
+
+    public function test_search_bulk_delete_and_public_switch(): void
+    {
+        $this->actingAs($this->admin(), 'admin');
+        $this->postJson('/dashboard/lives', $this->form(['title_en' => 'Algebra live', 'is_public' => '1']))->assertOk();
+        $this->postJson('/dashboard/lives', $this->form(['title_en' => 'Grammar live']))->assertOk();
+        [$first, $second] = Live::orderBy('id')->get();
+        $this->assertTrue($first->is_public);
+        $this->assertFalse($second->is_public);
+
+        // The search reads the titles only: the shared password matches nothing
+        $search = fn(string $value) => $this->getJson('/dashboard/lives?draw=1&start=0&length=10&columns[0][data]=id&columns[0][search][value]=&search[value]=' . urlencode($value), [
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])->assertOk()->json('data');
+        $this->assertSame(['Algebra live'], array_column($search('Algebra'), 'title_en'));
+        $this->assertSame([], $search('AbC123'));
+
+        $this->deleteJson('/dashboard/lives/delete-selected', ['selected_items_ids' => [$first->id, $second->id]])->assertOk();
+        $this->assertSame(0, Live::count());
+    }
+
     public function test_admin_without_the_lives_abilities_cannot_write(): void
     {
         $this->actingAs($this->admin(), 'admin');

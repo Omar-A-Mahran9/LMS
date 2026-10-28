@@ -21,8 +21,8 @@ class LiveController extends Controller
         $classes=CourseClass::with('course')->select('id', 'title_en', 'title_ar', 'course_id')->get();
 
         if ($request->ajax()) {
-        return  getModelData(model:new Live());
-
+            // Search the titles only (not the links / passwords)
+            return getModelData(model: new Live(), searchingColumns: ['title_ar', 'title_en']);
         }
 
         return view('dashboard.lives.index', compact('courses','classes'));
@@ -53,7 +53,7 @@ class LiveController extends Controller
     $validated = $this->prepareData($request, $request->validated());
 
     if ($request->hasFile('image')) {
-        deleteImageFromDirectory($live->image,'Lives');
+        $live->image && deleteImageFromDirectory($live->image, 'Lives');
         $validated['image'] = uploadImageToDirectory($request->file('image'), 'Lives');
     }
      $live->update($validated);
@@ -84,12 +84,25 @@ class LiveController extends Controller
         $this->authorize('delete_lives');
 
         $live = Live::findOrFail($id);
+        $live->image && deleteImageFromDirectory($live->image, 'Lives');
         $live->delete();
 
         return response()->json([
             'status' => true,
             'message' => __('Live session deleted successfully.'),
         ]);
+    }
+
+    public function deleteSelected(Request $request)
+    {
+        $this->authorize('delete_lives');
+
+        Live::whereIn('id', (array) $request->selected_items_ids)->get()->each(function (Live $live) {
+            $live->image && deleteImageFromDirectory($live->image, 'Lives');
+            $live->delete();
+        });
+
+        return response(['message' => __('Live session deleted successfully.')]);
     }
 
     /**

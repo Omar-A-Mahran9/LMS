@@ -37,6 +37,7 @@ Route::get("enrollments/restore-selected", "EnrollmentController@restoreSelected
 Route::get('students/{student}/report/pdf', [StudentController::class, 'reportPdf'])->name('students.report.pdf');
 Route::post('enrollments/toggle-status', [EnrollmentController::class, 'toggleStatus'])
     ->name('enrollments.toggleStatus');
+Route::delete('lives/delete-selected', 'LiveController@deleteSelected');
 Route::resource('lives', 'LiveController')->except(['create', 'edit']);
 Route::delete('free-videos/delete-selected', 'FreeVideoController@deleteSelected');
 Route::resource('free-videos', 'FreeVideoController')->except(['create', 'edit', 'show']);

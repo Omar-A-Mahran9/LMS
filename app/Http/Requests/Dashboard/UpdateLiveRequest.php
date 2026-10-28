@@ -43,7 +43,15 @@ class UpdateLiveRequest extends FormRequest
 
             'platform' => ['required', Rule::in(Live::PLATFORMS)],
             // YouTube / Facebook live link, or the Zoom / Google Meet invite link
-            'embed_url' => 'required|url|max:1000',
+            'embed_url' => [
+                'required', 'url', 'max:1000',
+                // The site plays YouTube by its video id: a channel link would show no player
+                function ($attribute, $value, $fail) {
+                    if ($this->input('platform') === 'youtube' && !Live::youtubeIdFrom($value)) {
+                        $fail(__('Use the link of the live video itself (youtube.com/live/... or watch?v=...), not the channel link'));
+                    }
+                },
+            ],
             'chat_enabled' => 'sometimes|boolean',
             'chat_embed_url' => 'nullable|url|max:1000',
 

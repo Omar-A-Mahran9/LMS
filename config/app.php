@@ -57,6 +57,9 @@ return [
 
     'url' => env('APP_URL', 'https://admin.mohamed-elnagar.com'),
 
+    // The students' website (public live links ...)
+    'website_url' => env('WEBSITE_URL', 'https://mohamed-elnagar.com'),
+
     'asset_url' => env('ASSET_URL'),
     'oto_refresh_token' => env('OTO_REFRESH_TOKEN', 'default_value_if_not_set'),
 

@@ -194,9 +194,15 @@ class Live extends Model
 
     public function youtubeId(): ?string
     {
+        return self::youtubeIdFrom($this->embed_url);
+    }
+
+    /** The video id in a YouTube link, null for links without one (a channel page ...). */
+    public static function youtubeIdFrom(?string $url): ?string
+    {
         preg_match(
             '/(?:youtube\.com\/(?:watch\?v=|embed\/|live\/|v\/|shorts\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/',
-            (string) $this->embed_url,
+            (string) $url,
             $matches
         );
 

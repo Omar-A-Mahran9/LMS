@@ -65,7 +65,7 @@
                     </span>
                     <!--end::Svg Icon-->
                     <input type="text" data-kt-docs-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Courses') }}">
+                        class="form-control form-control-solid w-250px ps-15" placeholder="{{ __('Search by title') }}">
                 </div>
                 <!--end::Search-->
 
@@ -338,6 +338,10 @@
 @push('scripts')
     <script src="{{ asset('assets/dashboard/js/global/datatable-config.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/datatables/datatables.bundle.js') }}"></script>
+    <script>
+        // The website, for the public live links
+        const websiteUrl = @json(rtrim(config('app.website_url'), '/'));
+    </script>
     <script src="{{ asset('assets/dashboard/js/datatables/lives.js') }}"></script>
     <script src="{{ asset('assets/dashboard/js/global/crud-operations.js') }}"></script>
 
