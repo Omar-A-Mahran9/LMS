@@ -1,4 +1,4 @@
- 
+
 @extends('dashboard.partials.master')
 
 
@@ -11,7 +11,7 @@
 
         <div
             id="kt_app_content_container"
-            class="app-container container-xxl"
+            class="app-container container-fluid"
         >
 
             @can('view_dashboard')
