@@ -20,7 +20,7 @@
                      Dashboard Header
                 ====================================================== --}}
 
-                <div class="d-flex flex-wrap align-items-center justify-content-between mb-8">
+                <div class="d-flex flex-wrap align-items-center justify-content-between">
 
                     <div>
 
