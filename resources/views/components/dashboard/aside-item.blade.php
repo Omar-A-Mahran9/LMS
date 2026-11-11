@@ -1,7 +1,9 @@
 @props(['slug', 'route', 'title'])
-<div class="menu-item {{ getClassIfUrlContains('here', $slug) }} show menu-accordion hover-scale">
+@php($isActive = getClassIfUrlContains('here', $slug) !== '')
+<div class="menu-item {{ $isActive ? 'here' : '' }}">
     <!--begin:Menu link-->
-    <a class="menu-link" href="{{ $route }}">
+    <a class="menu-link {{ $isActive ? 'active' : '' }}" href="{{ $route }}" title="{{ $title }}"
+        @if ($isActive) aria-current="page" @endif>
         <span class="menu-icon">
             {!! $slot !!}
         </span>

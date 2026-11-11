@@ -23,7 +23,7 @@ class UpdateStudentRequest extends FormRequest
         $student = $this->route('student');
 
  return [
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg,webp|max:2048',
             'first_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],
             'middle_name' => ['nullable', 'string', 'max:255', new NotNumbersOnly()],
             'last_name' => ['required', 'string', 'max:255', new NotNumbersOnly()],

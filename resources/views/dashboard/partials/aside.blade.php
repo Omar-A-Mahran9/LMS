@@ -5,7 +5,7 @@
 
 <div
     id="kt_app_sidebar"
-    class="app-sidebar flex-column mt-lg-4 ps-2 pe-2 ps-lg-7 pe-lg-4"
+    class="app-sidebar flex-column"
 
     data-kt-drawer="true"
     data-kt-drawer-name="app-sidebar"
@@ -23,42 +23,47 @@
 
     <div
         id="kt_app_sidebar_logo"
-        class="app-sidebar-logo flex-shrink-0 d-none d-md-flex flex-center align-items-center"
+        class="app-sidebar-logo flex-shrink-0 d-none d-md-flex align-items-center"
     >
 
-        <a href="{{ route('dashboard.index') }}">
+        <a href="{{ route('dashboard.index') }}" class="d-flex align-items-center">
 
             {{-- Light Mode --}}
             <img
                 src="{{ asset('placeholder_images/Logo.svg') }}"
                 alt="{{ setting('website_name') }}"
-                class="h-50px d-none d-sm-inline app-sidebar-logo-default theme-light-show"
+                class="app-sidebar-logo-default theme-light-show"
             >
 
             {{-- Dark Mode --}}
             <img
                 src="{{ asset('placeholder_images/Logo.svg') }}"
                 alt="{{ setting('website_name') }}"
-                class="h-50px theme-dark-show"
+                class="app-sidebar-logo-default theme-dark-show"
+            >
+
+            {{-- Minimized sidebar --}}
+            <img
+                src="{{ asset('placeholder_images/favicon.svg') }}"
+                alt="{{ setting('website_name') }}"
+                class="app-sidebar-logo-minimize"
             >
 
         </a>
 
 
-        {{-- Mobile Toggle --}}
-        <div
-            class="d-flex align-items-center d-lg-none ms-n3 me-1"
-            title="{{ __('Show aside menu') }}"
+        {{-- Minimize Toggle (desktop) --}}
+        <button
+            type="button"
+            id="kt_app_sidebar_toggle"
+            class="btn btn-icon d-none d-lg-flex flex-shrink-0 p-0"
+            title="{{ __('Toggle sidebar') }}"
+            aria-label="{{ __('Toggle sidebar') }}"
+            aria-controls="kt_app_sidebar"
+            aria-expanded="true"
         >
-
-            <div
-                id="kt_aside_mobile_toggle"
-                class="btn btn-icon btn-active-color-primary w-30px h-30px"
-            >
-                <i class="ki-outline ki-abstract-14 fs-1"></i>
-            </div>
-
-        </div>
+            <i class="ki-outline ki-black-left-line fs-3"></i>
+        </button>
 
     </div>
 
@@ -83,7 +88,7 @@
 
             <div
                 id="kt_app_sidebar_menu"
-                class="menu menu-column menu-rounded menu-sub-indention fw-bold px-6 bg-transparent"
+                class="menu menu-column menu-rounded menu-sub-indention fw-bold bg-transparent"
 
                 data-kt-menu="true"
                 data-kt-menu-expand="false"
@@ -571,7 +576,7 @@
 
     <div
         id="kt_app_sidebar_footer"
-        class="app-sidebar-footer d-flex align-items-center px-8 pb-10"
+        class="app-sidebar-footer d-flex align-items-center"
     >
 
         <div>
@@ -600,7 +605,7 @@
                 </div>
 
 
-                <div class="d-flex flex-column align-items-start justify-content-center ms-3">
+                <div class="sidebar-user-info d-flex flex-column align-items-start justify-content-center ms-3">
 
                     <span class="text-gray-500 fs-8 fw-semibold">
                         {{ __('Hello') }}

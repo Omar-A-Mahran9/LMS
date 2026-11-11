@@ -34,6 +34,7 @@
     <link href="{{ asset('assets/dashboard/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/dashboard/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
 @endif
+<link href="{{ asset('assets/dashboard/css/layout.css') }}" rel="stylesheet" type="text/css" />
 <!--end::Global Stylesheets Bundle-->
 <style>
     * :not(i) {

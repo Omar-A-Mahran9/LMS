@@ -41,6 +41,16 @@
 >
 
 
+    {{-- Sidebar minimize state (desktop), restored before first paint. --}}
+    <script>
+        try {
+            if (localStorage.getItem('lms_sidebar_minimize') === 'on' && window.innerWidth >= 992) {
+                document.body.setAttribute('data-kt-app-sidebar-minimize', 'on');
+            }
+        } catch (e) {}
+    </script>
+
+
     {{-- =========================================================
          Theme Mode
          Must run before the page renders to avoid theme flashing.

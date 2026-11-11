@@ -10,7 +10,8 @@ var KTDatatablesServerSide = (function () {
             { data: "id" },
             { data: "name" },
             { data: "image" },
-            { data: "description" },
+            // the model has description_ar / description_en, no "description" (showed "undefined")
+            { data: `description_${locale}`, defaultContent: "" },
             { data: "meta_tag_key_words" },
             { data: "meta_tag_key_description" },
             { data: "created_at" },
@@ -244,6 +245,9 @@ var KTDatatablesServerSide = (function () {
                 let data = datatable.row(currentBtnIndex).data();
 
                 $("#form_title").text(__("Edit category"));
+                // Clear the file picked in a previous add/edit, otherwise it gets uploaded
+                // to this category too (wrong image) even if no new image was chosen
+                $("#crud_form input[type='file']").val("");
                 $(".image-input-wrapper").css(
                     "background-image",
                     `url('${data.full_image_path}')`
@@ -265,6 +269,7 @@ var KTDatatablesServerSide = (function () {
                     "action",
                     `/dashboard/${dbTable}/${data.id}?type=${categoryType}`
                 );
+                $("#crud_form [name='_method']").remove();
                 $("#crud_form").prepend(
                     `<input type="hidden" name="_method" value="PUT">`
                 );

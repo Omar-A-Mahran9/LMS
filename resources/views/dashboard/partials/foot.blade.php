@@ -34,6 +34,7 @@
 <script src="{{ asset("assets/shared/js/global.js") }}"></script>
 <script src="{{asset('assets/dashboard/js/global/translations.js') }}"></script>
 <script src="{{asset('assets/dashboard/js/global/scripts.js')}}"></script>
+<script src="{{ asset('assets/dashboard/js/global/layout.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/favicon-badge.js') }}"></script>
 <!--end::Custom Javascript-->
 <!--end::Javascript-->

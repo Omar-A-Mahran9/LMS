@@ -1,0 +1,452 @@
+/* =====================================================================
+   Dashboard layout polish — sidebar + content area.
+   Loaded for both LTR and RTL (after the Metronic bundles), so only
+   direction-neutral / logical properties are used here.
+   ===================================================================== */
+
+/* ---------- Tokens ---------- */
+:root,
+[data-bs-theme="light"] {
+    --lms-accent: #005955;
+    --lms-accent-rgb: 0, 89, 85;
+    --lms-accent-text: #005955;
+    --lms-accent-soft: rgba(0, 89, 85, 0.09);
+
+    --lms-sidebar-bg: #ffffff;
+    --lms-sidebar-border: #ececf1;
+    --lms-link: #5e6278;
+    --lms-icon: #a1a5b7;
+    --lms-heading: #a1a5b7;
+    --lms-hover-bg: #f4f5f7;
+    --lms-hover-text: #181c32;
+
+    --lms-surface-border: #eef0f4;
+    --lms-thead-bg: #f7f8fa;
+    --lms-thead-text: #7e8299;
+    --lms-cell-text: #3f4254;
+    --lms-row-hover: #fafbfc;
+    --lms-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.04);
+
+    --bs-app-sidebar-base-bg-color: var(--lms-sidebar-bg);
+}
+
+[data-bs-theme="dark"] {
+    --lms-accent-text: #4fc3b9;
+    --lms-accent-soft: rgba(79, 195, 185, 0.12);
+
+    --lms-sidebar-bg: #1b1b28;
+    --lms-sidebar-border: #2b2b40;
+    --lms-link: #9899ac;
+    --lms-icon: #6d6d80;
+    --lms-heading: #5e6278;
+    --lms-hover-bg: #232334;
+    --lms-hover-text: #ffffff;
+
+    --lms-surface-border: #2b2b40;
+    --lms-thead-bg: #232334;
+    --lms-thead-text: #9899ac;
+    --lms-cell-text: #cdcdde;
+    --lms-row-hover: #20202f;
+    --lms-shadow: none;
+
+    --bs-app-sidebar-base-bg-color: var(--lms-sidebar-bg);
+}
+
+@media (min-width: 992px) {
+    :root {
+        --bs-app-sidebar-width: 265px;
+        --bs-app-sidebar-width-actual: 265px;
+    }
+
+    [data-kt-app-sidebar-minimize="on"] {
+        --bs-app-sidebar-width: 80px;
+    }
+}
+
+/* =====================================================================
+   Sidebar
+   ===================================================================== */
+#kt_app_sidebar {
+    background-color: var(--lms-sidebar-bg);
+    border-inline-end: 1px solid var(--lms-sidebar-border);
+    transition: width 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* Logo row */
+#kt_app_sidebar .app-sidebar-logo {
+    height: 72px;
+    padding-inline: 1.5rem 1rem;
+    justify-content: space-between;
+    border-bottom: 1px dashed var(--lms-sidebar-border);
+}
+
+#kt_app_sidebar .app-sidebar-logo img {
+    height: 42px;
+    max-width: 150px;
+    object-fit: contain;
+}
+
+#kt_app_sidebar .app-sidebar-logo .app-sidebar-logo-minimize {
+    display: none;
+    height: auto;
+    width: 52px;
+}
+
+/* Minimize toggle */
+#kt_app_sidebar_toggle {
+    width: 30px;
+    height: 30px;
+    border-radius: 0.5rem;
+    border: 1px solid var(--lms-sidebar-border);
+    background: var(--lms-sidebar-bg);
+    color: var(--lms-icon);
+    transition: color 0.2s ease, background-color 0.2s ease, transform 0.3s ease;
+}
+
+#kt_app_sidebar_toggle:hover {
+    color: var(--lms-accent-text);
+    background: var(--lms-accent-soft);
+}
+
+[dir="rtl"] #kt_app_sidebar_toggle i {
+    transform: scaleX(-1);
+}
+
+/* Menu */
+#kt_app_sidebar_menu {
+    padding-inline: 0.85rem !important;
+}
+
+#kt_app_sidebar .menu-heading {
+    display: block;
+    padding-inline: 0.85rem;
+    font-size: 0.72rem !important;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--lms-heading) !important;
+    white-space: nowrap;
+}
+
+#kt_app_sidebar .menu > .menu-item > .menu-content {
+    padding-top: 1.25rem !important;
+    padding-bottom: 0.4rem !important;
+}
+
+#kt_app_sidebar .menu > .menu-item:first-child > .menu-content {
+    padding-top: 0.25rem !important;
+}
+
+#kt_app_sidebar .menu > .menu-item > .menu-link {
+    position: relative;
+    padding: 0.6rem 0.85rem;
+    margin-bottom: 2px;
+    border-radius: 0.6rem;
+    color: var(--lms-link);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#kt_app_sidebar .menu > .menu-item > .menu-link .menu-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--lms-link);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#kt_app_sidebar .menu > .menu-item > .menu-link .menu-icon {
+    width: 1.75rem;
+    margin-inline-end: 0.65rem;
+    justify-content: center;
+}
+
+#kt_app_sidebar .menu > .menu-item > .menu-link .menu-icon i {
+    font-size: 1.3rem !important;
+    color: var(--lms-icon);
+    transition: color 0.2s ease;
+}
+
+/* Hover */
+#kt_app_sidebar .menu > .menu-item:not(.here) > .menu-link:hover {
+    background-color: var(--lms-hover-bg);
+}
+
+#kt_app_sidebar .menu > .menu-item:not(.here) > .menu-link:hover .menu-title,
+#kt_app_sidebar .menu > .menu-item:not(.here) > .menu-link:hover .menu-icon i {
+    color: var(--lms-hover-text);
+}
+
+/* Active */
+#kt_app_sidebar .menu > .menu-item.here > .menu-link {
+    background-color: var(--lms-accent-soft);
+}
+
+#kt_app_sidebar .menu > .menu-item.here > .menu-link .menu-title,
+#kt_app_sidebar .menu > .menu-item.here > .menu-link .menu-icon i {
+    color: var(--lms-accent-text) !important;
+}
+
+#kt_app_sidebar .menu > .menu-item.here > .menu-link::before {
+    content: "";
+    position: absolute;
+    inset-block: 0.55rem;
+    inset-inline-start: -0.85rem;
+    width: 3px;
+    border-start-end-radius: 3px;
+    border-end-end-radius: 3px;
+    background: var(--lms-accent-text);
+}
+
+/* Footer (user) */
+#kt_app_sidebar_footer {
+    padding: 1rem 1.5rem 1.25rem !important;
+    border-top: 1px dashed var(--lms-sidebar-border);
+}
+
+#kt_app_sidebar_footer .symbol-label {
+    background-color: var(--lms-accent-soft);
+    color: var(--lms-accent-text) !important;
+}
+
+/* ---------- Minimized (desktop) ----------
+   Collapsed look applies while the sidebar is minimized and not being
+   hovered (or right after the toggle was clicked: .animating). */
+@media (min-width: 992px) {
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar_toggle i {
+        transform: rotate(180deg);
+    }
+
+    [dir="rtl"] [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar_toggle i {
+        transform: scaleX(-1) rotate(180deg);
+    }
+
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar:is(:not(:hover), .animating) .app-sidebar-logo {
+        padding-inline: 0;
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.35rem;
+        height: 96px;
+    }
+
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar:is(:not(:hover), .animating) .app-sidebar-logo a img {
+        display: none !important;
+    }
+
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar:is(:not(:hover), .animating) .app-sidebar-logo a img.app-sidebar-logo-minimize {
+        display: inline-block !important;
+    }
+
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar:is(:not(:hover), .animating) .menu-title,
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar:is(:not(:hover), .animating) .sidebar-user-info {
+        display: none !important;
+    }
+
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar:is(:not(:hover), .animating) .menu-heading {
+        font-size: 0 !important;
+        height: 1px;
+        padding: 0;
+        margin-inline: 0.85rem;
+        background: var(--lms-sidebar-border);
+    }
+
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar:is(:not(:hover), .animating) .menu > .menu-item > .menu-link {
+        justify-content: center;
+        padding-inline: 0;
+    }
+
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar:is(:not(:hover), .animating) .menu > .menu-item > .menu-link .menu-icon {
+        margin-inline-end: 0;
+    }
+
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar:is(:not(:hover), .animating) #kt_app_sidebar_footer {
+        padding-inline: 0 !important;
+        justify-content: center;
+    }
+
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar:is(:not(:hover), .animating) #kt_app_sidebar_footer .symbol {
+        margin: 0 !important;
+    }
+
+    /* Hover-expanded sidebar floats over the content */
+    [data-kt-app-sidebar-minimize="on"] #kt_app_sidebar:hover:not(.animating) {
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+    }
+}
+
+/* =====================================================================
+   Content area
+   ===================================================================== */
+#kt_app_toolbar.app-toolbar {
+    padding-top: 1.25rem !important;
+    padding-bottom: 0.25rem;
+}
+
+@media (min-width: 992px) {
+    #kt_app_main .app-container.container-fluid {
+        padding-inline: 2rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    #kt_app_main .app-container.container-fluid {
+        padding-inline: 1rem;
+    }
+}
+
+/* Cards */
+#kt_app_content .card {
+    border: 1px solid var(--lms-surface-border);
+    border-radius: 0.9rem;
+    box-shadow: var(--lms-shadow);
+}
+
+#kt_app_content .card > .card-header {
+    min-height: 64px;
+    padding: 0.75rem 1.75rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    border-bottom: 1px solid var(--lms-surface-border) !important;
+}
+
+#kt_app_content .card > .card-header .card-title h3 {
+    font-size: 1.2rem;
+}
+
+#kt_app_content .card > .card-header > .card-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+#kt_app_content .card > .card-body {
+    padding: 1.5rem 1.75rem;
+}
+
+@media (max-width: 767.98px) {
+    #kt_app_content .card > .card-header,
+    #kt_app_content .card > .card-body {
+        padding-inline: 1rem;
+    }
+}
+
+/* Filters / search row (list pages) */
+#kt_app_content .card-body > .d-flex.flex-stack.flex-wrap {
+    gap: 0.75rem 1rem;
+    margin-bottom: 1.25rem !important;
+}
+
+#kt_app_content .card-body > .d-flex.flex-stack > .d-flex.position-relative {
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0 !important;
+}
+
+#kt_app_content .card-body > .d-flex.flex-stack > .d-flex.position-relative > div {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+#kt_app_content .card-body > .d-flex.flex-stack > .d-flex.position-relative > div[style*="min-width"] {
+    flex: 0 1 230px;
+    min-width: 190px !important;
+}
+
+/* keep the magnifier vertically centred on the search input even when the row wraps */
+#kt_app_content .card-body > .d-flex.flex-stack > .d-flex.position-relative > .svg-icon.position-absolute {
+    top: 0;
+    height: calc(1.65rem + 1.55rem + 2px);
+    display: flex;
+    align-items: center;
+    z-index: 1;
+    color: var(--lms-icon);
+}
+
+@media (max-width: 767.98px) {
+    #kt_app_content .card-body > .d-flex.flex-stack > .d-flex.position-relative > input,
+    #kt_app_content .card-body > .d-flex.flex-stack > .d-flex.position-relative > div[style*="min-width"] {
+        flex: 1 1 100%;
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    #kt_app_content .card > .card-header > .card-toolbar,
+    #kt_app_content .card > .card-header > .card-toolbar .btn {
+        width: 100%;
+    }
+}
+
+/* Tables */
+#kt_app_content .card-body table.table {
+    margin-bottom: 0.5rem;
+}
+
+#kt_app_content .card-body table.table > thead > tr > th {
+    background-color: var(--lms-thead-bg);
+    color: var(--lms-thead-text) !important;
+    font-size: 0.8rem !important;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 0 !important;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+#kt_app_content .card-body table.table > thead > tr > th:first-child {
+    border-start-start-radius: 0.6rem;
+    border-end-start-radius: 0.6rem;
+}
+
+#kt_app_content .card-body table.table > thead > tr > th:last-child {
+    border-start-end-radius: 0.6rem;
+    border-end-end-radius: 0.6rem;
+}
+
+#kt_app_content .card-body table.table > tbody > tr > td {
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    color: var(--lms-cell-text);
+    border-bottom: 1px dashed var(--lms-surface-border);
+    transition: background-color 0.15s ease;
+}
+
+#kt_app_content .card-body table.table > tbody > tr:last-child > td {
+    border-bottom: 0;
+}
+
+#kt_app_content .card-body table.table > tbody > tr:hover > td {
+    background-color: var(--lms-row-hover);
+}
+
+#kt_app_content .card-body table.table .symbol img,
+#kt_app_content .card-body table.table td img {
+    border-radius: 0.5rem;
+}
+
+/* DataTables chrome (length / info / pagination) */
+#kt_app_content .dataTables_wrapper .dataTables_info {
+    color: var(--lms-thead-text);
+    font-size: 0.9rem;
+}
+
+#kt_app_content .dataTables_wrapper .dataTables_paginate .pagination .page-item .page-link {
+    min-width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+}
+
+#kt_app_content .dataTables_wrapper .dataTables_paginate .pagination .page-item.active .page-link {
+    background-color: var(--lms-accent);
+    color: #fff;
+}
+
+#kt_app_content .dataTables_wrapper > .row:last-child {
+    margin-top: 0.75rem;
+    align-items: center;
+    row-gap: 0.75rem;
+}

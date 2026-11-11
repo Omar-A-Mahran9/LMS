@@ -29,8 +29,8 @@ class UpdateCourseRequest extends FormRequest
 
   return [
     // Required image
-    'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:10240',
-    'slide_image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:10240',
+    'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg,webp|max:10240',
+    'slide_image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg,webp|max:10240',
 
     // Multilingual Titles and Descriptions
 'title_ar' => [
